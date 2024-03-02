@@ -50,6 +50,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define MATERIALSYSTEM MaterialSystem::Instance()
 #define TEXTSYSTEM TextSystem::Instance()
 
+#define BLOOMER BLOOM_PBR::Instance()
+
 class Ray3D;
 //// Map of all shader field types
 //static std::unordered_map<std::string, size_t> shaderFieldTypeMap =
@@ -327,9 +329,42 @@ public:
 	void UIDraw_3D(BaseCamera & _camera);
 	// Drawing Screenspace UI onto worldspace
 	void UIDraw_2DWorldSpace(BaseCamera & _camera);
-
+	
 };
 
+// bloom stuff
+struct bloomMip
+{
+	glm::vec2 size;
+	glm::ivec2 intSize;
+	unsigned int texture;
+};
+
+SINGLETON(BLOOM_PBR)
+{
+public:
+
+	void Init(unsigned int windowWidth, unsigned int windowHeight);
+	void RenderBloomTexture(float filterRadius, BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo);
+	const std::vector<bloomMip>& MipChain() const { return mMipChain; }
+	GLuint BloomTexture();
+
+	bool mKarisAverageOnDownsample = true;
+
+private:
+
+	void RenderDownsamples(unsigned int srcTexture,unsigned int& _vao, unsigned int& _vbo);
+	void RenderUpsamples(float filterRadius, unsigned int& _vao, unsigned int& _vbo);
+
+
+	bool FBOInit(unsigned int windowWidth, unsigned int windowHeight, unsigned int mipChainLength);
+
+	glm::ivec2 mSrcViewportSize;
+	glm::vec2 mSrcViewportSizeFloat;
+	
+	unsigned int mFBO;
+	std::vector<bloomMip> mMipChain;
+};
 
 ENGINE_EDITOR_SYSTEM(DebugDraw)
 {
