@@ -85,7 +85,8 @@ AudioSource:
   AudioChannel: 0
   Loop: false
   Volume: 1
-  Fade Time (s): 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
   Sound File: {guid: c921bd0028ce6d21877c994c16ad963b}
   Play: false
 ---
@@ -148,3 +149,37 @@ LightSource:
   Inner Cutoff: 55
   Outer Cutoff: 70
   Color: [1, 1, 1]
+---
+ID: 12002158533829214230
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(5)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8103077798545818027}  # Transform
+    - component: {fileID: 15613392506886917710}  # TextRenderer
+---
+ID: 8103077798545818027
+Transform:
+  m_GameObject: {fileID: 12002158533829214230}
+  Translation: [-5, 5, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 15613392506886917710
+TextRenderer:
+  m_GameObject: {fileID: 12002158533829214230}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 012789ABCXYZabcxyz
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 1
+  Color R: 0.5
+  Color G: 0.800000012
+  Color B: 0.200000003
+  Opacity: 1
