@@ -441,12 +441,12 @@ public class ThirdPersonController : Script
         if (IsAttacking)
         {
             SetState("DashAttack", false);
-            dir = vec3.Zero;
+            //dir = vec3.Zero;
             if (currentAttackTimer / attackTimer < 0.2f)
                 movement = PlayerModel.forward * attackMoveSpeed * Time.deltaTime;
             else
             {
-                if (currentAttackTimer / attackTimer > 0.5f)
+                if (currentAttackTimer / attackTimer > 0.5f) 
                 {
                     selectedWeaponCollider.transform.position = new vec3(10000);
                     attackLight.SetActive(false);
