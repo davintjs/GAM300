@@ -61,8 +61,8 @@ public class Enemy : Script
     public float currentStunDuration;
 
     // Staggering stuff
-    public float staggerCooldown = 8f;
-    public float staggerTimer = 0f;
+    public float staggerCooldown = 5f;
+    public float staggerTimer = 5f;
 
     //audio
     public bool playOnce = true;
@@ -122,7 +122,7 @@ public class Enemy : Script
             {
                 currentAttackTimer += Time.deltaTime;
                 currentAttackBuffer += Time.deltaTime;
-                if (currentAttackBuffer >= 0.8f) // So that the attack is not instantaneous
+                if (currentAttackBuffer >= 0.6f) // So that the attack is not instantaneous
                 {
                     if (attackTrigger != null)
                     {
@@ -174,8 +174,6 @@ public class Enemy : Script
         direction = direction.NormalizedSafe;
         if(!isDead)
         {
-            // Bean: This shouldnt be here
-            // animationManager.currentState = "";
             switch (state)
             {
                 //idle state
