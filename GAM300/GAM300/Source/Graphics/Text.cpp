@@ -38,7 +38,7 @@ void TextSystem::Exit()
 	//glDeleteTextures(1, &texture);
 }
 
-void GenerateTextureAtlas(TextSystem::FontCharacters& characters) {
+void TextSystem::GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, TextSystem::FontCharacters& characters) {
 	//const int atlasSize = 128*8152; // Adjust this as needed
 
 	//// Create a blank texture atlas
@@ -86,7 +86,7 @@ void GenerateTextureAtlas(TextSystem::FontCharacters& characters) {
 	//glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Define some constants for padding between characters
-	const int padding = 1;
+	const int padding = 2;
 
 	// Calculate total size required for the atlas
 	int totalWidth = 0;
@@ -115,6 +115,7 @@ void GenerateTextureAtlas(TextSystem::FontCharacters& characters) {
 
 	// Fill the atlas with characters
 	int xOffset = 0;
+
 	for (auto& pair : characters) {
 		TextSystem::Character& ch = pair.second;
 		// Copy character texture data to the atlas
@@ -123,17 +124,17 @@ void GenerateTextureAtlas(TextSystem::FontCharacters& characters) {
 				int atlasIndex = ((y * totalWidth + xOffset + x));
 				int textureIndex = (y * ch.Size.x + x);
 				atlasData[atlasIndex] = ch.TextureData[textureIndex];
-				/*atlasData[atlasIndex + 0] = ch.TextureData[textureIndex + 0];
-				atlasData[atlasIndex + 1] = ch.TextureData[textureIndex + 1];
-				atlasData[atlasIndex + 2] = ch.TextureData[textureIndex + 2];
-				atlasData[atlasIndex + 3] = ch.TextureData[textureIndex + 3];*/
 			}
 		}
+		ch.AtlasCoordsMin = { (float)(xOffset+ padding)/ (float)(totalWidth*4), 0.f };
+
 		// Update character bearing
-		ch.Bearing.x = xOffset;
+		//ch.Bearing.x = xOffset;
 		ch.Bearing.y = ch.Size.y - ch.Bearing.y; // Adjust bearing based on top-left origin
 		// Move xOffset to the next character
 		xOffset += ch.Size.x + padding;
+
+		ch.AtlasCoordsMax = { (float)(xOffset - padding) / (float)(totalWidth*4), (float)ch.Size.y / (maxHeight*4) };
 
 	}
 
@@ -143,13 +144,14 @@ void GenerateTextureAtlas(TextSystem::FontCharacters& characters) {
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, totalWidth, maxHeight, GL_RGBA, GL_UNSIGNED_BYTE, atlasData.data());
 
 	// Update character advance for rendering
-	for (auto& pair : characters) {
-		TextSystem::Character& ch = pair.second;
-		ch.Advance = ch.Size.x + padding;
-	}
+	//for (auto& pair : characters) {
+	//	TextSystem::Character& ch = pair.second;
+	//	//ch.Advance = ch.Size.x + padding;
+	//}
 
 	// Cleanup
 	glBindTexture(GL_TEXTURE_2D, 0);
+	mFontAtlasContainer.insert(std::make_pair(_guid, atlasTextureID));
 
 }
 
@@ -225,7 +227,7 @@ void TextSystem::Draw(BaseCamera& _camera)
 
 	RenderText_WorldSpace(_camera);
 	//RenderText_ScreeninWorldSpace(_camera);
-	RenderText_ScreenSpace(_camera);
+	//RenderText_ScreenSpace(_camera);
 
 }
 
@@ -357,39 +359,47 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 {
 	// Clear previous data
 	allVertices.clear();
-	allTextures.clear();
+	//allTextures.clear();
 
 	float xoffset = text.x;
 	for (const char& c : text.text) {
 		Character ch = mFontContainer.at(text.guid).at(c);  // Use .at() to ensure the character exists in the map
 
 		float xpos = xoffset + ch.Bearing.x * (text.fontSize * 0.001f);
-		float ypos = text.y - (ch.Size.y - ch.Bearing.y) * (text.fontSize * 0.001f);
+		float ypos = text.y - (ch.Bearing.y * 2.f) * (text.fontSize * 0.001f);
 
 		float w = ch.Size.x * (text.fontSize * 0.001f);
 		float h = ch.Size.y * (text.fontSize * 0.001f) * 2.f;
 
-		if (!ch.Texture)
-		{
-			glGenTextures(1, &ch.Texture);
-			glBindTexture(GL_TEXTURE_2D, ch.Texture);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
-			glGenerateMipmap(GL_TEXTURE_2D);
+		//if (!ch.Texture)
+		//{
+		//	glGenTextures(1, &ch.Texture);
+		//	glBindTexture(GL_TEXTURE_2D, ch.Texture);
+		//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
+		//	glGenerateMipmap(GL_TEXTURE_2D);
 
-		}
+		//}
 
+		//// Update content of VBO memory with the new vertices
+		//float vertices[4][4] = {
+		//	{ xpos,     ypos,       0.0f, 1.0f },
+		//	{ xpos,     ypos + h,   0.0f, 0.0f },
+		//	{ xpos + w, ypos,       1.0f, 1.0f },
+		//	{ xpos + w, ypos + h,   1.0f, 0.0f }
+		//};
+		
 		// Update content of VBO memory with the new vertices
 		float vertices[4][4] = {
-			{ xpos,     ypos,       0.0f, 1.0f },
-			{ xpos,     ypos + h,   0.0f, 0.0f },
-			{ xpos + w, ypos,       1.0f, 1.0f },
-			{ xpos + w, ypos + h,   1.0f, 0.0f }
+			{ xpos,     ypos,       ch.AtlasCoordsMin.x, ch.AtlasCoordsMax.y },
+			{ xpos,     ypos + h,   ch.AtlasCoordsMin.x, ch.AtlasCoordsMin.y },
+			{ xpos + w, ypos,       ch.AtlasCoordsMax.x, ch.AtlasCoordsMax.y },
+			{ xpos + w, ypos + h,   ch.AtlasCoordsMax.x, ch.AtlasCoordsMin.y }
 		};
 
 		for (int i = 0; i < 4; ++i) {
 			allVertices.insert(allVertices.end(), vertices[i], vertices[i] + 4);
 		}
-		allTextures.push_back(ch.Texture);
+		//allTextures.push_back(ch.Texture);
 
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		xoffset += (ch.Advance >> 6) * (text.fontSize * 0.001f); // bitshift by 6 to get value in pixels (2^6 = 64)
@@ -401,9 +411,15 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 	glBufferData(GL_ARRAY_BUFFER, allVertices.size() * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+	//// Use the new texture for rendering
+	//for (size_t i = 0; i < allTextures.size(); ++i) {
+	//	glBindTexture(GL_TEXTURE_2D, allTextures[i]);
+	//	glDrawArrays(GL_TRIANGLE_STRIP, i * 4, 4);
+	//}
 	// Use the new texture for rendering
-	for (size_t i = 0; i < allTextures.size(); ++i) {
-		glBindTexture(GL_TEXTURE_2D, allTextures[i]);
+
+	glBindTexture(GL_TEXTURE_2D, mFontAtlasContainer.at(text.guid));
+	for (size_t i = 0; i < text.text.size(); ++i) {
 		glDrawArrays(GL_TRIANGLE_STRIP, i * 4, 4);
 	}
 
@@ -437,7 +453,7 @@ void TextSystem::AddFont(const std::filesystem::path& inputPath, const Engine::G
 	}
 	//Characters.insert(std::pair<std::string, std::map<char, Character>>(c, haracter));
 
-	GenerateTextureAtlas(Characters);
+	GenerateTextureAtlas(_guid, Characters);
 	mFontContainer.insert(std::make_pair(_guid, Characters));
 
 	inFile.close();

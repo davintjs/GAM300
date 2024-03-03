@@ -567,13 +567,15 @@ public:
 		glm::ivec2 Size;
 		glm::ivec2 Bearing;
 		unsigned int Advance;
+		glm::vec2 AtlasCoordsMin;
+		glm::vec2 AtlasCoordsMax;
 		GLuint Texture{ 0 }; // temp will be upgraded more later
-		glm::vec2 AtlasCoords;
 	};
 
 	unsigned int txtVAO, txtVBO;
 	using FontCharacters = std::map<char, Character>;
 	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
+	std::unordered_map<Engine::GUID<FontAsset>, GLuint> mFontAtlasContainer;
 
 	/*struct FontType {
 		Engine::GUID<FontAsset> GUID;
@@ -583,7 +585,7 @@ public:
 
 	//std::vector<FontType> fontGroups;
 	std::vector<float> allVertices;
-	std::vector<GLuint> allTextures;
+	//std::vector<GLuint> allTextures;
 
 
 
@@ -606,12 +608,12 @@ public:
 
 	void CallbackFontAssetLoaded(AssetLoadedEvent<FontAsset>* pEvent);
 
+	void GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, TextSystem::FontCharacters& characters);
 
 private:
 	//nth yet
 };
 
-void GenerateTextureAtlas(TextSystem::FontCharacters& characters);
 //ENGINE_SYSTEM(ShadowRenderer)
 //{
 //public:
