@@ -58,7 +58,7 @@ void BLOOM_PBR::RenderDownsamples(unsigned int srcTexture,unsigned int& _vao, un
 	for (int i = 0; i < (int)mipChain.size(); i++)
 	{
 		const bloomMip& mip = mipChain[i];
-		glViewport(0, 0, mip.size.x, mip.size.y);
+		glViewport(0, 0, (GLsizei)mip.size.x, (GLsizei)mip.size.y);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 			GL_TEXTURE_2D, mip.texture, 0);
 
@@ -114,7 +114,7 @@ void BLOOM_PBR::RenderUpsamples(float filterRadius, unsigned int& _vao, unsigned
 		glBindTexture(GL_TEXTURE_2D, mip.texture);
 
 		// Set framebuffer render target (we write to this texture)
-		glViewport(0, 0, nextMip.size.x, nextMip.size.y);
+		glViewport(0, 0, (GLsizei)nextMip.size.x, (GLsizei)nextMip.size.y);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 			GL_TEXTURE_2D, nextMip.texture, 0);
 
