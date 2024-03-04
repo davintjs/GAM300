@@ -119,7 +119,7 @@ void BaseAnimator::CalculateRigTransform(Animation& animation, const AssimpNodeD
     Transform* transform = nullptr;
 
     Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
-    PRINT(nodeName, "\n");
+    //PRINT(nodeName, "\n");
 
     if (Bone)
     {
@@ -144,9 +144,9 @@ void BaseAnimator::CalculateRigTransform(Animation& animation, const AssimpNodeD
         rig[nodeName] = transform;
 
         rot2 = glm::degrees(glm::eulerAngles(rot));
-        PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
+        /*PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
         PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
-        PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");
+        PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");*/
     }
 
     if (!transform)
