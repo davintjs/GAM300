@@ -32,6 +32,8 @@ public:
 	// Instantiate gameobjects with the whole bone tree
 	void CreateRig(Transform* _transform);
 
+	void ReAssignRig(Transform* _transform);
+
 	// Only done when assigning a new animation into the animator
 	void CalculateRigTransform(Animation& animation, const AssimpNodeData* node, Transform* parentTransform);
 
@@ -96,7 +98,6 @@ public:
 	float blendTimer;
 	float speedModifier;
 
-	bool hasRig;
 	bool playing;
 	int currBlendState{};
 	int blendedBones;

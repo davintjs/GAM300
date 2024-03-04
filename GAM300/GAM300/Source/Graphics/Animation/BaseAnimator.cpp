@@ -29,7 +29,7 @@ BaseAnimator::BaseAnimator()
     m_FinalBoneMatIdx = -1;
     speedModifier = 1.f;
     currentState = nextState = defaultState = nullptr;
-    playing = hasRig = false;
+    playing = false;
     currBlendState = notblending;
     blendedBones = 0;
     blendDuration = 4.f;
@@ -83,12 +83,30 @@ void BaseAnimator::CreateRig(Transform* _transform)
 
             if (bone)
             {
-                hasRig = true;
-                break;
+                // If there is a pre-existing bone in the animator, re-assign the rig base on the transform
+                rig.clear();
+                ReAssignRig(&currentScene.Get<Transform>(rigTransform->child[i]));
+                return;
             }
         }
 
         CalculateRigTransform(m_CurrentAnimation, &m_CurrentAnimation.GetRootNode(), rigTransform);
+    }
+}
+
+void BaseAnimator::ReAssignRig(Transform* _transform)
+{
+    if (!_transform)
+        return;
+
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+
+    std::string name = currentScene.Get<Tag>(*_transform).name;
+    rig[name] = _transform;
+
+    for (size_t i = 0; i < _transform->child.size(); i++)
+    {
+        ReAssignRig(&currentScene.Get<Transform>(_transform->child[i]));
     }
 }
 
@@ -113,46 +131,22 @@ void BaseAnimator::CalculateRigTransform(Animation& animation, const AssimpNodeD
     if (it != boneInfoMap.end())
     {
         // Set Rig Display
-        if (!hasRig)
-        {
-            Entity* entity = currentScene.Add<Entity>();
-            transform = &currentScene.Get<Transform>(*entity);
-            Tag& tag = currentScene.Get<Tag>(*entity);
-            tag.name = nodeName;
-            transform->SetParent(parentTransform);
-            Vector3 pos, scale, rot2;
-            glm::quat rot;
-            glm::mat4 temp = Bone->GetLocalTransform();
-            transform->Decompose(temp, pos, rot, scale);
-            transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
-            rig[nodeName] = transform;
+        Entity* entity = currentScene.Add<Entity>();
+        transform = &currentScene.Get<Transform>(*entity);
+        Tag& tag = currentScene.Get<Tag>(*entity);
+        tag.name = nodeName;
+        transform->SetParent(parentTransform);
+        Vector3 pos, scale, rot2;
+        glm::quat rot;
+        glm::mat4 temp = Bone->GetLocalTransform();
+        transform->Decompose(temp, pos, rot, scale);
+        transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
+        rig[nodeName] = transform;
 
-            rot2 = glm::degrees(glm::eulerAngles(rot));
-            PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
-            PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
-            PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");
-        }
-        else 
-        {
-            for (Tag& tag : currentScene.GetArray<Tag>())
-            {
-                if (tag.name == nodeName)
-                {
-                    Vector3 pos, scale, rot2;
-                    glm::quat rot;
-                    glm::mat4 temp = Bone->GetLocalTransform();
-                    transform = &currentScene.Get<Transform>(tag);
-                    transform->Decompose(temp, pos, rot, scale);
-                    transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
-                    rig[nodeName] = transform;
-
-                    PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
-                    PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
-                    PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");
-                    break;
-                }
-            }
-        }
+        rot2 = glm::degrees(glm::eulerAngles(rot));
+        PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
+        PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
+        PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");
     }
 
     if (!transform)
@@ -421,7 +415,13 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
             {
                 Transform* transform = rig[nodeName];
                 if (transform)
-                    transform->UpdateWorldMatrix(m_FinalBoneMatrices[index]);
+                {
+                    Vector3 pos, scale;
+                    glm::quat rot;
+                    glm::mat4 temp = Bone->GetLocalTransform();
+                    transform->Decompose(temp, pos, rot, scale);
+                    transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
+                }
             }
         }
 
