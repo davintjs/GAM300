@@ -176,12 +176,13 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 13407649395948068195}
+    - {fileID: 5096815227237667234}
 ---
 ID: 16517770713534027812
 Animator:
   m_GameObject: {fileID: 17009310945762714319}
   m_IsEnabled: true
-  Animation: {guid: 00000000000000000000000000000000}
+  Animation: {guid: bb421ce4b2d0d6e94060d0890f8bb89f}
 ---
 ID: 13407649395948068195
 GameObject:
@@ -209,3 +210,697 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 12597e24af252df94929ea556633fff1}
   Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+---
+ID: 5096815227237667234
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerV3Combined_low
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10483061022367057226}  # Transform
+---
+ID: 10483061022367057226
+Transform:
+  m_GameObject: {fileID: 5096815227237667234}
+  Translation: [0, 0, 0]
+  Rotation: [1.62920671e-07, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17009310945762714319}
+  m_Children:
+    - {fileID: 1271723430752549068}
+---
+ID: 1271723430752549068
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Hips
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8336941915500386922}  # Transform
+---
+ID: 8336941915500386922
+Transform:
+  m_GameObject: {fileID: 1271723430752549068}
+  Translation: [4.28716707, 57.629364, 31.5860901]
+  Rotation: [0.483035982, -0.331283361, -0.228014514]
+  Scale: [1.00000036, 1.00000036, 0.99999994]
+  Father: {fileID: 5096815227237667234}
+  m_Children:
+    - {fileID: 12523463634377321429}
+    - {fileID: 1267787830899390882}
+    - {fileID: 12633584556109186024}
+---
+ID: 12523463634377321429
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Spine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18061114251544350163}  # Transform
+---
+ID: 18061114251544350163
+Transform:
+  m_GameObject: {fileID: 12523463634377321429}
+  Translation: [-4.28079693e-06, 7.33337116, -0.310161352]
+  Rotation: [0.15264681, 0.154309362, -0.291449785]
+  Scale: [0.999999642, 0.999999881, 1.00000012]
+  Father: {fileID: 1271723430752549068}
+  m_Children:
+    - {fileID: 16006710664282775293}
+---
+ID: 16006710664282775293
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Spine1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3501568312018890997}  # Transform
+---
+ID: 3501568312018890997
+Transform:
+  m_GameObject: {fileID: 16006710664282775293}
+  Translation: [-2.70146415e-07, 8.563241, -1.54754829e-07]
+  Rotation: [0.0159818511, 0.0367954895, -0.0480811708]
+  Scale: [1, 0.99999994, 1]
+  Father: {fileID: 12523463634377321429}
+  m_Children:
+    - {fileID: 16957098767715665623}
+---
+ID: 16957098767715665623
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Spine2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6317271985359332950}  # Transform
+---
+ID: 6317271985359332950
+Transform:
+  m_GameObject: {fileID: 16957098767715665623}
+  Translation: [1.05778433e-07, 9.78656292, 1.88496116e-07]
+  Rotation: [0.0155530898, 0.0373537317, -0.048436217]
+  Scale: [0.99999994, 0.99999994, 1]
+  Father: {fileID: 16006710664282775293}
+  m_Children:
+    - {fileID: 16147197620371720230}
+    - {fileID: 8183114861106286093}
+    - {fileID: 12446607134148597095}
+---
+ID: 16147197620371720230
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Neck
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9012526024899090902}  # Transform
+---
+ID: 9012526024899090902
+Transform:
+  m_GameObject: {fileID: 16147197620371720230}
+  Translation: [3.24819382e-07, 11.0098877, 8.97305085e-07]
+  Rotation: [-0.067438364, 0.0172762424, 0.0290090609]
+  Scale: [0.99999994, 0.999999702, 0.999999821]
+  Father: {fileID: 16957098767715665623}
+  m_Children:
+    - {fileID: 5635748806359001782}
+---
+ID: 5635748806359001782
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Head
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17407293781855546639}  # Transform
+---
+ID: 17407293781855546639
+Transform:
+  m_GameObject: {fileID: 5635748806359001782}
+  Translation: [4.4118741e-07, 6.19826365, 1.60749567]
+  Rotation: [-0.451455176, 0.138748527, -0.0710234717]
+  Scale: [1, 1, 1]
+  Father: {fileID: 16147197620371720230}
+  m_Children:
+    - {fileID: 12105196697602168419}
+---
+ID: 12105196697602168419
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:HeadTop_End
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4031181979416253599}  # Transform
+---
+ID: 4031181979416253599
+Transform:
+  m_GameObject: {fileID: 12105196697602168419}
+  Translation: [1.09541801e-07, 19.520462, 5.06255913]
+  Rotation: [1.37181222e-09, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 5635748806359001782}
+  m_Children:
+    []
+---
+ID: 8183114861106286093
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftShoulder
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15893545266774197396}  # Transform
+---
+ID: 15893545266774197396
+Transform:
+  m_GameObject: {fileID: 8183114861106286093}
+  Translation: [4.38922024, 9.37733841, -0.0845420212]
+  Rotation: [1.75611317, 1.47463846, 0.0931261629]
+  Scale: [0.999999464, 0.999999762, 0.999999821]
+  Father: {fileID: 16957098767715665623}
+  m_Children:
+    - {fileID: 17569884894735862970}
+---
+ID: 17569884894735862970
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17576206089718063946}  # Transform
+---
+ID: 17576206089718063946
+Transform:
+  m_GameObject: {fileID: 17569884894735862970}
+  Translation: [3.69523946e-07, 9.38611412, -9.1378497e-06]
+  Rotation: [0.711319923, -0.368443787, -0.0222616158]
+  Scale: [1.00000083, 1.00000036, 1.00000024]
+  Father: {fileID: 8183114861106286093}
+  m_Children:
+    - {fileID: 4102040617646813976}
+---
+ID: 4102040617646813976
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftForeArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11258685295500814454}  # Transform
+---
+ID: 11258685295500814454
+Transform:
+  m_GameObject: {fileID: 4102040617646813976}
+  Translation: [3.29012522e-07, 20.2059994, 2.72942953e-06]
+  Rotation: [0.0741796643, -0.582158387, 1.44753671]
+  Scale: [0.999999642, 0.999999881, 0.999999642]
+  Father: {fileID: 17569884894735862970}
+  m_Children:
+    - {fileID: 18002137585485846767}
+---
+ID: 18002137585485846767
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHand
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3574421200289808171}  # Transform
+---
+ID: 3574421200289808171
+Transform:
+  m_GameObject: {fileID: 18002137585485846767}
+  Translation: [-8.02119587e-07, 20.5680332, -3.75672107e-06]
+  Rotation: [0.327596396, -0.0354794376, 0.142119676]
+  Scale: [0.999999523, 0.99999994, 0.999999464]
+  Father: {fileID: 4102040617646813976}
+  m_Children:
+    - {fileID: 4219840417996351258}
+    - {fileID: 9592709599025449511}
+---
+ID: 4219840417996351258
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3176703378187469017}  # Transform
+---
+ID: 3176703378187469017
+Transform:
+  m_GameObject: {fileID: 4219840417996351258}
+  Translation: [7.29317208e-07, 8.22125149, 5.0174549e-06]
+  Rotation: [1.4171828, -0.0218477808, 0.0887126401]
+  Scale: [1.00000012, 1, 1.00000012]
+  Father: {fileID: 18002137585485846767}
+  m_Children:
+    - {fileID: 16495562205463168006}
+---
+ID: 16495562205463168006
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2896285722014572677}  # Transform
+---
+ID: 2896285722014572677
+Transform:
+  m_GameObject: {fileID: 16495562205463168006}
+  Translation: [1.24067242e-06, 1.03478718, 3.34544325e-06]
+  Rotation: [0.952044666, 0.041025348, 0.0258018188]
+  Scale: [0.999999881, 1.00000024, 1.00000012]
+  Father: {fileID: 4219840417996351258}
+  m_Children:
+    - {fileID: 3200801426270804382}
+---
+ID: 3200801426270804382
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9830873402251765496}  # Transform
+---
+ID: 9830873402251765496
+Transform:
+  m_GameObject: {fileID: 3200801426270804382}
+  Translation: [-0.0236929357, 1.82187521, 0.42101416]
+  Rotation: [1.30410612, -0.28433764, 0.00126771594]
+  Scale: [1.0000006, 1.00000024, 1.00000036]
+  Father: {fileID: 16495562205463168006}
+  m_Children:
+    - {fileID: 7075361674769604469}
+---
+ID: 7075361674769604469
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5851862769321131929}  # Transform
+---
+ID: 5851862769321131929
+Transform:
+  m_GameObject: {fileID: 7075361674769604469}
+  Translation: [0.478872359, 1.26751661, 0.161735266]
+  Rotation: [1.24692692e-08, 3.0205996e-10, -3.96150917e-08]
+  Scale: [1.00000012, 1.00000012, 1.00000012]
+  Father: {fileID: 3200801426270804382}
+  m_Children:
+    []
+---
+ID: 12446607134148597095
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightShoulder
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1187647858274458287}  # Transform
+---
+ID: 1187647858274458287
+Transform:
+  m_GameObject: {fileID: 12446607134148597095}
+  Translation: [-4.38921976, 9.37602711, -0.0536084622]
+  Rotation: [1.92246103, -1.13636601, -0.0525207147]
+  Scale: [1.00000012, 1.00000024, 1]
+  Father: {fileID: 16957098767715665623}
+  m_Children:
+    - {fileID: 7806415048189876733}
+---
+ID: 7806415048189876733
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2477277946601314766}  # Transform
+---
+ID: 2477277946601314766
+Transform:
+  m_GameObject: {fileID: 7806415048189876733}
+  Translation: [-4.41520598e-07, 9.38611794, 1.35555383e-05]
+  Rotation: [0.0736269057, 0.340130448, -0.672542155]
+  Scale: [0.999999881, 0.999999642, 0.99999994]
+  Father: {fileID: 12446607134148597095}
+  m_Children:
+    - {fileID: 13891684448454587480}
+---
+ID: 13891684448454587480
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightForeArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7180519037978475321}  # Transform
+---
+ID: 7180519037978475321
+Transform:
+  m_GameObject: {fileID: 13891684448454587480}
+  Translation: [1.39104358e-07, 20.2061768, -2.95900179e-07]
+  Rotation: [0.484420389, -0.594087601, -1.48432124]
+  Scale: [0.99999994, 1.00000012, 1]
+  Father: {fileID: 7806415048189876733}
+  m_Children:
+    - {fileID: 10408574937477116847}
+---
+ID: 10408574937477116847
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHand
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8601240358146841437}  # Transform
+---
+ID: 8601240358146841437
+Transform:
+  m_GameObject: {fileID: 10408574937477116847}
+  Translation: [1.0921591e-06, 20.5738373, -4.12716736e-06]
+  Rotation: [0.0641015247, -0.0141368527, 0.559957504]
+  Scale: [1.00000024, 1, 1.00000024]
+  Father: {fileID: 13891684448454587480}
+  m_Children:
+    - {fileID: 5300285570996622064}
+---
+ID: 5300285570996622064
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3142165726792277202}  # Transform
+---
+ID: 3142165726792277202
+Transform:
+  m_GameObject: {fileID: 5300285570996622064}
+  Translation: [-7.33032977e-08, 8.54798508, -5.22924483e-06]
+  Rotation: [1.1271137, -0.245457903, -0.336388826]
+  Scale: [0.999999821, 0.999999881, 0.99999994]
+  Father: {fileID: 10408574937477116847}
+  m_Children:
+    - {fileID: 9679917760601002070}
+---
+ID: 9679917760601002070
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10731979566073382064}  # Transform
+---
+ID: 10731979566073382064
+Transform:
+  m_GameObject: {fileID: 9679917760601002070}
+  Translation: [-3.554464e-06, 1.07092583, -2.46698914e-06]
+  Rotation: [0.988621593, 0.0562588982, -0.377257794]
+  Scale: [0.999999881, 0.99999994, 0.999999821]
+  Father: {fileID: 5300285570996622064}
+  m_Children:
+    - {fileID: 6589285686793955331}
+---
+ID: 6589285686793955331
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12652201512492273553}  # Transform
+---
+ID: 12652201512492273553
+Transform:
+  m_GameObject: {fileID: 6589285686793955331}
+  Translation: [0.316688269, 1.62205625, 0.0383669883]
+  Rotation: [1.00385535, -0.0682223812, -0.40697065]
+  Scale: [1.00000048, 1.00000024, 1.00000036]
+  Father: {fileID: 9679917760601002070}
+  m_Children:
+    - {fileID: 18147045543505612430}
+---
+ID: 18147045543505612430
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3078196013583388999}  # Transform
+---
+ID: 3078196013583388999
+Transform:
+  m_GameObject: {fileID: 18147045543505612430}
+  Translation: [0.351121336, 1.22030735, -0.0506364368]
+  Rotation: [9.05982223e-09, -2.62696904e-08, 7.25696054e-08]
+  Scale: [0.999999881, 0.999999881, 0.999999881]
+  Father: {fileID: 6589285686793955331}
+  m_Children:
+    []
+---
+ID: 1267787830899390882
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftUpLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17428103578608230569}  # Transform
+---
+ID: 17428103578608230569
+Transform:
+  m_GameObject: {fileID: 1267787830899390882}
+  Translation: [6.95866013, -4.07769203, -0.0718275085]
+  Rotation: [1.53648782, -0.539600611, -2.86959147]
+  Scale: [1.00000179, 1.0000006, 1.0000155]
+  Father: {fileID: 1271723430752549068}
+  m_Children:
+    - {fileID: 8436471852593397027}
+---
+ID: 8436471852593397027
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 701101946881084521}  # Transform
+---
+ID: 701101946881084521
+Transform:
+  m_GameObject: {fileID: 8436471852593397027}
+  Translation: [3.59424689e-07, 34.2050781, -2.6051473e-06]
+  Rotation: [-1.50708878, -0.0557601862, -0.290400147]
+  Scale: [0.999999881, 1.00000048, 0.999999642]
+  Father: {fileID: 1267787830899390882}
+  m_Children:
+    - {fileID: 4629390065105789038}
+---
+ID: 4629390065105789038
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftFoot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2249414267532726269}  # Transform
+---
+ID: 2249414267532726269
+Transform:
+  m_GameObject: {fileID: 4629390065105789038}
+  Translation: [5.91774892e-07, 35.2011337, -2.17405159e-06]
+  Rotation: [1.24430752, -0.151301503, -0.0932097584]
+  Scale: [1.0000006, 0.999999583, 0.999999583]
+  Father: {fileID: 8436471852593397027}
+  m_Children:
+    - {fileID: 1076523763068216900}
+---
+ID: 1076523763068216900
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftToeBase
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7821028051491115850}  # Transform
+---
+ID: 7821028051491115850
+Transform:
+  m_GameObject: {fileID: 1076523763068216900}
+  Translation: [2.91618306e-07, 11.8128815, 2.02891738e-06]
+  Rotation: [0.665843844, -0.136912853, -0.00157290429]
+  Scale: [0.999999166, 1.0000006, 0.999999881]
+  Father: {fileID: 4629390065105789038}
+  m_Children:
+    - {fileID: 7408150775997103614}
+---
+ID: 7408150775997103614
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftToe_End
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7761982021606896630}  # Transform
+---
+ID: 7761982021606896630
+Transform:
+  m_GameObject: {fileID: 7408150775997103614}
+  Translation: [3.50027562e-08, 4.19208288, 8.98727315e-09]
+  Rotation: [2.07029274e-08, -4.92356911e-09, -8.74834782e-09]
+  Scale: [1.00000012, 0.99999994, 1.00000012]
+  Father: {fileID: 1076523763068216900}
+  m_Children:
+    []
+---
+ID: 12633584556109186024
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightUpLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6348629279599765112}  # Transform
+---
+ID: 6348629279599765112
+Transform:
+  m_GameObject: {fileID: 12633584556109186024}
+  Translation: [-6.95866013, -4.07769823, -0.0521366075]
+  Rotation: [0.265174747, -0.00719324732, 2.81129646]
+  Scale: [1, 1.00000119, 1.00002122]
+  Father: {fileID: 1271723430752549068}
+  m_Children:
+    - {fileID: 721157416153123016}
+---
+ID: 721157416153123016
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4503560255429732767}  # Transform
+---
+ID: 4503560255429732767
+Transform:
+  m_GameObject: {fileID: 721157416153123016}
+  Translation: [-1.2494703e-06, 34.206234, 1.2151263e-06]
+  Rotation: [-0.977867961, 0.0223356243, 0.0755813196]
+  Scale: [0.999999583, 0.999999881, 0.999999404]
+  Father: {fileID: 12633584556109186024}
+  m_Children:
+    - {fileID: 15896847847036635723}
+---
+ID: 15896847847036635723
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightFoot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13235965946505121084}  # Transform
+---
+ID: 13235965946505121084
+Transform:
+  m_GameObject: {fileID: 15896847847036635723}
+  Translation: [4.09843921e-07, 35.2078362, 3.94540024e-07]
+  Rotation: [1.13396299, 0.141846791, 0.350459009]
+  Scale: [1.00000036, 1.00000024, 1.00000036]
+  Father: {fileID: 721157416153123016}
+  m_Children:
+    - {fileID: 10620871012539597599}
+---
+ID: 10620871012539597599
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightToeBase
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4790986432666889572}  # Transform
+---
+ID: 4790986432666889572
+Transform:
+  m_GameObject: {fileID: 10620871012539597599}
+  Translation: [8.23558651e-07, 11.939352, 1.37024335e-06]
+  Rotation: [1.26463449, 0.567081094, 0.385194391]
+  Scale: [1.00000024, 0.999999821, 0.99999994]
+  Father: {fileID: 15896847847036635723}
+  m_Children:
+    - {fileID: 8704442574600760453}
+---
+ID: 8704442574600760453
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightToe_End
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11364400103652877576}  # Transform
+---
+ID: 11364400103652877576
+Transform:
+  m_GameObject: {fileID: 8704442574600760453}
+  Translation: [-1.56479473e-07, 4.29187202, 1.47215751e-08]
+  Rotation: [5.68785907e-08, -8.46708517e-08, 1.46907952e-08]
+  Scale: [0.99999994, 1, 1.00000012]
+  Father: {fileID: 10620871012539597599}
+  m_Children:
+    []
+---
+ID: 9592709599025449511
+GameObject:
+  m_IsActive: true
+  m_Name: Particle
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16004601892970361274}  # Transform
+    - component: {fileID: 11921706633819474208}  # ParticleComponent
+---
+ID: 16004601892970361274
+Transform:
+  m_GameObject: {fileID: 9592709599025449511}
+  Translation: [-2.81036067, 75.606514, -6.20686245]
+  Rotation: [0, 0, 0]
+  Scale: [1.00001228, 0.999998868, 0.999998868]
+  Father: {fileID: 18002137585485846767}
+  m_Children:
+    []
+---
+ID: 11921706633819474208
+ParticleComponent:
+  m_GameObject: {fileID: 9592709599025449511}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 0
+  Number Of Particles: 1
+  Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Trailing: true
+  Trail Size: 5
+  Looping: true

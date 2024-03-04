@@ -96,6 +96,7 @@ public:
 	float blendTimer;
 	float speedModifier;
 
+	bool hasRig;
 	bool playing;
 	int currBlendState{};
 	int blendedBones;

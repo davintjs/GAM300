@@ -29,7 +29,7 @@ BaseAnimator::BaseAnimator()
     m_FinalBoneMatIdx = -1;
     speedModifier = 1.f;
     currentState = nextState = defaultState = nullptr;
-    playing = false;
+    playing = hasRig = false;
     currBlendState = notblending;
     blendedBones = 0;
     blendDuration = 4.f;
@@ -51,7 +51,7 @@ void BaseAnimator::CreateRig(Transform* _transform)
     if (m_AnimationIdx == -1)
     {
         // Remove all existing rig
-        if ((*rig.begin()).second != nullptr) // If the root transform still exists within the scene
+        if (!rig.empty()) // If the root transform still exists within the scene
         {
             Change newchange;
             newchange.entity = &currentScene.Get<Entity>(*(*rig.begin()).second);
@@ -83,23 +83,7 @@ void BaseAnimator::CreateRig(Transform* _transform)
 
             if (bone)
             {
-                if (!rig.empty())
-                {
-                    Change newchange;
-                    newchange.entity = &currentScene.Get<Entity>(*(*rig.begin()).second);
-                    EDITOR.History.AddEntityChange(newchange);
-                }
-                
-                for (auto& [name, transform] : rig)
-                {
-                    if (transform->GetParent() != nullptr)
-                    {
-                        Transform* parent = transform->GetParent();
-                        parent->RemoveChild(transform);
-                    }
-                    currentScene.Destroy(transform);
-                }
-
+                hasRig = true;
                 break;
             }
         }
@@ -129,22 +113,46 @@ void BaseAnimator::CalculateRigTransform(Animation& animation, const AssimpNodeD
     if (it != boneInfoMap.end())
     {
         // Set Rig Display
-        Entity* entity = currentScene.Add<Entity>();
-        transform = &currentScene.Get<Transform>(*entity);
-        Tag& tag = currentScene.Get<Tag>(*entity);
-        tag.name = nodeName;
-        transform->SetParent(parentTransform);
-        Vector3 pos, scale, rot2;
-        glm::quat rot;
-        glm::mat4 temp = Bone->GetLocalTransform();
-        transform->Decompose(temp, pos, rot, scale);
-        transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
-        rig[nodeName] = transform;
+        if (!hasRig)
+        {
+            Entity* entity = currentScene.Add<Entity>();
+            transform = &currentScene.Get<Transform>(*entity);
+            Tag& tag = currentScene.Get<Tag>(*entity);
+            tag.name = nodeName;
+            transform->SetParent(parentTransform);
+            Vector3 pos, scale, rot2;
+            glm::quat rot;
+            glm::mat4 temp = Bone->GetLocalTransform();
+            transform->Decompose(temp, pos, rot, scale);
+            transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
+            rig[nodeName] = transform;
 
-        rot2 = glm::degrees(glm::eulerAngles(rot));
-        PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
-        PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
-        PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");
+            rot2 = glm::degrees(glm::eulerAngles(rot));
+            PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
+            PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
+            PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");
+        }
+        else 
+        {
+            for (Tag& tag : currentScene.GetArray<Tag>())
+            {
+                if (tag.name == nodeName)
+                {
+                    Vector3 pos, scale, rot2;
+                    glm::quat rot;
+                    glm::mat4 temp = Bone->GetLocalTransform();
+                    transform = &currentScene.Get<Transform>(tag);
+                    transform->Decompose(temp, pos, rot, scale);
+                    transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
+                    rig[nodeName] = transform;
+
+                    PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
+                    PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
+                    PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");
+                    break;
+                }
+            }
+        }
     }
 
     if (!transform)
