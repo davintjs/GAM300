@@ -49,6 +49,8 @@ public class BossBehaviour : Script
 
     public float dodgeDuration = 2f;
 
+    public float ultimateSize = 66f;
+
     public float basicAttackDuration = 3f;
 
     public float dashAttackDuration = 3f;
@@ -60,6 +62,10 @@ public class BossBehaviour : Script
     public float projectileAttackDuration = 4f;
 
     public float ultiExplodeDuration = 2f;
+
+    public float slamAttackRadius = 10f;
+
+    vec3 indicatorLocal = new vec3();
 
     public Transform ultiSphere;
 
@@ -75,10 +81,13 @@ public class BossBehaviour : Script
 
     int phase = 1;
 
+    bool startShoot = false;
+
     void Awake()
     {
         yPos = transform.position.y;
         rb = GetComponent<Rigidbody>();
+        indicatorLocal = ultiSphere.localPosition;
     }
 
     void Start()
@@ -113,7 +122,7 @@ public class BossBehaviour : Script
             float dist = vec3.Distance(transform.position, player.transform.position);
             vec3 dir = (player.transform.position - transform.position) / dist;
             dir.y = 0;
-            UpdateRotation(dir);
+            UpdateRotation(dir,rotationSpeed);
             rb.linearVelocity = dir * chaseSpeed * Time.deltaTime;
             timer -= Time.deltaTime;
             if (dist < basicAttackDistance)
@@ -142,7 +151,7 @@ public class BossBehaviour : Script
             dir.y = 0;
             if (timer > basicAttackDuration / 2)
             {
-                UpdateRotation(dir);
+                UpdateRotation(dir, rotationSpeed);
             }
             timer -= Time.deltaTime;
             yield return null;
@@ -171,7 +180,7 @@ public class BossBehaviour : Script
         {
             dist = vec3.Distance(startPos, targetPos);
             vec3 dir = (targetPos - startPos) / dist;
-            UpdateRotation(dir);
+            UpdateRotation(dir, rotationSpeed);
             timer -= Time.deltaTime;
             vec3 pos = vec3.Lerp(startPos+dir* 5f, startPos, timer / dodgeDuration);
             transform.position = pos;
@@ -199,7 +208,7 @@ public class BossBehaviour : Script
                 targetPos.y = transform.position.y;
                 dist = vec3.Distance(transform.position, targetPos);
                 dir = (targetPos - transform.position) / dist;
-                UpdateRotation(dir);
+                UpdateRotation(dir, rotationSpeed);
             }
             else
             {
@@ -237,17 +246,23 @@ public class BossBehaviour : Script
         vec3 dir = vec3.Zero;
         float timer = startDur;
         SetState("Jump", true);
-        ultiSphere.localScale = new vec3(5f);
+
+        float indicatorY = ultiSphere.position.y;
+
         while (timer > 0)
         {
             targetPos = player.transform.localPosition;
             targetPos.y = 0f;
-            ultiSphere.position = targetPos;
             dist = vec3.Distance(startPos, targetPos);
             dir = (targetPos - startPos) / dist;
-            UpdateRotation(dir);
+            UpdateRotation(dir, rotationSpeed/2f);
             transform.position = vec3.Lerp(startPos, startPos + transform.back * dist + vec3.UnitY * 50f, (1 - timer / startDur) * 0.5f);
+
+            vec3 indicatorPos = startPos + transform.back * dist;
+            indicatorPos.y = indicatorY;
+            ultiSphere.position = indicatorPos;
             timer -= Time.deltaTime;
+            ultiSphere.localScale = vec3.Lerp(vec3.Ones * slamAttackRadius, vec3.Ones * 0.1f, timer / startDur);
             yield return null;
         }
         startPos = transform.localPosition;
@@ -256,12 +271,14 @@ public class BossBehaviour : Script
         timer = jumpDur;
         while (timer > 0)
         {
-            ultiSphere.position = targetPos;
             transform.localPosition = vec3.Lerp(startPos, targetPos, (1 - timer / jumpDur));
+            vec3 indicatorPos = targetPos;
+            indicatorPos.y = indicatorY;
+            ultiSphere.position = indicatorPos;
             timer -= Time.deltaTime;
             yield return null;
         }
-        ultiSphere.localPosition = vec3.Zero;
+        ultiSphere.localPosition = indicatorLocal;
         ultiSphere.scale = vec3.Ones;
         transform.localPosition = targetPos;
         timer = slamDur;
@@ -283,7 +300,7 @@ public class BossBehaviour : Script
         while (timer > 0)
         {
             SetState("Idle", true);
-            ultiSphere.localScale = vec3.Lerp(66f, sphereScale, timer / ultiChargeDuration);
+            ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -300,46 +317,58 @@ public class BossBehaviour : Script
         StartCoroutine(SlamAttack());
     }
 
+    IEnumerator StartBullet(GameObject bullet)
+    {
+        while (!startShoot)
+            yield return null;
+        bullet.GetComponent<Rigidbody>().linearVelocity = bullet.transform.back * projectileSpeed;
+    }
+
     IEnumerator ProjectileAttack()
     {
-        int cycles = 8;
+        int cycles = 4;
 
         int directions = 16;
         float angle = 360 / directions;
         float offset = 10f;
 
-        List<GameObject> bullets;
 
+        float intervals = projectileAttackDuration / 2 / cycles;
+        float timer;
         for (int i = 0; i < cycles; i++)
         {
-            float timer = projectileAttackDuration / 2 / cycles;
             for (int d = 0; d < directions; d++)
             {
+                timer = intervals / directions;
                 vec3 rot = new vec3(0, glm.Radians(offset * i + angle * d), 0) ;
-                GameObject obj = Instantiate(bullet, transform.localPosition, rot);
+                GameObject obj = Instantiate(bullet, transform.localPosition + vec3.UnitY, rot);
+                StartCoroutine(StartBullet(obj));
                 obj.transform.position += obj.transform.back * 2f;
-                obj.GetComponent<Rigidbody>().linearVelocity = obj.transform.back * projectileSpeed;
-/*                while()
+                timer = intervals/directions;
+                while (timer > 0)
                 {
-
-                }*/
-                yield return null;
+                    timer -= Time.deltaTime;
+                    yield return null;
+                }
             }
-            timer = projectileAttackDuration / 2 / cycles;
+
+            startShoot = true;
+            timer = intervals;
             while (timer > 0)
             {
                 vec3 dir = (player.transform.localPosition - transform.localPosition)/vec3.Distance(player.transform.localPosition, transform.localPosition);
-                UpdateRotation(dir);
+                UpdateRotation(dir,rotationSpeed);
                 SetState("Idle", true);
                 timer -= Time.deltaTime;
                 yield return null;
             }
 
+            startShoot = false;
         }
         StartCoroutine(SlamAttack());
     }
 
-    public void UpdateRotation(vec3 dir)
+    public void UpdateRotation(vec3 dir, float rotSpeed)
     {
         if (dir == vec3.Zero)
             return;
@@ -348,7 +377,7 @@ public class BossBehaviour : Script
         quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
-        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * rotationSpeed);
+        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * rotSpeed);
 
         vec3 rot = ((vec3)midQuat.EulerAngles);
 
