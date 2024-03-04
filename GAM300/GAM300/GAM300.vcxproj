@@ -170,6 +170,7 @@
       <SubType>
       </SubType>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\bloom.cpp" />
     <ClCompile Include="Source\Graphics\ColourPicker.cpp" />
     <ClCompile Include="Source\Graphics\DebugDraw.cpp" />
     <ClCompile Include="Source\Graphics\GBuffer.cpp" />
