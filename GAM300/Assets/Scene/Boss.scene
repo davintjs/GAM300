@@ -3360,10 +3360,14 @@ Script:
   dashAttackDuration: 2
   basicAttackDuration: 1
   chaseDuration: 3
-  ultiChargeDuration: 10
+  projectileSpeed: 20
+  jumpAttackDuration: 3
+  ultiChargeDuration: 4
+  projectileAttackDuration: 4
   ultiExplodeDuration: 2
   animator: {fileID: 5291070275218929927}  # Component
   ultiSphere: {fileID: 8645961242742927387}  # Component
+  bullet: {fileID: 13101458077566229087}  # GameObject
 ---
 ID: 10920168034363521791
 GameObject:
@@ -3444,3 +3448,60 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
   Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 13101458077566229087
+GameObject:
+  m_IsActive: true
+  m_Name: Bullet
+  m_TagString: EnemyAttack
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1319637296791837144}  # Transform
+    - component: {fileID: 6113869454307643685}  # MeshRenderer
+    - component: {fileID: 12880305968723370071}  # SphereCollider
+    - component: {fileID: 8009757900667672339}  # Rigidbody
+    - component: {fileID: 2591896768151559816}  # Script
+---
+ID: 1319637296791837144
+Transform:
+  m_GameObject: {fileID: 13101458077566229087}
+  Translation: [0, 3.27329659, 3.15791154]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6113869454307643685
+MeshRenderer:
+  m_GameObject: {fileID: 13101458077566229087}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 12880305968723370071
+SphereCollider:
+  m_GameObject: {fileID: 13101458077566229087}
+  m_IsEnabled: true
+  Radius: 1
+  Offset: [0, 0, 0]
+---
+ID: 8009757900667672339
+Rigidbody:
+  m_GameObject: {fileID: 13101458077566229087}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 2591896768151559816
+Script:
+  m_GameObject: {fileID: 13101458077566229087}
+  m_IsEnabled: true
+  Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}

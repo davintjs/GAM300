@@ -39,6 +39,8 @@ public class BossBehaviour : Script
     public float chaseSpeed = 10f;
     public float rotationSpeed = 10f;
 
+    public float projectileSpeed = 10f;
+
     public Animator animator;
 
     public float basicAttackDistance = 3f;
@@ -55,6 +57,8 @@ public class BossBehaviour : Script
 
     public float ultiChargeDuration = 10f;
 
+    public float projectileAttackDuration = 4f;
+
     public float ultiExplodeDuration = 2f;
 
     public Transform ultiSphere;
@@ -62,6 +66,8 @@ public class BossBehaviour : Script
     AnimationStateMachine animationManager;
 
     ThirdPersonController player;
+
+    public GameObject bullet;
 
     float yPos;
 
@@ -277,7 +283,7 @@ public class BossBehaviour : Script
         while (timer > 0)
         {
             SetState("Idle", true);
-            ultiSphere.localScale = vec3.Lerp(100f, sphereScale, timer / ultiChargeDuration);
+            ultiSphere.localScale = vec3.Lerp(66f, sphereScale, timer / ultiChargeDuration);
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -296,7 +302,41 @@ public class BossBehaviour : Script
 
     IEnumerator ProjectileAttack()
     {
-        yield return null;
+        int cycles = 8;
+
+        int directions = 16;
+        float angle = 360 / directions;
+        float offset = 10f;
+
+        List<GameObject> bullets;
+
+        for (int i = 0; i < cycles; i++)
+        {
+            float timer = projectileAttackDuration / 2 / cycles;
+            for (int d = 0; d < directions; d++)
+            {
+                vec3 rot = new vec3(0, glm.Radians(offset * i + angle * d), 0) ;
+                GameObject obj = Instantiate(bullet, transform.localPosition, rot);
+                obj.transform.position += obj.transform.back * 2f;
+                obj.GetComponent<Rigidbody>().linearVelocity = obj.transform.back * projectileSpeed;
+/*                while()
+                {
+
+                }*/
+                yield return null;
+            }
+            timer = projectileAttackDuration / 2 / cycles;
+            while (timer > 0)
+            {
+                vec3 dir = (player.transform.localPosition - transform.localPosition)/vec3.Distance(player.transform.localPosition, transform.localPosition);
+                UpdateRotation(dir);
+                SetState("Idle", true);
+                timer -= Time.deltaTime;
+                yield return null;
+            }
+
+        }
+        StartCoroutine(SlamAttack());
     }
 
     public void UpdateRotation(vec3 dir)
