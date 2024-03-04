@@ -60,12 +60,11 @@ Transform:
   m_GameObject: {fileID: 11651427043620866289}
   Translation: [0.0155261923, 0, -0.874936759]
   Rotation: [0, 0, 0]
-  Scale: [1.66123903, 1, 1]
+  Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 4418236984561621579}
     - {fileID: 15122834859859923062}
-    - {fileID: 5370238613876965468}
 ---
 ID: 2748547964756519209
 Canvas:
@@ -105,9 +104,9 @@ GameObject:
 ID: 16773861268096498698
 Transform:
   m_GameObject: {fileID: 4418236984561621579}
-  Translation: [0, 0.0338769555, 0]
+  Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.579589069, 0.420963109, 1]
+  Scale: [0.5, 0.5, 1]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
@@ -135,9 +134,9 @@ GameObject:
 ID: 5205254661984323289
 Transform:
   m_GameObject: {fileID: 15122834859859923062}
-  Translation: [-0.149471134, -0.0475775823, 0.278801441]
-  Rotation: [-3.14159155, 0.593410015, 0]
-  Scale: [0.246819168, 0.218375444, 0.876962304]
+  Translation: [-0.149000004, 0, 0.278801441]
+  Rotation: [-3.14159083, 0.593410134, 0]
+  Scale: [0.449999988, 0.449999988, 1]
   Father: {fileID: 11651427043620866289}
   m_Children:
     - {fileID: 18227274232965132690}
@@ -166,10 +165,10 @@ GameObject:
 ID: 9737574517565939108
 Transform:
   m_GameObject: {fileID: 5144980746915515514}
-  Translation: [0.281383872, 0.177159086, -0.399975479]
-  Rotation: [-3.02772522, -0.592227638, 0]
-  Scale: [0.228461951, 0.0769790709, 0.998805046]
-  Father: {fileID: 0}
+  Translation: [0, 0.200000003, 0]
+  Rotation: [-3.14159274, 0, 0]
+  Scale: [0.25, 0.25, 0.99999994]
+  Father: {fileID: 5799748894602307964}
   m_Children:
     []
 ---
@@ -179,7 +178,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): true
+  Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 09c6bf963ea6cc412f5b9197c588acf6}
 ---
@@ -196,10 +195,10 @@ GameObject:
 ID: 9896614275649064532
 Transform:
   m_GameObject: {fileID: 15413680003274128894}
-  Translation: [0.339184105, 0.0633870065, -0.532936752]
-  Rotation: [-2.9149971, -0.733536839, 0]
-  Scale: [0.222230464, 0.0789608955, 0.998914957]
-  Father: {fileID: 0}
+  Translation: [0, 0.0500000007, 0]
+  Rotation: [-3.14159274, 0, 0]
+  Scale: [0.249999985, 0.249997735, 1.00000012]
+  Father: {fileID: 5799748894602307964}
   m_Children:
     []
 ---
@@ -209,7 +208,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): true
+  Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
 ---
@@ -226,10 +225,10 @@ GameObject:
 ID: 1850640387793568597
 Transform:
   m_GameObject: {fileID: 11997381317790178123}
-  Translation: [0.332282782, -0.0731539875, -0.503093421]
-  Rotation: [3.13970661, -0.612505019, 0.0634045824]
-  Scale: [0.21580632, 0.0761954561, 2.08734274]
-  Father: {fileID: 0}
+  Translation: [0, -0.100000001, 0]
+  Rotation: [-3.14159274, 0, 0]
+  Scale: [0.249999985, 0.25000003, 1.00000012]
+  Father: {fileID: 5799748894602307964}
   m_Children:
     []
 ---
@@ -239,7 +238,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): true
+  Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 9d5ca54110e8c8feb8e8edd7193210be}
 ---
@@ -256,10 +255,10 @@ GameObject:
 ID: 12705835085396231503
 Transform:
   m_GameObject: {fileID: 7360009555949792780}
-  Translation: [0.336145431, -0.211273417, -0.502936721]
-  Rotation: [-3.3919425, -0.715584993, 0.141371682]
-  Scale: [0.216883838, 0.0696007162, 0.999012709]
-  Father: {fileID: 0}
+  Translation: [0, -0.25, 0]
+  Rotation: [3.14159274, 0, 0]
+  Scale: [0.25, 0.249999985, 0.999999881]
+  Father: {fileID: 5799748894602307964}
   m_Children:
     []
 ---
@@ -269,7 +268,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): true
+  Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 13cc4bf4e9905a9d2d9fa16d77598bc3}
 ---
@@ -357,25 +356,6 @@ AudioSource:
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
 ---
-ID: 5370238613876965468
-GameObject:
-  m_IsActive: true
-  m_Name: SettingsText
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4791662680457265884}  # Transform
----
-ID: 4791662680457265884
-Transform:
-  m_GameObject: {fileID: 5370238613876965468}
-  Translation: [-0.00934615266, 0, 0.874936759]
-  Rotation: [0, 0, 0]
-  Scale: [0.601960361, 1, 1]
-  Father: {fileID: 11651427043620866289}
-  m_Children:
-    []
----
 ID: 18227274232965132690
 GameObject:
   m_IsActive: true
@@ -389,9 +369,9 @@ GameObject:
 ID: 334750977139012513
 Transform:
   m_GameObject: {fileID: 18227274232965132690}
-  Translation: [0.0734637752, 0.70535177, 8.56816882e-07]
+  Translation: [0, 0.200000003, 8.56816882e-07]
   Rotation: [0, 0, 0]
-  Scale: [0.999995232, 0.457879007, 1.00613976]
+  Scale: [0.300000012, 0.300000012, 1]
   Father: {fileID: 15122834859859923062}
   m_Children:
     []
@@ -419,9 +399,9 @@ GameObject:
 ID: 774947923613988462
 Transform:
   m_GameObject: {fileID: 1790461780820641168}
-  Translation: [0.00289639854, 1.01327907e-06, 0.0100004086]
+  Translation: [0, 1.01327907e-06, 0.0100004086]
   Rotation: [0, 0, 0]
-  Scale: [0.999995232, 1.00000012, 0.999999881]
+  Scale: [1, 1, 0.999999881]
   Father: {fileID: 15122834859859923062}
   m_Children:
     []
@@ -435,3 +415,25 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 0.5
   SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
+---
+ID: 5799748894602307964
+GameObject:
+  m_IsActive: true
+  m_Name: ButtonHolder
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11155069694626467655}  # Transform
+---
+ID: 11155069694626467655
+Transform:
+  m_GameObject: {fileID: 5799748894602307964}
+  Translation: [0.457922697, 0, -0.744351864]
+  Rotation: [0, -0.486927032, 0]
+  Scale: [0.999999464, 1, 0.999999464]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 5144980746915515514}
+    - {fileID: 15413680003274128894}
+    - {fileID: 11997381317790178123}
+    - {fileID: 7360009555949792780}

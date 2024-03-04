@@ -379,6 +379,8 @@ public:
 
 	void DrawIcons();
 
+	void DrawCanvasOutline();
+
 	void DrawBoxColliders();
 
 	void DrawCapsuleColliders();

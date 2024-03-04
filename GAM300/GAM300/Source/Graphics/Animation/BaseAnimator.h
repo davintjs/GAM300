@@ -21,11 +21,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 #define DEFAULT_ANIM DEFAULT_ASSETS["None.anim"]
 
+struct Transform;
+
 struct BaseAnimator : property::base
 {
 public:
 
 	BaseAnimator();
+
+	// Instantiate gameobjects with the whole bone tree
+	void CreateRig(Transform* _transform);
+
+	// Only done when assigning a new animation into the animator
+	void CalculateRigTransform(Animation& animation, const AssimpNodeData* node, Transform* parentTransform);
 
 	void UpdateAnimation(float dt, glm::mat4& pTransform);
 
@@ -68,11 +76,13 @@ public:
 		//void InterpolateAnimations(Animation& firstAnimation, Animation& secondAnimation);
 
 	std::vector<glm::mat4> m_FinalBoneMatrices;
+	std::map<std::string, Transform*> rig;
 	Engine::GUID<AnimationAsset> animID{0};
 	Engine::GUID<AnimationAsset> prevAnimID{0};
 	AnimationState* defaultState; // Bean: Temporary
 	AnimationState* currentState;
 	AnimationState* nextState;
+	Transform* rigTransform;
 	std::string stateName;
 	std::string stateNextName;
 	int m_FinalBoneMatIdx; // to access copy of original anim
