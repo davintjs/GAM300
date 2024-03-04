@@ -166,6 +166,18 @@ private:
 	FieldMap mReferenceFields;
 };
 
+
+ENGINE_RUNTIME_SYSTEM(LateScriptingSystem)
+{
+public:
+	void Init() {};
+
+	void Update(float dt);
+
+	//Does nothing
+	void Exit() {};
+};
+
 ENGINE_SYSTEM(ScriptingSystem)
 {
 public:
@@ -338,5 +350,7 @@ public:
 
 	template<class EventType>
 	void Subscribe(void(ScriptingSystem::* memberFunction)(EventType*));
+
+	friend class LateScriptingSystem;
 };
 #endif // !SCRIPTING_SYSTEM_H
