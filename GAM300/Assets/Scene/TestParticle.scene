@@ -47,15 +47,16 @@ ParticleComponent:
   Number Of Particles: 15
   Particle Lifetime: 1
   Particle Emission Rate: 1
-  Particle Min Scale: 1
-  Particle Max Scale: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
   Particle Scale Rate: 0
   Particle Speed: 30
   Particle Noise Movement Percentage: 30
   Particle Noise Frequency: 20
   2D particle: false
-  Trailing: false
+  Trailing: true
   Trail Size: 5
+  Trail Thickness: 10.2600002
   Looping: true
 ---
 ID: 1589847083358243135

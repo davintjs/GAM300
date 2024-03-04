@@ -567,6 +567,7 @@ struct ParticleComponent : Object
 
 	int numParticles_{ 1 };
 	int trailSize{ 0 };
+	float trailThiccness{ 1.f };
 
 	float angle{ 30.f }; // for directional particles
 	float particleLifetime_{ 3.0f };
@@ -605,6 +606,7 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(is2D).Name("2D particle"),
 	property_var(trailEnabled).Name("Trailing"),
 	property_var(trailSize).Name("Trail Size"),
+	property_var(trailThiccness).Name("Trail Thickness"),
 	property_var(particleLooping).Name("Looping")
 
 } property_vend_h(ParticleComponent)
