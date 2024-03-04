@@ -812,8 +812,8 @@ GameObject:
 ID: 18246905878658813158
 Transform:
   m_GameObject: {fileID: 3977294589520766028}
-  Translation: [66.307869, 37.3068237, -39.339077]
-  Rotation: [-3.14159203, 0, -3.14159203]
+  Translation: [0, 12.3170767, 0]
+  Rotation: [-3.14159083, 0, -3.14159083]
   Scale: [0.999999285, 1, 0.999999285]
   Father: {fileID: 0}
   m_Children:
@@ -892,6 +892,7 @@ Script:
   checkpointIndex: -1
   attack3duration: 0.699999988
   isAtCheckpoint: false
+  spawnPoint: [0, 0, 0]
   attackTimer: 1
   currentHealth: 4
   invulnerableTimer: 0.699999988
@@ -919,9 +920,6 @@ Script:
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
   audioSource: {fileID: 16716648517964172389}  # Component
-  spawnPoint: {fileID: 0}
-  terminal1: {fileID: 0}
-  terminal2: {fileID: 0}
   healthBarFill: {fileID: 18315212324025487925}  # GameObject
   healthBar: {fileID: 4056269345217226233}  # Component
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
@@ -2742,7 +2740,7 @@ LightSource:
 ---
 ID: 17866851235588629267
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: FadeBlack
   m_TagString: ""
   m_Layer: 0
@@ -3242,3 +3240,207 @@ Script:
   alphaValue: 0.800000012
   player: {fileID: 3977294589520766028}  # Component
   Objective1: {fileID: 6595519785796661465}  # Component
+---
+ID: 6771874118867325852
+GameObject:
+  m_IsActive: true
+  m_Name: Floor
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2915720037994429653}  # Transform
+    - component: {fileID: 18108192776659495232}  # MeshRenderer
+    - component: {fileID: 10032385630363656740}  # BoxCollider
+    - component: {fileID: 7270719144583062795}  # Rigidbody
+---
+ID: 2915720037994429653
+Transform:
+  m_GameObject: {fileID: 6771874118867325852}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [100, 1, 100]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 18108192776659495232
+MeshRenderer:
+  m_GameObject: {fileID: 6771874118867325852}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 10032385630363656740
+BoxCollider:
+  m_GameObject: {fileID: 6771874118867325852}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 7270719144583062795
+Rigidbody:
+  m_GameObject: {fileID: 6771874118867325852}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 17723947472884518121
+GameObject:
+  m_IsActive: true
+  m_Name: Boss
+  m_TagString: Player
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12389971819868191190}  # Transform
+    - component: {fileID: 5054382447752658369}  # BoxCollider
+    - component: {fileID: 3760138480247659999}  # Rigidbody
+    - component: {fileID: 5340113105648456710}  # AudioSource
+    - component: {fileID: 2883371525179796882}  # Script
+---
+ID: 12389971819868191190
+Transform:
+  m_GameObject: {fileID: 17723947472884518121}
+  Translation: [6.18011475, 1.02663243, 0]
+  Rotation: [-3.14159083, 0, -3.14159083]
+  Scale: [0.999999285, 1, 0.999999285]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 10920168034363521791}
+    - {fileID: 8645961242742927387}
+---
+ID: 5054382447752658369
+BoxCollider:
+  m_GameObject: {fileID: 17723947472884518121}
+  m_IsEnabled: true
+  Dimensions: [1, 2, 1]
+  Offset: [0, 0.449999988, 0]
+---
+ID: 3760138480247659999
+Rigidbody:
+  m_GameObject: {fileID: 17723947472884518121}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 5340113105648456710
+AudioSource:
+  m_GameObject: {fileID: 17723947472884518121}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 000000000000000000000000000001f4}
+  Play: false
+---
+ID: 2883371525179796882
+Script:
+  m_GameObject: {fileID: 17723947472884518121}
+  m_IsEnabled: true
+  Script: {guid: 1761a9cabdef2fc73e985ee6529cf8ee}
+  dodgeDuration: 1.20000005
+  chaseSpeed: 400
+  basicAttackDistance: 3
+  rotationSpeed: 10
+  dashAttackDuration: 2
+  basicAttackDuration: 1
+  chaseDuration: 3
+  ultiChargeDuration: 10
+  ultiExplodeDuration: 2
+  animator: {fileID: 5291070275218929927}  # Component
+  ultiSphere: {fileID: 8645961242742927387}  # Component
+---
+ID: 10920168034363521791
+GameObject:
+  m_IsActive: true
+  m_Name: BossModel
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9493545353962298864}  # Transform
+    - component: {fileID: 5291070275218929927}  # Animator
+---
+ID: 9493545353962298864
+Transform:
+  m_GameObject: {fileID: 10920168034363521791}
+  Translation: [0, -0.5, 0]
+  Rotation: [-3.14159203, 0, -3.14159203]
+  Scale: [0.0149999997, 0.0149999997, 0.0149999997]
+  Father: {fileID: 17723947472884518121}
+  m_Children:
+    - {fileID: 9911516422125544925}
+---
+ID: 5291070275218929927
+Animator:
+  m_GameObject: {fileID: 10920168034363521791}
+  m_IsEnabled: true
+  Animation: {guid: bb421ce4b2d0d6e94060d0890f8bb89f}
+---
+ID: 9911516422125544925
+GameObject:
+  m_IsActive: true
+  m_Name: BossMesh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 732847982796183600}  # Transform
+    - component: {fileID: 1226580813807300150}  # MeshRenderer
+---
+ID: 732847982796183600
+Transform:
+  m_GameObject: {fileID: 9911516422125544925}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10920168034363521791}
+  m_Children:
+    []
+---
+ID: 1226580813807300150
+MeshRenderer:
+  m_GameObject: {fileID: 9911516422125544925}
+  m_IsEnabled: true
+  Mesh: {guid: 12597e24af252df94929ea556633fff1}
+  Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
+---
+ID: 8645961242742927387
+GameObject:
+  m_IsActive: true
+  m_Name: Ultirange
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11577215067742357349}  # Transform
+    - component: {fileID: 9734618393618715208}  # MeshRenderer
+---
+ID: 11577215067742357349
+Transform:
+  m_GameObject: {fileID: 8645961242742927387}
+  Translation: [0, -0.5, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17723947472884518121}
+  m_Children:
+    []
+---
+ID: 9734618393618715208
+MeshRenderer:
+  m_GameObject: {fileID: 8645961242742927387}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: 00000000000000000000000000000000}

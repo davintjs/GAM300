@@ -136,7 +136,7 @@ public class ThirdPersonController : Script
     public float currentInvulnerableTimer;
     public bool isDead = false;
 
-    float maxAirTime = 1f;
+    float maxAirTime = 2f;
     float currentAirTime = 0;
 
     public float colliderDist = 0;
@@ -237,7 +237,6 @@ public class ThirdPersonController : Script
 
         stun.SetConditionals(false, death);
         falling.SetConditionals(false, death, stun);
-        falling.loop = true;
         jump.SetConditionals(false, death,stun);
         attack1.SetConditionals(false, jump, death, stun);
         attack2.SetConditionals(false, jump, death, stun);
@@ -247,9 +246,7 @@ public class ThirdPersonController : Script
         attack3.speed = 3.1f;
         sprint.SetConditionals(true, run);
         sprint.SetConditionals(false, attack1, jump, death, stun);
-        sprint.loop = true;
         run.SetConditionals(false, sprint, attack1, jump, death, stun);
-        run.loop = true;
         dashAttack.SetConditionals(false, jump, death, stun, sprint, run, attack1, attack2, attack3);
         dashAttack.speed = 2.5f;
         dodge.SetConditionals(false, dashAttack, jump, death, stun, attack1, attack2, attack3, dashAttack);
@@ -729,6 +726,7 @@ public class ThirdPersonController : Script
                 {
                     SetState("Falling", true);
                 }
+
             }
             else if (currentAirTime >= maxAirTime * .5f)
             {

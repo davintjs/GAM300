@@ -106,7 +106,13 @@ void Scene::LinkReferences(ReferencesTable& storage)
 {
 	for (auto& old_new : storage[GetType::E<T>()])
 	{
-		T& newObject = Get<T>(old_new.second);
+		if (std::is_same<T, Script>())
+		{
+			PRINT("WASSUP!");
+		}
+		Handle handle = old_new.second;
+
+		T& newObject = Get<T>(handle.euid, handle.uuid);
 
 		if constexpr (std::is_same<T, Transform>())
 		{
@@ -225,6 +231,7 @@ T& Scene::Get(Object* object)
 template<typename T, typename Owner>
 T& Scene::Get(Owner& object)
 {
+
 	if constexpr (MultiComponentTypes::Has<T>())
 	{
 		return *GetMulti<T>(object.euid).front();

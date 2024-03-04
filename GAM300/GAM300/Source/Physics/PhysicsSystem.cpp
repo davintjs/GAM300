@@ -786,8 +786,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
 
 			float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * cc.radius;
-			float offset = 0.5f * (tscale.y * cc.height) - radius;
-			if (offset <= 0.0f) {
+			float offset = 0.5f * (tscale.y * cc.height);
+			if (cc.height >= 0.0f) {
 				JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 				SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
 			}
