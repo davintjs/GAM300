@@ -309,6 +309,7 @@ struct TextRenderer : Object
 
 property_begin_name(TextRenderer, "TextRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(guid).Name("Font"),
 		property_var(text).Name("Text"),
 		property_var(x).Name("X-axis Offset"),
 		property_var(y).Name("Y-axis Offset"),
@@ -316,8 +317,7 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(r).Name("Color R"),
 		property_var(g).Name("Color G"),
 		property_var(b).Name("Color B"),
-		property_var(alpha).Name("Opacity"),
-		property_var(guid).Name("Font")
+		property_var(alpha).Name("Opacity")
 } property_vend_h(TextRenderer)
 
 struct Camera : Object, BaseCamera
