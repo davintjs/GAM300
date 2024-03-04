@@ -18710,7 +18710,7 @@ ID: 16486884645913952574
 Animator:
   m_GameObject: {fileID: 11998253260673808900}
   m_IsEnabled: true
-  Animation: {guid: bb421ce4b2d0d6e94060d0890f8bb89f}
+  Animation: {guid: c4fef853906fbef85cfcf3080cfd1a6b}
 ---
 ID: 9943126827848380058
 GameObject:
@@ -18736,7 +18736,7 @@ ID: 8276372826925682797
 MeshRenderer:
   m_GameObject: {fileID: 9943126827848380058}
   m_IsEnabled: true
-  Mesh: {guid: 12597e24af252df94929ea556633fff1}
+  Mesh: {guid: 23b3869682b2a7bad1d6b95b9bf2fb0e}
   Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
 ---
 ID: 3364331976708488181
