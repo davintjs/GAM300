@@ -1832,7 +1832,7 @@ ID: 2169999402375080222
 BoxCollider:
   m_GameObject: {fileID: 12486642072026848141}
   m_IsEnabled: true
-  Dimensions: [1, 1, 1]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 10978448946441949271
@@ -1940,6 +1940,8 @@ Script:
   alertedOnce: true
   stunDuration: 1.5
   currentStunDuration: 0
+  staggerCooldown: 5
+  staggerTimer: 5
   player: {fileID: 3977294589520766028}  # Component
   hpBar: {fileID: 15952054123807579159}  # Component
   modelOffset: {fileID: 17589645519894896830}  # Component
@@ -7279,10 +7281,10 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 6661078963704661251}
-    - {fileID: 14538833177825604643}
     - {fileID: 13385808514286287486}
     - {fileID: 16151418268757025182}
     - {fileID: 10998208615434921590}
+    - {fileID: 14538833177825604643}
 ---
 ID: 10086278634859035792
 GameObject:
@@ -21265,8 +21267,8 @@ Transform:
   Scale: [0.853785157, 0.754947841, 0.999991179]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 10555487912203654967}
     - {fileID: 13970551895324068386}
+    - {fileID: 10555487912203654967}
 ---
 ID: 17671396384719573191
 MeshRenderer:

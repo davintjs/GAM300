@@ -467,7 +467,7 @@ ID: 2169999402375080222
 BoxCollider:
   m_GameObject: {fileID: 12486642072026848141}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 10978448946441949271
@@ -49269,7 +49269,7 @@ ID: 16108243399380526292
 BoxCollider:
   m_GameObject: {fileID: 13608063128582373505}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 2790735772102063034
@@ -49319,7 +49319,7 @@ ID: 7879984351043138175
 BoxCollider:
   m_GameObject: {fileID: 8737543050631908055}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 18025557957597526913
@@ -49369,7 +49369,7 @@ ID: 11463043979405249954
 BoxCollider:
   m_GameObject: {fileID: 8752970089702699583}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 5744983805869878319
@@ -49419,7 +49419,7 @@ ID: 155865891832357681
 BoxCollider:
   m_GameObject: {fileID: 2036189163671800282}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 15086471321673337318
@@ -49469,7 +49469,7 @@ ID: 10023756055510667413
 BoxCollider:
   m_GameObject: {fileID: 1859320014956264795}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 4879800796180256890
@@ -49519,7 +49519,7 @@ ID: 733454350368266933
 BoxCollider:
   m_GameObject: {fileID: 12702401490049601225}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 9561133318000287806
@@ -49569,7 +49569,7 @@ ID: 3182145282608965818
 BoxCollider:
   m_GameObject: {fileID: 9873304508655296805}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 3321524479986829851
@@ -49619,7 +49619,7 @@ ID: 4451546358558383814
 BoxCollider:
   m_GameObject: {fileID: 11728886119229421634}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 17536254862483903116
@@ -49669,7 +49669,7 @@ ID: 3135112983731379591
 BoxCollider:
   m_GameObject: {fileID: 11431698503551896276}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 10372480190839420861
@@ -59758,7 +59758,7 @@ ID: 5248797211706420775
 BoxCollider:
   m_GameObject: {fileID: 5680074196717204813}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 16707788232169840821
@@ -59808,7 +59808,7 @@ ID: 9181988359284015877
 BoxCollider:
   m_GameObject: {fileID: 17339074096294122883}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 9118148062062441227
@@ -59858,7 +59858,7 @@ ID: 5313836988828989189
 BoxCollider:
   m_GameObject: {fileID: 12635576556742298042}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 10837686222644329881
@@ -59908,7 +59908,7 @@ ID: 5118315732385558811
 BoxCollider:
   m_GameObject: {fileID: 5976458865903935298}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 16651617620404722088
@@ -59958,7 +59958,7 @@ ID: 14343886124613692998
 BoxCollider:
   m_GameObject: {fileID: 10182307845023477381}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 16497937035519144418
@@ -60008,7 +60008,7 @@ ID: 9444270044413211392
 BoxCollider:
   m_GameObject: {fileID: 1034696538995432217}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 5708332134857005828
@@ -60058,7 +60058,7 @@ ID: 11040349630335609006
 BoxCollider:
   m_GameObject: {fileID: 13265326449278859074}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 14983279567950642572
@@ -60108,7 +60108,7 @@ ID: 9595516889442550060
 BoxCollider:
   m_GameObject: {fileID: 406715076858283333}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 3305544753828485291
@@ -60547,7 +60547,7 @@ ID: 10711661759787352282
 BoxCollider:
   m_GameObject: {fileID: 119253268068733130}
   m_IsEnabled: true
-  Dimensions: [2, 1, 2]
+  Dimensions: [0.600000024, 0.600000024, 0.400000006]
   Offset: [0, 0, 0]
 ---
 ID: 10084072951084136299
