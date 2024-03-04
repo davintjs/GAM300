@@ -42,9 +42,10 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	//return 0;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
-	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(-1.f * 1.777778f, 1.f * 1.777778f, -1.f, 1.f, -10.f, 10.f);
 	glm::mat4 IdentityMat = glm::mat4(1.f);
-	glm::mat4 projToUse, viewToUse, srtToUse;
+	glm::mat4 projToUse, viewToUse, srtToUse, scaleMat = glm::identity<glm::mat4>();
+	scaleMat[0][0] = 1.777778f;
 
 	glViewport(0, 0, 1600, 900);
 	glBindFramebuffer(GL_FRAMEBUFFER, colorPickFBO);
@@ -107,7 +108,7 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 			//std::cout << "WorldSpace\n";
 			projToUse = _camera.GetProjMatrix();
 			viewToUse = _camera.GetViewMatrix();
-			srtToUse = transform.GetWorldMatrix();
+			srtToUse = transform.GetWorldMatrix() * scaleMat;
 		}
 		else // Screen Space UI
 		{
@@ -115,7 +116,7 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 			//std::cout << "ScreenSpace\n";
 			projToUse = OrthoProjection;
 			viewToUse = IdentityMat;
-			srtToUse = transform.GetLocalMatrix();
+			srtToUse = transform.GetLocalMatrix() * scaleMat;
 		}
 
 		GLuint spriteTextureID = TextureManager.GetTexture(Sprite.SpriteTexture);
@@ -188,7 +189,7 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 			Engine::UUID EUID_Index = EUID_Holder[index];
 		
 			Tag& entity_tag = currentScene.Get<Tag>(EUID_Index);
-			//PRINT(entity_tag.name, "\n");
+			PRINT(entity_tag.name, "\n");
 			toReturn = EUID_Index;
 			//std::cout << "from ColorPickingUIButton : " << entity_tag.name << "\n";
 		}
