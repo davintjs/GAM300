@@ -391,7 +391,7 @@ public class Enemy : Script
         if(!isDead)
         {
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
-            //ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+            ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
             AudioManager.instance.enemyHit.Play();
             AudioManager.instance.meleeEnemyInjured.Play();
             currentHealth -= amount;
