@@ -28,7 +28,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
 #include "Graphics/GraphicsHeaders.h"
-
+#include "Physics/PhysicsSystem.h"
+	
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
 
@@ -70,6 +71,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static MonoString* GetTag(ScriptObject<Object> pObject)
 	{
 		Object* object = pObject;
+		if (!object)
+			return nullptr;
+
 		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(object->EUID());
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
 	}
@@ -117,9 +121,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma region PHYSICS SYSTEM
 
-	static void Raycast(Vector3& position, Vector3& direction, float& distance, bool& hit, int& mask)
+	static void Raycast(Vector3& position, Vector3& direction, float distance, bool& hit, Vector3& point, ScriptObject<Entity>& obj)
 	{
-
+		JPH::RVec3 pos = { position.x, position.y, position.z };
+		EngineRayCastResult rc = PHYSICS.CastRay(pos, { direction.x, direction.y, direction.z }, distance);
+		hit = rc.hit;
+		point = rc.point;
+		obj = &MySceneManager.GetCurrentScene().Get<Entity>(rc.tag);
 	}
 
 #pragma endregion

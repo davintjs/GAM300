@@ -1199,8 +1199,7 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 	*/
 
 
-	//JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
-	JPH::AllHitCollisionCollector <JPH::RayCastBodyCollector> collector;
+	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
 
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
 	JPH::RayCastSettings rcs;
@@ -1210,32 +1209,40 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 	if(!collector.HadHit())
 		return EngineRayCastResult(Tag(), tmp, false);
 	size_t numHits = (int)collector.mHits.size();
-	std::cout << "Number of hits on raycast: " << numHits << std::endl;	
+
+	collector.Sort();
+	JPH::BroadPhaseCastResult* results = collector.mHits.data();
+
+	UINT32 bid;
+	Tag tag;
+	Vector3 hitPt = { 0.f, 0.f, 0.f };
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& rbArray = scene.GetArray<Rigidbody>();
+	bool selected = false;
+	for (size_t i = 0; i < numHits; i++)
+	{
+		selected = false;
+		bid = results[i].mBodyID.GetIndexAndSequenceNumber();
+		JPH::RVec3 v = ray.GetPointOnRay(results[i].mFraction);
+		
+		for (auto it = rbArray.begin(); it != rbArray.end(); ++it) 
+		{
+			Rigidbody& rb = *it;
+			if (rb.bid == bid && !rb.is_trigger) 
+			{
+				JoltVec3ToGlmVec3(v, hitPt);
+				tag = scene.Get<Tag>(rb);
+				selected = true;
+				break;
+			}
+		}
+
+		if (selected)
+			break;
+	}
 
 
 	
-
-	JPH::BroadPhaseCastResult* results = collector.mHits.data();
-
-	size_t idx{ 0 };
-	if (numHits != 1) {
-		idx = numHits - 1;
-	}
-
-	UINT32 bid = results[idx].mBodyID.GetIndexAndSequenceNumber();
-	Tag tag;
-	Vector3 hitPt;
-	JPH::RVec3 v = ray.GetPointOnRay(results[idx].mFraction);
-	JoltVec3ToGlmVec3(v, hitPt);
-	Scene& scene = MySceneManager.GetCurrentScene();
-	auto& rbArray = scene.GetArray<Rigidbody>();
-	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
-		Rigidbody& rb = *it;
-		if (rb.bid == bid) {
-			tag = scene.Get<Tag>(rb);
-			break;
-		}
-	}
 
 	//collector.Sort();
 	/*
@@ -1259,11 +1266,10 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 			break;
 		}
 	}*/
-	std::cout << "Closest pt: " << hitPt.x << '|' 
+	/*std::cout << "Closest pt " << tag.name << ": " << hitPt.x << '|'
 									<< hitPt.y << '|' 
-									<< hitPt.z << std::endl;
-
-	return EngineRayCastResult(tag, hitPt, true);
+									<< hitPt.z << std::endl;*/
+	return EngineRayCastResult(tag, hitPt, selected);
 	
 }
 

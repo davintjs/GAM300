@@ -14,6 +14,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 
 using System;
+using System.Diagnostics.Tracing;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using GlmSharp;
@@ -200,7 +201,7 @@ namespace BeanFactory
 
         #region PHYSICS_SYSTEM
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, LayerMask mask);
+        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, ref vec3 point, ref GameObject gameObj);
         #endregion
 
         #region TEXT

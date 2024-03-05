@@ -4,6 +4,8 @@ using BeanFactory;
 using GlmSharp;
 using System;
 using System.Runtime.InteropServices;
+using System.Diagnostics.Tracing;
+
 public class ThirdPersonCamera : Script
 {
     public static ThirdPersonCamera instance;
@@ -36,13 +38,13 @@ public class ThirdPersonCamera : Script
     private float duration = 1.0f;
     private float bufferTimer = 0f;
     private float bufferDuration = 3.0f;
+    private float distance = 0f;
 
     public bool cutscene = false;
 
     float shakeMagnitude = 0f;
     float shakeDuration = 0f;
     private vec3 targetPosition;
-
 
 
     void Awake()
@@ -70,57 +72,71 @@ public class ThirdPersonCamera : Script
         ShakeCoroutine();
     }
 
-    void OnTriggerEnter(PhysicsComponent other)
-    {
-        if (GetTag(other) != "PlayerCollider")
-        {
-            StartZoom();
-        }
-    }
+    //void OnTriggerEnter(PhysicsComponent other)
+    //{
+    //    if (GetTag(other) != "PlayerCollider")
+    //    {
+    //        StartZoom();
+    //    }
+    //}
 
-    void OnTriggerExit(PhysicsComponent other)
-    {
-        if (GetTag(other) != "PlayerCollider")
-        {
-            StopZoom();
-        }
-    }
+    //void OnTriggerExit(PhysicsComponent other)
+    //{
+    //    if (GetTag(other) != "PlayerCollider")
+    //    {
+    //        StopZoom();
+    //    }
+    //}
 
-    void StartZoom()
-    {
-        isZooming = true;
-        zoomReset = false;
-        timer = bufferTimer = 0f;
-    }
+    //void StartZoom()
+    //{
+    //    isZooming = true;
+    //    zoomReset = false;
+    //    timer = bufferTimer = 0f;
+    //}
 
-    void StopZoom()
-    {
-        isZooming = false;
-    }
+    //void StopZoom()
+    //{
+    //    isZooming = false;
+    //}
 
     void AvoidColliders()
     {
-        if (isZooming)
+        vec3 direction = camera.position - target.transform.position;
+        RaycastHit raycast = Physics.Raycast(target.transform.position, direction.NormalizedSafe, 10.0f);
+        
+        if (raycast.hit && raycast.gameObj != null)
         {
-            zoom -= Time.deltaTime * zoomInSpeed;
-            if (zoom < closestZoom)
-            {
-                zoom = closestZoom;
+            string tagName = GetTag(raycast.gameObj);
+            if (tagName != "Camera")
+            { 
+                zoom = vec3.Distance(target.transform.position, raycast.point) * 0.9f;
+                zoom = (zoom < closestZoom) ? closestZoom : (zoom > furthestZoom) ? furthestZoom : zoom;
             }
-            else if (zoom > furthestZoom)
-            {
-                zoom = furthestZoom;
-            }
+        }
 
-            camera.lookatDistance = zoom;
-            initialZoom = zoom;
-            zoomReset = true;
-        }
-        else if (!isZooming && zoomReset)
-        {
-            // Wait x seconds then attemp to return to initialZoom
-            ResetZoom();
-        }
+
+        //if (isZooming)
+        //{
+        //    zoom -= Time.deltaTime * zoomInSpeed;
+        //    if (zoom < closestZoom)
+        //    {
+        //        zoom = closestZoom;
+        //    }
+        //    else if (zoom > furthestZoom)
+        //    {
+        //        zoom = furthestZoom;
+        //    }
+
+        //    camera.lookatDistance = zoom;
+        //    initialZoom = zoom;
+        //    zoomReset = true;
+        //}
+        //else if (!isZooming && zoomReset)
+        //{
+        //    // Wait x seconds then attemp to return to initialZoom
+        //    ResetZoom();
+        //}
     }
 
     void UpdateCameraRotation()
@@ -173,9 +189,19 @@ public class ThirdPersonCamera : Script
     {
         if (target != null)
         {
+            
+            vec3 finalPosition = camera.position;
+            if(camera.distance < zoom)
+            {
+                finalPosition = target.transform.position - (camera.forward * camera.distance);
+            }
+            else
+            {
+                finalPosition = target.transform.position - (camera.forward * zoom);
+            }
+
+            transform.position = camera.position = finalPosition;
             camera.LookAt(target);
-            camera.position = target.transform.position - (camera.forward * camera.distance);
-            transform.position = camera.position;
         }
     }
 
