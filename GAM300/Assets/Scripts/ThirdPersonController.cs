@@ -995,6 +995,18 @@ public class ThirdPersonController : Script
         // Interpolate using spherical linear interpolation (slerp)
         quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
 
+        /*
+         float smoothedYAngle = Mathf.SmoothDampAngle(currentYAngle, stateMachine.ReusableData.CurrentTargetRotation.y, ref stateMachine.ReusableData.DampedTargetRotationCurrentVelocity.y, stateMachine.ReusableData.TimeToReachTargetRotation.y - stateMachine.ReusableData.DampedTargetRotationPassedTime.y);
+
+            stateMachine.ReusableData.DampedTargetRotationPassedTime.y += Time.deltaTime;
+
+            Quaternion targetRotation = Quaternion.Euler(0f, smoothedYAngle, 0f);
+
+            stateMachine.Player.Rigidbody.MoveRotation(targetRotation);
+         
+         
+         */
+
         vec3 rot = ((vec3)midQuat.EulerAngles);
 
         if (rot != vec3.NaN)
