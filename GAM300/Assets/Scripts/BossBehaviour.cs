@@ -192,33 +192,43 @@ public class BossBehaviour : Script
 
     IEnumerator DashAttack()
     {
-        float timer = dashAttackDuration;
         float chargeUpDuration = dashAttackDuration / 4f;
+        float timer = chargeUpDuration;
 
         float dist = 0;
         vec3 dir = vec3.Zero;
         SetState("DashAttack", true);
         vec3 startPos = transform.localPosition;
         vec3 targetPos = vec3.Zero;
+        animator.SetSpeed(0.5f);
         while (timer > 0)
         {
-            if (timer > chargeUpDuration)
+            targetPos = player.transform.position;
+            targetPos.y = transform.position.y;
+            dist = vec3.Distance(transform.position, targetPos);
+            dir = (targetPos - transform.position) / dist;
+            UpdateRotation(dir, rotationSpeed);
+/*            if (timer < chargeUpDuration/2f)
             {
-                targetPos = player.transform.position;
-                targetPos.y = transform.position.y;
-                dist = vec3.Distance(transform.position, targetPos);
-                dir = (targetPos - transform.position) / dist;
-                UpdateRotation(dir, rotationSpeed);
+                animator.SetSpeed(0.5f);
             }
             else
             {
-                vec3 pos = vec3.Lerp(targetPos + dir * 5f, startPos, timer / chargeUpDuration);
-                transform.position = pos;
-            }
+
+            }*/
             timer -= Time.deltaTime;
             yield return null;
         }
-        animator.SetSpeed(0);
+        animator.SetSpeed(1f);
+
+        timer = chargeUpDuration;
+        while (timer > 0)
+        {
+            vec3 pos = vec3.Lerp(targetPos + dir * 5f, startPos, timer / chargeUpDuration);
+            transform.position = pos;
+            timer -= Time.deltaTime;
+            yield return null;
+        }
         //Cooldown
         timer = chargeUpDuration;
         rb.linearVelocity = vec3.Zero;
@@ -410,6 +420,8 @@ public class BossBehaviour : Script
         AnimationState jump = animationManager.GetState("Jump");
         AnimationState overdrive = animationManager.GetState("Overdrive");
         AnimationState dashAttack = animationManager.GetState("DashAttack");
+        dashAttack.speed = 2f;
+
         AnimationState dodge = animationManager.GetState("Dodge");
         AnimationState attack1 = animationManager.GetState("Attack1");
         AnimationState attack2 = animationManager.GetState("Attack2");
