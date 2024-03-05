@@ -3432,9 +3432,9 @@ Script:
   ultimateSize: 66
   dashAttackDuration: 2
   jumpAttackDuration: 3
-  ultiChargeDuration: 1
+  ultiChargeDuration: 5
   projectileAttackDuration: 6
-  ultiExplodeDuration: 2
+  ultiExplodeDuration: 3
   slamAttackRadius: 10
   projectileDistance: 3
   projectileCount: 24
