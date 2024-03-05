@@ -227,7 +227,7 @@ void TextSystem::Draw(BaseCamera& _camera)
 
 	RenderText_WorldSpace(_camera);
 	//RenderText_ScreeninWorldSpace(_camera);
-	//RenderText_ScreenSpace(_camera);
+	RenderText_ScreenSpace(_camera);
 
 }
 
@@ -361,15 +361,30 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 	allVertices.clear();
 	//allTextures.clear();
 
-	float xoffset = text.x;
+	float xoffset = text.x, yoffset = text.y;
+	float fontSize = 0.001 * text.fontSize;
+	float maxWidth = 0.01 * text.width;
+
 	for (const char& c : text.text) {
 		Character ch = mFontContainer.at(text.guid).at(c);  // Use .at() to ensure the character exists in the map
 
-		float xpos = xoffset + ch.Bearing.x * (text.fontSize * 0.001f);
-		float ypos = text.y - (ch.Bearing.y * 2.f) * (text.fontSize * 0.001f);
+		float xpos, ypos;
+		xpos = xoffset + ch.Bearing.x * fontSize;
 
-		float w = ch.Size.x * (text.fontSize * 0.001f);
-		float h = ch.Size.y * (text.fontSize * 0.001f) * 2.f;
+		// if new character pos exceeds width
+		if (xpos > maxWidth + text.x)
+		{
+			float charHeight = mFontContainer.at(text.guid).at('A').Size.y;
+			yoffset -= charHeight * fontSize * 2 * text.leading;
+			xoffset = text.x;
+			xpos = xoffset + ch.Bearing.x * fontSize;
+		}
+
+		ypos = yoffset - (ch.Bearing.y * 2.f) * fontSize;
+			
+		float w = ch.Size.x * fontSize;
+		float h = ch.Size.y * fontSize * 2.f;
+
 
 		//if (!ch.Texture)
 		//{
@@ -402,7 +417,7 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 		//allTextures.push_back(ch.Texture);
 
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		xoffset += (ch.Advance >> 6) * (text.fontSize * 0.001f); // bitshift by 6 to get value in pixels (2^6 = 64)
+		xoffset += (ch.Advance >> 6) * fontSize; // bitshift by 6 to get value in pixels (2^6 = 64)
 
 	}
 

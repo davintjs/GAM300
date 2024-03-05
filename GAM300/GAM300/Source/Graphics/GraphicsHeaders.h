@@ -606,7 +606,6 @@ public:
 		unsigned int Advance;
 		glm::vec2 AtlasCoordsMin;
 		glm::vec2 AtlasCoordsMax;
-		GLuint Texture{ 0 }; // temp will be upgraded more later
 	};
 
 	unsigned int txtVAO, txtVBO;
