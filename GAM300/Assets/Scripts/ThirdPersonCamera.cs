@@ -142,6 +142,9 @@ public class ThirdPersonCamera : Script
     void UpdateCameraRotation()
     {
         vec2 mouseDelta = Input.GetMouseDelta();
+        if (mouseDelta.LengthSqr > 1.0f)
+            return;
+
         yawAngle -= mouseDelta.x * yawRotSpeed * yawSM * Time.deltaTime * 3.14f / 180f;
 
         //Pitch Camera Rotation

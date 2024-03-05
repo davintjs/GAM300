@@ -79,8 +79,8 @@ void EditorCamera::InputControls()
 		//--------------------------------------------------------------
 		// Rotating / Panning / Zooming
 		//--------------------------------------------------------------
-
-		RotateCamera(delta);
+		if(delta.x + delta.y < 1.f)
+			RotateCamera(delta);
 
 		//--------------------------------------------------------------
 		// Moving the Editor Camera

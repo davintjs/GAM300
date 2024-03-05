@@ -743,8 +743,6 @@ public class ThirdPersonController : Script
 
 
         //attacking
-
-        animationManager.UpdateState();
     }
 
     public void Respawn()
@@ -890,6 +888,7 @@ public class ThirdPersonController : Script
     void SetState(string stateName, bool value)
     {
         animationManager.GetState(stateName).state = value;
+        animationManager.UpdateState(); 
     }
     public void TakeDamage(float amount)
     {
@@ -925,13 +924,11 @@ public class ThirdPersonController : Script
             //Console.WriteLine("YouDied");
             isDead = true;
             SetState("Death", true);
-            animationManager.UpdateState();
         }
         else
         {
             SetState("Stun", true);
             animator.Stop();
-            animationManager.UpdateState();
             animator.Play();
         }
     }
