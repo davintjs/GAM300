@@ -761,6 +761,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 			Transform::Decompose(boxTransMtx, (Vector3&)pos, (glm::quat&)rot, (Vector3&)scale);
 
+			PRINT(scene.Get<Tag>(boxCollider).name,'\n');
+
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
 
