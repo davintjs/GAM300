@@ -1848,8 +1848,8 @@ Rigidbody:
   Force: [0, 0, 0]
   Friction: 0.100000001
   Mass: 1
-  IsStatic: true
-  IsKinematic: false
+  IsStatic: false
+  IsKinematic: true
   UseGravity: false
   Is_trigger: true
 ---
@@ -1934,6 +1934,7 @@ Script:
   startDeathAnimationCountdown: false
   currentAnimationTimer: 0
   testingValue: 0
+  touchingPlayer: false
   isAttacking: false
   isAttackCooldown: false
   attackCooldownTimer: 1

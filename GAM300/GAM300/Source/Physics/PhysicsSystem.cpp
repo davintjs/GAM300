@@ -1135,9 +1135,8 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3&
 	*/
 
 
-	//JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
-	JPH::AllHitCollisionCollector <JPH::RayCastBodyCollector> collector;
-
+	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> allcollector;
+	JPH::ClosestHitCollisionCollector <JPH::RayCastBodyCollector> collector;
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
 	JPH::RayCastSettings rcs;
 	rcs.mBackFaceMode = JPH::EBackFaceMode::CollideWithBackFaces;
@@ -1145,20 +1144,20 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3&
 	bpq.CastRay(ray, collector);
 	if(!collector.HadHit())
 		return EngineRayCastResult(nullptr, Vector3(0, 0, 0), false);
-	size_t numHits = (int)collector.mHits.size();
-	std::cout << "Number of hits on raycast: " << numHits << std::endl;	
+	//size_t numHits = (int)collector.mHits.size();
+	//std::cout << "Number of hits on raycast: " << numHits << std::endl;	
 	
 
-	JPH::BroadPhaseCastResult* results = collector.mHits.data();
+	JPH::BroadPhaseCastResult results = collector.mHit;
+	
+	//size_t idx{ 0 };
+	//if (numHits != 1) {
+	//	idx = numHits - 1;
+	//}
 
-	size_t idx{ 0 };
-	if (numHits != 1) {
-		idx = numHits - 1;
-	}
-
-	UINT32 bid = results[idx].mBodyID.GetIndexAndSequenceNumber();
+	UINT32 bid = results.mBodyID.GetIndexAndSequenceNumber();
 	Vector3 hitPt;
-	JPH::RVec3 v = ray.GetPointOnRay(results[idx].mFraction);
+	JPH::RVec3 v = ray.GetPointOnRay(results.mFraction);
 	JoltVec3ToGlmVec3(v, hitPt);
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
