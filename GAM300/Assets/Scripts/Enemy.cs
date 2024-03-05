@@ -369,7 +369,6 @@ public class Enemy : Script
         stun.SetConditionals(false, death);
         attack.SetConditionals(false, death, stun);
         attack.speed = 1.5f;
-        attack.loop = true;
         walk.SetConditionals(true, walk);
         walk.SetConditionals(false, attack, death, stun);
         run.SetConditionals(false, attack, death, stun);
