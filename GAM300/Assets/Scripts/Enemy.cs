@@ -381,9 +381,7 @@ public class Enemy : Script
         attack.speed = 1.5f;
         walk.SetConditionals(true, walk);
         walk.SetConditionals(false, attack, death, stun);
-        walk.loop = true;
         run.SetConditionals(false, attack, death, stun);
-        run.loop = true;
     }
 
     bool GetState(string stateName)
