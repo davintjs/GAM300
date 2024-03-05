@@ -361,24 +361,64 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 	allVertices.clear();
 	//allTextures.clear();
 
-	float xoffset = text.x, yoffset = text.y;
-	float fontSize = 0.001 * text.fontSize;
-	float maxWidth = 0.01 * text.width;
-
+	float xoffset{ text.x }, yoffset { text.y };
+	float fontSize { 0.001f * text.fontSize };
+	float maxWidth { 0.01f * text.width };
+	//bool newLine{ false };
+	int iter{ 0 }; // forgive me im tireed and idk what im doing
 	for (const char& c : text.text) {
 		Character ch = mFontContainer.at(text.guid).at(c);  // Use .at() to ensure the character exists in the map
 
 		float xpos, ypos;
 		xpos = xoffset + ch.Bearing.x * fontSize;
 
-		// if new character pos exceeds width
-		if (xpos > maxWidth + text.x)
+		if (c == ' ')
 		{
-			float charHeight = mFontContainer.at(text.guid).at('A').Size.y;
-			yoffset -= charHeight * fontSize * 2 * text.leading;
-			xoffset = text.x;
-			xpos = xoffset + ch.Bearing.x * fontSize;
+			int internalIter{ iter };
+			char tempChar = text.text[iter + 1];
+			float wordWidth{ xpos };
+			while (tempChar != ' ')
+			{
+				wordWidth += mFontContainer.at(text.guid).at(tempChar).Size.x * fontSize;
+
+				if (wordWidth > maxWidth + text.x)
+				{
+					float charHeight = mFontContainer.at(text.guid).at('A').Size.y;
+					yoffset -= charHeight * fontSize * 2 * text.leading;
+					xoffset = text.x;
+					xpos = xoffset + ch.Bearing.x * fontSize;
+					break;
+				}
+
+				++internalIter;
+
+				if (internalIter >= text.text.size())
+					break;
+
+				tempChar = text.text[internalIter]; // move on
+			}
 		}
+
+		//// if new character pos exceeds width -> change to if word exceeds, so if space character, check width until next space
+		//if ((xpos > maxWidth + text.x) /*|| (c == '\\' && *std::next(&c) == 'n')*/)
+		//{
+		//	float charHeight = mFontContainer.at(text.guid).at('A').Size.y;
+		//	yoffset -= charHeight * fontSize * 2 * text.leading;
+		//	xoffset = text.x;
+		//	xpos = xoffset + ch.Bearing.x * fontSize;
+
+		//	//if (c == '\\' && *std::next(&c) == 'n') 
+		//	//{
+		//	//	newLine = true;
+		//	//	continue;
+		//	//}
+		//}
+
+		//if (newLine)
+		//{
+		//	newLine = false;
+		//	continue;
+		//}
 
 		ypos = yoffset - (ch.Bearing.y * 2.f) * fontSize;
 			
@@ -419,6 +459,7 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		xoffset += (ch.Advance >> 6) * fontSize; // bitshift by 6 to get value in pixels (2^6 = 64)
 
+		++iter;
 	}
 
 	// Update content of VBO memory with the new vertices and texture coordinates
