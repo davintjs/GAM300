@@ -270,7 +270,6 @@ void ScriptingSystem::Update(float dt)
 	{
 		mono_field_static_set_value(mTimeVtable, mTimeDtField, &dt);
 		InvokeAllScripts(DefaultMethodTypes::Update);
-		InvokeAllScripts(DefaultMethodTypes::LateUpdate);
 		InvokeAllScripts(DefaultMethodTypes::ExecuteCoroutines);
 		return;
 	}
@@ -1051,3 +1050,9 @@ void ScriptingSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 	}
 	mSceneHandles.erase(pEvent->sceneID);
 }
+
+void LateScriptingSystem::Update(float dt)
+{
+	SCRIPTING.InvokeAllScripts(DefaultMethodTypes::LateUpdate);
+}
+
