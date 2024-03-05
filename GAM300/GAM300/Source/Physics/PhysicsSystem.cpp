@@ -546,22 +546,20 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		}
 
 		// Update velocity
-		if (mCharacter->IsSupported()) {
-			//PRINT("supported\n");
-			JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
-			JPH::Vec3 desired_velocity = directionNormalized * length;
-			desired_velocity.SetY(current_velocity.GetY());
-			JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
+		//PRINT("supported\n");
+		JPH::Vec3 current_velocity = mCharacter->GetLinearVelocity();
+		JPH::Vec3 desired_velocity = directionNormalized * length;
+		desired_velocity.SetY(current_velocity.GetY());
+		JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
-			// Jump
-			if(groundState == JPH::Character::EGroundState::OnGround)
-				new_velocity += JPH::Vec3(0, direction.GetY(), 0);
-			//std::cout << "new velocity:" << new_velocity.GetX() << ',' << new_velocity.GetY() << ',' << new_velocity.GetZ() << std::endl;
+		// Jump
+		if(groundState == JPH::Character::EGroundState::OnGround)
+			new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+		//std::cout << "new velocity:" << new_velocity.GetX() << ',' << new_velocity.GetY() << ',' << new_velocity.GetZ() << std::endl;
 
 
-			//PRINT("end\n");
-			mCharacter->SetLinearVelocity(new_velocity);
-		}
+		//PRINT("end\n");
+		mCharacter->SetLinearVelocity(new_velocity);
 
 		// Reset character controller's direction
 		cc.direction = Vector3(0, 0, 0);
@@ -699,6 +697,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 			Transform::Decompose(boxTransMtx, (Vector3&)pos, (glm::quat&)rot, (Vector3&)scale);
 
+			PRINT(scene.Get<Tag>(boxCollider).name,'\n');
+
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
 
@@ -724,8 +724,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
 
 			float radius = (tscale.x < tscale.z ? tscale.z : tscale.x) * cc.radius;
-			float offset = 0.5f * (tscale.y * cc.height) - radius;
-			if (offset <= 0.0f) {
+			float offset = 0.5f * (tscale.y * cc.height);
+			if (cc.height >= 0.0f) {
 				JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 				SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
 			}

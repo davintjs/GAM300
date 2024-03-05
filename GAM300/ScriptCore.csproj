@@ -39,7 +39,11 @@
     <Compile Include="Assets\Scripts\AnimationStateMachine.cs" />
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\BossBehaviour.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
+    <Compile Include="Assets\Scripts\CompanionMovement.cs" />
+    <Compile Include="Assets\Scripts\CutsceneCamera.cs" />
+    <Compile Include="Assets\Scripts\CutsceneTrigger.cs" />
     <Compile Include="Assets\Scripts\Dialogue.cs" />
     <Compile Include="Assets\Scripts\DialogueManager.cs" />
     <Compile Include="Assets\Scripts\Door.cs" />
@@ -48,6 +52,8 @@
     <Compile Include="Assets\Scripts\Enemy.cs" />
     <Compile Include="Assets\Scripts\EnemyBullet.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
+    <Compile Include="Assets\Scripts\Exit.cs" />
+    <Compile Include="Assets\Scripts\FlashMaterial.cs" />
     <Compile Include="Assets\Scripts\FreeLookCamera.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
     <Compile Include="Assets\Scripts\HealthPack.cs" />
@@ -58,12 +64,15 @@
     <Compile Include="Assets\Scripts\MaxStatPack.cs" />
     <Compile Include="Assets\Scripts\PlatformScript.cs" />
     <Compile Include="Assets\Scripts\PlayerAttack.cs" />
+    <Compile Include="Assets\Scripts\PlaySound.cs" />
     <Compile Include="Assets\Scripts\RangeEnemy.cs" />
     <Compile Include="Assets\Scripts\RangeEnemyNavMesh.cs" />
     <Compile Include="Assets\Scripts\SpinningPropeller.cs" />
+    <Compile Include="Assets\Scripts\Splashscreen.cs" />
     <Compile Include="Assets\Scripts\Terminal.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonController.cs" />
+    <Compile Include="Assets\Scripts\TutorialEnemyKeyDrop.cs" />
     <Compile Include="Assets\Scripts\VictoryMenu.cs" />
     <Compile Include="CoreScripts\Application.cs" />
     <Compile Include="CoreScripts\Collision.cs" />

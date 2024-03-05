@@ -83,15 +83,29 @@ void ParticleManager::Update(float dt)
             if (particleComponent.noiseMovement > 1.f) {
                 if (particle.noiselifetime <= 0.f) {
 
-                    if (enableDirection && 
-                        (glm::dot(glm::normalize(particle.position - origin), glm::normalize(vec3(particleComponent.direction))) <= cosf((particleComponent.angle * 3.1415926f) / 180.f))) {
-                        particle.direction = vec3(particleComponent.direction);
-                    }
-                    else {
-                        vec3 noiseDirection = random.NextVector3(-20.0f, 20.0f);
-                        noiseDirection = glm::normalize(noiseDirection);
+                    if (!enableDirection || particle.position == origin) {
+                        // Handle case where enableDirection is false or particle.position == origin
+                        // Assuming some default behavior here
+                        vec3 noiseDirection = glm::normalize(random.NextVector3(-20.0f, 20.0f));
                         particle.direction = glm::normalize(noiseMovementFactor * noiseDirection + (1.f - noiseMovementFactor) * particle.direction);
                     }
+                    else {
+                        vec3 particlePosMinusOrigin = particle.position - origin;
+                        vec3 normalizedParticlePosMinusOrigin = glm::normalize(particlePosMinusOrigin);
+                        vec3 normalizedParticleComponentDirection = glm::normalize(vec3(particleComponent.direction));
+
+                        float dotProduct = glm::dot(normalizedParticlePosMinusOrigin, normalizedParticleComponentDirection);
+                        float threshold = cosf(particleComponent.angle * 0.0174533f); // Precomputed constant
+
+                        if (dotProduct < threshold) {
+                            particle.direction = vec3(particleComponent.direction);
+                        }
+                        else {
+                            vec3 noiseDirection = glm::normalize(random.NextVector3(-20.0f, 20.0f));
+                            particle.direction = glm::normalize(noiseMovementFactor * noiseDirection + (1.f - noiseMovementFactor) * particle.direction);
+                        }
+                    }
+
 
                     if (particleComponent.noisefrequency >= 1.f) {
                         particle.noiselifetime = random.NextFloat1(10.f * particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ - 12.5f * particleComponent.particleLifetime_ / (particleComponent.noisefrequency)) / 10.f;

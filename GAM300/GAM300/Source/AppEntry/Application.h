@@ -40,6 +40,8 @@ public:
 	// Create an application
 	static Application* CreateApp();
 
+	void TryExit();
+
 	// Set fullscreen of the window application
 	void Fullscreen(const bool& _enable, const int& _width, const int& _height);
 

@@ -35,7 +35,8 @@ void Texture_Manager::Exit()
 
 void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID<TextureAsset>& GUID)
 {
-    GLuint temp{};
+    BaseTexture tempTexture;
+    tempTexture.path = Filename;
 
     // check if from skybox
     std::string searchWord = "skybox";
@@ -57,29 +58,39 @@ void Texture_Manager::AddTexture(char const* Filename, const Engine::GUID<Textur
             strncpy_s(subString, length + 1, Filename, length);
             subString[length] = '\0';
 
-            temp = CreateSkyboxTexture(subString);
+            tempTexture.textureID = CreateSkyboxTexture(subString);
 
-            E_ASSERT(temp, "Skybox texture creation failed. Check if all textures necessary for skybox creation are named correctly.");
+            E_ASSERT(tempTexture.textureID, "Skybox texture creation failed. Check if all textures necessary for skybox creation are named correctly.");
 
             delete[] subString;
-            mTextureContainer.emplace(GUID, std::pair(Filename, temp));
+            mTextureContainer.emplace(GUID, tempTexture);
         }
     }
     else {
         // if not skybox
-        temp = CreateTexture(Filename);
-        E_ASSERT(temp, "Texture creation failed.");
-        mTextureContainer.emplace(GUID, std::pair(Filename, temp));
+        CreateTexture(tempTexture);
+        E_ASSERT(tempTexture.textureID, "Texture creation failed.");
+        mTextureContainer.emplace(GUID, tempTexture);
     }
 
 }
 
-/// Filename can be KTX or DDS files
 GLuint Texture_Manager::CreateTexture(char const* Filename)
 {
-    gli::texture Texture = gli::load(Filename);
+    BaseTexture tempTexture;
+    tempTexture.path = Filename;
+    tempTexture.textureID = 0;
+    CreateTexture(tempTexture);
+
+    return tempTexture.textureID;
+}
+
+/// Filename can be KTX or DDS files
+void Texture_Manager::CreateTexture(BaseTexture& _texture)
+{
+    gli::texture Texture = gli::load(_texture.path);
     if (Texture.empty())
-        return 0;
+        return;
 
     gli::gl GL(gli::gl::PROFILE_GL33);
     gli::gl::format Format = GL.translate(Texture.format(), Texture.swizzles());
@@ -199,7 +210,9 @@ GLuint Texture_Manager::CreateTexture(char const* Filename)
                 default: assert(0); break;
                 }
             }
-    return TextureName;
+
+    _texture.textureID = TextureName;
+    _texture.pixelDimension = glm::vec2(Extent);
 }
 
 GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
@@ -253,10 +266,19 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
 GLuint Texture_Manager::GetTexture(const Engine::GUID<TextureAsset>& GUID)
 {
     if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
-        return mTextureContainer.find(GUID)->second.second;
+        return mTextureContainer.find(GUID)->second.textureID;
     }
 
     return 0;
+}
+
+BaseTexture* Texture_Manager::GetBaseTexture(const Engine::GUID<TextureAsset>& GUID)
+{
+    if ((mTextureContainer.find(GUID) != mTextureContainer.end())) {
+        return &mTextureContainer.find(GUID)->second;
+    }
+
+    return nullptr;
 }
 
 GLuint Texture_Manager::GetTexture(const fs::path& filePath)

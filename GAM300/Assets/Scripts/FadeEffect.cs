@@ -15,7 +15,7 @@ public class FadeEffect : Script
 
     private float startVal = 0f;
     private float duration = 0f;
-    private bool isFading = false;
+    public bool isFading = false;
 
     public GameObject fader;
  
@@ -25,8 +25,8 @@ public class FadeEffect : Script
     public float targetVal = 1f;
 
     public bool finished = false;
+    public bool looping = false;
 
-    private Coroutine fadeCoroutine;
     private Coroutine fadeInCoroutine;
     private Coroutine fadeOutCoroutine;
     private Coroutine fadeInAndOutCoroutine;
@@ -39,7 +39,10 @@ public class FadeEffect : Script
 
     void Update()
     {
-        
+        if(looping && !isFading)
+        {
+            StartFadeInAndOut(inDuration);
+        }
     }
 
     public void StartFadeInAndOut(float fadeDuration = 1f)
@@ -151,7 +154,6 @@ public class FadeEffect : Script
 
     public void Reset()
     {
-        StopCoroutine(fadeCoroutine);
         StopCoroutine(fadeInCoroutine);
         StopCoroutine(fadeOutCoroutine);
         StopCoroutine(fadeInAndOutCoroutine);

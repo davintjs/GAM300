@@ -27,7 +27,6 @@ public class Enemy : Script
     public Transform modelOffset;
     public float RotationSpeed = 6f;
 
-
     AnimationStateMachine animationManager;
     public Animator animator;
     public int state;//Example 1 is walk, 2 is attack, 3 is idle etc.
@@ -46,8 +45,9 @@ public class Enemy : Script
 
     public bool isAttacking = false;
     public bool isAttackCooldown = false;
-    float attackTimer = 0.001f;
+    float attackTimer = 1f;
     float currentAttackTimer;
+    float currentAttackBuffer;
     public float attackCooldownTimer = 1f;
     public float currentAttackCooldownTimer;
 
@@ -57,11 +57,17 @@ public class Enemy : Script
     public bool newRequest = false;
 
     public bool isStunned;
-    public float stunDuration = 1.5f;
+    public float stunDuration = 0.5f;
     public float currentStunDuration;
+
+    // Staggering stuff
+    public float staggerCooldown = 5f;
+    public float staggerTimer = 5f;
 
     //audio
     public bool playOnce = true;
+    public bool alertedOnce = true;
+    int alertedRotation = 0;
 
     void Start()
     {
@@ -72,7 +78,6 @@ public class Enemy : Script
         rb = GetComponent<Rigidbody>();
         InitAnimStates();
     }
-
    
 
     void Update()
@@ -95,7 +100,7 @@ public class Enemy : Script
             {
                 currentDeathAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
-                animator.Pause();//pause the death animation to prevent it from returning to idle animation
+                //animator.Pause();//pause the death animation to prevent it from returning to idle animation
                 gameObject.SetActive(false);
                 //Respawn();
                 //SceneManager.LoadScene("LevelPlay2");
@@ -104,6 +109,10 @@ public class Enemy : Script
 
         if (isDead)
         {
+            if (attackTrigger != null)
+            {
+                attackTrigger.SetActive(false);
+            }
             return;
         }
         if(isStunned)
@@ -115,19 +124,9 @@ public class Enemy : Script
             isAttacking = true;
             if(isAttacking && !isAttackCooldown)
             {
-                //AudioManager.instance.meleeEnemyAttack.Play();
                 currentAttackTimer += Time.deltaTime;
-                if (currentAttackTimer >= attackTimer)
-                {
-                    isAttacking = false;
-                    isAttackCooldown = true;
-                    currentAttackTimer = 0f;
-                }
-            }
-            if(isAttackCooldown)
-            {
-                currentAttackCooldownTimer += Time.deltaTime;
-                if(currentAttackCooldownTimer >= 0.5f)
+                currentAttackBuffer += Time.deltaTime;
+                if (currentAttackBuffer >= 0.6f) // So that the attack is not instantaneous
                 {
                     if (attackTrigger != null)
                     {
@@ -135,19 +134,36 @@ public class Enemy : Script
                         attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
                         attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
                         attackTrigger.transform.rotation = new vec3(modelOffset.rotation);
-                        //attackTrigger.SetActive(true);
                     }
+                    currentAttackBuffer = 0f;
                 }
-                if(currentAttackCooldownTimer >= attackCooldownTimer)
+                
+                //AudioManager.instance.meleeEnemyAttack.Play();
+                if (currentAttackTimer >= attackTimer)
+                {
+                    isAttacking = false;
+                    isAttackCooldown = true;
+                    SetState("Attack", false);
+                    currentAttackTimer = 0f;
+                }
+            }
+            if(isAttackCooldown)
+            {
+                currentAttackCooldownTimer += Time.deltaTime;
+                if (attackTrigger != null)
                 {
                     attackTrigger.SetActive(false);
+                }
+
+                if (currentAttackCooldownTimer >= attackCooldownTimer)
+                {
                     isAttackCooldown = false;
                     currentAttackCooldownTimer = 0f;
                 }
             }
            
         }
-        else if(state != 2)
+        else if (state != 2)
         {
             attackTrigger.SetActive(false);
             isAttacking = false;
@@ -155,13 +171,6 @@ public class Enemy : Script
             currentAttackCooldownTimer = 0f;
             currentAnimationTimer = 0f;
         }
-
-        //NOTE: testing state, remove this later
-        //if (Input.GetKey(KeyCode.K))
-        //{
-            //Console.WriteLine("TestingState");
-            //SetState("Run", true);
-        //}
 
 
         vec3 direction = player.localPosition - transform.position;
@@ -176,6 +185,7 @@ public class Enemy : Script
                     //Console.WriteLine("Idle");
                     //idle animation
                     playOnce = true;//reset ability to play audio
+                    alertedOnce = true;
                     SetState("Idle", true);
                     //attackTrigger.SetActive(false);
                     //player detection
@@ -185,11 +195,6 @@ public class Enemy : Script
                         {
                             SetState("Idle", false);
                         }
-                        //if (timer >= duration)
-                        //{
-                        //    newRequest = true;
-                        //    timer = 0f;
-                        //}
                         //change to chase state
                         state = 1;
                     }
@@ -201,6 +206,30 @@ public class Enemy : Script
                     playOnce = true;//reset ability to play audio
                     //attackTrigger.SetActive(false);
                     //change to attack state once it has reach it is in range
+
+                    staggerTimer += Time.deltaTime; // Start counting stagger timer
+
+                    if (alertedOnce)
+                    {
+                        Random rd = new Random();
+                        alertedRotation = rd.Next(0, 2);
+                        alertedOnce = false;
+
+                        switch (alertedRotation)
+                        {
+                            case 0:
+                                AudioManager.instance.enemyAlerted1.Play();
+                                break;
+                            case 1:
+                                AudioManager.instance.enemyAlerted2.Play();
+                                break;
+                            case 2:
+                                AudioManager.instance.enemyAlerted3.Play();
+                                break;
+
+                        }
+                    }
+
                     if (vec3.Distance(player.localPosition, transform.localPosition) <= attackDistance)
                     {
                         state = 2;
@@ -221,11 +250,6 @@ public class Enemy : Script
                     if (check != null) // Use navmesh if is navmesh agent
                     {
                         check.FindPath(player.localPosition);
-                        //if (newRequest)
-                        //{
-                        //    check.FindPath(player.localPosition);
-                        //    newRequest = false;
-                        //}
                     }
                     else // Default
                     {
@@ -236,16 +260,9 @@ public class Enemy : Script
                     break;
                 //attack state
                 case 2:
-                    //attack animation
-                    SetState("Attack", true);
-                    //if(attackTrigger != null)
-                    //{
-                    //    Console.WriteLine("Attack");
-                    //    attackTrigger.GetComponent<Rigidbody>().linearVelocity = new vec3(modelOffset.back * 0.6f);
-                    //    attackTrigger.transform.localPosition = new vec3(transform.localPosition + modelOffset.forward * 0.6f);
-                    //    attackTrigger.transform.localRotation = new vec3(modelOffset.localRotation);
-                    //    attackTrigger.SetActive(true);
-                    //}
+                    SetState("Attack", true); //attack animation
+                    staggerTimer += Time.deltaTime; // Start counting stagger timer
+
                     if (playOnce)
                     {
                         playOnce = false;
@@ -255,7 +272,6 @@ public class Enemy : Script
                     LookAt(direction);
                     if(!isAttacking)
                     {
-
                         //change to chase state once player has reach out of range
                         if (vec3.Distance(player.localPosition, transform.localPosition) > attackDistance)
                         {
@@ -299,7 +315,6 @@ public class Enemy : Script
         }
 
         //timer += Time.deltaTime;
-
 
         //needed for the animation to change
         animationManager.UpdateState();
@@ -356,9 +371,7 @@ public class Enemy : Script
         attack.speed = 1.5f;
         walk.SetConditionals(true, walk);
         walk.SetConditionals(false, attack, death, stun);
-        walk.loop = true;
         run.SetConditionals(false, attack, death, stun);
-        run.loop = true;
     }
 
     bool GetState(string stateName)
@@ -377,6 +390,7 @@ public class Enemy : Script
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
             ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
             AudioManager.instance.enemyHit.Play();
+            AudioManager.instance.meleeEnemyInjured.Play();
             currentHealth -= amount;
             vec3 hpScale = hpBar.localScale;
             hpScale.x = currentHealth / maxHealth;
@@ -419,7 +433,12 @@ public class Enemy : Script
             Transform otherT = other.gameObject.GetComponent<Transform>();
             vec3 dir = otherT.forward;
             dir = dir.NormalizedSafe;
-            isStunned = true;
+            if (staggerTimer >= staggerCooldown)
+            {
+                isStunned = true;
+                staggerTimer = 0f;
+            }
+            
             if (damagedCoroutine != null)
             {
                 StopCoroutine(damagedCoroutine);

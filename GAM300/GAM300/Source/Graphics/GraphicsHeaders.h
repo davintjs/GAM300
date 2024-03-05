@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AssetManager/AssetTypes.h"
 #include "Scripting/ScriptFields.h"
 #include "Scene/Object.h"
+#include "Scene/Components.h"
 
 #define MAX_POINT_LIGHT 20
 #define MAX_SPOT_LIGHT 20
@@ -48,6 +49,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define UIRENDERER UIRenderer::Instance()
 #define MATERIALSYSTEM MaterialSystem::Instance()
 #define TEXTSYSTEM TextSystem::Instance()
+
+#define BLOOMER BLOOM_PBR::Instance()
 
 class Ray3D;
 //// Map of all shader field types
@@ -240,6 +243,7 @@ public:
 private:
 
 	void CallbackSceneStop(SceneStopEvent* pEvent);
+	void CallbackSceneStart(SceneStartEvent * pEvent);
 
 	//std::unordered_map< SHADERTYPE, std::vector<Material_instance> >_material;// Everything inside here is the variables
 };
@@ -325,9 +329,42 @@ public:
 	void UIDraw_3D(BaseCamera & _camera);
 	// Drawing Screenspace UI onto worldspace
 	void UIDraw_2DWorldSpace(BaseCamera & _camera);
-
+	
 };
 
+// bloom stuff
+struct bloomMip
+{
+	glm::vec2 size;
+	glm::ivec2 intSize;
+	unsigned int texture;
+};
+
+SINGLETON(BLOOM_PBR)
+{
+public:
+
+	void Init(unsigned int windowWidth, unsigned int windowHeight);
+	void RenderBloomTexture(float filterRadius, BaseCamera& _camera, unsigned int& _vao, unsigned int& _vbo);
+	const std::vector<bloomMip>& MipChain() const { return mMipChain; }
+	GLuint BloomTexture();
+
+	bool mKarisAverageOnDownsample = true;
+
+private:
+
+	void RenderDownsamples(unsigned int srcTexture,unsigned int& _vao, unsigned int& _vbo);
+	void RenderUpsamples(float filterRadius, unsigned int& _vao, unsigned int& _vbo);
+
+
+	bool FBOInit(unsigned int windowWidth, unsigned int windowHeight, unsigned int mipChainLength);
+
+	glm::ivec2 mSrcViewportSize;
+	glm::vec2 mSrcViewportSizeFloat;
+	
+	unsigned int mFBO;
+	std::vector<bloomMip> mMipChain;
+};
 
 ENGINE_EDITOR_SYSTEM(DebugDraw)
 {
@@ -341,6 +378,8 @@ public:
 	void Draw();
 
 	void DrawIcons();
+
+	void DrawCanvasOutline();
 
 	void DrawBoxColliders();
 
@@ -565,20 +604,48 @@ public:
 		glm::ivec2 Size;
 		glm::ivec2 Bearing;
 		unsigned int Advance;
+		glm::vec2 AtlasCoordsMin;
+		glm::vec2 AtlasCoordsMax;
+		GLuint Texture{ 0 }; // temp will be upgraded more later
 	};
 
 	unsigned int txtVAO, txtVBO;
-	std::map<char, Character> Characters;
+	using FontCharacters = std::map<char, Character>;
+	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
+	std::unordered_map<Engine::GUID<FontAsset>, GLuint> mFontAtlasContainer;
+
+	/*struct FontType {
+		Engine::GUID<FontAsset> GUID;
+		GLuint Texture{0};
+		FontCharacters charactrs;
+	};*/
+
+	//std::vector<FontType> fontGroups;
+	std::vector<float> allVertices;
+	//std::vector<GLuint> allTextures;
+
+
 
 	void Init();
 	void Update(float dt);
 	void Exit();
 
-	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera);
-	void Draw(BaseCamera& _camera);
-	void GenerateFontAtlas(const char* fontPath, const char* outputPath);
-	void LoadFontAtlas(const char* inputPath);
+	//void GenerateTextureAtlas(FontCharacters& characters);
 
+	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid);
+
+	void RenderTextFromString(TextRenderer const& text);
+
+	void RenderText_ScreenSpace(BaseCamera& _camera);
+	//void RenderText_ScreeninWorldSpace(BaseCamera& _camera);
+	void RenderText_WorldSpace(BaseCamera& _camera);
+
+	void Draw(BaseCamera& _camera);
+	void AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid);
+
+	void CallbackFontAssetLoaded(AssetLoadedEvent<FontAsset>* pEvent);
+
+	void GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, TextSystem::FontCharacters& characters);
 
 private:
 	//nth yet

@@ -116,6 +116,8 @@
     <ClCompile Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_api.cpp" />
     <ClCompile Include="Source\Graphics\Text.cpp" />
     <ClCompile Include="Source\AssetManager\TextureCompiler.cpp" />
+    <ClCompile Include="Source\AssetManager\FontCompiler.cpp" />
+    <ClCompile Include="Source\Graphics\bloom.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\AppEntry\Application.h">
@@ -218,6 +220,7 @@
     <ClInclude Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.h" />
     <ClInclude Include="Source\AssetManager\TextureCompiler.h" />
     <ClInclude Include="Source\Graphics\Text.h" />
+    <ClInclude Include="Source\AssetManager\FontCompiler.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\BasicLighting.frag" />
@@ -260,5 +263,7 @@
     <None Include="Source\Editor\ImGuiNodeEditor\imgui_bezier_math.inl" />
     <None Include="Source\Editor\ImGuiNodeEditor\imgui_extra_math.inl" />
     <None Include="Source\Editor\ImGuiNodeEditor\imgui_node_editor_internal.inl" />
+    <None Include="Shaders\TextWorld.vert" />
+    <None Include="Shaders\TextWorld.frag" />
   </ItemGroup>
 </Project>

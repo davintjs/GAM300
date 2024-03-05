@@ -24,6 +24,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 void Animation_Manager::Init()
 {  
     EVENTS.Subscribe(this, &Animation_Manager::CallbackAnimationAssetLoaded);
+    EVENTS.Subscribe(this, &Animation_Manager::CallbackAnimationSceneLoad);
 }
 
 void Animation_Manager::Update(float dt)
@@ -41,13 +42,16 @@ void Animation_Manager::Update(float dt)
             //PRINT("Animator ID: ", animator.UUID(), "\n");
             animator.prevAnimID = animator.animID;
             animator.m_CurrentTime = 0.f;
-            if (animator.animID == 0)
+            if (animator.animID == 0) // Replaced to empty
                 animator.m_AnimationIdx = -1;
             else
                 animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
 
             animator.SetDefaultState("Idle");
-            animator.ChangeState();
+            //animator.ChangeState();
+
+            Transform& t = currentScene.Get<Transform>(animator);
+            animator.CreateRig(&t);
         }
 
         /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_W))
@@ -85,4 +89,14 @@ void Animation_Manager::AddAnimation(const AnimationAsset& _animationAsset, cons
 void Animation_Manager::CallbackAnimationAssetLoaded(AssetLoadedEvent<AnimationAsset>* pEvent)
 {
     AddAnimation(pEvent->asset, pEvent->asset.importer->guid);
+}
+
+void Animation_Manager::CallbackAnimationSceneLoad(SceneStartEvent* pEvent)
+{
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    for (Animator& animator : currentScene.GetArray<Animator>())
+    {
+        Transform& t = currentScene.Get<Transform>(animator);
+        animator.CreateRig(&t);
+    }
 }

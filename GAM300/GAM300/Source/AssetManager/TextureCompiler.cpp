@@ -51,7 +51,7 @@ void LoadTexture(const std::filesystem::path& _filePath)
 
 	DirectX::ScratchImage bcImage;
 	hr = Compress(image.GetImages(), image.GetImageCount(),
-		image.GetMetadata(), DXGI_FORMAT_BC1_UNORM,
+		image.GetMetadata(), DXGI_FORMAT_BC3_UNORM,
 		DirectX::TEX_COMPRESS_DEFAULT, DirectX::TEX_THRESHOLD_DEFAULT,
 		bcImage);
 	if (FAILED(hr)) {

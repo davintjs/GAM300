@@ -34,6 +34,7 @@ All content � 2023 DigiPen Institute of Technology Singapore. All rights reser
 #include "Debugging/Debugger.h"
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtx/matrix_decompose.hpp>
+#include <FMOD/fmod.hpp>
 
 
 constexpr size_t MAX_ENTITIES{ 5 };
@@ -202,21 +203,24 @@ property_begin_name(Transform, "Transform")
 
 struct AudioSource : Object
 {
-	enum Channel { MUSIC, SFX, LOOPFX, COUNT };
+	enum Channel { MUSIC, SFX, COUNT };
 	int current_channel = (int)SFX;
 
 	std::vector<const char*> ChannelName =
 	{
 		"Music",
-		"SFX",
-		"Looping SFX"
+		"SFX"
 	};
 	bool loop = false;
 	bool play = false;
 	float volume{1.f};
+	float minPitch{-1.f};
+	float maxPitch{3.f};
 	float fadeInTime{1.f};
 	float fadeOutTime{1.f};
+	float maxDistance{100.f};
 	Engine::GUID<AudioAsset> currentSound;
+	FMOD::Channel* channel;
 	property_vtable();
 };
 
@@ -225,11 +229,22 @@ property_begin_name(AudioSource, "Audio Source") {
 		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(minPitch).Name("SFX min Pitch"),
+		property_var(maxPitch).Name("SFX max Pitch"),
 		property_var(fadeInTime).Name("Fade In Time (s)"),
 		property_var(fadeOutTime).Name("Fade Out Time (s)"),
 		property_var(currentSound).Name("Sound File"),
 		property_var(play).Name("Play")
 } property_vend_h(AudioSource)
+
+struct AudioListener : Object {
+		// no properties
+	property_vtable();
+};
+
+property_begin_name(AudioListener, "Audio Listener") {
+	property_parent(Object).Flags(property::flags::DONTSHOW)
+}property_vend_h(AudioListener)
 
 struct BoxCollider : Object
 {
@@ -285,20 +300,24 @@ property_begin_name(Animator, "Animator") {
 struct TextRenderer : Object
 {
 	std::string text = "Default Text";
-	float x = 0.f, y = 0.f, scale = 1.f; // need to find out  how to link with existing obj srt
+	float x = 0.f, y = 0.f, fontSize = 1.f; // need to find out  how to link with existing obj srt
 	float r = 0.5, g = 0.8f, b = 0.2f;
+	float alpha = 1.f;
+	Engine::GUID<FontAsset> guid{0};
 	property_vtable();
 };
 
 property_begin_name(TextRenderer, "TextRenderer") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
+		property_var(guid).Name("Font"),
 		property_var(text).Name("Text"),
-		property_var(x).Name("X-axis Position"),
-		property_var(y).Name("Y-axis Position"),
-		property_var(scale).Name("Scale"),
+		property_var(x).Name("X-axis Offset"),
+		property_var(y).Name("Y-axis Offset"),
+		property_var(fontSize).Name("Font Size"),
 		property_var(r).Name("Color R"),
 		property_var(g).Name("Color G"),
-		property_var(b).Name("Color B")
+		property_var(b).Name("Color B"),
+		property_var(alpha).Name("Opacity")
 } property_vend_h(TextRenderer)
 
 struct Camera : Object, BaseCamera
@@ -548,6 +567,7 @@ struct ParticleComponent : Object
 
 	int numParticles_{ 1 };
 	int trailSize{ 0 };
+	float trailThiccness{ 1.f };
 
 	float angle{ 30.f }; // for directional particles
 	float particleLifetime_{ 3.0f };
@@ -586,6 +606,7 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(is2D).Name("2D particle"),
 	property_var(trailEnabled).Name("Trailing"),
 	property_var(trailSize).Name("Trail Size"),
+	property_var(trailThiccness).Name("Trail Thickness"),
 	property_var(particleLooping).Name("Looping")
 
 } property_vend_h(ParticleComponent)
@@ -757,7 +778,8 @@ using SingleComponentTypes = decltype(
 		Canvas, 
 		ParticleComponent, 
 		NavMeshAgent,
-		TextRenderer
+		TextRenderer,
+		AudioListener
 	>::Concatenate(PhysicsTypes()));
 
 //Template pack of components that entities can only have multiple of each

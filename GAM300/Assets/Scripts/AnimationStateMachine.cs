@@ -9,6 +9,8 @@ namespace BeanFactory
 {
     public class AnimationState
     {
+        public AnimationState(string _stateName) { stateName = _stateName; }
+
         public bool canTransition
         {
             get
@@ -48,10 +50,9 @@ namespace BeanFactory
             }
         }
 
-        public bool stall = false;
         public bool state = false;
-        public bool loop = false;
         public float speed = 1f;
+        public string stateName;
         List<AnimationState> trueConditionals = new List<AnimationState>();
         List<AnimationState> falseConditionals = new List<AnimationState>();
     }
@@ -60,7 +61,7 @@ namespace BeanFactory
     {
         Animator animator;
         Dictionary<string, AnimationState> animationStates = new Dictionary<string, AnimationState>();
-        string currentState = "";
+        AnimationState currState = null;
 
         public AnimationStateMachine (Animator _animator)
         {
@@ -72,41 +73,21 @@ namespace BeanFactory
         //Call this in update function to update the animation state
         public void UpdateState()
         {
-            AnimationState currState = GetState(currentState);
-            if (currState != null && currState.stall)
-            {
-                if (animator.GetProgress() <= 0.95f)
-                {
-                    return;
-                }
-                else
-                {
-                    currState.state = false;
-                }
-                currState = null;
-                currentState = "";
-            }
             foreach (var pair in animationStates)
             {
+                //If this state can be transitioned to
                 if (pair.Value.canTransition)
                 {
-                    if (currentState == pair.Key)
-                    {
-                        if (currState != null && currState.loop)
-                        {
-                            animator.SetNextState(currentState);
-                        }
-                        return;
-                    }
-                    currentState = pair.Key;
-                    animator.SetState(currentState);
-                    animator.SetSpeed(pair.Value.speed);    
+                    AnimationState newState = pair.Value;
+                    //If its the same state
+                    SetState(newState);
                     return;
                 }
             }
-            if (currentState != "")
+
+            if (currState != null)
             {
-                currentState = "";
+                currState = null;
                 animator.SetState("Idle");
                 animator.SetSpeed(1f);
             }
@@ -117,13 +98,20 @@ namespace BeanFactory
             if (name == "")
                 return null;
             if (!animationStates.ContainsKey(name))
-                animationStates.Add(name, new AnimationState());
+                animationStates.Add(name, new AnimationState(name));
             return animationStates[name];
+        }
+
+        public void SetState(AnimationState state)
+        {
+            animator.SetState(state.stateName);
+            currState = state;
+            animator.SetSpeed(state.speed);
         }
 
         public AnimationState GetCurrentState()
         {
-            return animationStates[currentState];
+            return animationStates[currState.stateName];
         }
 
     }

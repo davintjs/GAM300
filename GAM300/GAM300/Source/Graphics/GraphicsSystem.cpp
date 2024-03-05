@@ -217,7 +217,7 @@ void GraphicsSystem::Init()
 	AnimationManager.Init();
 	glEnable(GL_EXT_texture_sRGB); // Unsure if this is required
 	EditorCam.Init();
-
+	BLOOMER.Init(1600, 900);
 	FRAMEBUFFER.CreateBloom(pingpongFBO, pingpongColorbuffers);
 }
 
@@ -315,9 +315,16 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	if (RENDERER.enableBloom())
 	{
-		bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
+		BLOOMER.RenderBloomTexture(0.005, _camera, cameraQuadVAO, cameraQuadVBO);
+		
+		
+		//bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
+		
 		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+		//glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
+
+		glBindTexture(GL_TEXTURE_2D, BLOOMER.BloomTexture());
+
 	}
 
 	// Draw debug drawing without being affected by the bloom
@@ -326,15 +333,19 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 	{
 		UIRENDERER.UIDraw_2D(_camera);
-		TEXTSYSTEM.Draw(_camera);
+		//TEXTSYSTEM.Draw(_camera);
 	}
 	else
+	{
 		UIRENDERER.UIDraw_2DWorldSpace(_camera);
-
+	}
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
 		DEBUGDRAW.Draw();
+
 	}
+	TEXTSYSTEM.Draw(_camera);
+
 	FRAMEBUFFER.Unbind();
 
 #if defined(_BUILD)
@@ -374,6 +385,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 		glGetUniformLocation(shader.GetHandle(), "enableBloom");
 
 	glUniform1f(uniform3, RENDERER.enableBloom());
+
+	GLint uniform4 =
+		glGetUniformLocation(shader.GetHandle(), "bloomStrength");
+
+	glUniform1f(uniform4, (float)(RENDERER.GetBloomCount())/100.f);
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();

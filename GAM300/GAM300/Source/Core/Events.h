@@ -66,6 +66,11 @@ struct SceneChangingEvent : IEvent
 	Scene& scene;
 };
 
+struct StopPreviewEvent : IEvent
+{
+	StopPreviewEvent() {}
+};
+
 template <size_t FTYPE>
 struct FileTypeModifiedEvent : IEvent 
 {
