@@ -40,16 +40,17 @@ void ParticleRenderer::Update(float dt) {
 
             //particleSRT.emplace_back(scale * rotate * translate);
             particleSRT.emplace_back(translate * rotate * scale);
+            float thicc = particleComponent.trailThiccness / 10.f;
 
             // update trail
             for (unsigned int j = 1; j < particleComponent.particles_[i].trails.count; ++j) {
                 glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j-1u];
                 float trailScale = glm::length(trailVector);
                 glm::mat4 trailScaleMatrix = glm::mat4( 
-                    glm::vec4(.1f, 0, 0, 0),
+                    glm::vec4(thicc, 0, 0, 0),
                     //glm::vec4(0, 1, 0, 0),
                     glm::vec4(0, trailScale, 0, 0),
-                    glm::vec4(0, 0, .1f, 0),
+                    glm::vec4(0, 0, thicc, 0),
                     glm::vec4(0, 0, 0, 1));
                 trailVector = glm::normalize(trailVector);
                 glm::vec3 newX = glm::cross(trailVector, glm::vec3(0.0f, 1.0f, 0.0f));

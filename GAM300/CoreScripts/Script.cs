@@ -115,7 +115,7 @@ namespace BeanFactory
         public Coroutine StartCoroutine(IEnumerator enumerator)
         {
             Coroutine coroutine = new Coroutine(enumerator);
-            coroutines.Add(coroutine);
+            coroutinesBuffer.Add(coroutine);
             return coroutine;
         }
 
@@ -128,6 +128,12 @@ namespace BeanFactory
 
         public void ExecuteCoroutines()
         {
+            foreach (Coroutine coroutine in coroutinesBuffer)
+            {
+                coroutines.Add(coroutine);
+            }
+            coroutinesBuffer.Clear();
+
             foreach (Coroutine coroutine in coroutines)
             {
                 //Finished operation
@@ -157,5 +163,6 @@ namespace BeanFactory
 
         static List<Coroutine> endedCoroutines = new List<Coroutine>();
         List<Coroutine> coroutines = new List<Coroutine>();
+        List<Coroutine> coroutinesBuffer = new List<Coroutine>();
     }
 }

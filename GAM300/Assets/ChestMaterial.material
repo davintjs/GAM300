@@ -1,0 +1,15 @@
+Material:
+  Material Name: ChestMaterial
+  Shader: 1
+  Albedo: [1, 0.999899983, 0.999899983, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  Is Emission: true
+  Emission: 1
+  AlbedoTexture: {guid: 3265c082f2a00916d7aa5a06470a2c94}
+  NormalMap: {guid: 671e730f74db6557444f9e5070087c28}
+  MetallicTexture: {guid: 2d77717b246cfd42c057fab9dcc14467}
+  RoughnessTexture: {guid: afa90e0934ff5a6757c2d1ae083a756f}
+  AoTexture: {guid: d67241f26d81d1cbe17e0041d2bbf7e6}
+  EmissionTexture: {guid: 6929fdb3fbc50e0d6736fddf9e6919e3}

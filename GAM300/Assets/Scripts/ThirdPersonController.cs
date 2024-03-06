@@ -44,7 +44,6 @@ public class ThirdPersonController : Script
     public float currentOverdriveCooldown;
     public bool startOverdriveCooldown = false;
 
-
     public CharacterController CC;
     public Transform PlayerCamera;
     public Transform PlayerModel;
@@ -55,7 +54,6 @@ public class ThirdPersonController : Script
     public GameObject playerWeaponCollider2;
     public GameObject playerWeaponCollider3;
     GameObject selectedWeaponCollider;
-    //public Transform checkpoint2;
 
     //public InstantDeath instantDeath;
 
@@ -77,9 +75,8 @@ public class ThirdPersonController : Script
 
     public int checkpointIndex = -1;
     public bool isAtCheckpoint = false;
-    public Transform spawnPoint;
-    public Transform terminal1;
-    public Transform terminal2;
+
+    public vec3 spawnPoint;
 
     //public MeshRenderer doorTestMesh;
 
@@ -139,7 +136,7 @@ public class ThirdPersonController : Script
     public float currentInvulnerableTimer;
     public bool isDead = false;
 
-    float maxAirTime = 1f;
+    float maxAirTime = 2f;
     float currentAirTime = 0;
 
     public float colliderDist = 0;
@@ -240,7 +237,6 @@ public class ThirdPersonController : Script
 
         stun.SetConditionals(false, death);
         falling.SetConditionals(false, death, stun);
-        falling.loop = true;
         jump.SetConditionals(false, death,stun);
         attack1.SetConditionals(false, jump, death, stun);
         attack2.SetConditionals(false, jump, death, stun);
@@ -250,9 +246,7 @@ public class ThirdPersonController : Script
         attack3.speed = 3.1f;
         sprint.SetConditionals(true, run);
         sprint.SetConditionals(false, attack1, jump, death, stun);
-        sprint.loop = true;
         run.SetConditionals(false, sprint, attack1, jump, death, stun);
-        run.loop = true;
         dashAttack.SetConditionals(false, jump, death, stun, sprint, run, attack1, attack2, attack3);
         dashAttack.speed = 2.5f;
         dodge.SetConditionals(false, dashAttack, jump, death, stun, attack1, attack2, attack3, dashAttack);
@@ -311,21 +305,6 @@ public class ThirdPersonController : Script
             Console.WriteLine("Missing audioSource reference in ThirdPersonController script");
             return;
         }
-        if(spawnPoint == null)
-        {
-            Console.WriteLine("Missing SpawnPoint reference in ThirdPersonController script");
-            return;
-        }
-        if(terminal1 == null)
-        {
-            Console.WriteLine("Missing terminal1 reference in ThirdPersonController script");
-            return;
-        }
-        if(terminal2 == null)
-        {
-            Console.WriteLine("Missing terminal2 reference in ThirdPersonController script");
-            return;
-        }
         if(healthBarFill == null)
         {
             Console.WriteLine("Missing healthBarFill reference in ThirdPersonController script");
@@ -374,6 +353,7 @@ public class ThirdPersonController : Script
         initialStaminaBarXScale = staminaBarFill.GetComponent<Transform>().localScale.x;
         walkSoundTime = walkStepsInterval;
         InitAnimStates();
+        spawnPoint = transform.position;
     }
 
     // Update is called once per frame
@@ -387,7 +367,7 @@ public class ThirdPersonController : Script
         if (Input.GetKey(KeyCode.R))
         {
             //Console.WriteLine("Test Respawn");
-            player.localPosition = new vec3(spawnPoint.localPosition);
+            player.localPosition = spawnPoint;
             //player.localRotation = new vec3(spawnPoint.localRotation);
             //SceneManager.LoadScene("LevelPlay2");
         }
@@ -441,12 +421,12 @@ public class ThirdPersonController : Script
         if (IsAttacking)
         {
             SetState("DashAttack", false);
-            dir = vec3.Zero;
+            //dir = vec3.Zero;
             if (currentAttackTimer / attackTimer < 0.2f)
                 movement = PlayerModel.forward * attackMoveSpeed * Time.deltaTime;
             else
             {
-                if (currentAttackTimer / attackTimer > 0.5f)
+                if (currentAttackTimer / attackTimer > 0.5f) 
                 {
                     selectedWeaponCollider.transform.position = new vec3(10000);
                     attackLight.SetActive(false);
@@ -746,6 +726,7 @@ public class ThirdPersonController : Script
                 {
                     SetState("Falling", true);
                 }
+
             }
             else if (currentAirTime >= maxAirTime * .5f)
             {
@@ -773,7 +754,7 @@ public class ThirdPersonController : Script
         healthStaminaCanvas.SetActive(true);
         SetState("Death", false);
         //animator.Play();
-        player.localPosition = new vec3(spawnPoint.localPosition);
+        player.localPosition = spawnPoint;
         HealHealth(maxHealth);
         healthBarFill.GetComponent<Transform>().localPosition = initialHealthBarPos;
         UpdatehealthBar();

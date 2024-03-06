@@ -21,7 +21,7 @@ layout (binding = 1)uniform sampler2D bloomBlur;
 uniform bool hdr;
 uniform float exposure;
 uniform bool enableBloom;
-
+uniform float bloomStrength;
 // Testing
 uniform sampler2D depthMap;
 uniform float near_plane;
@@ -43,8 +43,9 @@ void main()
     vec3 hdrColor = texture(hdrBuffer, TexCoords).rgb;
     if(enableBloom)
     {
-         vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;    
-        hdrColor += bloomColor;
+        vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;    
+//        hdrColor += bloomColor;
+        hdrColor = mix(hdrColor, bloomColor,bloomStrength); //  bloom strength
     }
     if(hdr)
     {

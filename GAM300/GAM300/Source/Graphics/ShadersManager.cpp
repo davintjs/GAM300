@@ -162,6 +162,14 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/TextWorld.vert";
 	fragmentPath = shaderPath + "/TextWorld.frag";
 	ShaderCompiler("Text WORLD space SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/DownSample.vert";
+	fragmentPath = shaderPath + "/DownSample.frag";
+	ShaderCompiler("DownSampling SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/UpSample.vert";
+	fragmentPath = shaderPath + "/UpSample.frag";
+	ShaderCompiler("UpSampling SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)

@@ -168,7 +168,6 @@ void Transform::UpdateWorldMatrix(glm::mat4& _world)
 	UpdateChildrenMatrices();
 }
 
-
 void Transform::UpdateChildrenMatrices()
 {
 	for (const auto& childID : child)

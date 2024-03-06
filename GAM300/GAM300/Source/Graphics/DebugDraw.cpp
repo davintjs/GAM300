@@ -112,7 +112,6 @@ void DebugDraw::Draw()
 	if (showAllColliders)
 		DrawCapsuleColliders();
 	
-	
 	glLineWidth(1.5f);
 	// Actual Debug Drawing
 	{
@@ -138,6 +137,8 @@ void DebugDraw::Draw()
 		glDrawElementsInstanced(iProp.drawType, 2, GL_UNSIGNED_INT, 0, iProp.iter);
 		glBindVertexArray(0);
 
+		iProp.iter = 0;
+
 		/*for (size_t i = 0; i < iProp.iter; i++)
 		{
 			glBindBuffer(GL_ARRAY_BUFFER, iProp.entitySRTbuffer);
@@ -156,10 +157,9 @@ void DebugDraw::Draw()
 			glBindVertexArray(0);
 		}*/
 
-		shader.UnUse();
-	
-		iProp.iter = 0;
+		DrawCanvasOutline();
 
+		shader.UnUse();
 	}
 
 	// Physic's Debug Draw
@@ -274,6 +274,61 @@ void DebugDraw::DrawIcons()
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderIcon"), false);
 	shader.UnUse();
 	glDisable(GL_BLEND);
+}
+
+// Draw Canvas Outline
+void DebugDraw::DrawCanvasOutline()
+{
+	if (!pProp)
+		return;
+
+	glLineWidth(10.f);
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	auto& iProp = *pProp;
+	
+	glClear(GL_DEPTH_BUFFER_BIT);
+	glm::mat4 scaleMat = glm::identity<glm::mat4>(), norMat;
+	glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
+	glm::vec3 p1, p2;
+	scaleMat[0][0] = 1.777778f;
+
+	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	{
+		if (currCanvas.state == DELETED) continue;
+		Entity& entity = currentScene.Get<Entity>(currCanvas);
+		Transform& t = currentScene.Get<Transform>(entity);
+
+		norMat = t.GetWorldMatrix() * scaleMat;
+
+		p1 = norMat * glm::vec4(-1.f, -1.f, 0.f, 1.f);
+		p2 = norMat * glm::vec4(1.f, -1.f, 0.f, 1.f);
+		DrawSegment3D(iProp, p1, p2, color);
+
+		p1 = norMat * glm::vec4(-1.f, 1.f, 0.f, 1.f);
+		p2 = norMat * glm::vec4(1.f, 1.f, 0.f, 1.f);
+		DrawSegment3D(iProp, p1, p2, color);
+
+		p1 = norMat * glm::vec4(1.f, -1.f, 0.f, 1.f);
+		p2 = norMat * glm::vec4(1.f, 1.f, 0.f, 1.f);
+		DrawSegment3D(iProp, p1, p2, color);
+
+		p1 = norMat * glm::vec4(-1.f, -1.f, 0.f, 1.f);
+		p2 = norMat * glm::vec4(-1.f, 1.f, 0.f, 1.f);
+		DrawSegment3D(iProp, p1, p2, color);
+	}
+
+	glBindBuffer(GL_ARRAY_BUFFER, iProp.entitySRTbuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, (iProp.iter) * sizeof(glm::mat4), iProp.entitySRT.data());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, iProp.AlbedoBuffer);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, (iProp.iter) * sizeof(glm::vec4), iProp.Albedo.data());
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(iProp.VAO);
+	glDrawElementsInstanced(iProp.drawType, 2, GL_UNSIGNED_INT, 0, iProp.iter);
+	glBindVertexArray(0);
+
+	iProp.iter = 0;
 }
 
 void DebugDraw::DrawBoxColliders()
