@@ -1,5 +1,6 @@
-[2024-03-06 20:56:52.849] [Error] [critical] 
+[2024-03-07 02:41:32.602] [Error] [critical] 
 Caused By:	false
-Info:		Could not find handle!
-Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 125)
+Info:		Failed to load .scene file "Assets/Scene/StartingScene.scene" due to: bad file: Assets/Scene/StartingScene.scene
+
+Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 364)
 
