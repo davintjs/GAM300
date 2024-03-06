@@ -903,4 +903,5 @@ ParticleComponent:
   2D particle: false
   Trailing: true
   Trail Size: 5
+  Trail Thickness: 1
   Looping: true

@@ -1,5 +1,5 @@
-[2024-03-03 21:57:00.540] [Error] [critical] 
-Caused By:	mClassField
-Info:		FIELD  healthPackCount COULD NOT BE FOUND IN SCRIPT 
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 715)
+[2024-03-06 20:56:52.849] [Error] [critical] 
+Caused By:	false
+Info:		Could not find handle!
+Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 125)
 

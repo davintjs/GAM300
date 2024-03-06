@@ -15,9 +15,7 @@ class Dialogue : Script
         if (done) return;
         if (GetTag(component) == "Player")
         {
-
             DialogueManager.Instance.SetState(state);
-            AudioManager.instance.uiSound.Play();
         }
     }
 
@@ -27,8 +25,6 @@ class Dialogue : Script
         if (GetTag(component) == "Player")
         {
             done = true;
-            DialogueManager.Instance.Reset();
-            AudioManager.instance.uiSound.Play();
         }
     }
 }
