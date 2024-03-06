@@ -14,6 +14,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Precompiled.h"
 #include "AnimationManager.h"
 #include "BaseAnimator.h"
+#include "Graphics/GraphicsHeaders.h"
+#include "Graphics/MeshManager.h"
 
 #include "AssetManager/ModelCompiler.h"
 #include "Core/EventsManager.h"
@@ -29,37 +31,88 @@ void Animation_Manager::Init()
 void Animation_Manager::Update(float dt)
 {
     Scene& currentScene = MySceneManager.GetCurrentScene();
-    for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+
+    for (Camera& CurrCam : currentScene.GetArray<Camera>())
     {
-#ifndef _BUILD
-        if (animator.state == DELETED) continue;
-#endif
-        if (!currentScene.IsActive(animator)) continue;
 
-        if (animator.animID != animator.prevAnimID) // This check should be in the animator itself
+        
+           /* bool withinCamera = false;
+            for (Camera& camera : currentScene.GetArray<Camera>())
+            {
+                if (camera.state == DELETED) continue;
+
+                if (!currentScene.IsActive(camera)) continue;
+
+                if (camera.WithinFrustum(transform, t_Mesh->vertices_min, t_Mesh->vertices_max))
+                {
+                    withinCamera = true;
+                    break;
+                }
+            }
+
+            if (!withinCamera) continue;*/
+        
+        //std::cout << "\n----------------\n";
+        glm::vec3 minBound = { -1.f, -1.f, -1.f };
+        glm::vec3 maxBound = { 1.f, 1.f, 1.f };
+        for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
         {
-            //PRINT("Animator ID: ", animator.UUID(), "\n");
-            animator.prevAnimID = animator.animID;
-            animator.m_CurrentTime = 0.f;
-            if (animator.animID == 0)
-                animator.m_AnimationIdx = -1;
-            else
-                animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
+            
+            
+    #ifndef _BUILD
+            if (animator.state == DELETED) continue;
+    #endif
+            if (!currentScene.IsActive(animator)) continue;
 
-            animator.SetDefaultState("Idle");
-            animator.ChangeState();
-        }
+            Transform& transForm{ currentScene.Get<Transform>(animator) };
 
-        /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_W))
-        {
-            animator.SetState("Run");
-        }*/
+            float distance = glm::distance(CurrCam.GetCameraPosition(), transForm.GetGlobalTranslation());
 
-        if (animator.playing && animator.AnimationAttached())
-        {
-            glm::mat4 translate = glm::mat4(1.f);
-            //glm::mat4 translate = glm::translate(glm::mat4(1.f), currentScene.Get<Transform>(animator).GetTranslation());
-            animator.UpdateAnimation(dt, translate);
+            if (distance < 20.f || CurrCam.WithinFrustum(transForm, minBound, maxBound))
+            {
+
+            }
+
+            //if (distance > 20.f || !CurrCam.WithinFrustrumAnimation(transForm, minBound, maxBound))
+            if (distance > 20.f && !CurrCam.WithinFrustum(transForm, minBound, maxBound))
+            {
+                //std::cout << "pew pew\n";
+                continue;
+            }
+            
+            
+            //if (!CurrCam.WithinFrustrumAnimation(transForm, minBound, maxBound))
+            //{
+            //    //std::cout << "ran away\n";
+            //    continue;
+            //}
+            
+
+            if(animator.animID != animator.prevAnimID) // This check should be in the animator itself
+            {
+                //PRINT("Animator ID: ", animator.UUID(), "\n");
+                animator.prevAnimID = animator.animID;
+                animator.m_CurrentTime = 0.f;
+                if (animator.animID == 0)
+                    animator.m_AnimationIdx = -1;
+                else
+                    animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
+
+                animator.SetDefaultState("Idle");
+                animator.ChangeState();
+            }
+
+            /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_W))
+            {
+                animator.SetState("Run");
+            }*/
+
+            if (animator.playing && animator.AnimationAttached())
+            {
+                glm::mat4 translate = glm::mat4(1.f);
+                //glm::mat4 translate = glm::translate(glm::mat4(1.f), currentScene.Get<Transform>(animator).GetTranslation());
+                animator.UpdateAnimation(dt, translate);
+            }
         }
     }
 }
