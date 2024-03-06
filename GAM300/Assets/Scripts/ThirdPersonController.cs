@@ -59,7 +59,7 @@ public class ThirdPersonController : Script
 
     List<vec3> pos = new List<vec3>();
 
-    public float RotationSpeed = 1;
+    public float RotationSpeed = 15;
 
     public AudioSource audioSource;
     int jumpAudioRotation = 0;
@@ -988,24 +988,13 @@ public class ThirdPersonController : Script
     {
         if (dir == vec3.Zero)
             return;
+
         float angle = (float)Math.Atan2(-dir.x, -dir.z);
         quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
         quat oldQuat = glm.FromEulerToQuat(PlayerModel.localRotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
         quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
-
-        /*
-         float smoothedYAngle = Mathf.SmoothDampAngle(currentYAngle, stateMachine.ReusableData.CurrentTargetRotation.y, ref stateMachine.ReusableData.DampedTargetRotationCurrentVelocity.y, stateMachine.ReusableData.TimeToReachTargetRotation.y - stateMachine.ReusableData.DampedTargetRotationPassedTime.y);
-
-            stateMachine.ReusableData.DampedTargetRotationPassedTime.y += Time.deltaTime;
-
-            Quaternion targetRotation = Quaternion.Euler(0f, smoothedYAngle, 0f);
-
-            stateMachine.Player.Rigidbody.MoveRotation(targetRotation);
-         
-         
-         */
 
         vec3 rot = ((vec3)midQuat.EulerAngles);
 

@@ -12199,7 +12199,7 @@ Script:
   isInvulnerable: false
   startOverdriveCooldown: false
   maxStamina: 100
-  RotationSpeed: 5
+  RotationSpeed: 15
   checkpointIndex: -1
   attack3duration: 0.699999988
   isAtCheckpoint: false
@@ -23188,7 +23188,7 @@ ID: 7918018387209235940
 Transform:
   m_GameObject: {fileID: 13667354508004312860}
   Translation: [0, 0, 0]
-  Rotation: [1.62920671e-07, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 11998253260673808900}
   m_Children:

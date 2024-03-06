@@ -52,9 +52,71 @@ namespace BeanFactory
 {
     public static class Mathf
     {
+        public static float PI = 3.1415926f;
+        public static float Rad2Deg = 180f / PI;
+
         public static float Lerp(float start, float end, float percentage)
         {
             return start + (end - start) * percentage;
+        }
+
+        public static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
+        {
+            if (value.CompareTo(min) < 0)
+            {
+                return min;
+            }
+            else if (value.CompareTo(max) > 0)
+            {
+                return max;
+            }
+            else
+            {
+                return value;
+            }
+        }
+
+        public static float CalculateYAngle(float directionX, float directionZ)
+        {
+            // Calculate the angle in radians
+            float radians = (float)Math.Atan2(directionZ, directionX);
+
+            // Convert radians to degrees
+            float degrees = radians * Rad2Deg;
+
+            // Ensure the angle is in the range [0, 360)
+            if (degrees < 0)
+            {
+                degrees += 360;
+            }
+
+            return degrees;
+        }
+
+        public static float SmoothDampAngle(float current, float target, ref float currentVelocity, float smoothTime, float maxSpeed)
+        {
+            // Calculate the delta time
+            float deltaTime = Time.deltaTime;
+
+            // Damping factor
+            float omega = 2.0f / smoothTime;
+
+            // Calculate the angular velocity
+            float x = omega * deltaTime;
+            float dampedFactor = 1.0f / (1.0f + x + 0.48f * x * x + 0.235f * x * x * x);
+            float deltaTheta = current - target;
+            float theta = deltaTheta * dampedFactor;
+
+            // Calculate the angular velocity
+            currentVelocity = currentVelocity - omega * theta * deltaTime;
+            current = target + (current - target) * (float)Math.Exp(-omega * deltaTime);
+
+            // Clamp the velocity to avoid overshooting
+            float maxDelta = maxSpeed * smoothTime;
+            currentVelocity = Mathf.Clamp(currentVelocity, -maxDelta, maxDelta);
+
+            // Return the smoothed angle
+            return current;
         }
     }
 }

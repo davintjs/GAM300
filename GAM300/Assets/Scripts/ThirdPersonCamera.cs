@@ -111,7 +111,7 @@ public class ThirdPersonCamera : Script
             if (tagName != "Camera")
             { 
                 zoom = vec3.Distance(target.transform.position, raycast.point) * 0.9f;
-                zoom = (zoom < closestZoom) ? closestZoom : (zoom > furthestZoom) ? furthestZoom : zoom;
+                zoom = Mathf.Clamp(zoom, closestZoom, furthestZoom);
             }
         }
 
