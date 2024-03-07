@@ -210,8 +210,8 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         
         if (blendedBones == m_CurrentAnimation.GetBoneCount() && blendTimer >= blendDuration)
         {
-            //std::cout << "Finished blending " << currentState->label << " and " << nextState->label << '\n';
-            //std::cout << "Bone count: " << blendedBones << " and timer: " << blendTimer << '\n';
+            std::cout << "Finished blending " << currentState->label << " and " << nextState->label << '\n';
+            std::cout << "Bone count: " << blendedBones << " and timer: " << blendTimer << '\n';
             currBlendState = blended;
             currentState = nextState;
             nextState = nullptr;
@@ -276,7 +276,7 @@ void BaseAnimator::ChangeState()
     if (nextState && currentState != nextState) // E.g. Idle is not equal to Jump state and Jump state exists
     {
         currBlendState = blending;
-        //std::cout << "Change state Different state blending " << currentState->label << " and " << nextState->label << '\n';
+        std::cout << "Change state Different state blending " << currentState->label << " and " << nextState->label << '\n';
         //endTime = m_CurrentTime + blendDuration;
         blendStartTime = m_CurrentTime;
     }
@@ -453,7 +453,7 @@ void BaseAnimator::SetState(const std::string& _state)
 {
     SetNextState(_state);
     //if(currBlendState != blending)
-    //std::cout << "Set state: " << currentState->label << " and " << nextState->label << "\n";
+    std::cout << "Set state: " << currentState->label << " and " << nextState->label << "\n";
     ChangeState();
 }
 
