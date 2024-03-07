@@ -290,6 +290,7 @@ Transform:
     - {fileID: 14843899441988254193}
     - {fileID: 4891637289365399706}
     - {fileID: 13030320504762511880}
+    - {fileID: 6578601626115437993}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -24269,3 +24270,33 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: c96bf599649f7d4ffd34411441fe74fd}
   Play: false
+---
+ID: 6578601626115437993
+GameObject:
+  m_IsActive: true
+  m_Name: Objective
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17377130675974990710}  # Transform
+    - component: {fileID: 2643042907670220731}  # SpriteRenderer
+---
+ID: 17377130675974990710
+Transform:
+  m_GameObject: {fileID: 6578601626115437993}
+  Translation: [-1.49990094, 0.381828308, 0.00400000019]
+  Rotation: [0, 0, -3.14159083]
+  Scale: [0.13567926, -0.136000007, 0.13567926]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 2643042907670220731
+SpriteRenderer:
+  m_GameObject: {fileID: 6578601626115437993}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 8bc854365fdc7a36838180a2c1c954dd}
