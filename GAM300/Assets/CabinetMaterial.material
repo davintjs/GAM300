@@ -5,8 +5,8 @@ Material:
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
-  Is Emission: false
-  Emission: 1
+  Is Emission: true
+  Emission: 1.13999999
   AlbedoTexture: {guid: 10de17fb7cfb6c176ee1511e4732c714}
   NormalMap: {guid: fff6d60cd07e68c2bd9e18ed70cbf0f3}
   MetallicTexture: {guid: 5a70b691d13487e9b8e2b77ee3c917d2}
