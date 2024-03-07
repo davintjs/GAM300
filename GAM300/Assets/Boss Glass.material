@@ -1,7 +1,7 @@
 Material:
   Material Name: Boss Glass
   Shader: 0
-  Albedo: [9.99999975e-05, 9.99762997e-05, 9.99762997e-05, 0.299363077]
+  Albedo: [9.99999975e-05, 9.99762997e-05, 9.99762997e-05, 0]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1
