@@ -70,6 +70,11 @@ public class BossBehaviour : Script
 
     public int projectileCount = 16;
 
+    public ParticleComponent dashVFX;
+    public ParticleComponent ultimateVFX;
+
+    public Transform ultimateCollider;
+
     vec3 indicatorLocal = new vec3();
 
     public Transform ultiSphere;
@@ -93,6 +98,8 @@ public class BossBehaviour : Script
     bool startShoot = false;
 
     bool dashed = false;
+
+    public Transform center;
 
     void Awake()
     {
@@ -163,13 +170,31 @@ public class BossBehaviour : Script
             dist = vec3.Distance(transform.position, player.transform.position);
             vec3 dir = (player.transform.position - transform.position) / dist;
             dir.y = 0;
-            if (timer > basicAttackDuration / 2)
+            //First Attack
+            if (timer > 2.2f && timer < 2.3f)
+            {
+                UpdateRotation(dir, rotationSpeed/2f);
+                rb.linearVelocity = transform.back * 30f;
+            }
+            //Second Attack
+            else if (timer > 1.5f && timer < 1.7f)
             {
                 UpdateRotation(dir, rotationSpeed);
+                rb.linearVelocity = transform.back * 30f;
+            }
+            else if (timer > 0.7f && timer < 1.2f)
+            {
+                UpdateRotation(dir, rotationSpeed / 2f);
+                rb.linearVelocity = transform.back * 10f;
+            }
+            else
+            {
+                rb.linearVelocity = vec3.Zero;
             }
             timer -= Time.deltaTime;
             yield return null;
         }
+
 
         yield return new WaitForSeconds(basicAttackDuration / 2f);
 
@@ -189,7 +214,7 @@ public class BossBehaviour : Script
     {
         float timer = dodgeDuration;
         float dist = 0;
-        vec3 targetPos = vec3.Zero;
+        vec3 targetPos = center.position;
         targetPos.y = yPos;
         vec3 startPos = transform.position;
         while (timer > 0)
@@ -250,6 +275,7 @@ public class BossBehaviour : Script
             timer -= Time.deltaTime;
             yield return null;
         }
+        dashVFX.particleLooping = true;
         SetState("DashChargeUp", false);
         SetState("DashAttack", true);
 
@@ -281,6 +307,7 @@ public class BossBehaviour : Script
         //Cooldown
         rb.linearVelocity = vec3.Zero;
         yield return new WaitForSeconds(dashAttackDuration / 2f);
+        dashVFX.particleLooping = false;
         StartCoroutine(Chase());
         SetState("DashAttack", false);
     }
@@ -291,9 +318,8 @@ public class BossBehaviour : Script
         float startDur = jumpAttackDuration * 0.7f;
 
         vec3 startPos = transform.localPosition;
-        startPos.y = 0;
         vec3 targetPos = player.transform.localPosition;
-        targetPos.y = 0f;
+        targetPos.y = startPos.y;
 
         float dist = 0;
         vec3 dir = vec3.Zero;
@@ -311,7 +337,7 @@ public class BossBehaviour : Script
         while (timer > 0)
         {
             targetPos = player.transform.localPosition;
-            targetPos.y = 0f;
+            targetPos.y = startPos.y;
             dist = vec3.Distance(startPos, targetPos);
             dir = (targetPos - startPos) / dist;
             UpdateRotation(dir, rotationSpeed/2f);
@@ -403,11 +429,17 @@ public class BossBehaviour : Script
         {
             if (timer <= ultiExplodeDuration / 3f * 2f)
             {
+                ultimateCollider.localPosition = transform.position;
+                ultimateCollider.gameObject.GetComponent<Rigidbody>().linearVelocity = vec3.UnitY;
+                ultimateCollider.gameObject.SetActive(true);
+                ultimateVFX.particleLooping = true;
                 animator.SetSpeed(1f);
             }
             timer -= Time.deltaTime;
             yield return null;
         }
+        ultimateVFX.particleLooping = false;
+        ultimateCollider.gameObject.SetActive(false);
 
         SetState("Ultimate", false);
         ultiSphere.gameObject.SetActive(false);
@@ -542,4 +574,6 @@ public class BossBehaviour : Script
         animationManager.GetState(stateName).state = value;
         animationManager.UpdateState();
     }
+
+    
 }

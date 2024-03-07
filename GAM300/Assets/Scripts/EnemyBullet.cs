@@ -7,8 +7,12 @@ using BeanFactory;
 
 public class EnemyBullet : Script
 {
+    public bool destroyOnTrigger = true;
+
     void OnTriggerEnter(PhysicsComponent other)
     {
+        if (!destroyOnTrigger)
+            return;
         if (GetTag(other) != "Enemy" && GetTag(other) != "EnemyAttack" && GetTag(other) != "PlayerAttack")
         {
             Destroy(gameObject);

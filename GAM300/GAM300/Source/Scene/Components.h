@@ -559,11 +559,7 @@ struct ParticleComponent : Object
 	Engine::GUID<MeshAsset> meshID{ ASSET_CUBE };
 	Engine::GUID<MaterialAsset> materialGUID{ 0 };
 	//Engine::GUID<TextureAsset> ParticleTexture{ 0 };
-
-	bool particleLooping{ false };
-	bool is2D{ false };
-	bool trailEnabled{ false };
-	bool isLocalSpace{ false };
+	Vector3 direction{ 0.f,0.f,0.f };
 
 	int numParticles_{ 1 };
 	int trailSize{ 0 };
@@ -580,7 +576,11 @@ struct ParticleComponent : Object
 	float noiseMovement{ 0.f };
 	float noisefrequency{ 0.f };
 
-	Vector3 direction{0.f,0.f,0.f};
+	bool particleLooping{ false };
+	bool is2D{ false };
+	bool trailEnabled{ false };
+	bool isLocalSpace{ false };
+
 	std::vector<Particle> particles_;
 
 	property_vtable();
