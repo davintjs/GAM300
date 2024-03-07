@@ -11,5 +11,5 @@ Material:
   NormalMap: {guid: 23caa359f6eb3c463892348bf80c9fb7}
   MetallicTexture: {guid: 13007a52253df901a8353a6a0a012239}
   RoughnessTexture: {guid: af7cb25043cabcf3dfeccf0ad9ed90d8}
-  AoTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: d9e557a6c185095bcd00a6b8b9e08b5d}
   EmissionTexture: {guid: 1d7359b6140d718add86239ef2c4f7b2}
