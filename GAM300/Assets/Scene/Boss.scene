@@ -102,6 +102,8 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 10
   Fade Out Time (s): 5
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
@@ -602,6 +604,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 4bdfa959f8e2dc7ae0d617c8e6620ad8}
@@ -634,6 +638,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 5e16beacb1259528db74e50fb01bad43}
@@ -666,6 +672,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: ce3fdcccf31b5a51da0972687da66904}
@@ -841,6 +849,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 000000000000000000000000000001f4}
@@ -981,6 +991,7 @@ ParticleComponent:
   2D particle: false
   Trailing: false
   Trail Size: 0
+  Trail Thickness: 1
   Looping: false
 ---
 ID: 14790332214141994081
@@ -1112,6 +1123,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
@@ -1144,6 +1157,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 0.300000012
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: eda674df517607f98c64da16ea040919}
@@ -1176,6 +1191,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 06f54883e9bc513507a05a5298dba06f}
@@ -1208,6 +1225,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 42dcb3de127c7dba6b7c233d0d648a80}
@@ -1240,6 +1259,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: e163082ab73fa95c5d0a07c82df6920c}
@@ -1272,6 +1293,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: c4f9a933d2103f414ffbc861e92d5bb1}
@@ -1304,6 +1327,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 7ea8fb553399a4eba3df2a0d19e0a815}
@@ -1336,6 +1361,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: f4bb7a459a14c3256accf4e34b46c4d0}
@@ -1605,6 +1632,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 4390061a4fc32cdc60928c28ed7c31a4}
@@ -1637,6 +1666,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
@@ -1934,6 +1965,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
@@ -1966,6 +1999,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: d3e0ca517ffb61df5488c7a95ea3e53e}
@@ -2418,6 +2453,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 9f8df03759bd025de40156229fe387ec}
@@ -2450,6 +2487,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: e2c803b37e46493acc4b856df0e91f95}
@@ -2482,6 +2521,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 6dfc6a4ff8d5e37c5b303cc3350fe00d}
@@ -2514,6 +2555,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: ce12584be0c04eb1d9f8412474d73214}
@@ -2671,6 +2714,7 @@ Transform:
   Father: {fileID: 3977294589520766028}
   m_Children:
     - {fileID: 13634005917329744601}
+    - {fileID: 6162460891195633644}
 ---
 ID: 9953969093344891570
 Animator:
@@ -2817,6 +2861,7 @@ ParticleComponent:
   2D particle: false
   Trailing: true
   Trail Size: 5
+  Trail Thickness: 1
   Looping: true
 ---
 ID: 13027737300980970512
@@ -2846,6 +2891,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: a958b6a910add424e67c4da7f3a70c45}
@@ -2878,6 +2925,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 3b5597373ba0415f19eee83296ad752b}
@@ -2910,6 +2959,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 4ac3da6f90ffe925e1368718223c7629}
@@ -2942,6 +2993,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 4879d8cbccffbd2c22b3508a370ec969}
@@ -2974,6 +3027,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 1682f86f9df2666b5d45632da015dcd5}
@@ -3006,6 +3061,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: d44bdb32a0aa5d9f4fde6eeee09a0a91}
@@ -3038,6 +3095,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 29893a407f7feda308faf18ac1404e2b}
@@ -3070,6 +3129,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: afa9ddd7bcf5a5b847cc23aadd0521f6}
@@ -3102,6 +3163,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 7f4dca2867d7267a988760fbb9e6e63b}
@@ -3134,6 +3197,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 961c5ccf4652254f50f84f2f7c5fa599}
@@ -3166,6 +3231,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 39c25d69f321816138ad9304fc599daf}
@@ -3291,164 +3358,6 @@ Rigidbody:
   UseGravity: true
   Is_trigger: false
 ---
-ID: 17723947472884518121
-GameObject:
-  m_IsActive: true
-  m_Name: Boss
-  m_TagString: Player
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12389971819868191190}  # Transform
-    - component: {fileID: 5054382447752658369}  # BoxCollider
-    - component: {fileID: 3760138480247659999}  # Rigidbody
-    - component: {fileID: 5340113105648456710}  # AudioSource
-    - component: {fileID: 2883371525179796882}  # Script
----
-ID: 12389971819868191190
-Transform:
-  m_GameObject: {fileID: 17723947472884518121}
-  Translation: [6.18011475, 1.02663243, 0]
-  Rotation: [-3.14159083, 0, -3.14159083]
-  Scale: [0.999999285, 1, 0.999999285]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 10920168034363521791}
-    - {fileID: 8645961242742927387}
----
-ID: 5054382447752658369
-BoxCollider:
-  m_GameObject: {fileID: 17723947472884518121}
-  m_IsEnabled: true
-  Dimensions: [1, 2, 1]
-  Offset: [0, 0.449999988, 0]
----
-ID: 3760138480247659999
-Rigidbody:
-  m_GameObject: {fileID: 17723947472884518121}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
----
-ID: 5340113105648456710
-AudioSource:
-  m_GameObject: {fileID: 17723947472884518121}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 000000000000000000000000000001f4}
-  Play: false
----
-ID: 2883371525179796882
-Script:
-  m_GameObject: {fileID: 17723947472884518121}
-  m_IsEnabled: true
-  Script: {guid: 1761a9cabdef2fc73e985ee6529cf8ee}
-  dodgeDuration: 1.20000005
-  chaseSpeed: 400
-  basicAttackDistance: 3
-  rotationSpeed: 10
-  dashAttackDuration: 2
-  basicAttackDuration: 1
-  chaseDuration: 3
-  projectileSpeed: 20
-  jumpAttackDuration: 3
-  ultiChargeDuration: 4
-  projectileAttackDuration: 4
-  ultiExplodeDuration: 2
-  animator: {fileID: 5291070275218929927}  # Component
-  ultiSphere: {fileID: 8645961242742927387}  # Component
-  bullet: {fileID: 13101458077566229087}  # GameObject
----
-ID: 10920168034363521791
-GameObject:
-  m_IsActive: true
-  m_Name: BossModel
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9493545353962298864}  # Transform
-    - component: {fileID: 5291070275218929927}  # Animator
----
-ID: 9493545353962298864
-Transform:
-  m_GameObject: {fileID: 10920168034363521791}
-  Translation: [0, -0.5, 0]
-  Rotation: [-3.14159203, 0, -3.14159203]
-  Scale: [0.0149999997, 0.0149999997, 0.0149999997]
-  Father: {fileID: 17723947472884518121}
-  m_Children:
-    - {fileID: 9911516422125544925}
----
-ID: 5291070275218929927
-Animator:
-  m_GameObject: {fileID: 10920168034363521791}
-  m_IsEnabled: true
-  Animation: {guid: bb421ce4b2d0d6e94060d0890f8bb89f}
----
-ID: 9911516422125544925
-GameObject:
-  m_IsActive: true
-  m_Name: BossMesh
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 732847982796183600}  # Transform
-    - component: {fileID: 1226580813807300150}  # MeshRenderer
----
-ID: 732847982796183600
-Transform:
-  m_GameObject: {fileID: 9911516422125544925}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 10920168034363521791}
-  m_Children:
-    []
----
-ID: 1226580813807300150
-MeshRenderer:
-  m_GameObject: {fileID: 9911516422125544925}
-  m_IsEnabled: true
-  Mesh: {guid: 12597e24af252df94929ea556633fff1}
-  Material_ID: {guid: 9a56db3d1aea18bbfcfdba1ff4d7dbcd}
----
-ID: 8645961242742927387
-GameObject:
-  m_IsActive: true
-  m_Name: Ultirange
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11577215067742357349}  # Transform
-    - component: {fileID: 9734618393618715208}  # MeshRenderer
----
-ID: 11577215067742357349
-Transform:
-  m_GameObject: {fileID: 8645961242742927387}
-  Translation: [0, -0.5, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 17723947472884518121}
-  m_Children:
-    []
----
-ID: 9734618393618715208
-MeshRenderer:
-  m_GameObject: {fileID: 8645961242742927387}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000002}
-  Material_ID: {guid: 00000000000000000000000000000000}
----
 ID: 13101458077566229087
 GameObject:
   m_IsActive: true
@@ -3505,3 +3414,653 @@ Script:
   m_GameObject: {fileID: 13101458077566229087}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
+---
+ID: 6162460891195633644
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerV3Combined_low
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3849929671264124867}  # Transform
+---
+ID: 3849929671264124867
+Transform:
+  m_GameObject: {fileID: 6162460891195633644}
+  Translation: [0, 0, 0]
+  Rotation: [1.62920671e-07, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3187203319805926689}
+  m_Children:
+    - {fileID: 17266762433091479319}
+---
+ID: 17266762433091479319
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Hips
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3136663465789160518}  # Transform
+---
+ID: 3136663465789160518
+Transform:
+  m_GameObject: {fileID: 17266762433091479319}
+  Translation: [-0.00866199099, 80.3359528, 0.0122749992]
+  Rotation: [3.49081461e-06, -6.63118699e-05, 0.00213464815]
+  Scale: [1.00000036, 1.00000036, 1]
+  Father: {fileID: 6162460891195633644}
+  m_Children:
+    - {fileID: 12570637580553461997}
+    - {fileID: 11409285225658608015}
+    - {fileID: 7956036006453990203}
+---
+ID: 12570637580553461997
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Spine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8288135462882383450}  # Transform
+---
+ID: 8288135462882383450
+Transform:
+  m_GameObject: {fileID: 12570637580553461997}
+  Translation: [-2.25518306e-08, 7.33337164, -0.310161352]
+  Rotation: [-0.042272713, 6.69513684e-05, -0.00213414687]
+  Scale: [0.999999642, 0.99999994, 1.00000012]
+  Father: {fileID: 17266762433091479319}
+  m_Children:
+    - {fileID: 12499713264809482498}
+---
+ID: 12499713264809482498
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Spine1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4587666417367447770}  # Transform
+---
+ID: 4587666417367447770
+Transform:
+  m_GameObject: {fileID: 12499713264809482498}
+  Translation: [-6.39488462e-12, 8.5632391, 4.44074288e-08]
+  Rotation: [-1.86264515e-08, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12570637580553461997}
+  m_Children:
+    - {fileID: 4923321750175988260}
+---
+ID: 4923321750175988260
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Spine2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11791636238435592902}  # Transform
+---
+ID: 11791636238435592902
+Transform:
+  m_GameObject: {fileID: 4923321750175988260}
+  Translation: [-2.94568281e-09, 9.78656292, 1.0400916e-07]
+  Rotation: [1.86264515e-08, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 12499713264809482498}
+  m_Children:
+    - {fileID: 6211847048917437859}
+    - {fileID: 16260248616180954372}
+    - {fileID: 7767387782458648318}
+---
+ID: 6211847048917437859
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Neck
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12905773410866132732}  # Transform
+---
+ID: 12905773410866132732
+Transform:
+  m_GameObject: {fileID: 6211847048917437859}
+  Translation: [8.39918357e-10, 11.0098896, 4.61633391e-07]
+  Rotation: [0.0422693416, -0, 0]
+  Scale: [1, 0.999999642, 0.999999702]
+  Father: {fileID: 4923321750175988260}
+  m_Children:
+    - {fileID: 9442184168085772026}
+---
+ID: 9442184168085772026
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:Head
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11931708451440749184}  # Transform
+---
+ID: 11931708451440749184
+Transform:
+  m_GameObject: {fileID: 9442184168085772026}
+  Translation: [-1.51187507e-09, 6.19826508, 1.60749602]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6211847048917437859}
+  m_Children:
+    - {fileID: 4267745036730369155}
+---
+ID: 4267745036730369155
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:HeadTop_End
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13745083457286114099}  # Transform
+---
+ID: 13745083457286114099
+Transform:
+  m_GameObject: {fileID: 4267745036730369155}
+  Translation: [1.92039806e-09, 19.5204639, 5.06255913]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9442184168085772026}
+  m_Children:
+    []
+---
+ID: 16260248616180954372
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftShoulder
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1263193131287191564}  # Transform
+---
+ID: 1263193131287191564
+Transform:
+  m_GameObject: {fileID: 16260248616180954372}
+  Translation: [4.38922024, 9.37733936, -0.084542051]
+  Rotation: [-1.18694043, 1.55716801, -2.98047733]
+  Scale: [0.999999523, 0.99999994, 0.999999881]
+  Father: {fileID: 4923321750175988260}
+  m_Children:
+    - {fileID: 14180693825090859268}
+---
+ID: 14180693825090859268
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7989062967456675802}  # Transform
+---
+ID: 7989062967456675802
+Transform:
+  m_GameObject: {fileID: 14180693825090859268}
+  Translation: [2.68220901e-07, 9.38611603, -8.57561827e-06]
+  Rotation: [-0.222700804, -0.000858201005, 0.0139973266]
+  Scale: [1.0000006, 1.00000036, 1.00000024]
+  Father: {fileID: 16260248616180954372}
+  m_Children:
+    - {fileID: 3578571145529165585}
+---
+ID: 3578571145529165585
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftForeArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15461900173113060109}  # Transform
+---
+ID: 15461900173113060109
+Transform:
+  m_GameObject: {fileID: 3578571145529165585}
+  Translation: [-2.03315722e-07, 20.2059975, 2.97030783e-06]
+  Rotation: [8.20211028e-07, 8.53464189e-06, -7.14774089e-08]
+  Scale: [0.999999642, 0.999999881, 0.999999642]
+  Father: {fileID: 14180693825090859268}
+  m_Children:
+    - {fileID: 6591498956453992320}
+---
+ID: 6591498956453992320
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHand
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 728950200551781689}  # Transform
+---
+ID: 728950200551781689
+Transform:
+  m_GameObject: {fileID: 6591498956453992320}
+  Translation: [-3.38557584e-07, 20.5680351, -4.29860665e-06]
+  Rotation: [-7.93605466e-07, -7.5493037e-05, 3.27313103e-07]
+  Scale: [0.999999523, 1, 0.999999583]
+  Father: {fileID: 3578571145529165585}
+  m_Children:
+    - {fileID: 14354735419875017681}
+---
+ID: 14354735419875017681
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10581192477209802988}  # Transform
+---
+ID: 10581192477209802988
+Transform:
+  m_GameObject: {fileID: 14354735419875017681}
+  Translation: [6.63578248e-07, 8.22125149, 6.48762216e-06]
+  Rotation: [-2.78669518e-06, 0.000143768251, 7.17041303e-07]
+  Scale: [1.00000012, 1, 1.00000012]
+  Father: {fileID: 6591498956453992320}
+  m_Children:
+    - {fileID: 3546041694524854285}
+---
+ID: 3546041694524854285
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9096522450683770844}  # Transform
+---
+ID: 9096522450683770844
+Transform:
+  m_GameObject: {fileID: 3546041694524854285}
+  Translation: [4.86455974e-07, 1.03478706, 1.53132714e-06]
+  Rotation: [-0.227070794, -0.00144509692, -0.0126737999]
+  Scale: [1, 1.00000024, 1.00000012]
+  Father: {fileID: 14354735419875017681}
+  m_Children:
+    - {fileID: 3168087180087668424}
+---
+ID: 3168087180087668424
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7835546501420375529}  # Transform
+---
+ID: 7835546501420375529
+Transform:
+  m_GameObject: {fileID: 3168087180087668424}
+  Translation: [-0.0236917734, 1.82187414, 0.421014816]
+  Rotation: [0.0793509334, -0.0978576541, 0.359124869]
+  Scale: [1.0000006, 1.00000024, 1.00000012]
+  Father: {fileID: 3546041694524854285}
+  m_Children:
+    - {fileID: 14396982883996702216}
+---
+ID: 14396982883996702216
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftHandIndex4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12653122649563566311}  # Transform
+---
+ID: 12653122649563566311
+Transform:
+  m_GameObject: {fileID: 14396982883996702216}
+  Translation: [0.478870273, 1.26751697, 0.161733791]
+  Rotation: [2.04890931e-08, 1.67638028e-08, -5.12227309e-08]
+  Scale: [1.00000012, 1.00000012, 1.00000012]
+  Father: {fileID: 3168087180087668424}
+  m_Children:
+    []
+---
+ID: 7767387782458648318
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightShoulder
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5162118598662311031}  # Transform
+---
+ID: 5162118598662311031
+Transform:
+  m_GameObject: {fileID: 7767387782458648318}
+  Translation: [-4.38922024, 9.37602806, -0.0536090322]
+  Rotation: [-1.15616369, -1.56419098, 2.95000362]
+  Scale: [1.00000012, 1.00000036, 0.999999881]
+  Father: {fileID: 4923321750175988260}
+  m_Children:
+    - {fileID: 10313988940441403239}
+---
+ID: 10313988940441403239
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7854020593809293188}  # Transform
+---
+ID: 7854020593809293188
+Transform:
+  m_GameObject: {fileID: 10313988940441403239}
+  Translation: [-6.40749931e-07, 9.38611698, 2.10553408e-05]
+  Rotation: [-0.223022759, 0.00227635819, -0.00717219757]
+  Scale: [0.99999994, 0.999999344, 1]
+  Father: {fileID: 7767387782458648318}
+  m_Children:
+    - {fileID: 11212456098584363079}
+---
+ID: 11212456098584363079
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightForeArm
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13969602188819130532}  # Transform
+---
+ID: 13969602188819130532
+Transform:
+  m_GameObject: {fileID: 11212456098584363079}
+  Translation: [4.01450961e-08, 20.2061787, 4.55707777e-07]
+  Rotation: [-3.76634262e-07, -2.34656054e-05, -2.76231987e-07]
+  Scale: [0.999999881, 1, 1]
+  Father: {fileID: 10313988940441403239}
+  m_Children:
+    - {fileID: 4939941842715493551}
+---
+ID: 4939941842715493551
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHand
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15263090970336735040}  # Transform
+---
+ID: 15263090970336735040
+Transform:
+  m_GameObject: {fileID: 4939941842715493551}
+  Translation: [-4.04164894e-07, 20.5738373, -2.12294981e-06]
+  Rotation: [4.93701975e-07, -0.000311270356, -7.85696045e-07]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11212456098584363079}
+  m_Children:
+    - {fileID: 5995229280173602079}
+---
+ID: 5995229280173602079
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15351029255133464413}  # Transform
+---
+ID: 15351029255133464413
+Transform:
+  m_GameObject: {fileID: 5995229280173602079}
+  Translation: [-6.18725608e-07, 8.54798508, -7.11076427e-06]
+  Rotation: [-3.85401972e-06, -0.480348557, 1.4708944e-06]
+  Scale: [0.999999821, 1, 0.999999762]
+  Father: {fileID: 4939941842715493551}
+  m_Children:
+    - {fileID: 8648718086204791991}
+---
+ID: 8648718086204791991
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16134349252204527957}  # Transform
+---
+ID: 16134349252204527957
+Transform:
+  m_GameObject: {fileID: 8648718086204791991}
+  Translation: [-4.19426942e-06, 1.07092547, -3.15491343e-06]
+  Rotation: [-0.0232292246, 0.00224559801, 0.192762792]
+  Scale: [0.999999881, 1.00000012, 0.999999464]
+  Father: {fileID: 5995229280173602079}
+  m_Children:
+    - {fileID: 2351688974638034871}
+---
+ID: 2351688974638034871
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7089153515804268204}  # Transform
+---
+ID: 7089153515804268204
+Transform:
+  m_GameObject: {fileID: 2351688974638034871}
+  Translation: [0.316689491, 1.62205791, 0.0383665562]
+  Rotation: [0.0608067401, -0.0167278554, 0.0868183225]
+  Scale: [1.00000048, 1.00000036, 1.00000036]
+  Father: {fileID: 8648718086204791991}
+  m_Children:
+    - {fileID: 479801234927258443}
+---
+ID: 479801234927258443
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightHandIndex4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11270919554890884091}  # Transform
+---
+ID: 11270919554890884091
+Transform:
+  m_GameObject: {fileID: 479801234927258443}
+  Translation: [0.351121426, 1.22030544, -0.0506368279]
+  Rotation: [7.45058149e-09, -2.70083582e-08, 7.63684653e-08]
+  Scale: [0.999999881, 0.999999821, 0.999999881]
+  Father: {fileID: 2351688974638034871}
+  m_Children:
+    []
+---
+ID: 11409285225658608015
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftUpLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1181346574833478606}  # Transform
+---
+ID: 1181346574833478606
+Transform:
+  m_GameObject: {fileID: 11409285225658608015}
+  Translation: [6.95866013, -4.07769012, -0.0718273968]
+  Rotation: [0.0940074623, -0.00252259127, 3.13823462]
+  Scale: [0.999999702, 0.999999702, 1.00001895]
+  Father: {fileID: 17266762433091479319}
+  m_Children:
+    - {fileID: 15149957475331621755}
+---
+ID: 15149957475331621755
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8168517310570312845}  # Transform
+---
+ID: 8168517310570312845
+Transform:
+  m_GameObject: {fileID: 15149957475331621755}
+  Translation: [3.94880772e-07, 34.2050819, -2.51270831e-06]
+  Rotation: [-0.245387301, 0.000311232987, 0.0025379695]
+  Scale: [0.999999881, 1.0000006, 0.999999285]
+  Father: {fileID: 11409285225658608015}
+  m_Children:
+    - {fileID: 3060243117485377484}
+---
+ID: 3060243117485377484
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftFoot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13801216727398904336}  # Transform
+---
+ID: 13801216727398904336
+Transform:
+  m_GameObject: {fileID: 3060243117485377484}
+  Translation: [1.36438757e-07, 35.2011337, -2.06008554e-06]
+  Rotation: [1.05036259, -0.174146324, -0.058370363]
+  Scale: [1.0000006, 0.999999583, 0.999999642]
+  Father: {fileID: 15149957475331621755}
+  m_Children:
+    - {fileID: 14555262786418752384}
+---
+ID: 14555262786418752384
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftToeBase
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 369644746072353271}  # Transform
+---
+ID: 369644746072353271
+Transform:
+  m_GameObject: {fileID: 14555262786418752384}
+  Translation: [4.93382686e-07, 11.8128815, 1.73778972e-06]
+  Rotation: [0.67896539, 0.0256033894, -5.31027844e-08]
+  Scale: [0.999999225, 1.00000072, 0.99999994]
+  Father: {fileID: 3060243117485377484}
+  m_Children:
+    - {fileID: 2152741653011768304}
+---
+ID: 2152741653011768304
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:LeftToe_End
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 170649419781582476}  # Transform
+---
+ID: 170649419781582476
+Transform:
+  m_GameObject: {fileID: 2152741653011768304}
+  Translation: [-5.14586475e-07, 4.19208193, 5.07134246e-09]
+  Rotation: [2.0765583e-08, -4.83123586e-09, -3.82595999e-09]
+  Scale: [1, 0.999999881, 1]
+  Father: {fileID: 14555262786418752384}
+  m_Children:
+    []
+---
+ID: 7956036006453990203
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightUpLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16105085798696529909}  # Transform
+---
+ID: 16105085798696529909
+Transform:
+  m_GameObject: {fileID: 7956036006453990203}
+  Translation: [-6.95866013, -4.07769823, -0.0521364585]
+  Rotation: [0.09805765, 0.00224733399, 3.14069223]
+  Scale: [1, 1.00000012, 1.00002217]
+  Father: {fileID: 17266762433091479319}
+  m_Children:
+    - {fileID: 9383697433056807775}
+---
+ID: 9383697433056807775
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightLeg
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12062793337267619278}  # Transform
+---
+ID: 12062793337267619278
+Transform:
+  m_GameObject: {fileID: 9383697433056807775}
+  Translation: [-2.18395144e-07, 34.206234, 1.3615936e-06]
+  Rotation: [-0.253914356, -0.00017729486, -0.00259104092]
+  Scale: [0.999999583, 0.999999881, 0.999999285]
+  Father: {fileID: 7956036006453990203}
+  m_Children:
+    - {fileID: 12858387692339151134}
+---
+ID: 12858387692339151134
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightFoot
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12900544658541154624}  # Transform
+---
+ID: 12900544658541154624
+Transform:
+  m_GameObject: {fileID: 12858387692339151134}
+  Translation: [4.60073352e-07, 35.2078362, 4.22820449e-07]
+  Rotation: [1.06342733, 0.171311349, 0.0597425848]
+  Scale: [1.00000036, 1.00000024, 1.00000036]
+  Father: {fileID: 9383697433056807775}
+  m_Children:
+    - {fileID: 11465385804680866697}
+---
+ID: 11465385804680866697
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightToeBase
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16628249134670275662}  # Transform
+---
+ID: 16628249134670275662
+Transform:
+  m_GameObject: {fileID: 11465385804680866697}
+  Translation: [5.74218575e-07, 11.939352, 8.54837708e-07]
+  Rotation: [0.670438945, -0.0282720774, 3.07459338e-08]
+  Scale: [1.00000024, 0.999999821, 0.99999994]
+  Father: {fileID: 12858387692339151134}
+  m_Children:
+    - {fileID: 7320237372558816906}
+---
+ID: 7320237372558816906
+GameObject:
+  m_IsActive: true
+  m_Name: mixamorig:RightToe_End
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4160075996874001745}  # Transform
+---
+ID: 4160075996874001745
+Transform:
+  m_GameObject: {fileID: 7320237372558816906}
+  Translation: [7.34628998e-07, 4.29187202, 1.0302756e-08]
+  Rotation: [5.69198093e-08, -8.48522177e-08, 1.26433948e-08]
+  Scale: [0.99999994, 1, 1.00000012]
+  Father: {fileID: 11465385804680866697}
+  m_Children:
+    []

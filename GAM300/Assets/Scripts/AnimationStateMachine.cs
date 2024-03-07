@@ -84,14 +84,6 @@ namespace BeanFactory
                     return;
                 }
             }
-
-            if (currState != null)
-            {
-                Console.WriteLine("Idling From Scripting");
-                currState = null;
-                animator.SetState("Idle");
-                animator.SetSpeed(1f);
-            }
         }
 
         public AnimationState GetState(string name)

@@ -30,6 +30,8 @@ public class ThirdPersonController : Script
     public float currentDashAttackCooldown;
     public bool startDashCooldown = false;
 
+    public bool stopJump = false;
+
 
     public float dodgeTimer = 1f;
     public float currentDodgeTimer;
@@ -233,6 +235,7 @@ public class ThirdPersonController : Script
         AnimationState dashAttack = animationManager.GetState("DashAttack");
         AnimationState dodge = animationManager.GetState("Dodge");
         AnimationState overdrive = animationManager.GetState("Overdrive");
+        AnimationState idle = animationManager.GetState("Idle");
         //Lowest Precedence
 
         stun.SetConditionals(false, death);
@@ -252,6 +255,7 @@ public class ThirdPersonController : Script
         dodge.SetConditionals(false, dashAttack, jump, death, stun, attack1, attack2, attack3, dashAttack);
         dodge.speed = 2.5f;
         overdrive.SetConditionals(false, dashAttack, dodge, attack1, attack2, attack3, jump, death, stun);
+        SetState("Idle", true);
     }
 
 
@@ -594,6 +598,7 @@ public class ThirdPersonController : Script
         }
         else if (CC.isGrounded)
         {
+            Console.WriteLine("\nGROUNDED!");
             if (GetState("Falling"))
             {
                 SetState("Falling", false);
@@ -671,6 +676,8 @@ public class ThirdPersonController : Script
             //JUMP
             else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
+                Console.WriteLine("JUMP KEY PRESSED!");
+                StartCoroutine(StopJump());
                 SetState("Jump", true);
 
                 //Jump will not require stamina
@@ -696,7 +703,9 @@ public class ThirdPersonController : Script
             }
             else if (!IsAttacking)
             {
-                SetState("Jump", false);
+                Console.WriteLine("Stopped Jumping");
+                if (stopJump)
+                    SetState("Jump", false);
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina >= sprintStamina)
                 {
@@ -720,6 +729,7 @@ public class ThirdPersonController : Script
         }
         else
         {
+            Console.WriteLine("NOT GROUNDED!");
             if (animationManager.GetState("Jump").state)
             {
                 if (currentAirTime >= maxAirTime)
@@ -743,6 +753,11 @@ public class ThirdPersonController : Script
 
 
         //attacking
+    }
+
+    void LateUpdate()
+    {
+        animationManager.UpdateState();
     }
 
     public void Respawn()
@@ -890,6 +905,8 @@ public class ThirdPersonController : Script
         animationManager.GetState(stateName).state = value;
         animationManager.UpdateState(); 
     }
+
+
     public void TakeDamage(float amount)
     {
         if (!isInvulnerable)
@@ -1034,6 +1051,14 @@ public class ThirdPersonController : Script
         //    Console.WriteLine("Collected");
         //    AudioManager.instance.itemCollected.Play();//play audio sound
         //}
+    }
+
+    IEnumerator StopJump()
+    {
+        stopJump = false;
+        yield return null;
+        yield return null;
+        stopJump = true;
     }
 
     void OnCollisionEnter(PhysicsComponent rb)
