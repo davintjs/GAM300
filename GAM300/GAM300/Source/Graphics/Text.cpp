@@ -9,15 +9,6 @@ void TextSystem::Init()
 	//LoadFontAtlas("Assets/Fonts/Xolonium-Bold.font"); // decompile
 	EVENTS.Subscribe(this, &TextSystem::CallbackFontAssetLoaded);
 
-	float vertices[6][4]{
-		{1.f,1.f,1.f,1.f},
-		{1.f,1.f,1.f,1.f},
-		{1.f,1.f,1.f,1.f},
-		{1.f,1.f,1.f,1.f},
-		{1.f,1.f,1.f,1.f},
-		{1.f,1.f,1.f,1.f}
-	};
-
 	glGenVertexArrays(1, &txtVAO);
 	glGenBuffers(1, &txtVBO);
 
@@ -31,35 +22,6 @@ void TextSystem::Init()
 	glVertexAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-/**/
-
-	// set up for instancing
-
-	//glGenBuffers(1, &transformBuffer);
-	//glBindBuffer(GL_ARRAY_BUFFER, transformBuffer);
-	//glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::mat4), instanceTransforms.data(), GL_DYNAMIC_DRAW);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//glBindVertexArray(txtVAO);
-	//glEnableVertexAttribArray(1);
-	//glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)0);
-	//glVertexAttribDivisor(1, 1); // This tells OpenGL to update this attribute once per instance
-
-	//glEnableVertexAttribArray(2);
-	//glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4)));
-	//glVertexAttribDivisor(2, 1);
-
-	//glEnableVertexAttribArray(3);
-	//glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(2 * sizeof(glm::vec4)));
-	//glVertexAttribDivisor(3, 1);
-
-	//glEnableVertexAttribArray(4);
-	//glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(3 * sizeof(glm::vec4)));
-	//glVertexAttribDivisor(4, 1);
-
-	//// Unbind VAO and VBO
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
-	//glBindVertexArray(0);
 
 }
 
@@ -145,7 +107,7 @@ void TextSystem::Draw(BaseCamera& _camera)
 
 	RenderText_WorldSpace(_camera);
 	//RenderText_ScreeninWorldSpace(_camera);
-	//RenderText_ScreenSpace(_camera);
+	RenderText_ScreenSpace(_camera);
 
 }
 
@@ -272,53 +234,6 @@ void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
 	txtshader.UnUse();
 
 }
-
-//void TextSystem::RenderTextFromString(TextRenderer const& text)
-//{
-//	// Clear previous data
-//	//allVertices.clear();
-//
-//	float xoffset{ text.x }, yoffset{ text.y };
-//	float fontSize{ 0.001f * text.fontSize };
-//	float maxWidth{ 0.01f * text.width };
-//	int iter{ 0 };
-//	//std::vector<glm::mat4> instanceTransforms; // Store instance transforms
-//	instanceTransforms.clear();
-//	for (const char& c : text.text) {
-//		Character ch = mFontContainer.at(text.guid).at(c);
-//
-//		// Similar character processing as before, but we're collecting instance data instead of directly rendering
-//		float xpos, ypos;
-//		xpos = xoffset + ch.Bearing.x * fontSize;
-//		ypos = yoffset - (ch.Bearing.y * 2.f) * fontSize;
-//
-//		glm::mat4 model = glm::mat4(1.0f);
-//		model = glm::translate(model, glm::vec3(xpos, ypos, 0.0f)); // Translation
-//		model = glm::scale(model, glm::vec3(ch.Size.x * fontSize, ch.Size.y * fontSize, 1.0f)); // Scale
-//
-//		instanceTransforms.push_back(model);
-//
-//		xoffset += (ch.Advance >> 6) * fontSize; // bitshift by 6 to get value in pixels (2^6 = 64)
-//
-//		++iter;
-//	}
-//
-//
-//	// Update content of VBO memory with the new instance transforms
-//	glBindBuffer(GL_ARRAY_BUFFER, transformBuffer);
-//	//glBufferSubData(GL_ARRAY_BUFFER, 0, instanceTransforms.size() * sizeof(glm::mat4), instanceTransforms.data());
-//	glBufferData(GL_ARRAY_BUFFER, instanceTransforms.size() * sizeof(glm::mat4), instanceTransforms.data(), GL_DYNAMIC_DRAW);
-//	//glBufferSubData(GL_ARRAY_BUFFER, 0, buffersize * sizeof(glm::vec4), prop.M_R_A_Texture.data());
-//	glBindBuffer(GL_ARRAY_BUFFER, 0);
-//
-//	// Bind necessary buffers and textures
-//	glBindVertexArray(txtVAO);
-//	glBindTexture(GL_TEXTURE_2D, mFontAtlasContainer.at(text.guid));
-//
-//	// Perform the instanced rendering draw call
-//	glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, 4, instanceTransforms.size());
-//}
-
 
 void TextSystem::RenderTextFromString(TextRenderer const& text)
 {

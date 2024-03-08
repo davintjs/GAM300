@@ -20,7 +20,6 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //-------------------------
 
 layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
-layout (location = 1) in mat4 modelMatrix; // Instance transformation matrix
 //-------------------------
 //          GOING OUT
 //-------------------------
@@ -42,12 +41,4 @@ void main()
     TexCoords = vertex.zw;
 
 	gl_Position = projection * view * SRT * vec4(vertex.xy, 0.0,1.0);
-
-//	vec4 pos = modelMatrix * vertex;
-//
-//    // Apply projection and view matrices
-//    gl_Position = projection * view * SRT * pos;
-//
-//    // Pass texture coordinates to fragment shader
-//    TexCoords = vertex.zw;
 }
