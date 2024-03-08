@@ -12059,7 +12059,7 @@ GameObject:
 ID: 813583600382484493
 Transform:
   m_GameObject: {fileID: 15334681090738628473}
-  Translation: [-19.6676064, 2.1999948, 24.7202797]
+  Translation: [-19.6676064, 2.1999948, 38.6534309]
   Rotation: [0, 0, 0]
   Scale: [0.999998093, 1, 0.999998093]
   Father: {fileID: 0}
@@ -12180,6 +12180,8 @@ Script:
   overDriveStamina: 40
   sprintStamina: 0.25
   startDashCooldown: false
+  maxColliderDist: 1.5
+  stopJump: false
   currentOverdriveCooldown: 0
   dodgeTimer: 0.5
   startDeathAnimationCountdown: false
@@ -12209,7 +12211,6 @@ Script:
   invulnerableTimer: 0.699999988
   isDead: false
   colliderDist: 0
-  maxColliderDist: 1.5
   timeBeforeRegen: 1
   regenRate: 60
   dashAttackStamina: 15
@@ -14934,6 +14935,7 @@ Animator:
   m_GameObject: {fileID: 17589645519894896830}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 14790332214141994081
 GameObject:
@@ -18731,6 +18733,7 @@ Animator:
   m_GameObject: {fileID: 11998253260673808900}
   m_IsEnabled: true
   Animation: {guid: c4fef853906fbef85cfcf3080cfd1a6b}
+  Playing: false
 ---
 ID: 9943126827848380058
 GameObject:

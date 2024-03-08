@@ -32,24 +32,24 @@ public class ThirdPersonCamera : Script
     public float closestZoom = 1f;
     public float furthestZoom = 10f;
     public bool isZooming = false;
-    private bool zoomReset = false;
+    //private bool zoomReset = false;
 
     public float timer = 0f;
     private float duration = 1.0f;
     private float bufferTimer = 0f;
     private float bufferDuration = 3.0f;
-    private float distance = 0f;
+    //private float distance = 0f;
 
     public bool cutscene = false;
 
     float shakeMagnitude = 0f;
     float shakeDuration = 0f;
-    private vec3 targetPosition;
+    //private vec3 targetPosition;
 
 
     void Awake()
     {
-        targetPosition = target.transform.localPosition;
+        //targetPosition = target.transform.localPosition;
         camera = GetComponent<Camera>();
         instance = this;
     }
@@ -57,7 +57,7 @@ public class ThirdPersonCamera : Script
     // Update is called once per frame
     void LateUpdate()
     {
-        if (cutscene)
+        if (cutscene || GameManager.instance.paused)
         {
             return;
         }
@@ -182,7 +182,7 @@ public class ThirdPersonCamera : Script
 
             if (timer >= duration)
             {
-                zoomReset = false;
+                //zoomReset = false;
                 timer = bufferTimer = 0f;
             }
         }

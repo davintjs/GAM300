@@ -37,6 +37,9 @@ void Animation_Manager::Update(float dt)
 #endif
         if (!currentScene.IsActive(animator)) continue;
 
+        Entity& entity = currentScene.Get<Entity>(animator);
+        if (!currentScene.IsActive(entity)) continue;
+
         if (animator.animID != animator.prevAnimID) // This check should be in the animator itself
         {
             //PRINT("Animator ID: ", animator.UUID(), "\n");

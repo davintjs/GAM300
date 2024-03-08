@@ -262,16 +262,16 @@ void PhysicsSystem::Update(float dt) {
 	// Fixed time steps
 	if (physicsSystem) {
 
-		//float fixedDt = (float)MyFrameRateController.GetFixedDt();
-		//for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
-		//{
-		//	PrePhysicsUpdate(dt);
-		//	physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
-		//	step++;
-		//}
-		PrePhysicsUpdate(dt);
+		float fixedDt = (float)MyFrameRateController.GetFixedDt();
+		for (int i = 0; i < MyFrameRateController.GetSteps(); ++i)
+		{
+			PrePhysicsUpdate(dt);
+			physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
+			step++;
+		}
+		/*PrePhysicsUpdate(dt);
 
-		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);
+		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);*/
 
 	}
 

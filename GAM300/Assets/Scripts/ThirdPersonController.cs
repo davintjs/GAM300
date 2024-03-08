@@ -363,7 +363,7 @@ public class ThirdPersonController : Script
     // Update is called once per frame
     void Update()
     {
-        if (ThirdPersonCamera.instance.cutscene)
+        if (ThirdPersonCamera.instance.cutscene || GameManager.instance.paused)
             return;
 
 
