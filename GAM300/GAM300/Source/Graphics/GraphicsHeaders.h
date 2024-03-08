@@ -608,7 +608,9 @@ public:
 		glm::vec2 AtlasCoordsMax;
 	};
 
-	unsigned int txtVAO, txtVBO;
+	unsigned int txtVAO, txtVBO, transformBuffer;
+	std::vector<glm::mat4> instanceTransforms; // Store instance transforms
+
 	using FontCharacters = std::map<char, Character>;
 	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
 	std::unordered_map<Engine::GUID<FontAsset>, GLuint> mFontAtlasContainer;
@@ -621,6 +623,7 @@ public:
 
 	//std::vector<FontType> fontGroups;
 	std::vector<float> allVertices;
+	//std::vector<glm::vec4> allVertices;
 	//std::vector<GLuint> allTextures;
 
 
