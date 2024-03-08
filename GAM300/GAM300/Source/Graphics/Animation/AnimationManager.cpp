@@ -66,27 +66,15 @@ void Animation_Manager::Update(float dt)
             if (!currentScene.IsActive(animator)) continue;
 
             Transform& transForm{ currentScene.Get<Transform>(animator) };
-            //PRINT("Animator ID: ", animator.UUID(), "\n");
-            animator.prevAnimID = animator.animID;
-            animator.m_CurrentTime = 0.f;
-            if (animator.animID == 0) // Replaced to empty
-                animator.m_AnimationIdx = -1;
-            else
-                animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
-
-            animator.SetDefaultState("Idle");
-            //animator.ChangeState();
-
-            Transform& t = currentScene.Get<Transform>(animator);
-            animator.CreateRig(&t);
-        }
+            
+        
 
             float distance = glm::distance(CurrCam.GetCameraPosition(), transForm.GetGlobalTranslation());
 
-            if (distance < 20.f || CurrCam.WithinFrustum(transForm, minBound, maxBound))
+          /*  if (distance < 20.f || CurrCam.WithinFrustum(transForm, minBound, maxBound))
             {
 
-            }
+            }*/
 
             //if (distance > 20.f || !CurrCam.WithinFrustrumAnimation(transForm, minBound, maxBound))
             if (distance > 20.f && !CurrCam.WithinFrustum(transForm, minBound, maxBound))
@@ -108,13 +96,15 @@ void Animation_Manager::Update(float dt)
                 //PRINT("Animator ID: ", animator.UUID(), "\n");
                 animator.prevAnimID = animator.animID;
                 animator.m_CurrentTime = 0.f;
-                if (animator.animID == 0)
+                if (animator.animID == 0) // Replaced to empty
                     animator.m_AnimationIdx = -1;
                 else
                     animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
 
                 animator.SetDefaultState("Idle");
-                animator.ChangeState();
+                //animator.ChangeState();
+
+                animator.CreateRig(&transForm);
             }
 
             /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_W))
