@@ -15,6 +15,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #include "Precompiled.h"
 #include "BaseAnimator.h"
 #include "AnimationManager.h"
+#include "Scene/Components.h"
+#include "Scene/SceneManager.h"
+#include "Editor/EditorHistory.h"
+#include "Editor/Editor.h"
 
 BaseAnimator::BaseAnimator()
 {
@@ -36,6 +40,122 @@ BaseAnimator::BaseAnimator()
 
     for (int i = 0; i < 100; i++)
         m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
+}
+
+void BaseAnimator::CreateRig(Transform* _transform)
+{
+    rigTransform = _transform;
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+
+    // If no aniamtion exists
+    if (m_AnimationIdx == -1)
+    {
+        // Remove all existing rig
+        if (!rig.empty()) // If the root transform still exists within the scene
+        {
+            Change newchange;
+            newchange.entity = &currentScene.Get<Entity>(*(*rig.begin()).second);
+            EDITOR.History.AddEntityChange(newchange);
+
+            for (auto& [name, transform] : rig)
+            {
+                if (transform->GetParent() != nullptr)
+                {
+                    Transform* parent = transform->GetParent();
+                    parent->RemoveChild(transform);
+                }
+                currentScene.Destroy(transform);
+            }
+        }
+        
+        rigTransform = nullptr;
+        rig.clear();
+    }
+    else
+    {
+        Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+
+        // Check for existing rig
+        for (size_t i = 0; i < rigTransform->child.size(); i++)
+        {
+            Tag& tag = currentScene.Get<Tag>(rigTransform->child[i]);
+            Bone* bone = m_CurrentAnimation.FindBone(tag.name);
+
+            if (bone)
+            {
+                // If there is a pre-existing bone in the animator, re-assign the rig base on the transform
+                rig.clear();
+                ReAssignRig(&currentScene.Get<Transform>(rigTransform->child[i]));
+                return;
+            }
+        }
+
+        CalculateRigTransform(m_CurrentAnimation, &m_CurrentAnimation.GetRootNode(), rigTransform);
+    }
+}
+
+void BaseAnimator::ReAssignRig(Transform* _transform)
+{
+    if (!_transform)
+        return;
+
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+
+    std::string name = currentScene.Get<Tag>(*_transform).name;
+    rig[name] = _transform;
+
+    for (size_t i = 0; i < _transform->child.size(); i++)
+    {
+        ReAssignRig(&currentScene.Get<Transform>(_transform->child[i]));
+    }
+}
+
+void BaseAnimator::CalculateRigTransform(Animation& animation, const AssimpNodeData* node, Transform* parentTransform)
+{
+    const std::string& nodeName = node->name;
+
+    Scene& currentScene = MySceneManager.GetCurrentScene();
+    Animation& m_CurrentAnimation = animation;
+    Transform* transform = nullptr;
+
+    Bone* Bone = m_CurrentAnimation.FindBone(nodeName);
+    //PRINT(nodeName, "\n");
+
+    if (Bone)
+    {
+        Bone->Update(m_CurrentTime);
+    }
+
+    auto& boneInfoMap = m_CurrentAnimation.GetBoneInfoMap();
+    auto it = boneInfoMap.find(nodeName);
+    if (it != boneInfoMap.end())
+    {
+        // Set Rig Display
+        Entity* entity = currentScene.Add<Entity>();
+        transform = &currentScene.Get<Transform>(*entity);
+        Tag& tag = currentScene.Get<Tag>(*entity);
+        tag.name = nodeName;
+        transform->SetParent(parentTransform);
+        Vector3 pos, scale, rot2;
+        glm::quat rot;
+        glm::mat4 temp = Bone->GetLocalTransform();
+        transform->Decompose(temp, pos, rot, scale);
+        transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
+        rig[nodeName] = transform;
+
+        rot2 = glm::degrees(glm::eulerAngles(rot));
+        /*PRINT("Comp Trans: ", pos.x, " ", pos.y, " ", pos.z);
+        PRINT(" : ", rot2.x, " ", rot2.y, " ", rot2.z);
+        PRINT(" : ", scale.x, " ", scale.y, " ", scale.z, "\n");*/
+    }
+
+    if (!transform)
+        transform = parentTransform;
+
+    for (int i = 0; i < node->childrenCount; i++)
+    {
+        CalculateRigTransform(animation, &node->children[i], transform);
+    }
 }
 
 void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
@@ -211,6 +331,21 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
         int index = it->second.id;
         glm::mat4 offset = it->second.offset;
         m_FinalBoneMatrices[index] = parentTransform * offset;
+
+        // Set Rig Display
+        if (!rig.empty())
+        {
+            Transform* transform = rig[nodeName];
+            if (transform)
+            {
+                Vector3 pos, scale;
+                glm::quat rot;
+                glm::mat4 temp = Bone->GetLocalTransform();
+                transform->Decompose(temp, pos, rot, scale);
+                transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
+                //PRINT(nodeName, " :", transform->GetLocalTranslation().x, " ", transform->GetLocalTranslation().y, " ", transform->GetLocalTranslation().z, "\n");
+            }
+        }
     }
 
     for (int i = 0; i < node->childrenCount; i++)
@@ -274,6 +409,20 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
             int index = boneInfoMap[nodeName].id;
             glm::mat4 offset = boneInfoMap[nodeName].offset;
             m_FinalBoneMatrices[index] = globalTransformation * offset;
+
+            // Set Rig Display
+            if (!rig.empty())
+            {
+                Transform* transform = rig[nodeName];
+                if (transform)
+                {
+                    Vector3 pos, scale;
+                    glm::quat rot;
+                    glm::mat4 temp = Bone->GetLocalTransform();
+                    transform->Decompose(temp, pos, rot, scale);
+                    transform->SetLocalMatrix(pos, glm::eulerAngles(rot), scale);
+                }
+            }
         }
 
         for (int i = 0; i < node->childrenCount; i++)

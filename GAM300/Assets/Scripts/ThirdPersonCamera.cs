@@ -39,7 +39,11 @@ public class ThirdPersonCamera : Script
 
     public bool cutscene = false;
 
+    float shakeMagnitude = 0f;
+    float shakeDuration = 0f;
     private vec3 targetPosition;
+
+
 
     void Awake()
     {
@@ -62,6 +66,8 @@ public class ThirdPersonCamera : Script
         UpdateCameraRotation();
 
         AvoidColliders();
+
+        ShakeCoroutine();
     }
 
     void OnTriggerEnter(PhysicsComponent other)
@@ -181,24 +187,19 @@ public class ThirdPersonCamera : Script
 
     public void ShakeCamera(float magnitude, float duration)
     {
-        StartCoroutine(ShakeCoroutine(magnitude, duration));
+        shakeDuration = duration;
+        shakeMagnitude = magnitude;
     }
 
-    IEnumerator ShakeCoroutine(float magnitude, float duration)
+    void ShakeCoroutine()
     {
-        vec3 originalPosition = transform.localPosition;
-        float elapsed = 0f;
-        while (elapsed < duration)
+        if (shakeDuration > 0)
         {
-            float x = RNG.Range(-1f, 1f) * magnitude;
-            float y = RNG.Range(-1f, 1f) * magnitude;
-
-            transform.localPosition = new vec3(originalPosition.x + x, originalPosition.y + y, originalPosition.z);
-
-            elapsed += Time.deltaTime;
-            yield return null;
+            shakeDuration -= Time.deltaTime;
+            float x = RNG.Range(-1f, 1f) * shakeMagnitude;
+            float y = RNG.Range(-1f, 1f) * shakeMagnitude;
+            transform.localPosition += new vec3(x,y,0);
         }
-        transform.localPosition = originalPosition; // Reset position after shaking
     }
 
     public void SetFOV(float targetFOV, float duration)

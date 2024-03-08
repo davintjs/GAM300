@@ -47,6 +47,8 @@ public:
 
     void CallbackAnimationAssetLoaded(AssetLoadedEvent<AnimationAsset>* pEvent);
 
+    void CallbackAnimationSceneLoad(SceneStartEvent* pEvent);
+
 private:
 
     //std::unordered_map<std::string, std::pair<char const*, GLuint>> mAnimationContainer; // GUID, <file name, GLuint>
