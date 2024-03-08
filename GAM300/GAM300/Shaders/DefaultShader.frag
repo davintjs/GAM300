@@ -717,7 +717,7 @@ void main()
     if( (brightness > bloomThreshold) && toBloom)
 
         Blooming = vec4(color.rgb, 1.0);
-    else
+    else if(Albedo.a == 1.0)
         Blooming = vec4(0.0, 0.0, 0.0, 1.0);
 
 
