@@ -96,7 +96,7 @@ void DebugDraw::Draw()
 			DrawSegment3D(iProp, tri[0], tri[2], color);
 		}
 
-		for (const auto& mAgent : MySceneManager.GetCurrentScene().GetArray<NavMeshAgent>())
+		for (const auto& mAgent : currentScene.GetArray<NavMeshAgent>())
 		{
 			if (mAgent.mPoints.empty())
 			{
@@ -113,6 +113,23 @@ void DebugDraw::Draw()
 	{
 		DrawCapsuleColliders();
 		DrawButtonOutlines();
+
+		color = { 1.f, 0.f, 0.f, 1.f };
+		for (const auto& animator : currentScene.GetArray<Animator>())
+		{
+			Transform& t = currentScene.Get<Transform>(animator);
+
+			for (const auto& camera : currentScene.GetArray<Camera>())
+			{
+				Transform& tCam = currentScene.Get<Transform>(camera);
+
+				glm::vec3 direction = t.GetParent()->GetGlobalTranslation() - tCam.GetGlobalTranslation();
+				glm::vec3 pos = tCam.GetGlobalTranslation() + 0.95f * direction;
+				float distance = glm::distance(pos, tCam.GetGlobalTranslation());
+				if (distance > 20.f)
+					DrawSegment3D(iProp, pos, tCam.GetGlobalTranslation(), color);
+			}
+		}
 	}	
 	
 	glLineWidth(1.5f);

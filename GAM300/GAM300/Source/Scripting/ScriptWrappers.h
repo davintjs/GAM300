@@ -531,6 +531,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return SCRIPTING.CreateMonoString(name);
 	}
 
+	static MonoString* GetName(ScriptObject<Entity> pEntity)
+	{
+		Entity* entity= &MySceneManager.GetCurrentScene().Get<Entity>(*pEntity);
+		if (entity == nullptr)
+			return SCRIPTING.CreateMonoString("");
+		return SCRIPTING.CreateMonoString(MySceneManager.GetCurrentScene().Get<Tag>(*entity).name);
+	}
+
 	static int GetLayer(MonoString* mString)
 	{
 		std::string name = mono_string_to_utf8(mString);
@@ -648,6 +656,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(Get);
 		Register(GetLayer);
 		Register(GetLayerName);
+		Register(GetName);
 		Register(GetActive);
 		Register(SetActive);
 		Register(LoadScene);

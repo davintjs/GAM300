@@ -16,6 +16,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "BaseAnimator.h"
 #include "Graphics/GraphicsHeaders.h"
 #include "Graphics/MeshManager.h"
+#include "Physics/PhysicsSystem.h"
 
 #include "AssetManager/ModelCompiler.h"
 #include "Core/EventsManager.h"
@@ -49,11 +50,7 @@ void Animation_Manager::Update(float dt)
 
             Transform& transForm{ currentScene.Get<Transform>(animator) };
 
-            float distance = glm::distance(CurrCam.GetCameraPosition(), transForm.GetGlobalTranslation());
-
-            if (distance > 20.f && !CurrCam.WithinFrustum(transForm, minBound, maxBound)) continue;
-
-            if(animator.animID != animator.prevAnimID)
+            if (animator.animID != animator.prevAnimID)
             {
                 //PRINT("Animator ID: ", animator.UUID(), "\n");
                 animator.prevAnimID = animator.animID;
@@ -67,6 +64,23 @@ void Animation_Manager::Update(float dt)
                 //animator.ChangeState();
 
                 animator.CreateRig(&transForm);
+            }
+
+            float distance = glm::distance(CurrCam.GetCameraPosition(), transForm.GetGlobalTranslation());
+
+            bool withinFrustum = CurrCam.WithinFrustum(transForm, minBound, maxBound);
+
+            if (distance > 20.f && !withinFrustum) continue;
+
+            if (distance > 20.f && withinFrustum) // Only raycast for those within frustum
+            {
+                Transform& cameraTran{ currentScene.Get<Transform>(CurrCam) };
+                glm::vec3 p = cameraTran.GetGlobalTranslation();
+                glm::vec3 d = transForm.GetParent()->GetGlobalTranslation() - p;
+                JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
+                EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
+                if (ray.hit) // If it hits something
+                    continue;
             }
 
             if (animator.playing && animator.AnimationAttached())

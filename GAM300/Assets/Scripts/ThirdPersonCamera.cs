@@ -57,13 +57,16 @@ public class ThirdPersonCamera : Script
     // Update is called once per frame
     void LateUpdate()
     {
-        if (cutscene || GameManager.instance.paused)
+        if (cutscene)
         {
             return;
         }
         Zoom();
 
         FocusOnTarget();
+
+        if (GameManager.instance.paused)
+            return;
 
         UpdateCameraRotation();
 
@@ -102,19 +105,19 @@ public class ThirdPersonCamera : Script
 
     void AvoidColliders()
     {
-        vec3 direction = camera.position - target.transform.position;
-        RaycastHit raycast = Physics.Raycast(target.transform.position, direction.NormalizedSafe, 10.0f);
+        vec3 direction = transform.position - target.transform.position;
+        RaycastHit raycast = Physics.Raycast(target.transform.position, direction, 1.01f);
         
         if (raycast.hit && raycast.gameObj != null)
         {
             string tagName = GetTag(raycast.gameObj);
             if (tagName != "Camera")
             { 
+                //Console.WriteLine("Name: " +  raycast.gameObj.name);
                 zoom = vec3.Distance(target.transform.position, raycast.point) * 0.9f;
                 zoom = Mathf.Clamp(zoom, closestZoom, furthestZoom);
             }
         }
-
 
         //if (isZooming)
         //{

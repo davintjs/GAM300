@@ -228,6 +228,9 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetLayerName(int layer);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string GetName(GameObject gameObject);
         #endregion
 
         #region PARTICLES

@@ -1236,8 +1236,11 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 			{
 				JoltVec3ToGlmVec3(v, hitPt);
 				tag = scene.Get<Tag>(rb);
-				selected = true;
-				break;
+				if (tag.physicsLayerIndex != 1) // If it isnt on TransparentFX layer
+				{
+					selected = true;
+					break;
+				}
 			}
 		}
 
