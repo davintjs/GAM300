@@ -35,63 +35,25 @@ void Animation_Manager::Update(float dt)
 
     for (Camera& CurrCam : currentScene.GetArray<Camera>())
     {
-
-        
-           /* bool withinCamera = false;
-            for (Camera& camera : currentScene.GetArray<Camera>())
-            {
-                if (camera.state == DELETED) continue;
-
-                if (!currentScene.IsActive(camera)) continue;
-
-                if (camera.WithinFrustum(transform, t_Mesh->vertices_min, t_Mesh->vertices_max))
-                {
-                    withinCamera = true;
-                    break;
-                }
-            }
-
-            if (!withinCamera) continue;*/
-        
-        //std::cout << "\n----------------\n";
         glm::vec3 minBound = { -1.f, -1.f, -1.f };
         glm::vec3 maxBound = { 1.f, 1.f, 1.f };
-        for (Animator& animator : currentScene.GetArray<Animator>()) // temp,  move to subsys later
+        for (Animator& animator : currentScene.GetArray<Animator>())
         {
-            
-            
     #ifndef _BUILD
             if (animator.state == DELETED) continue;
     #endif
             if (!currentScene.IsActive(animator)) continue;
 
+            Entity& entity = currentScene.Get<Entity>(animator);
+            if (!currentScene.IsActive(entity)) continue;
+
             Transform& transForm{ currentScene.Get<Transform>(animator) };
-            
-        
 
             float distance = glm::distance(CurrCam.GetCameraPosition(), transForm.GetGlobalTranslation());
 
-          /*  if (distance < 20.f || CurrCam.WithinFrustum(transForm, minBound, maxBound))
-            {
+            if (distance > 20.f && !CurrCam.WithinFrustum(transForm, minBound, maxBound)) continue;
 
-            }*/
-
-            //if (distance > 20.f || !CurrCam.WithinFrustrumAnimation(transForm, minBound, maxBound))
-            if (distance > 20.f && !CurrCam.WithinFrustum(transForm, minBound, maxBound))
-            {
-                //std::cout << "pew pew\n";
-                continue;
-            }
-            
-            
-            //if (!CurrCam.WithinFrustrumAnimation(transForm, minBound, maxBound))
-            //{
-            //    //std::cout << "ran away\n";
-            //    continue;
-            //}
-            
-
-            if(animator.animID != animator.prevAnimID) // This check should be in the animator itself
+            if(animator.animID != animator.prevAnimID)
             {
                 //PRINT("Animator ID: ", animator.UUID(), "\n");
                 animator.prevAnimID = animator.animID;
@@ -99,7 +61,7 @@ void Animation_Manager::Update(float dt)
                 if (animator.animID == 0) // Replaced to empty
                     animator.m_AnimationIdx = -1;
                 else
-                    animator.m_AnimationIdx = AddAnimCopy(animator.animID); // Bean: Should only do once
+                    animator.m_AnimationIdx = AddAnimCopy(animator.animID);
 
                 animator.SetDefaultState("Idle");
                 //animator.ChangeState();
@@ -107,15 +69,9 @@ void Animation_Manager::Update(float dt)
                 animator.CreateRig(&transForm);
             }
 
-            /*if (InputHandler::isKeyButtonPressed(GLFW_KEY_W))
-            {
-                animator.SetState("Run");
-            }*/
-
             if (animator.playing && animator.AnimationAttached())
             {
                 glm::mat4 translate = glm::mat4(1.f);
-                //glm::mat4 translate = glm::translate(glm::mat4(1.f), currentScene.Get<Transform>(animator).GetTranslation());
                 animator.UpdateAnimation(dt, translate);
             }
         }
