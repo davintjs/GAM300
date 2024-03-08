@@ -32,7 +32,7 @@ BaseAnimator::BaseAnimator()
     playing = false;
     currBlendState = notblending;
     blendedBones = 0;
-    blendDuration = 1.f;
+    blendDuration = 4.f;
     blendStartTime = 0.f;
     blendTimer = 0.f;
 
@@ -210,8 +210,8 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         
         if (blendedBones == m_CurrentAnimation.GetBoneCount() && blendTimer >= blendDuration)
         {
-            std::cout << "Finished blending " << currentState->label << " and " << nextState->label << '\n';
-            std::cout << "Bone count: " << blendedBones << " and timer: " << blendTimer << '\n';
+            //std::cout << "Finished blending " << currentState->label << " and " << nextState->label << '\n';
+            //std::cout << "Bone count: " << blendedBones << " and timer: " << blendTimer << '\n';
             currBlendState = blended;
             currentState = nextState;
             nextState = nullptr;
@@ -276,7 +276,7 @@ void BaseAnimator::ChangeState()
     if (nextState && currentState != nextState) // E.g. Idle is not equal to Jump state and Jump state exists
     {
         currBlendState = blending;
-        std::cout << "Change state Different state blending " << currentState->label << " and " << nextState->label << '\n';
+        //std::cout << "Change state Different state blending " << currentState->label << " and " << nextState->label << '\n';
         //endTime = m_CurrentTime + blendDuration;
         blendStartTime = m_CurrentTime;
     }
@@ -436,6 +436,8 @@ void BaseAnimator::SetDefaultState(const std::string& _defaultState)
 {
     Animation& animation = AnimationManager.GetAnimCopy(m_AnimationIdx);
     defaultState = animation.GetAnimationState(_defaultState);
+    CalculateBoneTransform(&animation.GetRootNode(), glm::mat4(1.f));
+
 }
 
 void BaseAnimator::SetNextState(const std::string& _nextState)
@@ -452,9 +454,8 @@ void BaseAnimator::SetNextState(const std::string& _nextState)
 void BaseAnimator::SetState(const std::string& _state)
 {
     SetNextState(_state);
-    //if(currBlendState != blending)
-    std::cout << "Set state: " << currentState->label << " and " << nextState->label << "\n";
-    ChangeState();
+    if(currBlendState != blending)
+        ChangeState();
 }
 
 void BaseAnimator::UpdateStateName()

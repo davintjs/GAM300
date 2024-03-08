@@ -121,7 +121,7 @@ property_begin_name(BaseAnimator, "BaseAnimator") {
 	property_var(m_CurrentTime).Name("Time").Flags(property::flags::DONTSAVE),
 	property_var(startTime).Name("StartTime").Flags(property::flags::DONTSAVE),
 	property_var(endTime).Name("EndTime").Flags(property::flags::DONTSAVE),
-	property_var(playing).Name("Playing").Flags(property::flags::DONTSAVE),
+	property_var(playing).Name("Playing"),
 
 }property_vend_h(BaseAnimator)
 
