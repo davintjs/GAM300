@@ -545,14 +545,14 @@ struct Particle : Object
 	Particle() {}
 	Particle(const vec3& position, const vec3& velocity, const float& acceleration, float lifetime, float scale)
 		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime), scale(scale) {}
-	vec3 position;
-	vec3 velocity;
-	vec3 direction;
+	vec3 position{ 0.f , 0.f, 0.f };
+	vec3 velocity{ 0.f , 0.f, 0.f };
+	vec3 direction{ 0.f , 0.f, 0.f };
 	float acceleration{0.f};
-	float lifetime;
-	float scale; 
-	float speed;
-	float noiselifetime;
+	float lifetime{ 0.f };
+	float scale{ 0.f };
+	float speed{0.f};
+	float noiselifetime{ 0.f };
 	Trail trails;
 };
 
@@ -579,6 +579,7 @@ struct ParticleComponent : Object
 	float particleMaxScale_{ 1.0f };
 	float particleScaleRate_{ 0.5f };
 	float speed_{ 0.5f };
+	float acceleration_{ 0.f };
 	float desiredLifetime{ 5.0f };
 	float noiseMovement{ 0.f };
 	float noisefrequency{ 0.f };
@@ -604,6 +605,7 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(particleMaxScale_).Name("Particle Max Scale"),
 	property_var(particleScaleRate_).Name("Particle Scale Rate"),
 	property_var(speed_).Name("Particle Speed"),
+	property_var(acceleration_).Name("Particle acceleration"),
 	property_var(noiseMovement).Name("Particle Noise Movement Percentage"),
 	property_var(noisefrequency).Name("Particle Noise Frequency"),
 	property_var(is2D).Name("2D particle"),
