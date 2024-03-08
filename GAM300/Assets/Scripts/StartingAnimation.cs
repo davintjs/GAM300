@@ -109,10 +109,10 @@ public class StartingAnimation : Script
             rot.z += Time.deltaTime * 4f;
             loading.transform.rotation = rot;
 
-            if (timer >= 14f)
+            if (timer >= 20f)
                 stats.SetActive(true);
 
-            if (timer >= 16f)
+            if (timer >= 21f)
             {
                 if (seq2)
                 {
@@ -123,7 +123,7 @@ public class StartingAnimation : Script
                 
             }
 
-            if (timer >= 17.5f)
+            if (timer >= 16.5f)
             {
                 if (seq3)
                 {
@@ -134,7 +134,7 @@ public class StartingAnimation : Script
             }
 
 
-            if (timer >= 18.5f)
+            if (timer >= 17.5f)
             {
                 if (playAudio)
                 {
@@ -143,14 +143,14 @@ public class StartingAnimation : Script
                 }              
             }
         }
-        else if (timer < 40f)
+        else if (timer < 46f)
         {
             systeminit.SetActive(false);
             loading.SetActive(false);
 
             scanning.SetActive(true);
 
-            if (timer >= 28f)
+            if (timer >= 34f)
             {
                 if (seq4)
                 {
@@ -160,7 +160,7 @@ public class StartingAnimation : Script
                 }
                 
             }
-            if (timer >= 30f)
+            if (timer >= 37f)
             {
                 if (seq5)
                 {
@@ -194,6 +194,10 @@ public class StartingAnimation : Script
             }
             else if (textTimer < 39f)
             {
+                if(textTimer > 36f)
+                {
+                    scanning.SetActive(false);
+                }
                 scanning.SetActive(false);
                 text3.SetActive(false);
                 text4.SetActive(true);
