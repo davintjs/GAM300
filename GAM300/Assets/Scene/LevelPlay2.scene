@@ -5493,6 +5493,13 @@ Transform:
     - {fileID: 9295220860800064196}
     - {fileID: 436127295408957879}
     - {fileID: 12521535399639334785}
+    - {fileID: 2010965744895807925}
+    - {fileID: 783346349410598326}
+    - {fileID: 16989569788804517597}
+    - {fileID: 7638358388038049573}
+    - {fileID: 13620939516381659214}
+    - {fileID: 8481823143146361351}
+    - {fileID: 10727427652694340384}
 ---
 ID: 1183833295746487535
 GameObject:
@@ -11658,7 +11665,7 @@ GameObject:
 ID: 11613807086383561158
 Transform:
   m_GameObject: {fileID: 9734277954788308524}
-  Translation: [53.3551559, 1.08140218, -167.746613]
+  Translation: [46.0062599, 1.08140182, -167.746613]
   Rotation: [0, 0, 0]
   Scale: [1.5, 1.98534012, 1.5]
   Father: {fileID: 10480691383386351295}
@@ -17506,7 +17513,7 @@ ID: 2782910807017723903
 Transform:
   m_GameObject: {fileID: 10105869364854835493}
   Translation: [-3.81469772e-06, -1.90734886e-06, 0]
-  Rotation: [0, 5.82075915e-11, 0]
+  Rotation: [0, 0, 0]
   Scale: [1.00000131, 1, 1.00000119]
   Father: {fileID: 8641555492752696194}
   m_Children:
@@ -25161,9 +25168,9 @@ GameObject:
 ID: 17441299318437765410
 Transform:
   m_GameObject: {fileID: 6614805135120495814}
-  Translation: [129.594147, 36.0960007, -56.4963989]
-  Rotation: [0, -0, 0]
-  Scale: [0.999960899, 1, 0.999970973]
+  Translation: [129.217026, 36.0960007, -56.4963989]
+  Rotation: [0, 0, 0]
+  Scale: [1.33946371, 1, 0.999970973]
   Father: {fileID: 4229837425546075238}
   m_Children:
     - {fileID: 3470021830443992187}
@@ -25238,9 +25245,9 @@ GameObject:
 ID: 960199243225613920
 Transform:
   m_GameObject: {fileID: 14977339062829089329}
-  Translation: [132.092728, 36.0960007, -56.4963989]
-  Rotation: [0, -0, 0]
-  Scale: [0.999960899, 1, 0.999970973]
+  Translation: [132.425995, 36.0960007, -56.4963989]
+  Rotation: [0, 0, 0]
+  Scale: [1.29523134, 1, 0.999970973]
   Father: {fileID: 4229837425546075238}
   m_Children:
     - {fileID: 4245332025506493141}
@@ -25315,9 +25322,9 @@ GameObject:
 ID: 14433439944522979594
 Transform:
   m_GameObject: {fileID: 18383024613547218372}
-  Translation: [138.012207, 36.0960007, -56.4963989]
-  Rotation: [0, -0, 0]
-  Scale: [0.999960899, 1, 0.999970973]
+  Translation: [137.685883, 36.0960007, -56.4963989]
+  Rotation: [0, 0, 0]
+  Scale: [1.3193301, 1, 0.999970973]
   Father: {fileID: 4229837425546075238}
   m_Children:
     - {fileID: 1841446304155806510}
@@ -25393,7 +25400,7 @@ ID: 4531991830828580736
 Transform:
   m_GameObject: {fileID: 891069670885104828}
   Translation: [140.412567, 36.0960007, -56.4963989]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.999960899, 1, 0.999970973]
   Father: {fileID: 4229837425546075238}
   m_Children:
@@ -25759,9 +25766,9 @@ GameObject:
 ID: 9588841681216335079
 Transform:
   m_GameObject: {fileID: 7958714934259594832}
-  Translation: [142.897888, 36.0960007, -56.4963989]
-  Rotation: [0, -0, 0]
-  Scale: [0.999960899, 1, 0.999970973]
+  Translation: [142.973572, 36.0960007, -56.4963989]
+  Rotation: [0, 0, 0]
+  Scale: [1.11236525, 1, 0.999970973]
   Father: {fileID: 4229837425546075238}
   m_Children:
     - {fileID: 17586389760951099112}
@@ -42651,9 +42658,9 @@ GameObject:
 ID: 628195676944031687
 Transform:
   m_GameObject: {fileID: 16267666590116155670}
-  Translation: [66.6287613, 34.883625, -156.116318]
-  Rotation: [0, 0, 0]
-  Scale: [0.999906957, 1, 0.999906957]
+  Translation: [66.6287613, 36.604866, -113.687561]
+  Rotation: [-3.14159203, 0, -3.14159203]
+  Scale: [0.999906242, 1, 0.999906242]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 13040872650618096360}
@@ -48194,7 +48201,7 @@ GameObject:
 ID: 13391212185643974938
 Transform:
   m_GameObject: {fileID: 3520596444848005558}
-  Translation: [105.032837, 36.3427162, -90.9587173]
+  Translation: [105.471512, 36.3427162, -104.327377]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -48232,7 +48239,7 @@ GameObject:
 ID: 7124094875133113107
 Transform:
   m_GameObject: {fileID: 846519838180547857}
-  Translation: [52.8473358, 37.3709984, -77.3507996]
+  Translation: [44.1014671, 37.3709984, -78.3258667]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -48251,7 +48258,7 @@ GameObject:
 ID: 9727648026438134175
 Transform:
   m_GameObject: {fileID: 4976388688774069869}
-  Translation: [66.4966125, 39.7792931, -113.931007]
+  Translation: [42.868248, 38.1783371, -119.345612]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -60819,6 +60826,8 @@ GameObject:
   m_Component:
     - component: {fileID: 4424889109813586379}  # Transform
     - component: {fileID: 17168241361854468059}  # MeshRenderer
+    - component: {fileID: 12682900256661802621}  # BoxCollider
+    - component: {fileID: 8509704609534896666}  # Rigidbody
 ---
 ID: 4424889109813586379
 Transform:
@@ -60836,6 +60845,27 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: ca2fb7ecd386fced74cefe0d5013e3a1}
   Material_ID: {guid: e25f6f5466888a06246d7e4ce73ad65a}
+---
+ID: 12682900256661802621
+BoxCollider:
+  m_GameObject: {fileID: 9132359687142672998}
+  m_IsEnabled: true
+  Dimensions: [1.98060966, 2.98562002, 1.9806118]
+  Offset: [-1.51395798e-05, 1.49281001, -1.40368938e-05]
+---
+ID: 8509704609534896666
+Rigidbody:
+  m_GameObject: {fileID: 9132359687142672998}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 11736288369183917097
 GameObject:
@@ -60862,7 +60892,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11736288369183917097}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 16863964401583955534
 GameObject:
@@ -88271,6 +88301,22 @@ Transform:
     - {fileID: 11097352631703379600}
     - {fileID: 14935517379010075282}
     - {fileID: 8813023868054517125}
+    - {fileID: 7453933959027508153}
+    - {fileID: 15585059741986553933}
+    - {fileID: 9636069326683566875}
+    - {fileID: 2513907683547657194}
+    - {fileID: 4140203640791601988}
+    - {fileID: 1132729560542028589}
+    - {fileID: 6662748405953888665}
+    - {fileID: 11527984858574279400}
+    - {fileID: 16890242055965524219}
+    - {fileID: 11122169585756141419}
+    - {fileID: 12702410476049353783}
+    - {fileID: 14144267780449697050}
+    - {fileID: 8555751548320759335}
+    - {fileID: 17939858400355541870}
+    - {fileID: 4052850725427726188}
+    - {fileID: 16630094886087691581}
 ---
 ID: 6897544555164281727
 GameObject:
@@ -88298,6 +88344,16 @@ Transform:
     - {fileID: 9921643221204584766}
     - {fileID: 7525855498974391718}
     - {fileID: 11391345525249986143}
+    - {fileID: 3760054254299970243}
+    - {fileID: 1562717045313750599}
+    - {fileID: 12113154500278951248}
+    - {fileID: 11292640546356589628}
+    - {fileID: 573263297524746783}
+    - {fileID: 13162841951116385743}
+    - {fileID: 10509890877230161516}
+    - {fileID: 1605621407029875310}
+    - {fileID: 5877606723863607966}
+    - {fileID: 15403824339946580370}
 ---
 ID: 2501033563124642148
 GameObject:
@@ -88341,6 +88397,34 @@ Transform:
     - {fileID: 14756324115453304197}
     - {fileID: 6581347657933473038}
     - {fileID: 2841568938766412495}
+    - {fileID: 17782228576496094969}
+    - {fileID: 10133871512070070674}
+    - {fileID: 1725093104844976578}
+    - {fileID: 11539703550657585087}
+    - {fileID: 11609645371250052948}
+    - {fileID: 17541510549633024953}
+    - {fileID: 18050780819918619037}
+    - {fileID: 13741980702226751769}
+    - {fileID: 15047412223347294960}
+    - {fileID: 2180020649151336195}
+    - {fileID: 4724155989949222933}
+    - {fileID: 685428555167534952}
+    - {fileID: 5495465645631004590}
+    - {fileID: 9612271203097891240}
+    - {fileID: 4721507698918882117}
+    - {fileID: 11074945727295310785}
+    - {fileID: 15672159257317451017}
+    - {fileID: 10659640410178757449}
+    - {fileID: 16329827438692286070}
+    - {fileID: 3257827739030223844}
+    - {fileID: 12873548473925382191}
+    - {fileID: 2467187814001172271}
+    - {fileID: 12703816718000780091}
+    - {fileID: 16499867673298963289}
+    - {fileID: 4015459904240329972}
+    - {fileID: 2823446509536874994}
+    - {fileID: 13356446052988442593}
+    - {fileID: 4230748181825398642}
 ---
 ID: 1935172939492071495
 GameObject:
@@ -88360,6 +88444,8 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 9132359687142672998}
+    - {fileID: 1021452465617892083}
+    - {fileID: 9640624024597372372}
 ---
 ID: 8950786642554036017
 GameObject:
@@ -88386,7 +88472,7 @@ MeshRenderer:
   m_GameObject: {fileID: 8950786642554036017}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 11639272233376884983
 GameObject:
@@ -88956,7 +89042,7 @@ GameObject:
 ID: 15437521849552758594
 Transform:
   m_GameObject: {fileID: 4828940711728058117}
-  Translation: [142.853683, 41.7992363, -63.1119156]
+  Translation: [142.853683, 41.3919983, -63.1119156]
   Rotation: [0, 0, -3.14159226]
   Scale: [0.403884679, 0.350760192, 0.44990623]
   Father: {fileID: 17551185539749227568}
@@ -88983,9 +89069,9 @@ GameObject:
 ID: 5139230916728773450
 Transform:
   m_GameObject: {fileID: 7275075488271498120}
-  Translation: [0, 0, -8.18866101e-05]
+  Translation: [0, 0, 0.039768815]
   Rotation: [0, 0, 0]
-  Scale: [1.00000119, 1, 1.00000119]
+  Scale: [1.00000215, 1, 1.00000215]
   Father: {fileID: 4828940711728058117}
   m_Children:
     []
@@ -89010,8 +89096,8 @@ GameObject:
 ID: 13962120400840451977
 Transform:
   m_GameObject: {fileID: 5709922246900216023}
-  Translation: [143.222397, 41.0864258, -63.370182]
-  Rotation: [-3.14159203, 1.53308558, -3.14159203]
+  Translation: [142.776138, 40.6476936, -63.370182]
+  Rotation: [-3.14159226, 1.53308558, -3.14159226]
   Scale: [0.999916732, 0.999974906, 0.999925137]
   Father: {fileID: 6897544555164281727}
   m_Children:
@@ -89022,7 +89108,7 @@ MeshRenderer:
   m_GameObject: {fileID: 5709922246900216023}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 9333013163105879839
 GameObject:
@@ -89037,7 +89123,7 @@ GameObject:
 ID: 447913590088705717
 Transform:
   m_GameObject: {fileID: 9333013163105879839}
-  Translation: [128.633682, 41.7992363, -96.5866699]
+  Translation: [128.633682, 41.3919983, -96.5866699]
   Rotation: [0, 0, -3.14159226]
   Scale: [0.403884679, 0.350760192, 0.44990623]
   Father: {fileID: 17551185539749227568}
@@ -89065,7 +89151,7 @@ ID: 15543444680383963000
 Transform:
   m_GameObject: {fileID: 10071684632459420302}
   Translation: [0, 0, -8.18866101e-05]
-  Rotation: [0, -0, 3.25463728e-16]
+  Rotation: [0, 0, 0]
   Scale: [1.00000119, 1, 1.00000119]
   Father: {fileID: 9333013163105879839}
   m_Children:
@@ -89091,7 +89177,7 @@ GameObject:
 ID: 16484498140680649072
 Transform:
   m_GameObject: {fileID: 14499535282109436915}
-  Translation: [128.733749, 41.0864258, -96.6340332]
+  Translation: [128.733749, 40.6501617, -96.6340332]
   Rotation: [0, 0.208399743, 0]
   Scale: [0.999916732, 0.999974906, 0.999925137]
   Father: {fileID: 6897544555164281727}
@@ -89103,7 +89189,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14499535282109436915}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 181690103956380704
 GameObject:
@@ -89118,7 +89204,7 @@ GameObject:
 ID: 6341851735008184540
 Transform:
   m_GameObject: {fileID: 181690103956380704}
-  Translation: [118.618958, 41.7992363, -63.3578568]
+  Translation: [118.618958, 41.3919983, -63.3578568]
   Rotation: [0, 0, -3.14159226]
   Scale: [0.403884679, 0.350760192, 0.44990623]
   Father: {fileID: 17551185539749227568}
@@ -89172,7 +89258,7 @@ GameObject:
 ID: 9063852363179509922
 Transform:
   m_GameObject: {fileID: 13014817814692177424}
-  Translation: [118.60218, 41.0616722, -63.370182]
+  Translation: [118.60218, 40.6658592, -63.370182]
   Rotation: [-3.14159226, -0.15898791, -3.14159226]
   Scale: [0.999894917, 0.999974906, 0.999903083]
   Father: {fileID: 6897544555164281727}
@@ -89184,7 +89270,7 @@ MeshRenderer:
   m_GameObject: {fileID: 13014817814692177424}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 12582860678833366066
 GameObject:
@@ -89199,7 +89285,7 @@ GameObject:
 ID: 17961716421497166756
 Transform:
   m_GameObject: {fileID: 12582860678833366066}
-  Translation: [110.516655, 41.7992363, -115.921432]
+  Translation: [110.516655, 41.3919983, -115.921432]
   Rotation: [0, 0, -3.14159226]
   Scale: [0.403884679, 0.350760192, 0.44990623]
   Father: {fileID: 17551185539749227568}
@@ -89253,8 +89339,8 @@ GameObject:
 ID: 7907263489924667104
 Transform:
   m_GameObject: {fileID: 1099978957968628360}
-  Translation: [110.496758, 41.0616722, -116.484917]
-  Rotation: [-3.14159203, -0.15898791, -3.14159203]
+  Translation: [110.496758, 40.6452103, -116.484917]
+  Rotation: [-3.14159226, -0.15898791, -3.14159226]
   Scale: [0.999894917, 0.999974906, 0.999903083]
   Father: {fileID: 6897544555164281727}
   m_Children:
@@ -89265,7 +89351,7 @@ MeshRenderer:
   m_GameObject: {fileID: 1099978957968628360}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 9921643221204584766
 GameObject:
@@ -89280,9 +89366,9 @@ GameObject:
 ID: 9274762178224725237
 Transform:
   m_GameObject: {fileID: 9921643221204584766}
-  Translation: [71.3110886, 41.0616722, -146.582336]
+  Translation: [70.9648132, 40.6483078, -146.643692]
   Rotation: [-3.14159226, 1.11580992, -3.14159226]
-  Scale: [0.99988085, 0.999974906, 0.999888659]
+  Scale: [0.99988097, 0.999974906, 0.999889076]
   Father: {fileID: 6897544555164281727}
   m_Children:
     []
@@ -89292,7 +89378,7 @@ MeshRenderer:
   m_GameObject: {fileID: 9921643221204584766}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 9295220860800064196
 GameObject:
@@ -89307,7 +89393,7 @@ GameObject:
 ID: 7534467187818660390
 Transform:
   m_GameObject: {fileID: 9295220860800064196}
-  Translation: [70.9247284, 41.7992363, -146.637024]
+  Translation: [70.9247284, 41.3919983, -146.637024]
   Rotation: [0, 1.57045102, 3.14159274]
   Scale: [0.40389365, 0.350760162, 0.449915051]
   Father: {fileID: 17551185539749227568}
@@ -89361,7 +89447,7 @@ GameObject:
 ID: 17361017005981576022
 Transform:
   m_GameObject: {fileID: 436127295408957879}
-  Translation: [115.803703, 41.7992363, -103.435928]
+  Translation: [115.803703, 41.3919983, -103.435928]
   Rotation: [0, 1.57045102, 0]
   Scale: [0.403890312, 0.350760162, 0.449911803]
   Father: {fileID: 17551185539749227568}
@@ -89415,9 +89501,9 @@ GameObject:
 ID: 17810522272785046283
 Transform:
   m_GameObject: {fileID: 7525855498974391718}
-  Translation: [115.669548, 41.0616722, -103.394218]
-  Rotation: [-3.14159226, -1.53871298, -3.14159226]
-  Scale: [0.999848664, 0.999974906, 0.999856532]
+  Translation: [115.669548, 40.640789, -103.394218]
+  Rotation: [-3.14159226, -1.53871107, -3.14159226]
+  Scale: [0.99982214, 0.999974906, 0.999826074]
   Father: {fileID: 6897544555164281727}
   m_Children:
     []
@@ -89427,7 +89513,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7525855498974391718}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
 ID: 11391345525249986143
 GameObject:
@@ -89456,7 +89542,7 @@ MeshRenderer:
   m_GameObject: {fileID: 11391345525249986143}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+  Material_ID: {guid: dea6b1456ca7e52f05b3093e2b3c09bb}
 ---
 ID: 10015212297392336031
 BoxCollider:
@@ -89492,7 +89578,7 @@ GameObject:
 ID: 8042760489115584563
 Transform:
   m_GameObject: {fileID: 12521535399639334785}
-  Translation: [66.5727539, 41.7992363, -156.60434]
+  Translation: [66.5727539, 41.3919983, -156.60434]
   Rotation: [0, 0, -3.14159226]
   Scale: [0.403897613, 0.350772172, 0.449918956]
   Father: {fileID: 17551185539749227568}
@@ -89682,3 +89768,3020 @@ Rigidbody:
   IsKinematic: true
   UseGravity: true
   Is_trigger: false
+---
+ID: 3760054254299970243
+GameObject:
+  m_IsActive: true
+  m_Name: BrokenSecurityCamera - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7994489257839996998}  # Transform
+    - component: {fileID: 3235589977337963928}  # MeshRenderer
+---
+ID: 7994489257839996998
+Transform:
+  m_GameObject: {fileID: 3760054254299970243}
+  Translation: [75.4001465, 40.6521072, -112.098732]
+  Rotation: [-3.14159226, -1.49484372, -3.14159226]
+  Scale: [0.999758661, 0.999887288, 0.999747694]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 3235589977337963928
+MeshRenderer:
+  m_GameObject: {fileID: 3760054254299970243}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: dea6b1456ca7e52f05b3093e2b3c09bb}
+---
+ID: 2010965744895807925
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - C - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13644343932809224447}  # Transform
+    - component: {fileID: 13661569776683892558}  # MeshRenderer
+---
+ID: 13644343932809224447
+Transform:
+  m_GameObject: {fileID: 2010965744895807925}
+  Translation: [58.0497093, 41.3919983, -112.082535]
+  Rotation: [3.14159274, 1.57045102, 0]
+  Scale: [0.403902113, 0.35077256, 0.449926645]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 17512393327204041196}
+---
+ID: 13661569776683892558
+MeshRenderer:
+  m_GameObject: {fileID: 2010965744895807925}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 17512393327204041196
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12053979086204559715}  # Transform
+    - component: {fileID: 13058868273352551125}  # MeshRenderer
+---
+ID: 12053979086204559715
+Transform:
+  m_GameObject: {fileID: 17512393327204041196}
+  Translation: [0, 0, -8.18866101e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 2010965744895807925}
+  m_Children:
+    []
+---
+ID: 13058868273352551125
+MeshRenderer:
+  m_GameObject: {fileID: 17512393327204041196}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 1562717045313750599
+GameObject:
+  m_IsActive: true
+  m_Name: BrokenSecurityCamera - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5711984318040903392}  # Transform
+    - component: {fileID: 8581930628012265512}  # MeshRenderer
+---
+ID: 5711984318040903392
+Transform:
+  m_GameObject: {fileID: 1562717045313750599}
+  Translation: [58.1766243, 36.7598419, -112.098732]
+  Rotation: [0.717509747, 0.312253714, 1.5132618]
+  Scale: [0.999740601, 0.999872386, 0.999737918]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 8581930628012265512
+MeshRenderer:
+  m_GameObject: {fileID: 1562717045313750599}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: dea6b1456ca7e52f05b3093e2b3c09bb}
+---
+ID: 17782228576496094969
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1904953773189476478}  # Transform
+    - component: {fileID: 5495368638502353571}  # MeshRenderer
+    - component: {fileID: 12126923145346485859}  # BoxCollider
+    - component: {fileID: 5304858693471044318}  # Rigidbody
+---
+ID: 1904953773189476478
+Transform:
+  m_GameObject: {fileID: 17782228576496094969}
+  Translation: [63.8004074, 37.1073647, -115.963135]
+  Rotation: [-2.28682637, -0.0773499236, -1.64313984]
+  Scale: [0.999693215, 0.999780059, 0.999590397]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 5495368638502353571
+MeshRenderer:
+  m_GameObject: {fileID: 17782228576496094969}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 12126923145346485859
+BoxCollider:
+  m_GameObject: {fileID: 17782228576496094969}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 5304858693471044318
+Rigidbody:
+  m_GameObject: {fileID: 17782228576496094969}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 10133871512070070674
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12160423966573305504}  # Transform
+    - component: {fileID: 15608244968909635567}  # MeshRenderer
+    - component: {fileID: 12577510470244269455}  # BoxCollider
+    - component: {fileID: 2769070592900663093}  # Rigidbody
+---
+ID: 12160423966573305504
+Transform:
+  m_GameObject: {fileID: 10133871512070070674}
+  Translation: [64.4479752, 36.5533524, -117.222801]
+  Rotation: [3.01279116, -0.113866597, -3.12470555]
+  Scale: [0.999528646, 0.999821484, 0.999474883]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 15608244968909635567
+MeshRenderer:
+  m_GameObject: {fileID: 10133871512070070674}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 12577510470244269455
+BoxCollider:
+  m_GameObject: {fileID: 10133871512070070674}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 2769070592900663093
+Rigidbody:
+  m_GameObject: {fileID: 10133871512070070674}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 1725093104844976578
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2540031132282157025}  # Transform
+    - component: {fileID: 9135133170925432081}  # MeshRenderer
+    - component: {fileID: 10811288262659466196}  # BoxCollider
+    - component: {fileID: 11141071254490239949}  # Rigidbody
+---
+ID: 2540031132282157025
+Transform:
+  m_GameObject: {fileID: 1725093104844976578}
+  Translation: [68.0567169, 36.5933456, -116.969315]
+  Rotation: [-3.14159226, 0.175796628, -3.14159226]
+  Scale: [0.999379635, 0.999821663, 0.99932909]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 9135133170925432081
+MeshRenderer:
+  m_GameObject: {fileID: 1725093104844976578}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 10811288262659466196
+BoxCollider:
+  m_GameObject: {fileID: 1725093104844976578}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 11141071254490239949
+Rigidbody:
+  m_GameObject: {fileID: 1725093104844976578}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 11539703550657585087
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14432671299795778085}  # Transform
+    - component: {fileID: 6101469571628521631}  # MeshRenderer
+    - component: {fileID: 13884912638329066367}  # BoxCollider
+    - component: {fileID: 12762793903801910646}  # Rigidbody
+---
+ID: 14432671299795778085
+Transform:
+  m_GameObject: {fileID: 11539703550657585087}
+  Translation: [70.7173004, 36.5563431, -116.969315]
+  Rotation: [0, -1.1966455, 0]
+  Scale: [0.999370873, 0.999821663, 0.999321401]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 6101469571628521631
+MeshRenderer:
+  m_GameObject: {fileID: 11539703550657585087}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 13884912638329066367
+BoxCollider:
+  m_GameObject: {fileID: 11539703550657585087}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 12762793903801910646
+Rigidbody:
+  m_GameObject: {fileID: 11539703550657585087}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 11609645371250052948
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13175196965657584784}  # Transform
+    - component: {fileID: 8449095488565961947}  # MeshRenderer
+    - component: {fileID: 9715217770232342420}  # BoxCollider
+    - component: {fileID: 66047641638332969}  # Rigidbody
+---
+ID: 13175196965657584784
+Transform:
+  m_GameObject: {fileID: 11609645371250052948}
+  Translation: [75.5248947, 36.6603661, -115.035011]
+  Rotation: [-1.51531458, -1.42385268, 1.5147109]
+  Scale: [0.99936229, 0.999821424, 0.999316633]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 8449095488565961947
+MeshRenderer:
+  m_GameObject: {fileID: 11609645371250052948}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 9715217770232342420
+BoxCollider:
+  m_GameObject: {fileID: 11609645371250052948}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 66047641638332969
+Rigidbody:
+  m_GameObject: {fileID: 11609645371250052948}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 17541510549633024953
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2792368197932867058}  # Transform
+    - component: {fileID: 13700528912870831714}  # MeshRenderer
+    - component: {fileID: 381817093216463578}  # BoxCollider
+    - component: {fileID: 18423478163387048449}  # Rigidbody
+---
+ID: 2792368197932867058
+Transform:
+  m_GameObject: {fileID: 17541510549633024953}
+  Translation: [75.5248947, 36.6559448, -114.109894]
+  Rotation: [-1.50550282, -1.44555533, 1.50498688]
+  Scale: [0.999358416, 0.999824822, 0.999300539]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 13700528912870831714
+MeshRenderer:
+  m_GameObject: {fileID: 17541510549633024953}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 381817093216463578
+BoxCollider:
+  m_GameObject: {fileID: 17541510549633024953}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 18423478163387048449
+Rigidbody:
+  m_GameObject: {fileID: 17541510549633024953}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 18050780819918619037
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7936071824222146400}  # Transform
+    - component: {fileID: 11717617767560537431}  # MeshRenderer
+    - component: {fileID: 5836795082978610011}  # BoxCollider
+    - component: {fileID: 15135867084006814898}  # Rigidbody
+---
+ID: 7936071824222146400
+Transform:
+  m_GameObject: {fileID: 18050780819918619037}
+  Translation: [75.5248947, 36.7090645, -113.215279]
+  Rotation: [-1.25703716, -1.5440824, 1.25692427]
+  Scale: [0.999330282, 0.999823868, 0.99926126]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 11717617767560537431
+MeshRenderer:
+  m_GameObject: {fileID: 18050780819918619037}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 5836795082978610011
+BoxCollider:
+  m_GameObject: {fileID: 18050780819918619037}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 15135867084006814898
+Rigidbody:
+  m_GameObject: {fileID: 18050780819918619037}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 1021452465617892083
+GameObject:
+  m_IsActive: true
+  m_Name: Incubator - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3043031085317082008}  # Transform
+    - component: {fileID: 16068582676315577141}  # MeshRenderer
+    - component: {fileID: 15871278048833415399}  # BoxCollider
+    - component: {fileID: 1311685982855494819}  # Rigidbody
+---
+ID: 3043031085317082008
+Transform:
+  m_GameObject: {fileID: 1021452465617892083}
+  Translation: [75.4725723, 36.640255, -111.622627]
+  Rotation: [0, 0.0604137294, 0.0432275571]
+  Scale: [0.999945939, 0.999946892, 0.999983609]
+  Father: {fileID: 1935172939492071495}
+  m_Children:
+    []
+---
+ID: 16068582676315577141
+MeshRenderer:
+  m_GameObject: {fileID: 1021452465617892083}
+  m_IsEnabled: true
+  Mesh: {guid: ca2fb7ecd386fced74cefe0d5013e3a1}
+  Material_ID: {guid: e25f6f5466888a06246d7e4ce73ad65a}
+---
+ID: 15871278048833415399
+BoxCollider:
+  m_GameObject: {fileID: 1021452465617892083}
+  m_IsEnabled: true
+  Dimensions: [1.98060966, 2.98562002, 1.9806118]
+  Offset: [-1.51395798e-05, 1.49281001, -1.40368938e-05]
+---
+ID: 1311685982855494819
+Rigidbody:
+  m_GameObject: {fileID: 1021452465617892083}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 7453933959027508153
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1992819173787922275}  # Transform
+    - component: {fileID: 17793067349589732012}  # MeshRenderer
+    - component: {fileID: 12733190919501849621}  # BoxCollider
+    - component: {fileID: 6429010984802567791}  # Rigidbody
+---
+ID: 1992819173787922275
+Transform:
+  m_GameObject: {fileID: 7453933959027508153}
+  Translation: [75.4587708, 38.8452492, -113.648666]
+  Rotation: [-3.11660933, -1.05958652, 3.1249516]
+  Scale: [0.799721122, 0.800003171, 0.799739182]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 17793067349589732012
+MeshRenderer:
+  m_GameObject: {fileID: 7453933959027508153}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 12733190919501849621
+BoxCollider:
+  m_GameObject: {fileID: 7453933959027508153}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 6429010984802567791
+Rigidbody:
+  m_GameObject: {fileID: 7453933959027508153}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 15585059741986553933
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1227776849134159251}  # Transform
+    - component: {fileID: 9907814820840753979}  # MeshRenderer
+    - component: {fileID: 7790395062403109382}  # BoxCollider
+    - component: {fileID: 3897033985687974267}  # Rigidbody
+---
+ID: 1227776849134159251
+Transform:
+  m_GameObject: {fileID: 15585059741986553933}
+  Translation: [75.4587708, 38.8452492, -114.813622]
+  Rotation: [0.115965642, -0.813644946, -0.072733745]
+  Scale: [0.799705923, 0.800005257, 0.799723327]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 9907814820840753979
+MeshRenderer:
+  m_GameObject: {fileID: 15585059741986553933}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 7790395062403109382
+BoxCollider:
+  m_GameObject: {fileID: 15585059741986553933}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 3897033985687974267
+Rigidbody:
+  m_GameObject: {fileID: 15585059741986553933}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 9636069326683566875
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1701939856423910051}  # Transform
+    - component: {fileID: 18256612015050019404}  # MeshRenderer
+    - component: {fileID: 17530423500856668793}  # BoxCollider
+    - component: {fileID: 9720494396106697521}  # Rigidbody
+---
+ID: 1701939856423910051
+Transform:
+  m_GameObject: {fileID: 9636069326683566875}
+  Translation: [68.0225449, 36.5480042, -101.821152]
+  Rotation: [-3.09397817, -0.789639115, -3.09546065]
+  Scale: [0.799587905, 0.800005198, 0.799602866]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 18256612015050019404
+MeshRenderer:
+  m_GameObject: {fileID: 9636069326683566875}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 17530423500856668793
+BoxCollider:
+  m_GameObject: {fileID: 9636069326683566875}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 9720494396106697521
+Rigidbody:
+  m_GameObject: {fileID: 9636069326683566875}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 2513907683547657194
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12520785696313132906}  # Transform
+    - component: {fileID: 3472571106934873132}  # MeshRenderer
+    - component: {fileID: 10073988690993491103}  # BoxCollider
+    - component: {fileID: 15287924037633929129}  # Rigidbody
+---
+ID: 12520785696313132906
+Transform:
+  m_GameObject: {fileID: 2513907683547657194}
+  Translation: [68.0225449, 36.5480042, -100.870262]
+  Rotation: [0.139977708, -1.07144332, -0.0678602681]
+  Scale: [0.799575925, 0.800004959, 0.799590826]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 3472571106934873132
+MeshRenderer:
+  m_GameObject: {fileID: 2513907683547657194}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 10073988690993491103
+BoxCollider:
+  m_GameObject: {fileID: 2513907683547657194}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 15287924037633929129
+Rigidbody:
+  m_GameObject: {fileID: 2513907683547657194}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4140203640791601988
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18260060193490289648}  # Transform
+    - component: {fileID: 11323333855208995709}  # MeshRenderer
+    - component: {fileID: 78129615728632034}  # BoxCollider
+    - component: {fileID: 13167717640707784600}  # Rigidbody
+---
+ID: 18260060193490289648
+Transform:
+  m_GameObject: {fileID: 4140203640791601988}
+  Translation: [68.0225449, 37.4083099, -101.328117]
+  Rotation: [1.28160787, 1.55433881, 1.51815462]
+  Scale: [0.799491465, 0.8000049, 0.799503863]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 11323333855208995709
+MeshRenderer:
+  m_GameObject: {fileID: 4140203640791601988}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 78129615728632034
+BoxCollider:
+  m_GameObject: {fileID: 4140203640791601988}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 13167717640707784600
+Rigidbody:
+  m_GameObject: {fileID: 4140203640791601988}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 12113154500278951248
+GameObject:
+  m_IsActive: true
+  m_Name: BrokenSecurityCamera - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7733837254994291093}  # Transform
+    - component: {fileID: 16605253096237536077}  # MeshRenderer
+    - component: {fileID: 16635021565553143245}  # BoxCollider
+    - component: {fileID: 8931146449059413510}  # Rigidbody
+---
+ID: 7733837254994291093
+Transform:
+  m_GameObject: {fileID: 12113154500278951248}
+  Translation: [72.8044891, 36.8636971, -114.455124]
+  Rotation: [-1.5810101, -0.124058366, 1.64727557]
+  Scale: [0.999726057, 0.999854147, 0.999731064]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 16605253096237536077
+MeshRenderer:
+  m_GameObject: {fileID: 12113154500278951248}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: dea6b1456ca7e52f05b3093e2b3c09bb}
+---
+ID: 16635021565553143245
+BoxCollider:
+  m_GameObject: {fileID: 12113154500278951248}
+  m_IsEnabled: true
+  Dimensions: [0.795614064, 0.63989073, 0.87997508]
+  Offset: [-6.13927841e-06, 0.258478016, 0.0421743244]
+---
+ID: 8931146449059413510
+Rigidbody:
+  m_GameObject: {fileID: 12113154500278951248}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 13741980702226751769
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13921685984345656079}  # Transform
+    - component: {fileID: 6071011086767533970}  # MeshRenderer
+    - component: {fileID: 5840352941529738977}  # BoxCollider
+    - component: {fileID: 206948080253751062}  # Rigidbody
+---
+ID: 13921685984345656079
+Transform:
+  m_GameObject: {fileID: 13741980702226751769}
+  Translation: [57.5592308, 36.9957237, -114.109894]
+  Rotation: [1.72370291, 0.34588334, 1.60801923]
+  Scale: [0.999283969, 0.999786615, 0.999217093]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 6071011086767533970
+MeshRenderer:
+  m_GameObject: {fileID: 13741980702226751769}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 5840352941529738977
+BoxCollider:
+  m_GameObject: {fileID: 13741980702226751769}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 206948080253751062
+Rigidbody:
+  m_GameObject: {fileID: 13741980702226751769}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 11292640546356589628
+GameObject:
+  m_IsActive: true
+  m_Name: BrokenSecurityCamera - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7492273338961406482}  # Transform
+    - component: {fileID: 8284656264519248297}  # MeshRenderer
+    - component: {fileID: 9843589761039127462}  # BoxCollider
+    - component: {fileID: 5540858350674253964}  # Rigidbody
+---
+ID: 7492273338961406482
+Transform:
+  m_GameObject: {fileID: 11292640546356589628}
+  Translation: [59.9945145, 36.7598419, -113.222908]
+  Rotation: [1.80009294, 0.202083796, 1.81714499]
+  Scale: [0.999715328, 0.999854088, 0.999719203]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 8284656264519248297
+MeshRenderer:
+  m_GameObject: {fileID: 11292640546356589628}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: dea6b1456ca7e52f05b3093e2b3c09bb}
+---
+ID: 9843589761039127462
+BoxCollider:
+  m_GameObject: {fileID: 11292640546356589628}
+  m_IsEnabled: true
+  Dimensions: [0.795614064, 0.63989073, 0.87997508]
+  Offset: [-6.13927841e-06, 0.258478016, 0.0421743244]
+---
+ID: 5540858350674253964
+Rigidbody:
+  m_GameObject: {fileID: 11292640546356589628}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 15047412223347294960
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17323149431699453229}  # Transform
+    - component: {fileID: 16724115696072901230}  # MeshRenderer
+    - component: {fileID: 9178314597929329684}  # BoxCollider
+    - component: {fileID: 15220414994580655264}  # Rigidbody
+---
+ID: 17323149431699453229
+Transform:
+  m_GameObject: {fileID: 15047412223347294960}
+  Translation: [57.5592308, 36.9957237, -115.348091]
+  Rotation: [1.74655128, 0.792247057, 1.62062144]
+  Scale: [0.999253392, 0.999778807, 0.999189019]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 16724115696072901230
+MeshRenderer:
+  m_GameObject: {fileID: 15047412223347294960}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 9178314597929329684
+BoxCollider:
+  m_GameObject: {fileID: 15047412223347294960}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 15220414994580655264
+Rigidbody:
+  m_GameObject: {fileID: 15047412223347294960}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 2180020649151336195
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17171182556701875846}  # Transform
+    - component: {fileID: 11414075034972027400}  # MeshRenderer
+    - component: {fileID: 3805928362812808356}  # BoxCollider
+    - component: {fileID: 15355370628188158474}  # Rigidbody
+---
+ID: 17171182556701875846
+Transform:
+  m_GameObject: {fileID: 2180020649151336195}
+  Translation: [57.5592308, 36.6703224, -116.149559]
+  Rotation: [-2.39405274, 1.52822018, -2.53479481]
+  Scale: [0.9992311, 0.999779582, 0.999160826]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 11414075034972027400
+MeshRenderer:
+  m_GameObject: {fileID: 2180020649151336195}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 3805928362812808356
+BoxCollider:
+  m_GameObject: {fileID: 2180020649151336195}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 15355370628188158474
+Rigidbody:
+  m_GameObject: {fileID: 2180020649151336195}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 1132729560542028589
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9765389127394919120}  # Transform
+    - component: {fileID: 985075786184125680}  # MeshRenderer
+    - component: {fileID: 14446897011644487261}  # BoxCollider
+    - component: {fileID: 12346876451545775138}  # Rigidbody
+---
+ID: 9765389127394919120
+Transform:
+  m_GameObject: {fileID: 1132729560542028589}
+  Translation: [62.8306122, 36.5272026, -113.374397]
+  Rotation: [-3.13432145, 0.37021783, 3.13285565]
+  Scale: [0.79958266, 0.800003171, 0.799609721]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 985075786184125680
+MeshRenderer:
+  m_GameObject: {fileID: 1132729560542028589}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 14446897011644487261
+BoxCollider:
+  m_GameObject: {fileID: 1132729560542028589}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 12346876451545775138
+Rigidbody:
+  m_GameObject: {fileID: 1132729560542028589}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 6662748405953888665
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7546979014411813992}  # Transform
+    - component: {fileID: 6651341087444995636}  # MeshRenderer
+    - component: {fileID: 5240135533226099056}  # BoxCollider
+    - component: {fileID: 11098311491684839943}  # Rigidbody
+---
+ID: 7546979014411813992
+Transform:
+  m_GameObject: {fileID: 6662748405953888665}
+  Translation: [62.8306122, 36.5477219, -112.193497]
+  Rotation: [-0.0390108265, 0.584559679, 0]
+  Scale: [0.799562991, 0.800004601, 0.799577832]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 6651341087444995636
+MeshRenderer:
+  m_GameObject: {fileID: 6662748405953888665}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 5240135533226099056
+BoxCollider:
+  m_GameObject: {fileID: 6662748405953888665}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 11098311491684839943
+Rigidbody:
+  m_GameObject: {fileID: 6662748405953888665}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 11527984858574279400
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15277914716378632087}  # Transform
+    - component: {fileID: 10068462177937067398}  # MeshRenderer
+    - component: {fileID: 10543324542752623132}  # BoxCollider
+    - component: {fileID: 6752871847029262835}  # Rigidbody
+---
+ID: 15277914716378632087
+Transform:
+  m_GameObject: {fileID: 11527984858574279400}
+  Translation: [62.8306122, 37.4012375, -112.806686]
+  Rotation: [-0.231536165, -1.12251604, 0.236902609]
+  Scale: [0.799535275, 0.800012231, 0.799551845]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 10068462177937067398
+MeshRenderer:
+  m_GameObject: {fileID: 11527984858574279400}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 10543324542752623132
+BoxCollider:
+  m_GameObject: {fileID: 11527984858574279400}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 6752871847029262835
+Rigidbody:
+  m_GameObject: {fileID: 11527984858574279400}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4724155989949222933
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16657388234190897955}  # Transform
+    - component: {fileID: 11878315579025796271}  # MeshRenderer
+    - component: {fileID: 8558486589659157616}  # BoxCollider
+    - component: {fileID: 17977758431556779886}  # Rigidbody
+---
+ID: 16657388234190897955
+Transform:
+  m_GameObject: {fileID: 4724155989949222933}
+  Translation: [70.6665192, 36.6394997, -113.295708]
+  Rotation: [-3.14159226, -0.771056175, -3.14159226]
+  Scale: [0.999366105, 0.999821663, 0.999316335]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 11878315579025796271
+MeshRenderer:
+  m_GameObject: {fileID: 4724155989949222933}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 8558486589659157616
+BoxCollider:
+  m_GameObject: {fileID: 4724155989949222933}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 17977758431556779886
+Rigidbody:
+  m_GameObject: {fileID: 4724155989949222933}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 685428555167534952
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5039164071796894151}  # Transform
+    - component: {fileID: 708615376008797241}  # MeshRenderer
+    - component: {fileID: 1390940358123403561}  # BoxCollider
+    - component: {fileID: 3429993916084375103}  # Rigidbody
+---
+ID: 5039164071796894151
+Transform:
+  m_GameObject: {fileID: 685428555167534952}
+  Translation: [69.7403412, 37.0202179, -113.295708]
+  Rotation: [2.97320104, 0.0647009015, -1.60469401]
+  Scale: [0.99913764, 0.999623358, 0.998900294]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 708615376008797241
+MeshRenderer:
+  m_GameObject: {fileID: 685428555167534952}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 1390940358123403561
+BoxCollider:
+  m_GameObject: {fileID: 685428555167534952}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 3429993916084375103
+Rigidbody:
+  m_GameObject: {fileID: 685428555167534952}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 16890242055965524219
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3323363503407807639}  # Transform
+    - component: {fileID: 2368790524329383394}  # MeshRenderer
+    - component: {fileID: 18246880200430797774}  # BoxCollider
+    - component: {fileID: 931641917772053757}  # Rigidbody
+---
+ID: 3323363503407807639
+Transform:
+  m_GameObject: {fileID: 16890242055965524219}
+  Translation: [62.7931404, 38.1405487, -116.959518]
+  Rotation: [-1.56966424, -0.144290477, -1.65460086]
+  Scale: [0.799512863, 0.799964428, 0.799568772]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 2368790524329383394
+MeshRenderer:
+  m_GameObject: {fileID: 16890242055965524219}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 18246880200430797774
+BoxCollider:
+  m_GameObject: {fileID: 16890242055965524219}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 931641917772053757
+Rigidbody:
+  m_GameObject: {fileID: 16890242055965524219}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 5495465645631004590
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5494998565328582543}  # Transform
+    - component: {fileID: 14581256870909726580}  # MeshRenderer
+    - component: {fileID: 8528599206584479961}  # BoxCollider
+    - component: {fileID: 558245172773495118}  # Rigidbody
+---
+ID: 5494998565328582543
+Transform:
+  m_GameObject: {fileID: 5495465645631004590}
+  Translation: [75.5248947, 36.6603661, -121.737114]
+  Rotation: [-1.51530504, -1.42385232, 1.51470268]
+  Scale: [0.999361217, 0.999821424, 0.999315381]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 14581256870909726580
+MeshRenderer:
+  m_GameObject: {fileID: 5495465645631004590}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 8528599206584479961
+BoxCollider:
+  m_GameObject: {fileID: 5495465645631004590}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 558245172773495118
+Rigidbody:
+  m_GameObject: {fileID: 5495465645631004590}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 9612271203097891240
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5242264602408622400}  # Transform
+    - component: {fileID: 5676439272299871777}  # MeshRenderer
+    - component: {fileID: 5502071088043903727}  # BoxCollider
+    - component: {fileID: 10118730140798067994}  # Rigidbody
+---
+ID: 5242264602408622400
+Transform:
+  m_GameObject: {fileID: 9612271203097891240}
+  Translation: [57.5592308, 36.6703224, -103.701347]
+  Rotation: [-2.39394355, 1.52821589, -2.53470039]
+  Scale: [0.999246418, 0.999781311, 0.999157012]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 5676439272299871777
+MeshRenderer:
+  m_GameObject: {fileID: 9612271203097891240}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 5502071088043903727
+BoxCollider:
+  m_GameObject: {fileID: 9612271203097891240}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 10118730140798067994
+Rigidbody:
+  m_GameObject: {fileID: 9612271203097891240}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4721507698918882117
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7040153047730897032}  # Transform
+    - component: {fileID: 811726711685513895}  # MeshRenderer
+    - component: {fileID: 7804980011601810271}  # BoxCollider
+    - component: {fileID: 3178907241816098224}  # Rigidbody
+---
+ID: 7040153047730897032
+Transform:
+  m_GameObject: {fileID: 4721507698918882117}
+  Translation: [75.7199097, 36.6394997, -104.091995]
+  Rotation: [-3.14159226, -0.771056175, -3.14159226]
+  Scale: [0.999366105, 0.999821663, 0.999316335]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 811726711685513895
+MeshRenderer:
+  m_GameObject: {fileID: 4721507698918882117}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 7804980011601810271
+BoxCollider:
+  m_GameObject: {fileID: 4721507698918882117}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 3178907241816098224
+Rigidbody:
+  m_GameObject: {fileID: 4721507698918882117}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 573263297524746783
+GameObject:
+  m_IsActive: true
+  m_Name: BrokenSecurityCamera - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6871528439060651830}  # Transform
+    - component: {fileID: 7433966677296793450}  # MeshRenderer
+    - component: {fileID: 1616505819376312255}  # BoxCollider
+    - component: {fileID: 3213655928512774187}  # Rigidbody
+---
+ID: 6871528439060651830
+Transform:
+  m_GameObject: {fileID: 573263297524746783}
+  Translation: [72.0212097, 36.8636971, -110.585258]
+  Rotation: [3.00482488, 0, 1.71513379]
+  Scale: [0.999716043, 0.999846637, 0.999720752]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 7433966677296793450
+MeshRenderer:
+  m_GameObject: {fileID: 573263297524746783}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: dea6b1456ca7e52f05b3093e2b3c09bb}
+---
+ID: 1616505819376312255
+BoxCollider:
+  m_GameObject: {fileID: 573263297524746783}
+  m_IsEnabled: true
+  Dimensions: [0.795614064, 0.63989073, 0.87997508]
+  Offset: [-6.13927841e-06, 0.258478016, 0.0421743244]
+---
+ID: 3213655928512774187
+Rigidbody:
+  m_GameObject: {fileID: 573263297524746783}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 11074945727295310785
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11789975451502493925}  # Transform
+    - component: {fileID: 15434254545508842556}  # MeshRenderer
+    - component: {fileID: 15041048928017178725}  # BoxCollider
+    - component: {fileID: 189469571591521449}  # Rigidbody
+---
+ID: 11789975451502493925
+Transform:
+  m_GameObject: {fileID: 11074945727295310785}
+  Translation: [64.5890884, 36.5933456, -127.144524]
+  Rotation: [-3.14159226, -0.0530585051, 2.98748326]
+  Scale: [0.999240339, 0.999821246, 0.999180913]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 15434254545508842556
+MeshRenderer:
+  m_GameObject: {fileID: 11074945727295310785}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 15041048928017178725
+BoxCollider:
+  m_GameObject: {fileID: 11074945727295310785}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 189469571591521449
+Rigidbody:
+  m_GameObject: {fileID: 11074945727295310785}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 15672159257317451017
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9750227791684774358}  # Transform
+    - component: {fileID: 10921668397350175210}  # MeshRenderer
+    - component: {fileID: 12366978601383267164}  # BoxCollider
+    - component: {fileID: 4707083820784878252}  # Rigidbody
+---
+ID: 9750227791684774358
+Transform:
+  m_GameObject: {fileID: 15672159257317451017}
+  Translation: [68.5010757, 36.672451, -127.144524]
+  Rotation: [-3.14159226, -0.0530587919, -2.77540326]
+  Scale: [0.999263823, 0.999820113, 0.999216437]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 10921668397350175210
+MeshRenderer:
+  m_GameObject: {fileID: 15672159257317451017}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 12366978601383267164
+BoxCollider:
+  m_GameObject: {fileID: 15672159257317451017}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 4707083820784878252
+Rigidbody:
+  m_GameObject: {fileID: 15672159257317451017}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 10659640410178757449
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11063870535251190601}  # Transform
+    - component: {fileID: 15908465709948698946}  # MeshRenderer
+    - component: {fileID: 9867384077780088523}  # BoxCollider
+    - component: {fileID: 11388978698351198682}  # Rigidbody
+---
+ID: 11063870535251190601
+Transform:
+  m_GameObject: {fileID: 10659640410178757449}
+  Translation: [65.3463745, 39.1712685, -127.144524]
+  Rotation: [-3.14159226, -0.0530586466, 1.54035509]
+  Scale: [0.999199033, 0.999807, 0.999143243]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 15908465709948698946
+MeshRenderer:
+  m_GameObject: {fileID: 10659640410178757449}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 9867384077780088523
+BoxCollider:
+  m_GameObject: {fileID: 10659640410178757449}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 11388978698351198682
+Rigidbody:
+  m_GameObject: {fileID: 10659640410178757449}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 11122169585756141419
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1354894835660628546}  # Transform
+    - component: {fileID: 8676288170398388567}  # MeshRenderer
+    - component: {fileID: 4492353747113664154}  # BoxCollider
+    - component: {fileID: 7644390871761801642}  # Rigidbody
+---
+ID: 1354894835660628546
+Transform:
+  m_GameObject: {fileID: 11122169585756141419}
+  Translation: [68.0653076, 39.3168297, -126.879227]
+  Rotation: [-1.58271158, 0.022152327, 0.0510214381]
+  Scale: [0.799461782, 0.799779177, 0.799407601]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 8676288170398388567
+MeshRenderer:
+  m_GameObject: {fileID: 11122169585756141419}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 4492353747113664154
+BoxCollider:
+  m_GameObject: {fileID: 11122169585756141419}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 7644390871761801642
+Rigidbody:
+  m_GameObject: {fileID: 11122169585756141419}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 12702410476049353783
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2289498543685122402}  # Transform
+    - component: {fileID: 2990485580832620071}  # MeshRenderer
+    - component: {fileID: 15087275470416233447}  # BoxCollider
+    - component: {fileID: 182713737417800395}  # Rigidbody
+---
+ID: 2289498543685122402
+Transform:
+  m_GameObject: {fileID: 12702410476049353783}
+  Translation: [64.8844757, 39.2572708, -126.879227]
+  Rotation: [-1.58277154, 0.0221539289, -1.65366209]
+  Scale: [0.799469411, 0.799820602, 0.799452782]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 2990485580832620071
+MeshRenderer:
+  m_GameObject: {fileID: 12702410476049353783}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 15087275470416233447
+BoxCollider:
+  m_GameObject: {fileID: 12702410476049353783}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 182713737417800395
+Rigidbody:
+  m_GameObject: {fileID: 12702410476049353783}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 16329827438692286070
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7348765996041844896}  # Transform
+    - component: {fileID: 6614347647454590037}  # MeshRenderer
+    - component: {fileID: 8047599849218228137}  # BoxCollider
+    - component: {fileID: 5182340083934329556}  # Rigidbody
+---
+ID: 7348765996041844896
+Transform:
+  m_GameObject: {fileID: 16329827438692286070}
+  Translation: [64.8097458, 36.5533524, -101.226112]
+  Rotation: [-3.09895062, 0.107273713, -2.98553395]
+  Scale: [0.999313116, 0.999818921, 0.999253213]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 6614347647454590037
+MeshRenderer:
+  m_GameObject: {fileID: 16329827438692286070}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 8047599849218228137
+BoxCollider:
+  m_GameObject: {fileID: 16329827438692286070}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 5182340083934329556
+Rigidbody:
+  m_GameObject: {fileID: 16329827438692286070}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 3257827739030223844
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11086250319100937437}  # Transform
+    - component: {fileID: 11206695620439962299}  # MeshRenderer
+    - component: {fileID: 13956453069427528643}  # BoxCollider
+    - component: {fileID: 6681849634901064181}  # Rigidbody
+---
+ID: 11086250319100937437
+Transform:
+  m_GameObject: {fileID: 3257827739030223844}
+  Translation: [65.4005127, 36.5693245, -100.383339]
+  Rotation: [-3.14024377, 0.562896967, 3.11752248]
+  Scale: [0.998970807, 0.999816477, 0.998925567]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 11206695620439962299
+MeshRenderer:
+  m_GameObject: {fileID: 3257827739030223844}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 13956453069427528643
+BoxCollider:
+  m_GameObject: {fileID: 3257827739030223844}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 6681849634901064181
+Rigidbody:
+  m_GameObject: {fileID: 3257827739030223844}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 12873548473925382191
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6828693396026668271}  # Transform
+    - component: {fileID: 6654251216561458639}  # MeshRenderer
+    - component: {fileID: 16276993740323424982}  # BoxCollider
+    - component: {fileID: 13999836876895319635}  # Rigidbody
+---
+ID: 6828693396026668271
+Transform:
+  m_GameObject: {fileID: 12873548473925382191}
+  Translation: [67.2584381, 36.5693245, -98.7149048]
+  Rotation: [-3.12997413, 0.126091704, 3.12106442]
+  Scale: [0.998922288, 0.999816239, 0.998879135]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 6654251216561458639
+MeshRenderer:
+  m_GameObject: {fileID: 12873548473925382191}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 16276993740323424982
+BoxCollider:
+  m_GameObject: {fileID: 12873548473925382191}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 13999836876895319635
+Rigidbody:
+  m_GameObject: {fileID: 12873548473925382191}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 14144267780449697050
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 106489718227033220}  # Transform
+    - component: {fileID: 5254441826574655951}  # MeshRenderer
+    - component: {fileID: 16609695391284441741}  # BoxCollider
+    - component: {fileID: 6565201663572249781}  # Rigidbody
+---
+ID: 106489718227033220
+Transform:
+  m_GameObject: {fileID: 14144267780449697050}
+  Translation: [68.5069733, 36.574913, -98.757988]
+  Rotation: [3.11708188, 0.858017504, 3.11743665]
+  Scale: [0.7994349, 0.800004661, 0.799464226]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 5254441826574655951
+MeshRenderer:
+  m_GameObject: {fileID: 14144267780449697050}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 16609695391284441741
+BoxCollider:
+  m_GameObject: {fileID: 14144267780449697050}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 6565201663572249781
+Rigidbody:
+  m_GameObject: {fileID: 14144267780449697050}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 8555751548320759335
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15675055868401731108}  # Transform
+    - component: {fileID: 4500233000893974094}  # MeshRenderer
+    - component: {fileID: 8337544673668882078}  # BoxCollider
+    - component: {fileID: 9155348598436866975}  # Rigidbody
+---
+ID: 15675055868401731108
+Transform:
+  m_GameObject: {fileID: 8555751548320759335}
+  Translation: [67.2573242, 38.7367401, -98.365654]
+  Rotation: [3.11708188, 0.858030558, 3.11743665]
+  Scale: [0.799403369, 0.800004661, 0.7994349]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 4500233000893974094
+MeshRenderer:
+  m_GameObject: {fileID: 8555751548320759335}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 8337544673668882078
+BoxCollider:
+  m_GameObject: {fileID: 8555751548320759335}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 9155348598436866975
+Rigidbody:
+  m_GameObject: {fileID: 8555751548320759335}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 2467187814001172271
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10551053681868496623}  # Transform
+    - component: {fileID: 17343017231215195331}  # MeshRenderer
+    - component: {fileID: 14172816757770446219}  # BoxCollider
+    - component: {fileID: 15802938321957033446}  # Rigidbody
+---
+ID: 10551053681868496623
+Transform:
+  m_GameObject: {fileID: 2467187814001172271}
+  Translation: [64.9038467, 37.017704, -93.9892044]
+  Rotation: [-3.12997413, 0.126090541, -1.56694555]
+  Scale: [0.998910427, 0.999803066, 0.99887234]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 17343017231215195331
+MeshRenderer:
+  m_GameObject: {fileID: 2467187814001172271}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 14172816757770446219
+BoxCollider:
+  m_GameObject: {fileID: 2467187814001172271}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 15802938321957033446
+Rigidbody:
+  m_GameObject: {fileID: 2467187814001172271}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 12703816718000780091
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6191367145722633488}  # Transform
+    - component: {fileID: 9936862684821648763}  # MeshRenderer
+    - component: {fileID: 17785712605483853717}  # BoxCollider
+    - component: {fileID: 12328364961005528442}  # Rigidbody
+---
+ID: 6191367145722633488
+Transform:
+  m_GameObject: {fileID: 12703816718000780091}
+  Translation: [66.4636154, 36.5693245, -97.4919281]
+  Rotation: [-3.10878205, -0.740024209, 3.11400533]
+  Scale: [0.998892367, 0.999816775, 0.998837948]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 9936862684821648763
+MeshRenderer:
+  m_GameObject: {fileID: 12703816718000780091}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 17785712605483853717
+BoxCollider:
+  m_GameObject: {fileID: 12703816718000780091}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 12328364961005528442
+Rigidbody:
+  m_GameObject: {fileID: 12703816718000780091}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 16499867673298963289
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12356602192511570976}  # Transform
+    - component: {fileID: 17046165076800805511}  # MeshRenderer
+    - component: {fileID: 3498760422503803107}  # BoxCollider
+    - component: {fileID: 15150800309227716871}  # Rigidbody
+---
+ID: 12356602192511570976
+Transform:
+  m_GameObject: {fileID: 16499867673298963289}
+  Translation: [63.2335052, 36.5693245, -97.4919281]
+  Rotation: [0, -0.210733727, 0.0208323635]
+  Scale: [0.998868048, 0.999823093, 0.998813093]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 17046165076800805511
+MeshRenderer:
+  m_GameObject: {fileID: 16499867673298963289}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 3498760422503803107
+BoxCollider:
+  m_GameObject: {fileID: 16499867673298963289}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 15150800309227716871
+Rigidbody:
+  m_GameObject: {fileID: 16499867673298963289}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4015459904240329972
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18009475449513302753}  # Transform
+    - component: {fileID: 11369749722483197590}  # MeshRenderer
+    - component: {fileID: 1500427751191925930}  # BoxCollider
+    - component: {fileID: 5556994999382575982}  # Rigidbody
+---
+ID: 18009475449513302753
+Transform:
+  m_GameObject: {fileID: 4015459904240329972}
+  Translation: [68.0567169, 36.5933456, -110.297424]
+  Rotation: [-3.14159226, 1.43479919, -3.14159226]
+  Scale: [0.999352515, 0.999821663, 0.99930203]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 11369749722483197590
+MeshRenderer:
+  m_GameObject: {fileID: 4015459904240329972}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 1500427751191925930
+BoxCollider:
+  m_GameObject: {fileID: 4015459904240329972}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 5556994999382575982
+Rigidbody:
+  m_GameObject: {fileID: 4015459904240329972}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 2823446509536874994
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12454437960993062608}  # Transform
+    - component: {fileID: 10633342903628874365}  # MeshRenderer
+    - component: {fileID: 3318954178936159900}  # BoxCollider
+    - component: {fileID: 6959861125123185805}  # Rigidbody
+---
+ID: 12454437960993062608
+Transform:
+  m_GameObject: {fileID: 2823446509536874994}
+  Translation: [63.3520966, 36.5933456, -110.297424]
+  Rotation: [-3.14159226, -0.01604403, -3.14159226]
+  Scale: [0.999300659, 0.999821663, 0.999261737]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 10633342903628874365
+MeshRenderer:
+  m_GameObject: {fileID: 2823446509536874994}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 3318954178936159900
+BoxCollider:
+  m_GameObject: {fileID: 2823446509536874994}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 6959861125123185805
+Rigidbody:
+  m_GameObject: {fileID: 2823446509536874994}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 13356446052988442593
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18382533462987586097}  # Transform
+    - component: {fileID: 16465055475808504191}  # MeshRenderer
+    - component: {fileID: 2437392167993549797}  # BoxCollider
+    - component: {fileID: 9781058705963027180}  # Rigidbody
+---
+ID: 18382533462987586097
+Transform:
+  m_GameObject: {fileID: 13356446052988442593}
+  Translation: [64.4353867, 36.5933456, -110.125977]
+  Rotation: [-3.14159226, 0.405978501, -3.14159226]
+  Scale: [0.999280632, 0.999821663, 0.999240756]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 16465055475808504191
+MeshRenderer:
+  m_GameObject: {fileID: 13356446052988442593}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 2437392167993549797
+BoxCollider:
+  m_GameObject: {fileID: 13356446052988442593}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 9781058705963027180
+Rigidbody:
+  m_GameObject: {fileID: 13356446052988442593}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 9640624024597372372
+GameObject:
+  m_IsActive: true
+  m_Name: Incubator - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4215785927746528996}  # Transform
+    - component: {fileID: 9742835769906760028}  # MeshRenderer
+    - component: {fileID: 16294119510100682554}  # BoxCollider
+    - component: {fileID: 5566020946161405781}  # Rigidbody
+---
+ID: 4215785927746528996
+Transform:
+  m_GameObject: {fileID: 9640624024597372372}
+  Translation: [57.5168037, 36.640255, -110.606186]
+  Rotation: [0, 0.0604126826, 0.0432274826]
+  Scale: [0.999945939, 0.999942362, 0.999983609]
+  Father: {fileID: 1935172939492071495}
+  m_Children:
+    []
+---
+ID: 9742835769906760028
+MeshRenderer:
+  m_GameObject: {fileID: 9640624024597372372}
+  m_IsEnabled: true
+  Mesh: {guid: ca2fb7ecd386fced74cefe0d5013e3a1}
+  Material_ID: {guid: e25f6f5466888a06246d7e4ce73ad65a}
+---
+ID: 16294119510100682554
+BoxCollider:
+  m_GameObject: {fileID: 9640624024597372372}
+  m_IsEnabled: true
+  Dimensions: [1.98060966, 2.98562002, 1.9806118]
+  Offset: [-1.51395798e-05, 1.49281001, -1.40368938e-05]
+---
+ID: 5566020946161405781
+Rigidbody:
+  m_GameObject: {fileID: 9640624024597372372}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4230748181825398642
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15018741666335615575}  # Transform
+    - component: {fileID: 15296076499732436894}  # MeshRenderer
+    - component: {fileID: 12341828732194653946}  # BoxCollider
+    - component: {fileID: 6672146996689606220}  # Rigidbody
+---
+ID: 15018741666335615575
+Transform:
+  m_GameObject: {fileID: 4230748181825398642}
+  Translation: [57.5592308, 36.8712769, -121.272125]
+  Rotation: [-1.51395237, 1.17359972, -1.66128755]
+  Scale: [0.99924624, 0.999780178, 0.999169171]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 15296076499732436894
+MeshRenderer:
+  m_GameObject: {fileID: 4230748181825398642}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 12341828732194653946
+BoxCollider:
+  m_GameObject: {fileID: 4230748181825398642}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 6672146996689606220
+Rigidbody:
+  m_GameObject: {fileID: 4230748181825398642}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 17939858400355541870
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5405888270560370613}  # Transform
+    - component: {fileID: 6653462702026932848}  # MeshRenderer
+    - component: {fileID: 5803062276645815780}  # BoxCollider
+    - component: {fileID: 15993900974111419213}  # Rigidbody
+---
+ID: 5405888270560370613
+Transform:
+  m_GameObject: {fileID: 17939858400355541870}
+  Translation: [59.859993, 36.5480042, -95.2105865]
+  Rotation: [-3.09397817, -0.789655447, -3.09546065]
+  Scale: [0.799545765, 0.800005198, 0.799560726]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 6653462702026932848
+MeshRenderer:
+  m_GameObject: {fileID: 17939858400355541870}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 5803062276645815780
+BoxCollider:
+  m_GameObject: {fileID: 17939858400355541870}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 15993900974111419213
+Rigidbody:
+  m_GameObject: {fileID: 17939858400355541870}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4052850725427726188
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9471721254364645968}  # Transform
+    - component: {fileID: 1262953579572013347}  # MeshRenderer
+    - component: {fileID: 4516174917167083988}  # BoxCollider
+    - component: {fileID: 14586717044558321888}  # Rigidbody
+---
+ID: 9471721254364645968
+Transform:
+  m_GameObject: {fileID: 4052850725427726188}
+  Translation: [52.2288857, 36.5480042, -93.8563385]
+  Rotation: [0.262245059, -1.39305627, -0.184700057]
+  Scale: [0.799467087, 0.80000478, 0.799478889]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 1262953579572013347
+MeshRenderer:
+  m_GameObject: {fileID: 4052850725427726188}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 4516174917167083988
+BoxCollider:
+  m_GameObject: {fileID: 4052850725427726188}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 14586717044558321888
+Rigidbody:
+  m_GameObject: {fileID: 4052850725427726188}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 16630094886087691581
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2531491608813586292}  # Transform
+    - component: {fileID: 14261495286870987559}  # MeshRenderer
+    - component: {fileID: 3798002035142204102}  # BoxCollider
+    - component: {fileID: 5057436106284707479}  # Rigidbody
+---
+ID: 2531491608813586292
+Transform:
+  m_GameObject: {fileID: 16630094886087691581}
+  Translation: [52.2288857, 36.5480042, -94.9019623]
+  Rotation: [0.0532712787, 0.695414424, -0.0423033796]
+  Scale: [0.799458802, 0.800004482, 0.799470663]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 14261495286870987559
+MeshRenderer:
+  m_GameObject: {fileID: 16630094886087691581}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 3798002035142204102
+BoxCollider:
+  m_GameObject: {fileID: 16630094886087691581}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 5057436106284707479
+Rigidbody:
+  m_GameObject: {fileID: 16630094886087691581}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 13162841951116385743
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14875247986749844365}  # Transform
+    - component: {fileID: 9267040137344795873}  # MeshRenderer
+---
+ID: 14875247986749844365
+Transform:
+  m_GameObject: {fileID: 13162841951116385743}
+  Translation: [40.458477, 39.9650078, -73.0723495]
+  Rotation: [-3.14159131, -1.46489787, -3.14159226]
+  Scale: [0.99992317, 0.999974906, 0.999930918]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 9267040137344795873
+MeshRenderer:
+  m_GameObject: {fileID: 13162841951116385743}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 783346349410598326
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - C - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1850586123592659363}  # Transform
+    - component: {fileID: 4144737866565629728}  # MeshRenderer
+---
+ID: 1850586123592659363
+Transform:
+  m_GameObject: {fileID: 783346349410598326}
+  Translation: [40.6794815, 40.6923637, -72.9157181]
+  Rotation: [-3.14159226, 1.57045102, 0]
+  Scale: [0.403903484, 0.350776643, 0.449927986]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 14504909904466814973}
+---
+ID: 4144737866565629728
+MeshRenderer:
+  m_GameObject: {fileID: 783346349410598326}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 14504909904466814973
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15891246380395392821}  # Transform
+    - component: {fileID: 11926231044651599545}  # MeshRenderer
+---
+ID: 15891246380395392821
+Transform:
+  m_GameObject: {fileID: 14504909904466814973}
+  Translation: [-6.02379441e-06, -1.52587891e-05, -6.86645508e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 783346349410598326}
+  m_Children:
+    []
+---
+ID: 11926231044651599545
+MeshRenderer:
+  m_GameObject: {fileID: 14504909904466814973}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 10509890877230161516
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12068465593991571959}  # Transform
+    - component: {fileID: 7772579632775032150}  # MeshRenderer
+---
+ID: 12068465593991571959
+Transform:
+  m_GameObject: {fileID: 10509890877230161516}
+  Translation: [0.056086164, 39.9650078, -96.373497]
+  Rotation: [0, 0.271282017, 0]
+  Scale: [0.999917686, 0.999974906, 0.999924183]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 7772579632775032150
+MeshRenderer:
+  m_GameObject: {fileID: 10509890877230161516}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 16989569788804517597
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - C - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18353802368088034703}  # Transform
+    - component: {fileID: 12218270623162674208}  # MeshRenderer
+---
+ID: 18353802368088034703
+Transform:
+  m_GameObject: {fileID: 16989569788804517597}
+  Translation: [-0.0584568419, 40.6923637, -96.4053955]
+  Rotation: [-3.14159203, 1.57045102, 0]
+  Scale: [0.403903484, 0.350776643, 0.449927986]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 14649026628318835191}
+---
+ID: 12218270623162674208
+MeshRenderer:
+  m_GameObject: {fileID: 16989569788804517597}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 14649026628318835191
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15296474506500960343}  # Transform
+    - component: {fileID: 9347192750116325514}  # MeshRenderer
+---
+ID: 15296474506500960343
+Transform:
+  m_GameObject: {fileID: 14649026628318835191}
+  Translation: [-6.02379441e-06, -1.52587891e-05, -6.86645508e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 16989569788804517597}
+  m_Children:
+    []
+---
+ID: 9347192750116325514
+MeshRenderer:
+  m_GameObject: {fileID: 14649026628318835191}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 1605621407029875310
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4137237702223146412}  # Transform
+    - component: {fileID: 3235434625120947005}  # MeshRenderer
+---
+ID: 4137237702223146412
+Transform:
+  m_GameObject: {fileID: 1605621407029875310}
+  Translation: [-14.9795704, 39.9650078, -116.852226]
+  Rotation: [-3.1415894, 1.49739456, -3.1415894]
+  Scale: [0.999900579, 0.999974906, 0.999900758]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 3235434625120947005
+MeshRenderer:
+  m_GameObject: {fileID: 1605621407029875310}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 7638358388038049573
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - C - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16123887395936594895}  # Transform
+    - component: {fileID: 11693682778154467620}  # MeshRenderer
+---
+ID: 16123887395936594895
+Transform:
+  m_GameObject: {fileID: 7638358388038049573}
+  Translation: [-15.0695257, 40.6923637, -116.884346]
+  Rotation: [-3.14159226, 1.57045102, 0]
+  Scale: [0.403903484, 0.350776643, 0.449927986]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 2973678046673217679}
+---
+ID: 11693682778154467620
+MeshRenderer:
+  m_GameObject: {fileID: 7638358388038049573}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 2973678046673217679
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5521352314333589402}  # Transform
+    - component: {fileID: 10900287828168455135}  # MeshRenderer
+---
+ID: 5521352314333589402
+Transform:
+  m_GameObject: {fileID: 2973678046673217679}
+  Translation: [-6.02379441e-06, -1.52587891e-05, -6.86645508e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 7638358388038049573}
+  m_Children:
+    []
+---
+ID: 10900287828168455135
+MeshRenderer:
+  m_GameObject: {fileID: 2973678046673217679}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 13620939516381659214
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - C - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7744134923287171926}  # Transform
+    - component: {fileID: 17661496424014155200}  # MeshRenderer
+---
+ID: 7744134923287171926
+Transform:
+  m_GameObject: {fileID: 13620939516381659214}
+  Translation: [75.5617294, 41.3919907, -112.082535]
+  Rotation: [0, 1.57045102, -3.14159226]
+  Scale: [0.403914779, 0.350810617, 0.449939251]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 6234318250471406130}
+---
+ID: 17661496424014155200
+MeshRenderer:
+  m_GameObject: {fileID: 13620939516381659214}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 6234318250471406130
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 92451950798299315}  # Transform
+    - component: {fileID: 14193588207929727181}  # MeshRenderer
+---
+ID: 92451950798299315
+Transform:
+  m_GameObject: {fileID: 6234318250471406130}
+  Translation: [0, 0, -8.18866101e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 13620939516381659214}
+  m_Children:
+    []
+---
+ID: 14193588207929727181
+MeshRenderer:
+  m_GameObject: {fileID: 6234318250471406130}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 8481823143146361351
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14415726186310881754}  # Transform
+    - component: {fileID: 9645612422230337491}  # MeshRenderer
+---
+ID: 14415726186310881754
+Transform:
+  m_GameObject: {fileID: 8481823143146361351}
+  Translation: [131.328629, 41.3919983, -59.7895813]
+  Rotation: [0, 0, -3.14159203]
+  Scale: [0.403884679, 0.350760192, 0.44990623]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 179529263395128126}
+---
+ID: 9645612422230337491
+MeshRenderer:
+  m_GameObject: {fileID: 8481823143146361351}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 179529263395128126
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5076791302464193775}  # Transform
+    - component: {fileID: 14293915221348055100}  # MeshRenderer
+---
+ID: 5076791302464193775
+Transform:
+  m_GameObject: {fileID: 179529263395128126}
+  Translation: [0, 0, 0.039768815]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000215, 1, 1.00000215]
+  Father: {fileID: 8481823143146361351}
+  m_Children:
+    []
+---
+ID: 14293915221348055100
+MeshRenderer:
+  m_GameObject: {fileID: 179529263395128126}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 5877606723863607966
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15703464169934738396}  # Transform
+    - component: {fileID: 5121733475648855050}  # MeshRenderer
+---
+ID: 15703464169934738396
+Transform:
+  m_GameObject: {fileID: 5877606723863607966}
+  Translation: [131.395569, 40.6695976, -59.3306236]
+  Rotation: [0, -1.32972622, 0]
+  Scale: [0.999909937, 0.999974906, 0.999918163]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 5121733475648855050
+MeshRenderer:
+  m_GameObject: {fileID: 5877606723863607966}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 10727427652694340384
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13427045374644054108}  # Transform
+    - component: {fileID: 18281365436285257751}  # MeshRenderer
+---
+ID: 13427045374644054108
+Transform:
+  m_GameObject: {fileID: 10727427652694340384}
+  Translation: [104.815498, 41.3919983, -68.0511246]
+  Rotation: [0, 0.864816427, 0]
+  Scale: [0.403883249, 0.350760162, 0.449904829]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 11250872661860907728}
+---
+ID: 18281365436285257751
+MeshRenderer:
+  m_GameObject: {fileID: 10727427652694340384}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 11250872661860907728
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5677025781089962892}  # Transform
+    - component: {fileID: 9296395055309049767}  # MeshRenderer
+---
+ID: 5677025781089962892
+Transform:
+  m_GameObject: {fileID: 11250872661860907728}
+  Translation: [0, 0, 0.039768815]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000215, 1, 1.00000215]
+  Father: {fileID: 10727427652694340384}
+  m_Children:
+    []
+---
+ID: 9296395055309049767
+MeshRenderer:
+  m_GameObject: {fileID: 11250872661860907728}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 15403824339946580370
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 191205845444302490}  # Transform
+    - component: {fileID: 7754064423184546405}  # MeshRenderer
+---
+ID: 191205845444302490
+Transform:
+  m_GameObject: {fileID: 15403824339946580370}
+  Translation: [104.614517, 40.6695976, -68.0239182]
+  Rotation: [-3.14159226, -1.09410429, -3.14159226]
+  Scale: [0.999852717, 0.999974906, 0.999862373]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 7754064423184546405
+MeshRenderer:
+  m_GameObject: {fileID: 15403824339946580370}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
