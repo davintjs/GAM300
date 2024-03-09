@@ -5486,6 +5486,13 @@ Transform:
     - {fileID: 12962801402719314099}
     - {fileID: 4976741840336427048}
     - {fileID: 18271903222718580535}
+    - {fileID: 4828940711728058117}
+    - {fileID: 9333013163105879839}
+    - {fileID: 181690103956380704}
+    - {fileID: 12582860678833366066}
+    - {fileID: 9295220860800064196}
+    - {fileID: 436127295408957879}
+    - {fileID: 12521535399639334785}
 ---
 ID: 1183833295746487535
 GameObject:
@@ -17191,7 +17198,7 @@ ID: 5838702574538653561
 Transform:
   m_GameObject: {fileID: 6868942725064466088}
   Translation: [66.5777969, 35.6695061, -140.465958]
-  Rotation: [-0.174532682, 0, 0]
+  Rotation: [-0.174532667, 0, 0]
   Scale: [1, 0.999999464, 0.99999994]
   Father: {fileID: 13098920750524760369}
   m_Children:
@@ -60843,9 +60850,9 @@ GameObject:
 ID: 13263917980705562325
 Transform:
   m_GameObject: {fileID: 11736288369183917097}
-  Translation: [71.5967255, 39.9650116, -72.4070129]
-  Rotation: [-0.310157299, -1.31353009, 0.30067876]
-  Scale: [0.999927402, 0.999974906, 0.999934971]
+  Translation: [71.5967255, 39.9650116, -72.0450134]
+  Rotation: [0, -1.31352973, 0]
+  Scale: [0.999926627, 0.999974906, 0.999935687]
   Father: {fileID: 6897544555164281727}
   m_Children:
     []
@@ -88263,6 +88270,7 @@ Transform:
     - {fileID: 9693533989823774830}
     - {fileID: 11097352631703379600}
     - {fileID: 14935517379010075282}
+    - {fileID: 8813023868054517125}
 ---
 ID: 6897544555164281727
 GameObject:
@@ -88283,6 +88291,13 @@ Transform:
   m_Children:
     - {fileID: 11736288369183917097}
     - {fileID: 8950786642554036017}
+    - {fileID: 5709922246900216023}
+    - {fileID: 14499535282109436915}
+    - {fileID: 13014817814692177424}
+    - {fileID: 1099978957968628360}
+    - {fileID: 9921643221204584766}
+    - {fileID: 7525855498974391718}
+    - {fileID: 11391345525249986143}
 ---
 ID: 2501033563124642148
 GameObject:
@@ -88324,6 +88339,8 @@ Transform:
     - {fileID: 1585148882987997502}
     - {fileID: 6247652813257664506}
     - {fileID: 14756324115453304197}
+    - {fileID: 6581347657933473038}
+    - {fileID: 2841568938766412495}
 ---
 ID: 1935172939492071495
 GameObject:
@@ -88357,7 +88374,7 @@ GameObject:
 ID: 13179854032545413234
 Transform:
   m_GameObject: {fileID: 8950786642554036017}
-  Translation: [60.3301201, 41.9912071, -76.0996475]
+  Translation: [59.6095772, 41.9912071, -76.0996475]
   Rotation: [0, 0.603523374, 0]
   Scale: [0.999931633, 1, 0.999932647]
   Father: {fileID: 6897544555164281727}
@@ -88915,6 +88932,746 @@ BoxCollider:
 ID: 8385403734238713274
 Rigidbody:
   m_GameObject: {fileID: 14935517379010075282}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4828940711728058117
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15437521849552758594}  # Transform
+    - component: {fileID: 6360302152234632470}  # MeshRenderer
+---
+ID: 15437521849552758594
+Transform:
+  m_GameObject: {fileID: 4828940711728058117}
+  Translation: [142.853683, 41.7992363, -63.1119156]
+  Rotation: [0, 0, -3.14159226]
+  Scale: [0.403884679, 0.350760192, 0.44990623]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 7275075488271498120}
+---
+ID: 6360302152234632470
+MeshRenderer:
+  m_GameObject: {fileID: 4828940711728058117}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 7275075488271498120
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5139230916728773450}  # Transform
+    - component: {fileID: 13378772351037374611}  # MeshRenderer
+---
+ID: 5139230916728773450
+Transform:
+  m_GameObject: {fileID: 7275075488271498120}
+  Translation: [0, 0, -8.18866101e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 4828940711728058117}
+  m_Children:
+    []
+---
+ID: 13378772351037374611
+MeshRenderer:
+  m_GameObject: {fileID: 7275075488271498120}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 5709922246900216023
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13962120400840451977}  # Transform
+    - component: {fileID: 3275080353530252857}  # MeshRenderer
+---
+ID: 13962120400840451977
+Transform:
+  m_GameObject: {fileID: 5709922246900216023}
+  Translation: [143.222397, 41.0864258, -63.370182]
+  Rotation: [-3.14159203, 1.53308558, -3.14159203]
+  Scale: [0.999916732, 0.999974906, 0.999925137]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 3275080353530252857
+MeshRenderer:
+  m_GameObject: {fileID: 5709922246900216023}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+---
+ID: 9333013163105879839
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 447913590088705717}  # Transform
+    - component: {fileID: 7571236501059918980}  # MeshRenderer
+---
+ID: 447913590088705717
+Transform:
+  m_GameObject: {fileID: 9333013163105879839}
+  Translation: [128.633682, 41.7992363, -96.5866699]
+  Rotation: [0, 0, -3.14159226]
+  Scale: [0.403884679, 0.350760192, 0.44990623]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 10071684632459420302}
+---
+ID: 7571236501059918980
+MeshRenderer:
+  m_GameObject: {fileID: 9333013163105879839}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 10071684632459420302
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15543444680383963000}  # Transform
+    - component: {fileID: 3784676431694473231}  # MeshRenderer
+---
+ID: 15543444680383963000
+Transform:
+  m_GameObject: {fileID: 10071684632459420302}
+  Translation: [0, 0, -8.18866101e-05]
+  Rotation: [0, -0, 3.25463728e-16]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 9333013163105879839}
+  m_Children:
+    []
+---
+ID: 3784676431694473231
+MeshRenderer:
+  m_GameObject: {fileID: 10071684632459420302}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 14499535282109436915
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16484498140680649072}  # Transform
+    - component: {fileID: 4737998934809976266}  # MeshRenderer
+---
+ID: 16484498140680649072
+Transform:
+  m_GameObject: {fileID: 14499535282109436915}
+  Translation: [128.733749, 41.0864258, -96.6340332]
+  Rotation: [0, 0.208399743, 0]
+  Scale: [0.999916732, 0.999974906, 0.999925137]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 4737998934809976266
+MeshRenderer:
+  m_GameObject: {fileID: 14499535282109436915}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+---
+ID: 181690103956380704
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6341851735008184540}  # Transform
+    - component: {fileID: 1611976167810872012}  # MeshRenderer
+---
+ID: 6341851735008184540
+Transform:
+  m_GameObject: {fileID: 181690103956380704}
+  Translation: [118.618958, 41.7992363, -63.3578568]
+  Rotation: [0, 0, -3.14159226]
+  Scale: [0.403884679, 0.350760192, 0.44990623]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 327790134639551114}
+---
+ID: 1611976167810872012
+MeshRenderer:
+  m_GameObject: {fileID: 181690103956380704}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 327790134639551114
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17021656434307606335}  # Transform
+    - component: {fileID: 2676263807792909264}  # MeshRenderer
+---
+ID: 17021656434307606335
+Transform:
+  m_GameObject: {fileID: 327790134639551114}
+  Translation: [0, 0, -8.18866101e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 181690103956380704}
+  m_Children:
+    []
+---
+ID: 2676263807792909264
+MeshRenderer:
+  m_GameObject: {fileID: 327790134639551114}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 13014817814692177424
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9063852363179509922}  # Transform
+    - component: {fileID: 3988951454607851078}  # MeshRenderer
+---
+ID: 9063852363179509922
+Transform:
+  m_GameObject: {fileID: 13014817814692177424}
+  Translation: [118.60218, 41.0616722, -63.370182]
+  Rotation: [-3.14159226, -0.15898791, -3.14159226]
+  Scale: [0.999894917, 0.999974906, 0.999903083]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 3988951454607851078
+MeshRenderer:
+  m_GameObject: {fileID: 13014817814692177424}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+---
+ID: 12582860678833366066
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17961716421497166756}  # Transform
+    - component: {fileID: 371438523081849636}  # MeshRenderer
+---
+ID: 17961716421497166756
+Transform:
+  m_GameObject: {fileID: 12582860678833366066}
+  Translation: [110.516655, 41.7992363, -115.921432]
+  Rotation: [0, 0, -3.14159226]
+  Scale: [0.403884679, 0.350760192, 0.44990623]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 4683963216218546016}
+---
+ID: 371438523081849636
+MeshRenderer:
+  m_GameObject: {fileID: 12582860678833366066}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 4683963216218546016
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7658578821868619042}  # Transform
+    - component: {fileID: 434798646789095087}  # MeshRenderer
+---
+ID: 7658578821868619042
+Transform:
+  m_GameObject: {fileID: 4683963216218546016}
+  Translation: [-0.000244140625, -1.52587891e-05, -8.98160652e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000215, 1, 1.00000215]
+  Father: {fileID: 12582860678833366066}
+  m_Children:
+    []
+---
+ID: 434798646789095087
+MeshRenderer:
+  m_GameObject: {fileID: 4683963216218546016}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 1099978957968628360
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7907263489924667104}  # Transform
+    - component: {fileID: 11388183601156344226}  # MeshRenderer
+---
+ID: 7907263489924667104
+Transform:
+  m_GameObject: {fileID: 1099978957968628360}
+  Translation: [110.496758, 41.0616722, -116.484917]
+  Rotation: [-3.14159203, -0.15898791, -3.14159203]
+  Scale: [0.999894917, 0.999974906, 0.999903083]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 11388183601156344226
+MeshRenderer:
+  m_GameObject: {fileID: 1099978957968628360}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+---
+ID: 9921643221204584766
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9274762178224725237}  # Transform
+    - component: {fileID: 1379159202945735533}  # MeshRenderer
+---
+ID: 9274762178224725237
+Transform:
+  m_GameObject: {fileID: 9921643221204584766}
+  Translation: [71.3110886, 41.0616722, -146.582336]
+  Rotation: [-3.14159226, 1.11580992, -3.14159226]
+  Scale: [0.99988085, 0.999974906, 0.999888659]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 1379159202945735533
+MeshRenderer:
+  m_GameObject: {fileID: 9921643221204584766}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+---
+ID: 9295220860800064196
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7534467187818660390}  # Transform
+    - component: {fileID: 8689494802896569742}  # MeshRenderer
+---
+ID: 7534467187818660390
+Transform:
+  m_GameObject: {fileID: 9295220860800064196}
+  Translation: [70.9247284, 41.7992363, -146.637024]
+  Rotation: [0, 1.57045102, 3.14159274]
+  Scale: [0.40389365, 0.350760162, 0.449915051]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 4835444843088608858}
+---
+ID: 8689494802896569742
+MeshRenderer:
+  m_GameObject: {fileID: 9295220860800064196}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 4835444843088608858
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14616926946018035475}  # Transform
+    - component: {fileID: 14679185619689208557}  # MeshRenderer
+---
+ID: 14616926946018035475
+Transform:
+  m_GameObject: {fileID: 4835444843088608858}
+  Translation: [0, 0, -8.18866101e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 9295220860800064196}
+  m_Children:
+    []
+---
+ID: 14679185619689208557
+MeshRenderer:
+  m_GameObject: {fileID: 4835444843088608858}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 436127295408957879
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17361017005981576022}  # Transform
+    - component: {fileID: 15042487413532986755}  # MeshRenderer
+---
+ID: 17361017005981576022
+Transform:
+  m_GameObject: {fileID: 436127295408957879}
+  Translation: [115.803703, 41.7992363, -103.435928]
+  Rotation: [0, 1.57045102, 0]
+  Scale: [0.403890312, 0.350760162, 0.449911803]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 16525591508550684346}
+---
+ID: 15042487413532986755
+MeshRenderer:
+  m_GameObject: {fileID: 436127295408957879}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 16525591508550684346
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10400689023640183860}  # Transform
+    - component: {fileID: 11648100955076990459}  # MeshRenderer
+---
+ID: 10400689023640183860
+Transform:
+  m_GameObject: {fileID: 16525591508550684346}
+  Translation: [-0.000244140625, -1.52587891e-05, -8.98160652e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000215, 1, 1.00000215]
+  Father: {fileID: 436127295408957879}
+  m_Children:
+    []
+---
+ID: 11648100955076990459
+MeshRenderer:
+  m_GameObject: {fileID: 16525591508550684346}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 7525855498974391718
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCamera - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17810522272785046283}  # Transform
+    - component: {fileID: 15614078236422292596}  # MeshRenderer
+---
+ID: 17810522272785046283
+Transform:
+  m_GameObject: {fileID: 7525855498974391718}
+  Translation: [115.669548, 41.0616722, -103.394218]
+  Rotation: [-3.14159226, -1.53871298, -3.14159226]
+  Scale: [0.999848664, 0.999974906, 0.999856532]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 15614078236422292596
+MeshRenderer:
+  m_GameObject: {fileID: 7525855498974391718}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+---
+ID: 11391345525249986143
+GameObject:
+  m_IsActive: true
+  m_Name: BrokenSecurityCamera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6586171145901087555}  # Transform
+    - component: {fileID: 7660943239530462796}  # MeshRenderer
+    - component: {fileID: 10015212297392336031}  # BoxCollider
+    - component: {fileID: 611430586704217325}  # Rigidbody
+---
+ID: 6586171145901087555
+Transform:
+  m_GameObject: {fileID: 11391345525249986143}
+  Translation: [67.6313171, 35.0966492, -156.929352]
+  Rotation: [2.66509175, 0.472560525, 1.82455075]
+  Scale: [0.999786258, 0.999894857, 0.999792576]
+  Father: {fileID: 6897544555164281727}
+  m_Children:
+    []
+---
+ID: 7660943239530462796
+MeshRenderer:
+  m_GameObject: {fileID: 11391345525249986143}
+  m_IsEnabled: true
+  Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
+  Material_ID: {guid: 76f872cffaaa54a84016c7fd52c5a2b9}
+---
+ID: 10015212297392336031
+BoxCollider:
+  m_GameObject: {fileID: 11391345525249986143}
+  m_IsEnabled: true
+  Dimensions: [0.795614064, 0.63989073, 0.87997508]
+  Offset: [-6.13927841e-06, 0.258478016, 0.0421743244]
+---
+ID: 611430586704217325
+Rigidbody:
+  m_GameObject: {fileID: 11391345525249986143}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 12521535399639334785
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1 - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8042760489115584563}  # Transform
+    - component: {fileID: 14446105762770621242}  # MeshRenderer
+---
+ID: 8042760489115584563
+Transform:
+  m_GameObject: {fileID: 12521535399639334785}
+  Translation: [66.5727539, 41.7992363, -156.60434]
+  Rotation: [0, 0, -3.14159226]
+  Scale: [0.403897613, 0.350772172, 0.449918956]
+  Father: {fileID: 17551185539749227568}
+  m_Children:
+    - {fileID: 2422844210830573457}
+---
+ID: 14446105762770621242
+MeshRenderer:
+  m_GameObject: {fileID: 12521535399639334785}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 2422844210830573457
+GameObject:
+  m_IsActive: true
+  m_Name: Lines - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1057234072015297803}  # Transform
+    - component: {fileID: 15897243669234170344}  # MeshRenderer
+---
+ID: 1057234072015297803
+Transform:
+  m_GameObject: {fileID: 2422844210830573457}
+  Translation: [0, 0, -8.18866101e-05]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000119, 1, 1.00000119]
+  Father: {fileID: 12521535399639334785}
+  m_Children:
+    []
+---
+ID: 15897243669234170344
+MeshRenderer:
+  m_GameObject: {fileID: 2422844210830573457}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+---
+ID: 6581347657933473038
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15480062609371006456}  # Transform
+    - component: {fileID: 4534113885076469604}  # MeshRenderer
+    - component: {fileID: 10384832388593419273}  # BoxCollider
+    - component: {fileID: 15465717839301635645}  # Rigidbody
+---
+ID: 15480062609371006456
+Transform:
+  m_GameObject: {fileID: 6581347657933473038}
+  Translation: [65.1473312, 34.9350281, -149.361542]
+  Rotation: [0.420790493, -1.45069385, -0.122951649]
+  Scale: [0.999590218, 0.999777794, 0.999516547]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 4534113885076469604
+MeshRenderer:
+  m_GameObject: {fileID: 6581347657933473038}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 10384832388593419273
+BoxCollider:
+  m_GameObject: {fileID: 6581347657933473038}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 15465717839301635645
+Rigidbody:
+  m_GameObject: {fileID: 6581347657933473038}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 2841568938766412495
+GameObject:
+  m_IsActive: true
+  m_Name: Cabinet - Copy - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4835956495316811145}  # Transform
+    - component: {fileID: 1374811495841650016}  # MeshRenderer
+    - component: {fileID: 2849668614361637939}  # BoxCollider
+    - component: {fileID: 5053691381374173353}  # Rigidbody
+---
+ID: 4835956495316811145
+Transform:
+  m_GameObject: {fileID: 2841568938766412495}
+  Translation: [65.0967026, 34.9789085, -150.603729]
+  Rotation: [0.491276979, -1.05615497, -0.115843162]
+  Scale: [0.999540269, 0.999776661, 0.999463499]
+  Father: {fileID: 15202522457526674551}
+  m_Children:
+    []
+---
+ID: 1374811495841650016
+MeshRenderer:
+  m_GameObject: {fileID: 2841568938766412495}
+  m_IsEnabled: true
+  Mesh: {guid: cf7e959bf5b30b1f73de3cf803a29a08}
+  Material_ID: {guid: 8b8d0cf62e33884fceca7c309f1d68b2}
+---
+ID: 2849668614361637939
+BoxCollider:
+  m_GameObject: {fileID: 2841568938766412495}
+  m_IsEnabled: true
+  Dimensions: [0.999984741, 2.19996619, 1.08330894]
+  Offset: [-7.62939453e-06, 1.09998333, 0.0416544974]
+---
+ID: 5053691381374173353
+Rigidbody:
+  m_GameObject: {fileID: 2841568938766412495}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 8813023868054517125
+GameObject:
+  m_IsActive: true
+  m_Name: Chest - Copy - Copy - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9739302095355968024}  # Transform
+    - component: {fileID: 464740142792134863}  # MeshRenderer
+    - component: {fileID: 9736434136389987390}  # BoxCollider
+    - component: {fileID: 17681182558949401739}  # Rigidbody
+---
+ID: 9739302095355968024
+Transform:
+  m_GameObject: {fileID: 8813023868054517125}
+  Translation: [65.5181198, 34.8801498, -147.768417]
+  Rotation: [-0.0882215053, -0.509647608, 0.0286817085]
+  Scale: [0.799932361, 0.799994051, 0.799934149]
+  Father: {fileID: 6058687707966345969}
+  m_Children:
+    []
+---
+ID: 464740142792134863
+MeshRenderer:
+  m_GameObject: {fileID: 8813023868054517125}
+  m_IsEnabled: true
+  Mesh: {guid: fe9773551bc782dc19dfa526ca3ad37a}
+  Material_ID: {guid: 5d4a231836ef6b087f891e88fdcbaa3c}
+---
+ID: 9736434136389987390
+BoxCollider:
+  m_GameObject: {fileID: 8813023868054517125}
+  m_IsEnabled: true
+  Dimensions: [1.19998169, 1.10916102, 1.19998169]
+  Offset: [-9.14931297e-06, 0.55458051, -9.14931297e-06]
+---
+ID: 17681182558949401739
+Rigidbody:
+  m_GameObject: {fileID: 8813023868054517125}
   m_IsEnabled: true
   LinearVelocity: [0, 0, 0]
   AngularVelocity: [0, 0, 0]
