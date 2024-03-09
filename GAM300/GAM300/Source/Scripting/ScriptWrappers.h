@@ -243,6 +243,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			transform.SetParent(nullptr);
 	}
 
+	static void GetChild(ScriptObject<Transform> pTransform, ScriptObject<Transform>& pChild)
+	{
+		Transform& t = pTransform;
+		Scene& scene = MySceneManager.GetCurrentScene();
+		Object* pObject = &scene.Get<Transform>(t.child.front());
+		pChild = pObject;
+	}
+
 	static void GetWorldPosition(ScriptObject<Transform> pTransform, Vector3& position)
 	{
 		Transform& t = pTransform;
@@ -666,6 +674,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Transform Component
 		Register(SetTransformParent);
+		Register(GetChild);
 		Register(GetWorldPosition);
 		Register(GetWorldRotation);
 		Register(GetWorldScale);

@@ -103,6 +103,9 @@ namespace BeanFactory
         public static extern void SetTransformParent(Transform gameObject, Transform parent);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetChild(Transform owner, out Transform child);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetLocalPosition(Transform gameObject, out vec3 position);
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetLocalRotation(Transform gameObject, out vec3 rotation);

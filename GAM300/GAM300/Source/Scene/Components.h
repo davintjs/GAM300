@@ -462,15 +462,14 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 
 struct LightSource : Object
 {
-	bool enableShadow = true;
 	//index for light type for serializing and de-serializing
-	int lightType = (int)SPOT_LIGHT;	
-
 	// Used in point & Spot
 	Vector3 lightpos;
-
 	// Used in directional & spot
 	Vector3 direction;
+
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	int lightType = (int)SPOT_LIGHT;
 
 	// Used only in Spot
 	float inner_CutOff = 50.f;
@@ -478,8 +477,8 @@ struct LightSource : Object
 
 	// Used for all
 	float intensity = 10.f;
-	Vector3 lightingColor{1.f, 1.f, 1.f };
 
+	bool enableShadow = true;
 	bool toRender = true; // Dirtybit 
 	property_vtable()
 };
@@ -559,11 +558,7 @@ struct ParticleComponent : Object
 	Engine::GUID<MeshAsset> meshID{ ASSET_CUBE };
 	Engine::GUID<MaterialAsset> materialGUID{ 0 };
 	//Engine::GUID<TextureAsset> ParticleTexture{ 0 };
-
-	bool particleLooping{ false };
-	bool is2D{ false };
-	bool trailEnabled{ false };
-	bool isLocalSpace{ false };
+	Vector3 direction{ 0.f,0.f,0.f };
 
 	int numParticles_{ 1 };
 	int trailSize{ 0 };
@@ -580,7 +575,11 @@ struct ParticleComponent : Object
 	float noiseMovement{ 0.f };
 	float noisefrequency{ 0.f };
 
-	Vector3 direction{0.f,0.f,0.f};
+	bool particleLooping{ false };
+	bool is2D{ false };
+	bool trailEnabled{ false };
+	bool isLocalSpace{ false };
+
 	std::vector<Particle> particles_;
 
 	property_vtable();

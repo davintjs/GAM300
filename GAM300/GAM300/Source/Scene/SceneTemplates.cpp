@@ -106,10 +106,6 @@ void Scene::LinkReferences(ReferencesTable& storage)
 {
 	for (auto& old_new : storage[GetType::E<T>()])
 	{
-		if (std::is_same<T, Script>())
-		{
-			PRINT("WASSUP!");
-		}
 		Handle handle = old_new.second;
 
 		T& newObject = Get<T>(handle.euid, handle.uuid);

@@ -117,6 +117,33 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class ParticleComponent
     {
+        Int64 padding1;
+        Int64 padding2;
+        Int64 padding3;
+        Int64 padding4;
+        public vec3 direction;
+
+
+        public int numParticles_;
+        public int trailSize;
+        public float trailThickness;
+        public float angle; // for directional particles
+        public float particleLifetime_;
+        public float particleEmissionRate_;
+        public float particleMinScale_;
+        public float particleMaxScale_;
+        public float particleScaleRate_;
+        public float speed_;
+        public float desiredLifetime;
+        public float noiseMovement;
+        public float noisefrequency;
+        public bool particleLooping;
+        public bool is2D;
+        public bool trailEnabled;
+        public bool isLocalSpace;
+
+
+
         public void Play() { InternalCalls.ParticlesPlayer(this); }
 
         public GameObject gameObject
@@ -312,6 +339,12 @@ namespace BeanFactory
         {
             InternalCalls.SetTransformParent(this, parent);
         }
+
+        public Transform GetChild()
+        {
+            InternalCalls.GetChild(this, out Transform child);
+            return child;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -462,15 +495,30 @@ namespace BeanFactory
         {
             get
             {
-                Console.WriteLine("Before Changed!");
                 Material mat = new Material();
                 InternalCalls.GetMaterial(this, mat);
                 mat.meshRenderer = this;
-                Console.WriteLine("After Changed!");
                 return mat;
             }
         }
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class LightSource
+    {
+        public vec3 lightpos;
+        public vec3 direction;
+        public vec3 lightingColor;
+        public int lightType;
+        public float inner_CutOff;
+        public float outer_CutOff;
+        public float intensity;
+        public bool enableShadow;
+        public bool toRender; // Dirtybit 
+    }
+
+
+
 
     /*
         public class Camera : Component

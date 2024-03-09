@@ -1,0 +1,20 @@
+guid: ca846d245d6c09136c93cc6d09a32555
+meshes:
+  data: {guid: 1907d99d95a6d1bc5669ef6861b4d26b}
+animations:
+  data: {guid: ae6a4d09048c7f62490076e8d359ddff}
+animationStates:
+  Idle: [5, 152]
+  Ready: [156, 231]
+  Walking: [232, 268]
+  Running: [269, 295]
+  Sprinting: [296, 315]
+  Stun: [316, 345]
+  RangeAttack: [346, 418]
+  Attack1: [419, 545]
+  DashChargeUp: [546, 574]
+  DashAttack: [575, 665]
+  Death: [666, 775]
+  Ultimate: [776, 861]
+  Attack2: [862, 968]
+  JumpAttack: [969, 1083]
