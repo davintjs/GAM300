@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 class Dialogue : Script
 {
-    public int state = 1;
+    public int dialogue_state = 1;
     bool done = false;
 
     public void OnTriggerEnter(PhysicsComponent component)
@@ -15,9 +15,7 @@ class Dialogue : Script
         if (done) return;
         if (GetTag(component) == "Player")
         {
-
-            DialogueManager.Instance.SetState(state);
-            AudioManager.instance.uiSound.Play();
+            DialogueManager.Instance.SetState(dialogue_state);
         }
     }
 
@@ -27,8 +25,6 @@ class Dialogue : Script
         if (GetTag(component) == "Player")
         {
             done = true;
-            DialogueManager.Instance.Reset();
-            AudioManager.instance.uiSound.Play();
         }
     }
 }

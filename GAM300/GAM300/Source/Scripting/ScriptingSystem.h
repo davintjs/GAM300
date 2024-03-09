@@ -154,7 +154,7 @@ struct ScriptClass
 	//Collision
 	MonoMethod* DefaultMethods[DefaultMethodTypes::SIZE]{nullptr};
 
-	using FieldMap = std::unordered_map<std::string, MonoClassField*>;
+	using FieldMap = std::map<std::string, MonoClassField*>;
 
 	const FieldMap& GetFields() const { return mFields; }
 	const FieldMap& GetReferenceFields() const { return mReferenceFields; }

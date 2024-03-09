@@ -115,6 +115,7 @@ public:
 		IDENTIFIERS.GetTags()["EnemyAttack"] = Engine::CreateUUID();
 		IDENTIFIERS.GetTags()["Platform"] = Engine::CreateUUID();
 		IDENTIFIERS.GetTags()["Checkpoint"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["Dialogue1"] = Engine::CreateUUID();
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
 		//#ifndef _BUILD
