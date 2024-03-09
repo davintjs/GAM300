@@ -75,6 +75,9 @@ Transform:
     - {fileID: 1925772060971598989}
     - {fileID: 14254453317567868689}
     - {fileID: 13523656796890678290}
+    - {fileID: 12813299083475271808}
+    - {fileID: 16526287598854957340}
+    - {fileID: 6711356329535506755}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -87,6 +90,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 7ab20ba8375724359f12ba9f101f8850}
   audio: {fileID: 18230885468184141171}  # Component
+  fadeblack: {fileID: 6711356329535506755}  # GameObject
   gps: {fileID: 9397382759585305232}  # GameObject
   loading: {fileID: 17869501716874934695}  # GameObject
   location: {fileID: 17621016148347953717}  # GameObject
@@ -108,6 +112,8 @@ Script:
   text6: {fileID: 4454479509132717219}  # GameObject
   text7: {fileID: 18020263174201275437}  # GameObject
   transmission: {fileID: 1925772060971598989}  # GameObject
+  view: {fileID: 12813299083475271808}  # GameObject
+  visorconnected: {fileID: 16526287598854957340}  # GameObject
 ---
 ID: 4592072074559840146
 GameObject:
@@ -156,10 +162,10 @@ AudioSource:
   m_GameObject: {fileID: 16470510239641695939}
   m_IsEnabled: true
   AudioChannel: 0
-  Loop: true
+  Loop: false
   Volume: 0.699999988
-  SFX min Pitch: -1
-  SFX max Pitch: 3
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 06fbe7a1f23c33e346da56888b5efae6}
@@ -178,7 +184,7 @@ GameObject:
 ID: 2080999141880009777
 Transform:
   m_GameObject: {fileID: 14671038178053974221}
-  Translation: [0, -0.000783830881, 0.0856174529]
+  Translation: [0, -0.000783830881, 0.100000001]
   Rotation: [-3.14159083, 0, -3.14159083]
   Scale: [0.920700014, -0.921000004, 0.915991545]
   Father: {fileID: 17065559468612678914}
@@ -238,7 +244,7 @@ GameObject:
 ID: 4477729326556179546
 Transform:
   m_GameObject: {fileID: 17869501716874934695}
-  Translation: [0.0160000008, -0.0791403726, 0.0856174529]
+  Translation: [0.0160000008, -0.0260000005, 0.0856174529]
   Rotation: [0, 0, 0]
   Scale: [0.532000005, 0.532000005, 0.518599272]
   Father: {fileID: 17065559468612678914}
@@ -448,9 +454,9 @@ GameObject:
 ID: 9650576533481140271
 Transform:
   m_GameObject: {fileID: 1925772060971598989}
-  Translation: [-1.04999995, -0.118244544, -0.137038916]
+  Translation: [-1.04999995, -0.118244544, 0.860000014]
   Rotation: [0, 0, 0]
-  Scale: [0.600000024, -0.660000026, 0.738213718]
+  Scale: [0.550000012, -0.579999983, 0.738213718]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -478,7 +484,7 @@ GameObject:
 ID: 7485147987485848627
 Transform:
   m_GameObject: {fileID: 14254453317567868689}
-  Translation: [0.0550153702, 0.147, 0.0856174529]
+  Translation: [0.0550153702, 0.147, 0.0900000036]
   Rotation: [0, 0, 0]
   Scale: [1.20000005, -1, 0.925243974]
   Father: {fileID: 17065559468612678914}
@@ -831,3 +837,93 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
   Play: false
+---
+ID: 12813299083475271808
+GameObject:
+  m_IsActive: false
+  m_Name: view
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15523977660725378234}  # Transform
+    - component: {fileID: 1722691992720888734}  # SpriteRenderer
+---
+ID: 15523977660725378234
+Transform:
+  m_GameObject: {fileID: 12813299083475271808}
+  Translation: [0.0397143736, 0.147, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.20000005, -1, 0.925243974]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 1722691992720888734
+SpriteRenderer:
+  m_GameObject: {fileID: 12813299083475271808}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 499c9a295b35498efa9d9b55611e4660}
+---
+ID: 16526287598854957340
+GameObject:
+  m_IsActive: false
+  m_Name: visorconnected
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6251690304860278830}  # Transform
+    - component: {fileID: 9002324098593597080}  # SpriteRenderer
+---
+ID: 6251690304860278830
+Transform:
+  m_GameObject: {fileID: 16526287598854957340}
+  Translation: [-0.0199999996, -0.319999993, 0.0860000029]
+  Rotation: [0, 0, 0]
+  Scale: [0.449999988, -0.449999988, 0.43486467]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 9002324098593597080
+SpriteRenderer:
+  m_GameObject: {fileID: 16526287598854957340}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 1f3fc1868a9d9117056ce5859b7e77af}
+---
+ID: 6711356329535506755
+GameObject:
+  m_IsActive: false
+  m_Name: fadeblack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12547162527113978062}  # Transform
+    - component: {fileID: 9092643756737553499}  # SpriteRenderer
+---
+ID: 12547162527113978062
+Transform:
+  m_GameObject: {fileID: 6711356329535506755}
+  Translation: [-0.0450473242, -0.0500993803, 0.328481853]
+  Rotation: [3.14159083, 0, -3.14159083]
+  Scale: [0.975941896, 0.976259947, 0.970950902]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 9092643756737553499
+SpriteRenderer:
+  m_GameObject: {fileID: 6711356329535506755}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}

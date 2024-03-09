@@ -15,6 +15,8 @@ public class ObjectiveManager : Script
     public GameObject tut1;
     public GameObject tut2;
     public GameObject tut3;
+    public GameObject tut4;
+    public GameObject tut5;
 
     void Awake()
     {
@@ -29,12 +31,31 @@ public class ObjectiveManager : Script
 
     void Update()
     {
-        //if (d1 && (timer > 0.f))
-        //{
-        //    timer -= Time.deltaTime;
-        //}
-        //else
-        //    Objective1.alpha = 0.f;
+
+    }
+
+    public void completeObjective(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                break;
+            case 1:
+                tut1.GetComponent<SpriteRenderer>().alpha = 0.2f;
+                tut2.GetComponent<SpriteRenderer>().alpha = 0.2f;
+                break;
+            case 2:
+                tut3.GetComponent<SpriteRenderer>().alpha = 0.2f;
+                break;
+            case 3:
+                tut4.GetComponent<SpriteRenderer>().alpha = 0.2f;
+                break;
+            case 4:
+                tut5.GetComponent<SpriteRenderer>().alpha = 0.2f;
+                break;
+        }
+        //play UI sound
+        AudioManager.instance.obj_success.Play();
     }
 
     public void SetState(int i)
@@ -51,35 +72,14 @@ public class ObjectiveManager : Script
                 tut3.SetActive(true);
                 break;
             case 3:
+                tut4.SetActive(true);
+                break;
+            case 4:
+                tut5.SetActive(true);
                 break;
         }
         //play UI sound
         AudioManager.instance.itemCollected.Play();
-    }
-
-    void OnTriggerEnter(PhysicsComponent rb)
-    {
-        //detect the player
-        //if (GetTag(rb) == "StartObjective")
-        //{
-        //    if (!temp)
-        //    {
-        //        temp = true;
-        //        Objective1.alpha = alphaValue;
-        //        AudioManager.instance.itemCollected.Play();
-        //    }
-        //}
-
-        //if (GetTag(rb) == "Dialogue1")
-        //{
-        //    if (!d1)
-        //    {
-        //        d1 = true;
-        //        Dialogue1.alpha = 1f;
-        //        audio1.Play();
-        //    }
-        //}
-
     }
 
 }

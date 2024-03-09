@@ -22,6 +22,10 @@ public class StartingAnimation : Script
     public GameObject location;
     public GameObject transmission;
     public GameObject scanning;
+    public GameObject view;
+    public GameObject visorconnected;
+
+    public GameObject fadeblack;
 
     public GameObject text1;
     public GameObject text2;
@@ -60,6 +64,7 @@ public class StartingAnimation : Script
         seq4 = true;
         seq5 = true;
         seq6 = true;
+        stop = false;
     }
 
     void AudioPlay()
@@ -68,14 +73,27 @@ public class StartingAnimation : Script
         audio.Play();
     }
 
+    bool stop = false;
 
 
     void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            //skip to level
+            timer = 65f;
+        }
         timer += Time.deltaTime;
 
         if (timer < 10f)
         {
+            SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
+            black.alpha -= Time.deltaTime;
+            if(black.alpha < 0)
+            {
+                fadeblack.SetActive(false);
+            }
+
             SpriteRenderer systemboot = systembooting.GetComponent<SpriteRenderer>();
             if (systemboot.alpha > 0f && fadeout)
                 systemboot.alpha -= Time.deltaTime / 2f;
@@ -88,12 +106,35 @@ public class StartingAnimation : Script
                     fadeout = true;
                 }
             }
+
+            
         }
-        else if (timer < 11f)
+        else if (timer < 14f)
         {
             systembooting.SetActive(false);
+
+            if (timer >= 11f)
+            {
+                if (seq4)
+                {
+                    seq4 = false;
+                    transmission.SetActive(true);
+                    sfx3.Play();
+                }
+            }
+
+
+            if (timer >= 12f)
+            {
+                if (playAudio)
+                {
+                    AudioPlay();
+                    startText = true;
+                }
+            }
+
         }
-        else if (timer < 25f)
+        else if (timer < 35f)
         {
             if (seq1)
             {
@@ -102,7 +143,7 @@ public class StartingAnimation : Script
                 sfx1.Play();
             }
 
-            if (timer > 12f)
+            if (timer > 17f)
                 loading.SetActive(true);
 
             vec3 rot = loading.transform.rotation;
@@ -112,7 +153,7 @@ public class StartingAnimation : Script
             if (timer >= 20f)
                 stats.SetActive(true);
 
-            if (timer >= 21f)
+            if (timer >= 22f)
             {
                 if (seq2)
                 {
@@ -120,57 +161,94 @@ public class StartingAnimation : Script
                     sfx2.Play();
                     statsok.SetActive(true);
                 }
-                
+
             }
 
-            if (timer >= 16.5f)
+            if (timer >= 30f)
             {
                 if (seq3)
                 {
                     seq3 = false;
-                    transmission.SetActive(true);
-                    sfx3.Play();
-                }            
+                    visorconnected.SetActive(true);
+                    sfx2.Play();
+                }
             }
 
-
-            if (timer >= 17.5f)
+            if (timer >= 32)
             {
-                if (playAudio)
-                {
-                    AudioPlay();
-                    startText = true;
-                }              
+                view.SetActive(true);
             }
+
         }
-        else if (timer < 46f)
+        else if (timer < 64f)
         {
             systeminit.SetActive(false);
             loading.SetActive(false);
-
+            visorconnected.SetActive(false);
             scanning.SetActive(true);
 
-            if (timer >= 34f)
+            SpriteRenderer scan = scanning.GetComponent<SpriteRenderer>();
+
+            if (!stop)
             {
-                if (seq4)
+                if (scan.alpha > 0f && fadeout)
+                    scan.alpha -= Time.deltaTime / 2f;
+                else
                 {
-                   seq4 = false;
-                    gps.SetActive(true);
-                    sfx1.Play();
+                    fadeout = false;
+                    scan.alpha += Time.deltaTime / 2f;
+                    if (scan.alpha >= 1f)
+                    {
+                        sfx1.Play();
+                        fadeout = true;
+                    }
                 }
-                
             }
-            if (timer >= 37f)
+
+            if (timer > 50f && scan.alpha <= 0)
+            {
+                stop = true;
+            }
+
+
+            if (timer >= 44f)
             {
                 if (seq5)
                 {
                     seq5 = false;
+                    gps.SetActive(true);
+                    sfx1.Play();
+                }
+
+            }
+
+            if (timer >= 47f)
+            {
+                if (seq6)
+                {
+                    seq6 = false;
                     map.SetActive(true);
                     location.SetActive(true);
                     sfx1.Play();
                 }
 
             }
+
+            
+        }
+        else
+        {
+            fadeblack.SetActive(true);
+            SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
+            if (black.alpha < 1f)
+            {
+                black.alpha += Time.deltaTime;
+            }
+            else
+            {
+                //load tutorial level
+                SceneManager.LoadScene("LevelTutorial");
+            }          
         }
 
         //timers for subtitles
@@ -194,10 +272,6 @@ public class StartingAnimation : Script
             }
             else if (textTimer < 39f)
             {
-                if(textTimer > 36f)
-                {
-                    scanning.SetActive(false);
-                }
                 scanning.SetActive(false);
                 text3.SetActive(false);
                 text4.SetActive(true);

@@ -29,8 +29,6 @@ public class DialogueManager : Script
     bool startTimer;
     float Timer;
 
-    private int obj_state = 0;
-
     void Awake()
     {
         Instance = this;
@@ -47,7 +45,6 @@ public class DialogueManager : Script
             }
             else
             {
-                ObjectiveManager.Instance.SetState(obj_state);
                 startTimer = false;
                 Reset();
             }
@@ -63,7 +60,6 @@ public class DialogueManager : Script
         text5.SetActive(false);
         text6.SetActive(false);
         text7.SetActive(false);
-        obj_state = 0;
     }
 
     void setTimer (float duration)
@@ -79,11 +75,13 @@ public class DialogueManager : Script
             case 1:
                 text1.SetActive(true);
                 tutorial1.Play();
-                obj_state = 1;
+                ObjectiveManager.Instance.SetState(1);
                 setTimer(7.5f);              
                 break;
             case 2:
                 text2.SetActive(true);
+                ObjectiveManager.Instance.completeObjective(1);
+                ObjectiveManager.Instance.SetState(2);
                 tutorial2.Play();
                 setTimer(6f);
                 break;
@@ -94,17 +92,21 @@ public class DialogueManager : Script
                 break;
             case 4:
                 text4.SetActive(true);
+                ObjectiveManager.Instance.completeObjective(2);
+                ObjectiveManager.Instance.SetState(3);
                 tutorial3.Play();
                 setTimer(4f);
                 break;
             case 5:
                 text5.SetActive(true);
-                obj_state = 2;
+                ObjectiveManager.Instance.completeObjective(3);
+                ObjectiveManager.Instance.SetState(4);
                 tutorial4.Play();
                 setTimer(6f);
                 break;
             case 6:
                 text6.SetActive(true);
+                ObjectiveManager.Instance.completeObjective(4);
                 tutorial5.Play();
                 setTimer(17f);
                 break;

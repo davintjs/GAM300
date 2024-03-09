@@ -86,7 +86,7 @@ public class MainMenu : Script
         {
             //LoadScene(1.0f);
             Console.WriteLine("Scene");
-            SceneManager.LoadScene("LevelTutorial");
+            SceneManager.LoadScene("StartingScene");
 
         }
 
