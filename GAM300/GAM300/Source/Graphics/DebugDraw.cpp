@@ -112,6 +112,7 @@ void DebugDraw::Draw()
 	if (showAllColliders)
 	{
 		DrawCapsuleColliders();
+		DrawSphereColliders();
 		DrawButtonOutlines();
 
 		color = { 1.f, 0.f, 0.f, 1.f };
@@ -480,6 +481,32 @@ void DebugDraw::DrawCapsuleColliders()
 	}
 }
 
+void DebugDraw::DrawSphereColliders()
+{
+	if (!pProp)
+		return;
+
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& iProp = *pProp;
+	const float pi = glm::pi<float>();
+	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
+
+	for (SphereCollider& sphereCollider : scene.GetArray<SphereCollider>())
+	{
+		if (sphereCollider.state == DELETED) continue;
+		if (!scene.IsActive(sphereCollider)) continue;
+
+		Entity& entity = scene.Get<Entity>(sphereCollider);
+
+		if (!scene.IsActive(entity)) continue;
+
+		Transform& t = scene.Get<Transform>(sphereCollider);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, 0.f), color, sphereCollider.radius);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(pi * 0.5f, 0.f, 0.f), color, sphereCollider.radius);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, pi * 0.5f), color, sphereCollider.radius);
+	}
+}
+
 void DebugDraw::DrawCapsuleBounds(const Engine::UUID& _euid)
 {
 	if (!pProp)
@@ -494,6 +521,24 @@ void DebugDraw::DrawCapsuleBounds(const Engine::UUID& _euid)
 
 	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
 	DrawCapsuleCollider(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color, capsuleCollider.radius, capsuleCollider.height);
+}
+
+void DebugDraw::DrawSphereBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Transform& t = currentScene.Get<Transform>(_euid);
+	Entity& entity = currentScene.Get<Entity>(_euid);
+	SphereCollider& sphereCollider = currentScene.Get<SphereCollider>(_euid);
+	const float pi = glm::pi<float>();
+	auto& iProp = *pProp;
+
+	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
+	DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, 0.f), color, sphereCollider.radius);
+	DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(pi * 0.5f, 0.f, 0.f), color, sphereCollider.radius);
+	DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, pi * 0.5f), color, sphereCollider.radius);
 }
 
 void DebugDraw::DrawCameraBounds(const Engine::UUID& _euid)

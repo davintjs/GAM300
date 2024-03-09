@@ -598,7 +598,7 @@ public class ThirdPersonController : Script
         }
         else if (CC.isGrounded)
         {
-            Console.WriteLine("\nGROUNDED!");
+            //Console.WriteLine("\nGROUNDED!");
             if (GetState("Falling"))
             {
                 SetState("Falling", false);
@@ -634,7 +634,7 @@ public class ThirdPersonController : Script
                 AudioManager.instance.overdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use
                 //UseStamina(overDriveStamina);
-                Console.WriteLine("Overdrive");
+                //Console.WriteLine("Overdrive");
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
@@ -676,7 +676,7 @@ public class ThirdPersonController : Script
             //JUMP
             else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
-                Console.WriteLine("JUMP KEY PRESSED!");
+                //Console.WriteLine("JUMP KEY PRESSED!");
                 StartCoroutine(StopJump());
                 SetState("Jump", true);
 
@@ -703,7 +703,7 @@ public class ThirdPersonController : Script
             }
             else if (!IsAttacking)
             {
-                Console.WriteLine("Stopped Jumping");
+                //Console.WriteLine("Stopped Jumping");
                 if (stopJump)
                     SetState("Jump", false);
                 //SPRINT
@@ -729,7 +729,7 @@ public class ThirdPersonController : Script
         }
         else
         {
-            Console.WriteLine("NOT GROUNDED!");
+            //Console.WriteLine("NOT GROUNDED!");
             if (animationManager.GetState("Jump").state)
             {
                 if (currentAirTime >= maxAirTime)

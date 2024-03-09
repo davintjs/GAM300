@@ -54,7 +54,10 @@ namespace BeanFactory
     {
         public static float PI = 3.1415926f;
         public static float Rad2Deg = 180f / PI;
-
+        public static float Abs(float value)
+        {
+            return value < 0 ? -value : value;
+        }
         public static float Lerp(float start, float end, float percentage)
         {
             return start + (end - start) * percentage;

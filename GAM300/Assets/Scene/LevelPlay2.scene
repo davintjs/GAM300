@@ -10181,7 +10181,7 @@ GameObject:
   m_Component:
     - component: {fileID: 813583600382484493}  # Transform
     - component: {fileID: 16773315215798417911}  # Camera
-    - component: {fileID: 5416340461028794432}  # BoxCollider
+    - component: {fileID: 1094365086644883275}  # SphereCollider
     - component: {fileID: 1139370946230178394}  # Rigidbody
     - component: {fileID: 12100504774977972383}  # Script
 ---
@@ -10200,7 +10200,7 @@ Camera:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
   BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
-  ClearFlags: "\x01"
+  ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
   FarClip: 100
@@ -10212,18 +10212,18 @@ Camera:
   FrustumCulling: true
   DistanceCulling: 50
 ---
-ID: 5416340461028794432
-BoxCollider:
+ID: 1094365086644883275
+SphereCollider:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
-  Dimensions: [0.5, 0.5, 0.5]
+  Radius: 1
   Offset: [0, 0, 0]
 ---
 ID: 1139370946230178394
 Rigidbody:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
+  LinearVelocity: [0, 0.00100000005, 0]
   AngularVelocity: [0, 0, 0]
   Force: [0, 0, 0]
   Friction: 0.100000001
@@ -10238,9 +10238,9 @@ Script:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
   Script: {guid: f204530c811d06247b59f2ef14dd1085}
-  maxPitchAngle: 170
+  maxPitchAngle: 30
   yawRotSpeed: 2
-  defaultZoom: 4
+  defaultZoom: 5
   invertPitch: true
   pitchRotSpeed: 1
   minPitchAngle: -85
@@ -10330,6 +10330,8 @@ Script:
   overDriveStamina: 40
   sprintStamina: 0.25
   startDashCooldown: false
+  maxColliderDist: 1.5
+  stopJump: false
   currentOverdriveCooldown: 0
   dodgeTimer: 0.5
   startDeathAnimationCountdown: false
@@ -10359,7 +10361,6 @@ Script:
   invulnerableTimer: 0.699999988
   isDead: false
   colliderDist: 0
-  maxColliderDist: 1.5
   timeBeforeRegen: 1
   regenRate: 60
   dashAttackStamina: 15
@@ -33686,6 +33687,7 @@ Animator:
   m_GameObject: {fileID: 5297853854918785373}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 8787889187340902967
 GameObject:
@@ -34111,6 +34113,7 @@ Animator:
   m_GameObject: {fileID: 17325133999229751987}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 10613620391169950987
 GameObject:
@@ -42887,6 +42890,7 @@ Animator:
   m_GameObject: {fileID: 9983597563396382479}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 12325139730683629389
 GameObject:
@@ -46738,6 +46742,7 @@ Animator:
   m_GameObject: {fileID: 8181097202000610831}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 2441269254856014379
 GameObject:
@@ -47198,6 +47203,7 @@ Animator:
   m_GameObject: {fileID: 4651293391192650299}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 9858809955170522547
 GameObject:
@@ -49268,6 +49274,7 @@ Animator:
   m_GameObject: {fileID: 3187203319805926689}
   m_IsEnabled: true
   Animation: {guid: c4fef853906fbef85cfcf3080cfd1a6b}
+  Playing: false
 ---
 ID: 13634005917329744601
 GameObject:
@@ -51244,6 +51251,7 @@ Animator:
   m_GameObject: {fileID: 3295364860990313297}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 17574749794126389009
 GameObject:
@@ -53038,6 +53046,7 @@ Animator:
   m_GameObject: {fileID: 16614945116669692070}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 1386070044797248867
 GameObject:
@@ -54590,6 +54599,7 @@ Animator:
   m_GameObject: {fileID: 15771493367344086800}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 8135072918305409601
 GameObject:
@@ -56823,6 +56833,7 @@ Animator:
   m_GameObject: {fileID: 2281979527073026994}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 17315456125228963552
 GameObject:
@@ -57213,6 +57224,7 @@ Animator:
   m_GameObject: {fileID: 17410272475223950305}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 3514040243684930671
 GameObject:
@@ -57603,6 +57615,7 @@ Animator:
   m_GameObject: {fileID: 13679024543590507492}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 15857613104579025041
 GameObject:
@@ -57993,6 +58006,7 @@ Animator:
   m_GameObject: {fileID: 10571348349847112841}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 15210767162079200632
 GameObject:
@@ -58383,6 +58397,7 @@ Animator:
   m_GameObject: {fileID: 17530039533555631439}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 3933507260952262748
 GameObject:
@@ -58773,6 +58788,7 @@ Animator:
   m_GameObject: {fileID: 13301186590583378764}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 5082708480256293797
 GameObject:
@@ -59163,6 +59179,7 @@ Animator:
   m_GameObject: {fileID: 16213852318901244393}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 1967432145379214210
 GameObject:
@@ -59553,6 +59570,7 @@ Animator:
   m_GameObject: {fileID: 10869195669279574947}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 1608199646427759041
 GameObject:
@@ -60343,6 +60361,7 @@ Animator:
   m_GameObject: {fileID: 10169941270709570099}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 13667835057243733406
 GameObject:

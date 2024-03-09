@@ -25,19 +25,19 @@ public class ThirdPersonCamera : Script
     public GameObject target;
 
     public float zoom = 1f;
-    private float initialZoom = 0f;
-    public float defaultZoom = 4f;
+    //private float initialZoom = 0f;
+    public float defaultZoom = 5f;
     public float zoomSpeed = 50f;
     public float zoomInSpeed = 3f;
     public float closestZoom = 1f;
     public float furthestZoom = 10f;
     public bool isZooming = false;
-    //private bool zoomReset = false;
+    private bool zoomReset = false;
 
     public float timer = 0f;
     private float duration = 1.0f;
-    private float bufferTimer = 0f;
-    private float bufferDuration = 3.0f;
+    //private float bufferTimer = 0f;
+    //private float bufferDuration = 3.0f;
     //private float distance = 0f;
 
     public bool cutscene = false;
@@ -61,12 +61,13 @@ public class ThirdPersonCamera : Script
         {
             return;
         }
-        Zoom();
 
         FocusOnTarget();
 
         if (GameManager.instance.paused)
             return;
+
+        Zoom();
 
         UpdateCameraRotation();
 
@@ -75,33 +76,22 @@ public class ThirdPersonCamera : Script
         ShakeCoroutine();
     }
 
-    //void OnTriggerEnter(PhysicsComponent other)
-    //{
-    //    if (GetTag(other) != "PlayerCollider")
-    //    {
-    //        StartZoom();
-    //    }
-    //}
+    void OnTriggerEnter(PhysicsComponent other)
+    {
+        if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
+        {
+            zoomReset = false;
+        }
+    }
 
-    //void OnTriggerExit(PhysicsComponent other)
-    //{
-    //    if (GetTag(other) != "PlayerCollider")
-    //    {
-    //        StopZoom();
-    //    }
-    //}
-
-    //void StartZoom()
-    //{
-    //    isZooming = true;
-    //    zoomReset = false;
-    //    timer = bufferTimer = 0f;
-    //}
-
-    //void StopZoom()
-    //{
-    //    isZooming = false;
-    //}
+    void OnTriggerExit(PhysicsComponent other)
+    {
+        if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
+        {
+            timer = 0f;
+            zoomReset = true;
+        }
+    }
 
     void AvoidColliders()
     {
@@ -110,36 +100,23 @@ public class ThirdPersonCamera : Script
         
         if (raycast.hit && raycast.gameObj != null)
         {
+            isZooming = true;
+            zoomReset = false;
             string tagName = GetTag(raycast.gameObj);
-            if (tagName != "Camera")
-            { 
+            if (tagName != "Camera" && tagName != "Enemy")
+            {
                 //Console.WriteLine("Name: " +  raycast.gameObj.name);
-                zoom = vec3.Distance(target.transform.position, raycast.point) * 0.9f;
+                zoom = vec3.Distance(target.transform.position, raycast.point) * 0.95f;
                 zoom = Mathf.Clamp(zoom, closestZoom, furthestZoom);
             }
         }
+        else
+        {
+            isZooming = false;
+        }
 
-        //if (isZooming)
-        //{
-        //    zoom -= Time.deltaTime * zoomInSpeed;
-        //    if (zoom < closestZoom)
-        //    {
-        //        zoom = closestZoom;
-        //    }
-        //    else if (zoom > furthestZoom)
-        //    {
-        //        zoom = furthestZoom;
-        //    }
-
-        //    camera.lookatDistance = zoom;
-        //    initialZoom = zoom;
-        //    zoomReset = true;
-        //}
-        //else if (!isZooming && zoomReset)
-        //{
-        //    // Wait x seconds then attemp to return to initialZoom
-        //    ResetZoom();
-        //}
+        if (zoomReset)
+            ResetZoom();
     }
 
     void UpdateCameraRotation()
@@ -162,7 +139,13 @@ public class ThirdPersonCamera : Script
 
     void Zoom()
     {
-        zoom += Input.GetScroll() * zoomSpeed;
+        float scroll = Input.GetScroll();
+
+        if (scroll == 0f || isZooming) // Dont allow manual zoom if it is doing wall collision
+            return;
+
+        zoomReset = false;
+        zoom += scroll * zoomSpeed;
         if (zoom < closestZoom)
         {
             zoom = closestZoom;
@@ -176,36 +159,28 @@ public class ThirdPersonCamera : Script
     void ResetZoom()
     {
         // Give it a buffer before reseting the camera's zoom
-        bufferTimer += Time.deltaTime;
+        //bufferTimer += Time.deltaTime;
 
-        if (bufferTimer >= bufferDuration)
-        {
-            timer += Time.deltaTime;
-            zoom = Lerp(initialZoom, defaultZoom, timer, duration);
+        //if (bufferTimer >= bufferDuration)
+        //{
+        //    timer += Time.deltaTime;
+        //    zoom = Mathf.Lerp(zoom, defaultZoom, timer);
 
-            if (timer >= duration)
-            {
-                //zoomReset = false;
-                timer = bufferTimer = 0f;
-            }
-        }
+        //    if (timer >= duration)
+        //    {
+        //        isZooming = true;
+        //        timer = bufferTimer = 0f;
+        //    }
+        //}
+        zoom = Mathf.Lerp(zoom, defaultZoom, timer);
+        timer += Time.deltaTime;
     }
 
     void FocusOnTarget()
     {
         if (target != null)
         {
-            
-            vec3 finalPosition = camera.position;
-            if(camera.distance < zoom)
-            {
-                finalPosition = target.transform.position - (camera.forward * camera.distance);
-            }
-            else
-            {
-                finalPosition = target.transform.position - (camera.forward * zoom);
-            }
-
+            vec3 finalPosition = target.transform.position - (camera.forward * zoom);
             transform.position = camera.position = finalPosition;
             camera.LookAt(target);
         }
@@ -236,7 +211,7 @@ public class ThirdPersonCamera : Script
 
     public void SetFOV(float targetFOV, float duration)
     {
-        StartCoroutine(FOVLerp(targetFOV, duration));
+        //StartCoroutine(FOVLerp(targetFOV, duration));
     }
 
     IEnumerator FOVLerp(float targetFOV, float duration)

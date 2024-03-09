@@ -389,7 +389,11 @@ public:
 
 	void DrawCapsuleColliders();
 
+	void DrawSphereColliders();
+
 	void DrawCapsuleBounds(const Engine::UUID & _euid);
+
+	void DrawSphereBounds(const Engine::UUID & _euid);
 
 	void DrawCameraBounds(const Engine::UUID& _euid);
 	

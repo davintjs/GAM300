@@ -556,6 +556,11 @@ void EditorScene::DisplayGizmos()
             //DEBUGDRAW.DrawCapsuleBounds(entity.EUID());
         }
 
+        if (currentScene.Has<SphereCollider>(entity) && isActive)
+        {
+            DEBUGDRAW.DrawSphereBounds(entity.EUID());
+        }
+
         if (currentScene.Has<Camera>(entity) && isActive)
         {
             DEBUGDRAW.DrawCameraBounds(entity.EUID());

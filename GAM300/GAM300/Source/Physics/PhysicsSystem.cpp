@@ -841,6 +841,9 @@ void PhysicsSystem::UpdateGameObjects() {
 		if (!scene.IsActive(entity))
 			continue;
 
+		if (rb.isStatic) // Ignore Static object
+			continue;
+
 		Transform& t = scene.Get<Transform>(entity);
 
 		JPH::BodyID tmpBID(rb.bid);
