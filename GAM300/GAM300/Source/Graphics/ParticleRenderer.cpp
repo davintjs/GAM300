@@ -16,21 +16,43 @@ void ParticleRenderer::Update(float dt) {
     particleSRT.clear(); // @kk not all entity should use the same container
     trailSRT.clear();
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+    glm::mat4 _2dmtx(1.f);
+    glm::vec3 camTranslate(1.f);
+    glm::vec3 camUp(0.f, 1.f, 0.f);
+    for (Camera& cam : currentScene.GetArray<Camera>()) {
+        Transform& camTransform = currentScene.Get<Transform>(cam);
+        //_2dmtx = glm::inverse(camTransform.GetWorldMatrix());
+        camTranslate = camTransform.GetGlobalTranslation();
+        camUp = cam.GetUpVec();
+    }/**/
+
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         if (!currentScene.IsActive(particleComponent))
             continue;
         Entity& entity = currentScene.Get<Entity>(particleComponent);
+        Transform& transform = currentScene.Get<Transform>(particleComponent);
         if (!currentScene.IsActive(entity))
             continue;
         for (int i = 0; i < particleComponent.particles_.size(); ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
             scale[3] = glm::vec4(0, 0, 0, 1);
-            glm::mat4 rotate = glm::mat4(1.f);// @desmond lemme know when rotation is up
 
-            /*if (_2dParticles) {
-                rotate = desmond's rotation around y = 0; // in shader, set cam rotation around Y to 0;
-            }*/
+            glm::mat4 rotate = glm::mat4(1.f);
+            //calculate rotation if 2D
+            if (particleComponent.is2D) {
+                // look vector
+                glm::vec3 forward = glm::normalize(camTranslate - particleComponent.particles_[i].position);
+                glm::vec3 newz = glm::normalize(glm::cross(forward, camUp));
+
+                rotate = glm::mat4(
+                glm::vec4(newz, 0.f),
+                glm::vec4(camUp, 0.f),
+                glm::vec4(forward, 0.f),
+                glm::vec4(0.f, 0.f, 0.f, 1.f)
+                );
+            }
+
 
             glm::mat4 translate = glm::mat4(
                 glm::vec4(1, 0, 0, 0),
@@ -39,7 +61,9 @@ void ParticleRenderer::Update(float dt) {
                 glm::vec4(particleComponent.particles_[i].position, 1));/**/
 
             //particleSRT.emplace_back(scale * rotate * translate);
-            particleSRT.emplace_back(translate * rotate * scale);
+            glm::mat4 srt = translate * rotate * scale;
+
+            particleSRT.emplace_back(srt);
             float thicc = particleComponent.trailThiccness / 10.f;
 
             // update trail
@@ -73,7 +97,28 @@ void ParticleRenderer::Update(float dt) {
             }
 
         }
+        //sort particle
+        if (particleComponent.is2D) {
+            std::sort(particleSRT.begin(), particleSRT.end(),
+                [&](const glm::mat4& particle1, const glm::mat4& particle2) {
+                    return compareParticles(particle1, particle2, camTranslate);
+                });
+        }
     }
+}
+
+// Define a custom comparator function for sorting particles based on distance to camera
+bool ParticleRenderer::compareParticles(const glm::mat4& particle1, const glm::mat4& particle2, const glm::vec3& cameraPosition) {
+    // Extract translation from the transformation matrices
+    glm::vec3 position1 = glm::vec3(particle1[3]);
+    glm::vec3 position2 = glm::vec3(particle2[3]);
+
+    // Calculate squared distances from particles to camera
+    float distance1 = glm::length2(position1 - cameraPosition);
+    float distance2 = glm::length2(position2 - cameraPosition);
+
+    // Sort particles based on distance
+    return distance1 > distance2; // Sort in descending order (furthest first)
 }
 
 void ParticleRenderer::Draw(BaseCamera& _camera) {
@@ -84,6 +129,8 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
             continue;
         Entity& entity = currentScene.Get<Entity>(particleComponent);
         if (!currentScene.IsActive(entity))
+            continue;
+        if (particleComponent.is2D)
             continue;
         if (particleComponent.numParticles_ == 0)
             continue;
@@ -100,12 +147,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, TextureManager.GetTexture(currMatInstance.albedoTexture));
 
-        if (particleComponent.is2D) {
-            glBindBuffer(GL_ARRAY_BUFFER, quadSRTBuffer);
-        }
-        else {
-            glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
-        }
+        glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 
         glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -134,21 +176,12 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glUniform1f(EmissionConstant, currMatInstance.emissionConstant);
         glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
         glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), RENDERER.GetBloomThreshold());
-
-        GLint _2d = glGetUniformLocation(shader.GetHandle(), "is2D");
-        glUniform1i(_2d, particleComponent.is2D);
         GLint boolean1 = glGetUniformLocation(shader.GetHandle(), "hasTexture");
         glUniform1i(boolean1, hasTexture);
         
-
-        if (particleComponent.is2D) {
-            glBindVertexArray(quadVAO);
-            glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
-        }
-        else {
-            glBindVertexArray(vao);
-            glDrawElementsInstanced(prim, prop.drawCount, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
-        }
+        glBindVertexArray(vao);
+        glDrawElementsInstanced(prim, prop.drawCount, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
+        
         glBindVertexArray(0);
 
         shader.UnUse();
@@ -174,7 +207,66 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
     }
 }
 
+void ParticleRenderer::Draw2D(BaseCamera& _camera) {
+    Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+    int counter = 0;
+    for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
+        if (!currentScene.IsActive(particleComponent))
+            continue;
+        Entity& entity = currentScene.Get<Entity>(particleComponent);
+        if (!currentScene.IsActive(entity))
+            continue;
+        if (!particleComponent.is2D)
+            continue;
+        if (particleComponent.numParticles_ == 0)
+            continue;
+        if (particleSRT.size() == 0)
+            continue;
+        
 
+        GLuint vao = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->vaoID;
+        GLenum prim = MESHMANAGER.DereferencingMesh(particleComponent.meshID)->prim; // for now particles are all cubes
+        InstanceProperties& prop = MESHMANAGER.instanceProperties->find(vao)->second;
+        Material_instance currMatInstance = MaterialSystem::Instance().getMaterialInstance(particleComponent.materialGUID);
+
+        hasTexture = currMatInstance.albedoTexture.longInt[0] ? true : false;
+
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, TextureManager.GetTexture(currMatInstance.albedoTexture));
+
+        glBindBuffer(GL_ARRAY_BUFFER, quadSRTBuffer);
+        
+
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES2D);
+        shader.Use();
+
+        GLint perspective =
+            glGetUniformLocation(shader.GetHandle(), "persp_projection");
+        GLint view =
+            glGetUniformLocation(shader.GetHandle(), "View");
+        GLint Colour =
+            glGetUniformLocation(shader.GetHandle(), "frag_Albedo");
+        glUniformMatrix4fv(perspective, 1, GL_FALSE,
+            glm::value_ptr(_camera.GetProjMatrix()));
+        glUniformMatrix4fv(view, 1, GL_FALSE,
+            glm::value_ptr(_camera.GetViewMatrix()));
+        glUniform4fv(Colour, 1, glm::value_ptr(glm::vec4(currMatInstance.albedoColour)));
+        GLint boolean1 = glGetUniformLocation(shader.GetHandle(), "hasTexture");
+        glUniform1i(boolean1, hasTexture);
+
+        glBindVertexArray(quadVAO);
+        glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
+        
+        
+        glBindVertexArray(0);
+
+        counter += particleComponent.numParticles_;
+
+    }
+}
 void ParticleRenderer::SetupInstancedCylinder() {
     float radius = 0.5f;  // Adjust as needed
     float height = 1.0f;  // Adjust as needed
