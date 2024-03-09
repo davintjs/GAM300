@@ -13882,7 +13882,7 @@ GameObject:
 ID: 12859451180230906073
 Transform:
   m_GameObject: {fileID: 4720521423488205772}
-  Translation: [-1.35899997, 0.75999999, 1.81727982]
+  Translation: [-1.35000002, 0.75999999, 1.81727982]
   Rotation: [3.14158487, 0, 0]
   Scale: [1, 1, -1]
   Father: {fileID: 4212138099454399691}
