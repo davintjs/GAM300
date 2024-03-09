@@ -462,15 +462,14 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 
 struct LightSource : Object
 {
-	bool enableShadow = true;
 	//index for light type for serializing and de-serializing
-	int lightType = (int)SPOT_LIGHT;	
-
 	// Used in point & Spot
 	Vector3 lightpos;
-
 	// Used in directional & spot
 	Vector3 direction;
+
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	int lightType = (int)SPOT_LIGHT;
 
 	// Used only in Spot
 	float inner_CutOff = 50.f;
@@ -478,8 +477,8 @@ struct LightSource : Object
 
 	// Used for all
 	float intensity = 10.f;
-	Vector3 lightingColor{1.f, 1.f, 1.f };
 
+	bool enableShadow = true;
 	bool toRender = true; // Dirtybit 
 	property_vtable()
 };

@@ -95,7 +95,6 @@ namespace BeanFactory
 
         void PropertyChangedCallBack()
         {
-            Console.WriteLine("Changed!");
             isVariant = true;
             InternalCalls.SetMaterial(meshRenderer, this);
         }

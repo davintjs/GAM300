@@ -339,6 +339,12 @@ namespace BeanFactory
         {
             InternalCalls.SetTransformParent(this, parent);
         }
+
+        public Transform GetChild()
+        {
+            InternalCalls.GetChild(this, out Transform child);
+            return child;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -489,14 +495,26 @@ namespace BeanFactory
         {
             get
             {
-                Console.WriteLine("Before Changed!");
                 Material mat = new Material();
                 InternalCalls.GetMaterial(this, mat);
                 mat.meshRenderer = this;
-                Console.WriteLine("After Changed!");
                 return mat;
             }
         }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public class LightSource
+    {
+        public vec3 lightpos;
+        public vec3 direction;
+        public vec3 lightingColor;
+        public int lightType;
+        public float inner_CutOff;
+        public float outer_CutOff;
+        public float intensity;
+        public bool enableShadow;
+        public bool toRender; // Dirtybit 
     }
 
 
