@@ -194,7 +194,7 @@ void SceneManager::StartScene()
 	EVENTS.Publish(&e);
 
 	SceneStartEvent startEvent{};
-	EVENTS.Publish(&startEvent);
+		EVENTS.Publish(&startEvent);
 }
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)

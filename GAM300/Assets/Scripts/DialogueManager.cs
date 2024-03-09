@@ -29,9 +29,12 @@ public class DialogueManager : Script
     bool startTimer;
     float Timer;
 
+    private int obj_state = 0;
+
     void Awake()
     {
         Instance = this;
+        startTimer = false;
     }
 
     void Update()
@@ -44,6 +47,7 @@ public class DialogueManager : Script
             }
             else
             {
+                ObjectiveManager.Instance.SetState(obj_state);
                 startTimer = false;
                 Reset();
             }
@@ -59,6 +63,7 @@ public class DialogueManager : Script
         text5.SetActive(false);
         text6.SetActive(false);
         text7.SetActive(false);
+        obj_state = 0;
     }
 
     void setTimer (float duration)
@@ -74,7 +79,8 @@ public class DialogueManager : Script
             case 1:
                 text1.SetActive(true);
                 tutorial1.Play();
-                setTimer(7.5f);
+                obj_state = 1;
+                setTimer(7.5f);              
                 break;
             case 2:
                 text2.SetActive(true);
@@ -93,6 +99,7 @@ public class DialogueManager : Script
                 break;
             case 5:
                 text5.SetActive(true);
+                obj_state = 2;
                 tutorial4.Play();
                 setTimer(6f);
                 break;

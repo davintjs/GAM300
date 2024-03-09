@@ -9,19 +9,17 @@ using GlmSharp;
 
 public class ObjectiveManager : Script
 {
-    //public float alphaValue = 0.8f;
-    //public Transform player;
-    //public SpriteRenderer Objective1;
 
+    public static ObjectiveManager Instance;
 
-    //private bool d1;
-    //public SpriteRenderer Dialogue1;
-    //public AudioSource audio1;
+    public GameObject tut1;
+    public GameObject tut2;
+    public GameObject tut3;
 
-
-    //bool temp = false;
-
-    //vec3 startGridTextSize;
+    void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
@@ -37,6 +35,26 @@ public class ObjectiveManager : Script
         //}
         //else
         //    Objective1.alpha = 0.f;
+    }
+
+    public void SetState(int i)
+    {
+        switch (i)
+        {
+            case 0:
+                break;
+            case 1:
+                tut1.SetActive(true);
+                tut2.SetActive(true);
+                break;
+            case 2:
+                tut3.SetActive(true);
+                break;
+            case 3:
+                break;
+        }
+        //play UI sound
+        AudioManager.instance.itemCollected.Play();
     }
 
     void OnTriggerEnter(PhysicsComponent rb)

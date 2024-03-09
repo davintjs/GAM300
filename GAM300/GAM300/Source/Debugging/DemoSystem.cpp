@@ -31,9 +31,9 @@ void DemoSystem::Init()
 	//MySceneManager.LoadScene("Assets/Scene/JosScene.scene");
 	//MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
 	//MySceneManager.LoadScene("Assets/Scene/Start.scene");
-	//MySceneManager.LoadScene("Assets/Scene/LevelTutorial.scene");
+	MySceneManager.LoadScene("Assets/Scene/LevelTutorial.scene");
 	//MySceneManager.LoadScene("Assets/Scene/TestParticle.scene");
-	MySceneManager.LoadScene("Assets/Scene/StartingScene.scene");
+	//MySceneManager.LoadScene("Assets/Scene/StartingScene.scene");
 }
 
 void DemoSystem::Update(float dt)
