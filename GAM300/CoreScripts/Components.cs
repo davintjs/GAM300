@@ -127,6 +127,7 @@ namespace BeanFactory
         public int numParticles_;
         public int trailSize;
         public float trailThickness;
+
         public float angle; // for directional particles
         public float particleLifetime_;
         public float particleEmissionRate_;
@@ -134,6 +135,7 @@ namespace BeanFactory
         public float particleMaxScale_;
         public float particleScaleRate_;
         public float speed_;
+        public float acceleration;
         public float desiredLifetime;
         public float noiseMovement;
         public float noisefrequency;

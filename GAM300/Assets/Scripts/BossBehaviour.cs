@@ -82,6 +82,12 @@ public class BossBehaviour : Script
     public Transform ultiLaserVFX;
     public Transform ultiLight;
 
+    public AudioSource bossOpeningSFX;
+    public Transform openingCameraStartTarget;
+    public Transform openingCameraEndTarget;
+    public AudioSource bossPhase2SFX;
+    public AudioSource bossDeathSpeechSFX;
+
     vec3 indicatorLocal = new vec3();
 
     public Transform ultiSphere;
@@ -94,7 +100,49 @@ public class BossBehaviour : Script
 
     public Transform model;
 
-    int health = 100;
+    public int maxHealth = 100;
+
+    int _health;
+
+    int health
+    {
+        get 
+        { 
+            return _health;
+        }
+        set 
+        {
+            _health = value;
+            if (_health <= 0)
+            {
+                if (phase == 1)
+                {
+                    phase = 2;
+                    _health = maxHealth;
+                    StopAllCoroutines();
+                    rb.linearVelocity = vec3.Zero;
+                    animationManager.ResetAllStates();
+                    SetState("Idle", true);
+                    StartCoroutine(UltimateAttack());
+                }
+                else
+                {
+                    StopAllCoroutines();
+                    rb.linearVelocity = vec3.Zero;
+                    animationManager.ResetAllStates();
+                    SetEnabled(rb,false);
+                    SetState("Death", true);
+                    StartCoroutine(Victory());
+                    //DIE
+                }
+            }
+            vec3 scale = vec3.Ones;
+            scale.x = _health / (float)maxHealth;
+            bossHealthPivot.localScale = scale;
+        }
+    }
+
+    
 
     float yPos;
 
@@ -102,17 +150,18 @@ public class BossBehaviour : Script
 
     int phase = 1;
 
-    bool startShoot = false;
-
     bool dashed = false;
 
     public Transform center;
+
+    public Transform bossHealthPivot;
 
     void Awake()
     {
         yPos = transform.position.y;
         rb = GetComponent<Rigidbody>();
         indicatorLocal = ultiSphere.localPosition;
+        health = maxHealth;
     }
 
     void Start()
@@ -128,8 +177,45 @@ public class BossBehaviour : Script
         if (Input.GetKeyDown(KeyCode.Z)) 
         {
             health = 0;
-            phase = 2;
         }
+    }
+
+    IEnumerator Victory()
+    {
+        yield return new WaitForSeconds(1);
+        SceneManager.LoadScene("VictoryScreenMenu",true);
+    }
+
+    IEnumerator EnterBossCutscene()
+    {
+        bossOpeningSFX.Play();
+        ThirdPersonCamera.instance.cutscene = true;
+        Transform camera = ThirdPersonCamera.instance.transform;
+
+        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
+
+        transform.localPosition = bossStartPos;
+
+        float cutsceneDuration = 10f;
+        float timer = cutsceneDuration;
+        while (timer > 0)
+        {
+            animator.SetState("Walking");
+            float percentage = (float)timer / cutsceneDuration;
+            transform.localPosition = vec3.Lerp(bossStartPos - vec3.UnitX * 12f, bossStartPos, percentage);
+            vec3 targetPos = vec3.Lerp(openingCameraEndTarget.position, openingCameraStartTarget.position, percentage * percentage);
+            vec3 targetRot = vec3.Lerp(openingCameraEndTarget.rotation, openingCameraStartTarget.rotation, percentage * percentage);
+            camera.localPosition = targetPos;
+            camera.localRotation = targetRot;
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        ThirdPersonCamera.instance.yawAngle = camera.localRotation.y;
+
+        ThirdPersonCamera.instance.cutscene = false;
+
+        StartCoroutine(Chase());
     }
 
     //Decision making is here
@@ -138,14 +224,6 @@ public class BossBehaviour : Script
         float timer = chaseDuration;
         while (timer > 0)
         {
-            if (phase == 2 && health == 0)
-            {
-                health = 100;
-                rb.linearVelocity = vec3.Zero;
-                SetState("Running", false);
-                StartCoroutine(UltimateAttack());
-                yield break;
-            }
             SetState("Running", true);
             float dist = vec3.Distance(transform.position, player.transform.position);
             vec3 dir = (player.transform.position - transform.position) / dist;
@@ -366,6 +444,7 @@ public class BossBehaviour : Script
             timer -= Time.deltaTime;
             yield return null;
         }
+        ThirdPersonCamera.instance.ShakeCamera(0.6f, 0.2f);
         animator.SetSpeed(0f);
         ultiSphere.localPosition = indicatorLocal;
         ultiSphere.scale = vec3.Ones;
@@ -401,6 +480,7 @@ public class BossBehaviour : Script
 
         float vfxDuration = 3f;
         float timer = 0;
+        ThirdPersonCamera.instance.ShakeCamera(0.2f, timer);
         while (timer < vfxDuration)
         {
             yield return null;
@@ -434,7 +514,6 @@ public class BossBehaviour : Script
 
         timer = 0;
         dur /= 2f;
-
         ultiDomeVFX.localPosition = transform.localPosition;
         while (timer < dur)
         {
@@ -458,47 +537,59 @@ public class BossBehaviour : Script
 
         ultiSphere.gameObject.SetActive(true);
 
+        ThirdPersonCamera.instance.ShakeCamera(0.05f, timer);
         SetState("Ultimate", true);
-        while (timer > 0)
+        animator.SetSpeed(0.2f);
+        while(timer > ultiChargeDuration - 0.05f)
         {
             ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
-            if (timer <= ultiChargeDuration - 0.05f)
-            {
-                animator.SetSpeed(0.02f);
-            }
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        while (timer > 2.3f)
+        {
+            ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        animator.SetSpeed(0f);
+        while (timer > 0f)
+        {
+            ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+        yield return StartCoroutine(UltimateLaser());
+        yield return StartCoroutine(UltimateLightVFX());
+
+        timer = ultiExplodeDuration;
+        float explode = ultiExplodeDuration / 3f * 2f;
+        while (timer > explode)
+        {
             timer -= Time.deltaTime;
             yield return null;
         }
 
-        animator.SetSpeed(0f);
-        yield return StartCoroutine(UltimateLaser());
-        yield return StartCoroutine(UltimateLightVFX());
+        animator.SetSpeed(1f);
+        yield return new WaitForSeconds(0.2f);
 
-        //Huge laser comes down
-        //Laser thins out and disappears
-        //Light blinds everyone
-        //Transparent sphere to show explosion
-        //Light stops blinding people
-
-        timer = ultiExplodeDuration;
-        float explode = ultiExplodeDuration / 3f * 2f;
-        //ACTUAL BOOM EXPANDS
+        ultimateVFX.particleLooping = true;
         while (timer > 0)
         {
-            if (timer <= explode)
-            {
-                ultiDomeVFX.localScale = vec3.Lerp(100f, 0f, timer / explode);
-                ultimateCollider.localPosition = transform.position;
-                ultimateCollider.gameObject.GetComponent<Rigidbody>().linearVelocity = vec3.UnitY * 0.0001f;
-                ultimateCollider.gameObject.SetActive(true);
-                ultimateVFX.particleLooping = true;
-                animator.SetSpeed(1f);
-            }
+            ThirdPersonCamera.instance.ShakeCamera(0.8f, ultiExplodeDuration /2f);
+            ultiDomeVFX.localScale = vec3.Lerp(100f, 0f, timer / explode);
+            ultimateCollider.localPosition = transform.position;
+            ultimateCollider.gameObject.GetComponent<Rigidbody>().linearVelocity = vec3.UnitY * 0.0001f;
+            ultimateCollider.gameObject.SetActive(true);
             timer -= Time.deltaTime;
             yield return null;
         }
         ultimateVFX.particleLooping = false;
-        //ultimateCollider.gameObject.SetActive(false);
+        ultiDomeVFX.gameObject.SetActive(false);
+        
+        
+
+        ultimateCollider.gameObject.SetActive(false);
 
         SetState("Ultimate", false);
         ultiSphere.gameObject.SetActive(false);
@@ -506,54 +597,10 @@ public class BossBehaviour : Script
         StartCoroutine(Rest((ultiChargeDuration + ultiExplodeDuration) / 2f, SlamAttack()));
     }
 
-    IEnumerator StartBullet(GameObject bullet, float duration)
+    void StartBullet(GameObject bullet, float duration, float waitTime, vec3 velocity)
     {
-        while (!startShoot)
-            yield return null;
-
-        if (duration == 0)
-            yield break;
-
-        Transform attackTrans = bullet.transform;
-
-        Transform child = attackTrans.GetChild();
-
-        if (child == null)
-        {
-            yield break;
-        }
-
-        Rigidbody rb = child.gameObject.GetComponent<Rigidbody>();
-        MeshRenderer mesh = child.GetChild().gameObject.GetComponent<MeshRenderer>();
-
-        Material mat = mesh.material;
-
-        float timer = duration;
-
-        vec3 vel = attackTrans.back * projectileSpeed;
-
-        vec4 color = mat.color;
-
-        float emission = mat.emission;
-
-        vec4 targetColor = color;
-
-        targetColor.a = 0;
-        while (timer > 0)
-        {
-            if (!IsEnabled(rb))
-            {
-                Destroy(bullet);
-                yield break;
-            }
-            timer -= Time.deltaTime;
-            mat.color = vec4.Lerp(targetColor, color, timer / duration);
-            mat.emission = glm.Lerp(0, emission, timer / duration);
-            rb.linearVelocity = vel * Time.deltaTime;
-            attackTrans.localScale = vec3.Lerp(2f, 1f, timer / duration);
-            yield return null;
-        }
-        Destroy(bullet);
+        EnemyBullet bulletScript = bullet.GetComponent<EnemyBullet>();
+        bulletScript.StartCoroutine(bulletScript.StartBullet(duration,waitTime, velocity));
     }
 
     IEnumerator ProjectileAttack()
@@ -577,24 +624,22 @@ public class BossBehaviour : Script
 
             float yaw = (float)bossQuat.Yaw;
 
+            float waitTime = intervals * 1.15f;
 
             for (int d = 0; d < directions; d++)
             {
                 timer = intervals / directions;
-                vec3 rot = new vec3(0, glm.Radians(offset * i + angle * d) + yaw, 0) ;
-/*                GameObject obj = Instantiate(bullet, transform.localPosition + posOffset, rot);
-                StartCoroutine(StartBullet(obj, intervals));
-                obj.transform.position += obj.transform.back * projectileDistance;*/
-
-                timer = intervals/directions;
+                vec3 rot = new vec3(0, glm.Radians(offset * i + angle * d + 90f) + yaw, 0) ;
+                GameObject obj = Instantiate(bullet, transform.localPosition + posOffset, rot);
+                obj.transform.position += obj.transform.right * projectileDistance;
+                StartBullet(obj, intervals, waitTime, obj.transform.right * projectileSpeed);
                 while (timer > 0)
                 {
+                    waitTime -= Time.deltaTime;
                     timer -= Time.deltaTime;
                     yield return null;
                 }
             }
-
-            startShoot = true;
             timer = intervals;
             while (timer > 0)
             {
@@ -605,7 +650,6 @@ public class BossBehaviour : Script
             }
 
             SetState("RangeAttack", false);
-            startShoot = false;
         }
         SetState("Idle", true);
         //Cooldown
@@ -723,5 +767,18 @@ public class BossBehaviour : Script
         animationManager.UpdateState();
     }
 
-    
+    void OnTriggerEnter(PhysicsComponent rb)
+    {
+        if (GetTag(rb) == "PlayerAttack")
+        {
+            //AudioManager.instance.playerInjured.Play();
+            health -= 10;
+        }
+        ////Not working
+        //if(GetTag(rb) == "PuzzleKey")
+        //{
+        //    Console.WriteLine("Collected");
+        //    AudioManager.instance.itemCollected.Play();//play audio sound
+        //}
+    }
 }

@@ -6,7 +6,7 @@ animations:
 animationStates:
   Idle: [5, 152]
   Ready: [156, 231]
-  Walking: [232, 268]
+  Walking: [232, 267]
   Running: [269, 295]
   Sprinting: [296, 315]
   Stun: [316, 345]

@@ -102,6 +102,14 @@ namespace BeanFactory
             animator.SetSpeed(state.speed);
         }
 
+        public void ResetAllStates()
+        {
+            foreach (var pair in animationStates)
+            {
+                pair.Value.state = false;
+            }
+        }
+
         public AnimationState GetCurrentState()
         {
             return animationStates[currState.stateName];

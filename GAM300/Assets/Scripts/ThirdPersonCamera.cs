@@ -17,7 +17,7 @@ public class ThirdPersonCamera : Script
     public float minPitchAngle = -85f;
     public bool invertPitch = false;
 
-    private float yawAngle;
+    public float yawAngle;
     public float pitchAngle;
     private const float yawSM = 1800f;
     private const float pitchSM = 1800f;

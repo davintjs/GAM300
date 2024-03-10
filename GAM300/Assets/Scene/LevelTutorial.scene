@@ -12330,6 +12330,7 @@ ParticleComponent:
   Particle Max Scale: 0.0199999996
   Particle Scale Rate: 1
   Particle Speed: 2
+  Particle acceleration: 0
   Particle Noise Movement Percentage: 4.98999977
   Particle Noise Frequency: 4.42999983
   2D particle: false
@@ -18829,6 +18830,7 @@ ParticleComponent:
   Particle Max Scale: 0
   Particle Scale Rate: 0
   Particle Speed: 30
+  Particle acceleration: 0
   Particle Noise Movement Percentage: 30
   Particle Noise Frequency: 20
   2D particle: false
@@ -37683,8 +37685,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 0.699999988
-  SFX min Pitch: 1
-  SFX max Pitch: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 0
   Fade Out Time (s): 0
   Sound File: {guid: 6e2cd76bb31ed8e84a0a6bdee53904ce}
@@ -38441,8 +38443,8 @@ GameObject:
     - component: {fileID: 16151585852512474301}  # Transform
     - component: {fileID: 15757735754745815066}  # BoxCollider
     - component: {fileID: 7783161709980015579}  # Rigidbody
-    - component: {fileID: 18178702132841964540}  # Script
     - component: {fileID: 15324367447412149646}  # Script
+    - component: {fileID: 18178702132841964540}  # Script
 ---
 ID: 16151585852512474301
 Transform:
@@ -38475,6 +38477,13 @@ Rigidbody:
   UseGravity: false
   Is_trigger: true
 ---
+ID: 15324367447412149646
+Script:
+  m_GameObject: {fileID: 8599480594669798676}
+  m_IsEnabled: true
+  Script: {guid: 73a99346dabafcd80f1945f025aef51a}
+  dialogue_state: 5
+---
 ID: 18178702132841964540
 Script:
   m_GameObject: {fileID: 8599480594669798676}
@@ -38482,13 +38491,6 @@ Script:
   Script: {guid: 7dca9db8fae3b3e65d96d4ac4f69098f}
   cutsceneDuration: 4
   cameraPosition: {fileID: 5650148034540153237}  # Component
----
-ID: 15324367447412149646
-Script:
-  m_GameObject: {fileID: 8599480594669798676}
-  m_IsEnabled: true
-  Script: {guid: 73a99346dabafcd80f1945f025aef51a}
-  dialogue_state: 5
 ---
 ID: 8875528418324781343
 GameObject:

@@ -763,8 +763,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: d3e0ca517ffb61df5488c7a95ea3e53e}
@@ -797,8 +797,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
@@ -831,8 +831,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
@@ -926,4 +926,4 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}

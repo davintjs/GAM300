@@ -126,6 +126,12 @@ namespace BeanFactory
             //ERROR IF not found
         }
 
+        public void StopAllCoroutines()
+        {
+            coroutines.Clear();
+            coroutinesBuffer.Clear();
+        }
+
         public void ExecuteCoroutines()
         {
             foreach (Coroutine coroutine in coroutinesBuffer)

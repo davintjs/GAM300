@@ -247,7 +247,7 @@ public class StartingAnimation : Script
             else
             {
                 //load tutorial level
-                SceneManager.LoadScene("LevelTutorial");
+                SceneManager.LoadScene("LevelTutorial",true);
             }          
         }
 
