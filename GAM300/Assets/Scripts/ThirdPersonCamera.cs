@@ -54,6 +54,13 @@ public class ThirdPersonCamera : Script
         instance = this;
     }
 
+    void Update()
+    {
+        if (GameManager.instance.paused)
+            return;
+        UpdateCameraRotation();
+    }
+
     // Update is called once per frame
     void LateUpdate()
     {
@@ -69,12 +76,9 @@ public class ThirdPersonCamera : Script
 
         Zoom();
 
-        UpdateCameraRotation();
-
         AvoidColliders();
 
         ShakeCoroutine();
-        Console.WriteLine("");
     }
 
     void OnTriggerEnter(PhysicsComponent other)

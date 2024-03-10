@@ -369,8 +369,8 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				found = true;
 		}
 		auto& ccArray = scene.GetArray<CharacterController>();
-		for (auto it = ccArray.begin(); it != ccArray.end() && !found; ++it) {
-
+		for (auto it = ccArray.begin(); it != ccArray.end() && !found; ++it)
+		{
 			CharacterController& cc = *it;
 			if (cc.bid == e.bid1) {
 				pc1 = &cc;
@@ -439,14 +439,12 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tre.pc1 = pc1;
 				tre.pc2 = pc2;
 				EVENTS.Publish(&tre);
-				PRINT("Sending Trigger Remove Event\n");
 			}
 			else {
 				ContactRemovedEvent cre;
 				cre.pc1 = pc1;
 				cre.pc2 = pc2;
 				EVENTS.Publish(&cre);
-				//PRINT("Sending Collision Remove Event\n");
 			}
 		}
 		else if (e.op == EngineCollisionData::collisionOperation::persisted) {
