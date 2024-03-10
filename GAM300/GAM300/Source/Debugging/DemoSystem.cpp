@@ -31,7 +31,7 @@ void DemoSystem::Init()
 	//MySceneManager.LoadScene("Assets/Scene/JosScene.scene");
 	//MySceneManager.LoadScene("Assets/Scene/EuanTestingArena.scene");
 	//MySceneManager.LoadScene("Assets/Scene/Start.scene");
-	MySceneManager.LoadScene("Assets/Scene/TestParticle.scene");
+	MySceneManager.LoadScene("Assets/Scene/MainMenu.scene");
 	//MySceneManager.LoadScene("Assets/Scene/LevelTutorial.scene");
 }
 

@@ -1,6 +1,6 @@
-[2024-03-09 17:45:18.843] [Error] [critical] 
-Caused By:	r == FMOD_OK
-Info:		Assets/Audio\obj_success.wav  doesnt exist!
+[2024-03-11 05:21:33.914] [Error] [critical] 
+Caused By:	false
+Info:		Failed to load .scene file "Assets/Scene/StartScene.scene" due to: bad file: Assets/Scene/StartScene.scene
 
-Source:		C:\Users\josep\Documents\Digipen IMGD\Year 3 Sem 1\GAM300 - Software Engineering\GAM300\GAM300\GAM300\Source\Audio\AudioManager.cpp (Line: 115)
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 364)
 

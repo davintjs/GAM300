@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,9 +9,9 @@ using GlmSharp;
 
 public class TutorialEnemyKeyDrop : Script
 {
-    //public GameObject key;
+    public GameObject key;
     public Enemy tutorialEnemy;
-    //public float timeBeforeKeySpawn = 2f;
+    public float timeBeforeKeySpawn = 2f;
     //public float currentTimeBeforeKeySpawn;
     public bool cue = false;
 
@@ -25,6 +26,14 @@ public class TutorialEnemyKeyDrop : Script
         }
     }
 
+    IEnumerator SpawnKey()
+    {
+        yield return new WaitForSeconds(timeBeforeKeySpawn);
+        key.SetActive(true);
+        key.transform.localPosition = gameObject.transform.localPosition;
+        gameObject.SetActive(false);
+    }
+
     void Update()
     {
         if(tutorialEnemy.currentHealth <= 0)
@@ -32,6 +41,7 @@ public class TutorialEnemyKeyDrop : Script
             //cue dialogue 
             if(!cue)
             {
+                StartCoroutine(SpawnKey());
                 cue = true;
                 DialogueManager.Instance.SetState(6);
             }    

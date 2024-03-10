@@ -62,7 +62,7 @@ public class KeyDoor : Script
             doorscript.moving = true;
             AudioManager.instance.keyCollected.Play();
             AudioManager.instance.doorOpen.Play();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

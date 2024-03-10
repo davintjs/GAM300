@@ -37,10 +37,10 @@ class SceneTransitionTrigger : Script
                 switch (sceneIndex)
                 {
                     case 0:
-                        SceneManager.LoadScene("LevelPlay2");
+                        SceneManager.LoadScene("LevelPlay2", true);
                         break;
                     case 1:
-                        SceneManager.LoadScene("LevelBoss");
+                        SceneManager.LoadScene("LevelBoss", true);
                         break;
                     case 2:
                         SceneManager.LoadScene("VictoryScreen", true);

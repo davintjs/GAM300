@@ -1968,6 +1968,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: c2842abf1019f5a501732cffb6363736}
   cue: false
+  timeBeforeKeySpawn: 2
+  key: {fileID: 18443479616549604882}  # GameObject
   tutorialEnemy: {fileID: 13457975659125709231}  # Component
 ---
 ID: 3574560937881504822
@@ -12141,6 +12143,7 @@ Script:
   pitchAngle: 0
   pitchRotSpeed: 1
   timer: 0
+  yawAngle: 0
   yawRotSpeed: 2
   zoom: 5.00000143
   zoomInSpeed: 3
@@ -12601,7 +12604,7 @@ MeshRenderer:
 ---
 ID: 18443479616549604882
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: PuzzleKey
   m_TagString: ""
   m_Layer: 0
@@ -12674,7 +12677,7 @@ ID: 5823733516603310595
 Transform:
   m_GameObject: {fileID: 9415500495553204706}
   Translation: [-0.000389099121, -1.20000005, 0.5]
-  Rotation: [0, -0.00034505126, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.999999881, 1, 0.999999881]
   Father: {fileID: 18443479616549604882}
   m_Children:
@@ -16138,7 +16141,6 @@ GameObject:
     - component: {fileID: 16693450727280184903}  # Transform
     - component: {fileID: 6495768652861786321}  # BoxCollider
     - component: {fileID: 16888008568694078254}  # Rigidbody
-    - component: {fileID: 1132887525266275382}  # Script
 ---
 ID: 16693450727280184903
 Transform:
@@ -16170,13 +16172,6 @@ Rigidbody:
   IsKinematic: true
   UseGravity: false
   Is_trigger: true
----
-ID: 1132887525266275382
-Script:
-  m_GameObject: {fileID: 9496102192294917609}
-  m_IsEnabled: true
-  Script: {guid: 73a99346dabafcd80f1945f025aef51a}
-  dialogue_state: 2
 ---
 ID: 14345828798894584708
 GameObject:
@@ -18737,7 +18732,7 @@ Transform:
   m_GameObject: {fileID: 14843899441988254193}
   Translation: [0, 0, -1]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [7.30000019, 7.1500001, 1]
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
@@ -18750,7 +18745,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 0.300000012
-  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
 ---
 ID: 10168314299232393249
 GameObject:
@@ -38444,7 +38439,6 @@ GameObject:
     - component: {fileID: 15757735754745815066}  # BoxCollider
     - component: {fileID: 7783161709980015579}  # Rigidbody
     - component: {fileID: 15324367447412149646}  # Script
-    - component: {fileID: 18178702132841964540}  # Script
 ---
 ID: 16151585852512474301
 Transform:
@@ -38483,14 +38477,6 @@ Script:
   m_IsEnabled: true
   Script: {guid: 73a99346dabafcd80f1945f025aef51a}
   dialogue_state: 5
----
-ID: 18178702132841964540
-Script:
-  m_GameObject: {fileID: 8599480594669798676}
-  m_IsEnabled: true
-  Script: {guid: 7dca9db8fae3b3e65d96d4ac4f69098f}
-  cutsceneDuration: 4
-  cameraPosition: {fileID: 5650148034540153237}  # Component
 ---
 ID: 8875528418324781343
 GameObject:
