@@ -143,7 +143,7 @@ public class BossBehaviour : Script
                 health = 100;
                 rb.linearVelocity = vec3.Zero;
                 SetState("Running", false);
-                StartCoroutine(UltimateAttack());
+                StartCoroutine(ProjectileAttack());
                 yield break;
             }
             SetState("Running", true);
@@ -511,12 +511,54 @@ public class BossBehaviour : Script
         StartCoroutine(Rest((ultiChargeDuration + ultiExplodeDuration) / 2f, SlamAttack()));
     }
 
-    IEnumerator StartBullet(GameObject bullet)
+    IEnumerator StartBullet(GameObject bullet, float duration)
     {
         while (!startShoot)
             yield return null;
-        Console.WriteLine("StartShoot");
-        StartCoroutine(EnableAttackCollider(bullet.transform, bullet.transform.back * projectileSpeed, 10f, vec3.Zero));
+
+        if (duration == 0)
+            yield break;
+
+        Transform attackTrans = bullet.transform;
+
+        Transform child = attackTrans.GetChild();
+
+        if (child == null)
+        {
+            yield break;
+        }
+
+        Rigidbody rb = child.gameObject.GetComponent<Rigidbody>();
+        MeshRenderer mesh = child.GetChild().gameObject.GetComponent<MeshRenderer>();
+
+        Material mat = mesh.material;
+
+        float timer = duration;
+
+        vec3 vel = attackTrans.back * projectileSpeed;
+
+        vec4 color = mat.color;
+
+        float emission = mat.emission;
+
+        vec4 targetColor = color;
+
+        targetColor.a = 0;
+        while (timer > 0)
+        {
+            if (!IsEnabled(rb))
+            {
+                Destroy(bullet);
+                yield break;
+            }
+            timer -= Time.deltaTime;
+            mat.color = vec4.Lerp(targetColor, color, timer / duration);
+            mat.emission = glm.Lerp(0, emission, timer / duration);
+            rb.linearVelocity = vel * Time.deltaTime;
+            attackTrans.localScale = vec3.Lerp(2f, 1f, timer / duration);
+            yield return null;
+        }
+        Destroy(bullet);
     }
 
     IEnumerator ProjectileAttack()
@@ -527,6 +569,7 @@ public class BossBehaviour : Script
         float angle = 360 / (float)(directions);
         float offset = 10f;
 
+        vec3 posOffset = vec3.UnitY * 2f;
 
         float intervals = projectileAttackDuration / 2 / cycles;
         float timer;
@@ -544,9 +587,10 @@ public class BossBehaviour : Script
             {
                 timer = intervals / directions;
                 vec3 rot = new vec3(0, glm.Radians(offset * i + angle * d) + yaw, 0) ;
-                GameObject obj = Instantiate(bullet, transform.localPosition + vec3.UnitY * 2f, rot);
-                StartCoroutine(StartBullet(obj));
+                GameObject obj = Instantiate(bullet, transform.localPosition + posOffset, rot);
+                StartCoroutine(StartBullet(obj, intervals));
                 obj.transform.position += obj.transform.back * projectileDistance;
+
                 timer = intervals/directions;
                 while (timer > 0)
                 {
@@ -568,6 +612,7 @@ public class BossBehaviour : Script
             SetState("RangeAttack", false);
             startShoot = false;
         }
+        SetState("Idle", true);
         //Cooldown
         StartCoroutine(Rest(projectileAttackDuration / 2f, SlamAttack()));
     }
