@@ -377,6 +377,10 @@ public:
 	
 	void Draw();
 
+	void DrawButtonOutlines();
+
+	void DrawButtonBounds(const Engine::UUID & _euid);
+
 	void DrawIcons();
 
 	void DrawCanvasOutline();
@@ -385,7 +389,11 @@ public:
 
 	void DrawCapsuleColliders();
 
+	void DrawSphereColliders();
+
 	void DrawCapsuleBounds(const Engine::UUID & _euid);
+
+	void DrawSphereBounds(const Engine::UUID & _euid);
 
 	void DrawCameraBounds(const Engine::UUID& _euid);
 	
@@ -546,8 +554,6 @@ public:
 
 	bool& EnableFrustumCulling() { return frustumCulling; };
 
-	bool& EnableIsActive() { return isActive; };
-
 	float& getAmbient() { return ambient; };
 
 	glm::vec3& getAmbientRGB() { return ambient_rgb; };
@@ -573,8 +579,7 @@ private:
 	bool hdr = true;
 	bool renderShadow = true;
 	bool enablebloom;
-	bool frustumCulling = false;
-	bool isActive = true;
+	bool frustumCulling = true;
 };
 
 property_begin_name(Renderer, "Graphics Settings"){

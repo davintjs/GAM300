@@ -33,7 +33,7 @@ namespace BeanFactory
         {
             get
             {
-                return "Yes";
+                return InternalCalls.GetName(this);
             }
             set
             {
