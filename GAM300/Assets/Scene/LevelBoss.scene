@@ -32,15 +32,20 @@ Script:
   m_GameObject: {fileID: 5342434905140024301}
   m_IsEnabled: true
   Script: {guid: 0470ed2b8def9ecbe83ea13ee17af641}
-  playerName: {fileID: 15243324590400962737}  # GameObject
-  dialogue2: {fileID: 11733672071644877139}  # GameObject
-  dialogue3: {fileID: 7012372586903751207}  # GameObject
-  dialogue4: {fileID: 1397792527501854904}  # GameObject
-  dialogueWarning: {fileID: 0}
-  dialogue5: {fileID: 6586543693501608855}  # GameObject
-  dialogueDefence: {fileID: 0}
-  ai: {fileID: 7835293411479101006}  # GameObject
-  dialogueBg: {fileID: 6826500622308863951}  # GameObject
+  text1: {fileID: 0}
+  text2: {fileID: 0}
+  text3: {fileID: 0}
+  text4: {fileID: 0}
+  text5: {fileID: 0}
+  text6: {fileID: 0}
+  text7: {fileID: 0}
+  tutorial1: {fileID: 0}
+  tutorial2: {fileID: 0}
+  tutorial3: {fileID: 0}
+  tutorial4: {fileID: 0}
+  tutorial5: {fileID: 0}
+  tutorial6: {fileID: 0}
+  tutoriallore1: {fileID: 0}
 ---
 ID: 9202772318638598359
 GameObject:
@@ -67,11 +72,11 @@ Script:
   m_GameObject: {fileID: 9202772318638598359}
   m_IsEnabled: true
   Script: {guid: 240ef1325945ba7654a2ccd34ac0a17b}
-  damagedShakeMag: 0.0500000007
   damagedShakeDur: 0.300000012
+  damagedShakeMag: 0.0500000007
   hitEffectDuration: 1
-  hitShakeMag: 0.100000001
   hitShakeDur: 0.100000001
+  hitShakeMag: 0.100000001
   hitEffect: {fileID: 17611351097031071778}  # GameObject
 ---
 ID: 11768379503594195228
@@ -172,36 +177,37 @@ Script:
   m_GameObject: {fileID: 14088906961581824457}
   m_IsEnabled: true
   Script: {guid: b01c0159e88a0504f824d8bcb6303ee8}
-  jumpVoice2: {fileID: 17384956244929632316}  # Component
-  itemCollected: {fileID: 3483838879810750950}  # Component
-  jumpVoice: {fileID: 2598491438105149260}  # Component
-  playerSlashAttack: {fileID: 8829355492810947455}  # Component
-  meleeEnemyDie: {fileID: 14157919317546456730}  # Component
-  playerInjured: {fileID: 3760519619074301342}  # Component
-  rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
-  jumpVoice3: {fileID: 1298934831599437468}  # Component
-  spark: {fileID: 1060299922073029148}  # Component
-  playerAttack: {fileID: 3436078548414859258}  # Component
-  rangeEnemyDead: {fileID: 2502308778807293875}  # Component
+  dashAttack: {fileID: 3292439134972329249}  # Component
+  dodgeRoll1: {fileID: 1086886035799123363}  # Component
+  dodgeRoll2: {fileID: 11490585744734373202}  # Component
   doorOpen: {fileID: 14332204263861564631}  # Component
   elevator: {fileID: 2406511765798993316}  # Component
-  thumpCollision1: {fileID: 12152755750733174901}  # Component
-  overdriveVFXSound: {fileID: 814352591872434956}  # Component
-  playerFootstep: {fileID: 6518591935153270902}  # Component
-  enemyHit: {fileID: 14492758170611173101}  # Component
-  keyCollected: {fileID: 12067369461903983448}  # Component
-  uiSound: {fileID: 12043367231734905459}  # Component
-  useItem: {fileID: 8508182677235274511}  # Component
-  meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
-  meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
-  dodgeRoll1: {fileID: 1086886035799123363}  # Component
-  playerOverdrive: {fileID: 4330194544441596099}  # Component
-  thumpCollision2: {fileID: 10580402611710297282}  # Component
-  dodgeRoll2: {fileID: 11490585744734373202}  # Component
-  dashAttack: {fileID: 3292439134972329249}  # Component
   enemyAlerted1: {fileID: 12262929383047051249}  # Component
   enemyAlerted2: {fileID: 6670779144662544128}  # Component
   enemyAlerted3: {fileID: 998502570275308366}  # Component
+  enemyHit: {fileID: 14492758170611173101}  # Component
+  itemCollected: {fileID: 3483838879810750950}  # Component
+  jumpVoice: {fileID: 2598491438105149260}  # Component
+  jumpVoice2: {fileID: 17384956244929632316}  # Component
+  jumpVoice3: {fileID: 1298934831599437468}  # Component
+  keyCollected: {fileID: 12067369461903983448}  # Component
+  meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
+  meleeEnemyDie: {fileID: 14157919317546456730}  # Component
+  meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  obj_success: {fileID: 0}
+  overdriveVFXSound: {fileID: 814352591872434956}  # Component
+  playerAttack: {fileID: 3436078548414859258}  # Component
+  playerFootstep: {fileID: 6518591935153270902}  # Component
+  playerInjured: {fileID: 3760519619074301342}  # Component
+  playerOverdrive: {fileID: 4330194544441596099}  # Component
+  playerSlashAttack: {fileID: 8829355492810947455}  # Component
+  rangeEnemyDead: {fileID: 2502308778807293875}  # Component
+  rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
+  spark: {fileID: 1060299922073029148}  # Component
+  thumpCollision1: {fileID: 12152755750733174901}  # Component
+  thumpCollision2: {fileID: 10580402611710297282}  # Component
+  uiSound: {fileID: 12043367231734905459}  # Component
+  useItem: {fileID: 8508182677235274511}  # Component
 ---
 ID: 4212138099454399691
 GameObject:
@@ -9841,21 +9847,21 @@ Script:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
   Script: {guid: f204530c811d06247b59f2ef14dd1085}
-  maxPitchAngle: 170
-  yawRotSpeed: 2
-  defaultZoom: 4
-  invertPitch: true
-  pitchRotSpeed: 1
-  minPitchAngle: -85
-  zoom: 5.00000143
-  pitchAngle: 0
-  zoomSpeed: 50
-  zoomInSpeed: 3
   closestZoom: 0.5
-  furthestZoom: 6
-  isZooming: false
-  timer: 0
   cutscene: false
+  defaultZoom: 4
+  furthestZoom: 6
+  invertPitch: true
+  isZooming: false
+  maxPitchAngle: 170
+  minPitchAngle: -85
+  pitchAngle: 0
+  pitchRotSpeed: 1
+  timer: 0
+  yawRotSpeed: 2
+  zoom: 5.00000143
+  zoomInSpeed: 3
+  zoomSpeed: 50
   target: {fileID: 6663313825132233637}  # GameObject
 ---
 ID: 3977294589520766028
@@ -9915,82 +9921,82 @@ Script:
   m_GameObject: {fileID: 3977294589520766028}
   m_IsEnabled: true
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
-  currentDashAttackTimer: 0
-  attackMoveSpeed: 160
-  currentDashAttackCooldown: 0
-  MoveSpeed: 400
-  overDriveCooldown: 6
-  dashAttackSpeed: 10
-  JumpSpeed: 7
-  dashAttackCooldown: 0.899999976
-  sprintModifier: 1.29999995
-  maxHealth: 10
-  dodgeSpeed: 10
   Gravity: 9.81000042
-  runStepsInterval: 0.300000012
+  JumpSpeed: 7
+  MoveSpeed: 400
+  RotationSpeed: 5
+  _isAttacking: false
+  _isDashAttacking: false
+  _isOverdrive: false
+  animCancelPercentage: 0.600000024
+  attack1duration: 0.5
+  attack2duration: 0.600000024
+  attack3duration: 0.699999988
+  attackMoveSpeed: 160
+  attackStamina: 0
+  attackTimer: 1
+  checkpointIndex: -1
+  colliderDist: 0
+  currentAnimationTimer: 0
+  currentDashAttackCooldown: 0
+  currentDashAttackTimer: 0
+  currentDodgeCooldown: 0
+  currentDodgeTimer: 0
+  currentHealth: 4
+  currentInvulnerableTimer: 1
+  currentOverdriveCooldown: 0
+  currentOverdriveTimer: 0
+  currentStamina: 0
+  cutscene: false
+  dashAttackCooldown: 0.899999976
+  dashAttackSpeed: 10
+  dashAttackStamina: 15
   dashAttackTimer: 0.899999976
-  walkStepsInterval: 0.439999998
+  dodgeCooldown: 0.5
+  dodgeSpeed: 10
+  dodgeStamina: 10
+  dodgeTimer: 0.5
+  invulnerableTimer: 0.699999988
+  isAtCheckpoint: false
+  isDead: false
+  isDodging: false
+  isInvulnerable: false
+  jumpStamina: 0
+  maxColliderDist: 1.5
+  maxHealth: 10
+  maxStamina: 100
+  overDriveCooldown: 6
   overDriveStamina: 40
+  overdriveTimer: 2
+  regenRate: 60
+  runStepsInterval: 0.300000012
+  spawnPoint: [0, 0, 0]
+  sprintModifier: 1.29999995
   sprintStamina: 0.25
   startDashCooldown: false
-  currentOverdriveCooldown: 0
-  dodgeTimer: 0.5
   startDeathAnimationCountdown: false
-  _isAttacking: false
-  currentDodgeTimer: 0
-  cutscene: false
-  currentOverdriveTimer: 0
-  dodgeCooldown: 0.5
-  _isOverdrive: false
-  currentDodgeCooldown: 0
-  currentStamina: 0
-  isDodging: false
   startDodgeCooldown: false
-  currentInvulnerableTimer: 1
-  _isDashAttacking: false
-  overdriveTimer: 2
-  isInvulnerable: false
   startOverdriveCooldown: false
-  maxStamina: 100
-  RotationSpeed: 5
-  checkpointIndex: -1
-  attack3duration: 0.699999988
-  isAtCheckpoint: false
-  spawnPoint: [0, 0, 0]
-  attackTimer: 1
-  currentHealth: 4
-  invulnerableTimer: 0.699999988
-  isDead: false
-  colliderDist: 0
-  maxColliderDist: 1.5
   timeBeforeRegen: 1
-  regenRate: 60
-  dashAttackStamina: 15
-  jumpStamina: 0
-  attackStamina: 0
-  attack2duration: 0.600000024
-  dodgeStamina: 10
-  currentAnimationTimer: 0
-  attack1duration: 0.5
-  animCancelPercentage: 0.600000024
-  playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
+  walkStepsInterval: 0.439999998
   CC: {fileID: 15939117778428800744}  # Component
-  attackLight: {fileID: 16176702755422307341}  # GameObject
-  staminaBar: {fileID: 1155348055569638397}  # Component
   PlayerCamera: {fileID: 15334681090738628473}  # Component
-  overDriveCollider: {fileID: 6669890113452856865}  # GameObject
   PlayerModel: {fileID: 3187203319805926689}  # Component
+  animator: {fileID: 9953969093344891570}  # Component
+  attackLight: {fileID: 16176702755422307341}  # GameObject
+  audioSource: {fileID: 16716648517964172389}  # Component
+  healthBar: {fileID: 4056269345217226233}  # Component
+  healthBarFill: {fileID: 18315212324025487925}  # GameObject
+  healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
+  overDriveCollider: {fileID: 6669890113452856865}  # GameObject
+  overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
+  playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
-  audioSource: {fileID: 16716648517964172389}  # Component
-  healthBarFill: {fileID: 18315212324025487925}  # GameObject
-  healthBar: {fileID: 4056269345217226233}  # Component
-  healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
+  staminaBar: {fileID: 1155348055569638397}  # Component
   staminaBarFill: {fileID: 4490157770252088129}  # GameObject
-  overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   staminaBarPos: {fileID: 1155348055569638397}  # Component
-  animator: {fileID: 9953969093344891570}  # Component
 ---
 ID: 14362096387145765665
 Script:
@@ -9998,9 +10004,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 3073be0cc8b65f7867eab0eee250b496}
   healthPackCount: 0
-  staminaPackCount: 0
   healthPackHealValue: 5
   maxStatPackCount: 0
+  staminaPackCount: 0
   staminaPackValue: 50
   thirdPersonController: {fileID: 0}
 ---
@@ -10137,12 +10143,12 @@ Script:
   m_GameObject: {fileID: 13118126822589154153}
   m_IsEnabled: true
   Script: {guid: 3b98078bfb28c24bc457712c63ec8f52}
-  duration: 10
   back: false
-  timer: 0
+  currentRestTimer: 0
+  duration: 10
   rest: false
   restTimer: 2
-  currentRestTimer: 0
+  timer: 0
   endPoint: {fileID: 14260613841086092935}  # Component
 ---
 ID: 10551036212890023191
@@ -10323,8 +10329,8 @@ Script:
   m_GameObject: {fileID: 15606294544464115370}
   m_IsEnabled: true
   Script: {guid: 03efcb3e5ae6648610a87d35ebb74208}
-  sceneIndex: 1
   fadeDuration: 4
+  sceneIndex: 1
   fadeBlackSR: {fileID: 2293742353939863974}  # Component
 ---
 ID: 17614648089446210470
@@ -10577,7 +10583,6 @@ Script:
   m_GameObject: {fileID: 16905222177648308199}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: true
 ---
 ID: 11170072543942258493
 GameObject:
@@ -14319,32 +14324,32 @@ Script:
   m_GameObject: {fileID: 10712419355432134318}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 4.5
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 4.5
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 10
+  chaseDistance: 4.5
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 1.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 4.5
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 10678651017425919308}  # Component
+  modelOffset: {fileID: 6929116684091574066}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 10712419355432134318}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 6929116684091574066}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 10678651017425919308}  # Component
 ---
 ID: 9834818310388416835
 GameObject:
@@ -14373,8 +14378,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 10712419355432134318}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 1087374814937148363
 GameObject:
@@ -15191,8 +15196,8 @@ Script:
   m_GameObject: {fileID: 6043762608075201925}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: true
+  rotateSpeed: 0.100000001
 ---
 ID: 16699902853658577603
 GameObject:
@@ -26693,16 +26698,16 @@ Script:
   m_GameObject: {fileID: 5735379976349244520}
   m_IsEnabled: true
   Script: {guid: 0fefd0c595492ac740a129e5bbed8346}
-  duration: 4
   back: false
-  timer: 0
+  currentRestTimer: 0
+  duration: 4
   rest: false
   restTimer: 2
-  currentRestTimer: 0
-  thirdPersonController: {fileID: 0}
-  startPoint: {fileID: 17441662153453751265}  # Component
+  timer: 0
   endPoint: {fileID: 12178027534466905426}  # Component
   soundEffect: {fileID: 4882999431629747730}  # Component
+  startPoint: {fileID: 17441662153453751265}  # Component
+  thirdPersonController: {fileID: 0}
 ---
 ID: 13781252108706284126
 GameObject:
@@ -27110,16 +27115,16 @@ Script:
   m_GameObject: {fileID: 1606653961683117534}
   m_IsEnabled: true
   Script: {guid: 0fefd0c595492ac740a129e5bbed8346}
-  duration: 2
   back: false
-  timer: 0
+  currentRestTimer: 0
+  duration: 2
   rest: false
   restTimer: 5
-  currentRestTimer: 0
-  thirdPersonController: {fileID: 0}
-  startPoint: {fileID: 11939130977313780034}  # Component
+  timer: 0
   endPoint: {fileID: 18251512309457564224}  # Component
   soundEffect: {fileID: 8854197523742005570}  # Component
+  startPoint: {fileID: 11939130977313780034}  # Component
+  thirdPersonController: {fileID: 0}
 ---
 ID: 10804934671915767308
 GameObject:
@@ -32890,12 +32895,12 @@ Script:
   m_GameObject: {fileID: 11931344363477315440}
   m_IsEnabled: true
   Script: {guid: 815d4cc2f640fb893b32fe6f19897baa}
-  index: 1
   colors: [0, 1, 1]
+  index: 1
   interaced: false
+  glowMesh: {fileID: 15514360625503175091}  # Component
   glowObjectReference: {fileID: 13140446175095248756}  # GameObject
   terminalglowMesh: {fileID: 5249366417715043332}  # Component
-  glowMesh: {fileID: 15514360625503175091}  # Component
 ---
 ID: 3412261393044614546
 GameObject:
@@ -33109,42 +33114,42 @@ Script:
   m_GameObject: {fileID: 8640499112490309379}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 18081422161438025274}  # Component
-  modelOffset: {fileID: 5297853854918785373}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 13665857943017219500}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 13608063128582373505}  # GameObject
+  hpBar: {fileID: 18081422161438025274}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 5297853854918785373}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 18081422161438025274
 GameObject:
@@ -33173,8 +33178,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 8640499112490309379}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 11234550795519056455
 GameObject:
@@ -33534,42 +33539,42 @@ Script:
   m_GameObject: {fileID: 505178339176436673}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 12
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 12
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 7
   staggerTimer: 7
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 13563546279246814984}  # Component
-  modelOffset: {fileID: 17325133999229751987}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 13228710214417602934}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 8737543050631908055}  # GameObject
+  hpBar: {fileID: 13563546279246814984}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 17325133999229751987}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13563546279246814984
 GameObject:
@@ -33598,8 +33603,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 505178339176436673}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 15761111545168782062
 GameObject:
@@ -42352,42 +42357,42 @@ Script:
   m_GameObject: {fileID: 7216264740618189409}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 12
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 12
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 7
   staggerTimer: 7
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 17338308076949455477}  # Component
-  modelOffset: {fileID: 9983597563396382479}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 15490750772518730921}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 2036189163671800282}  # GameObject
+  hpBar: {fileID: 17338308076949455477}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 9983597563396382479}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 17338308076949455477
 GameObject:
@@ -42416,8 +42421,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 7216264740618189409}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 18270885596103450463
 GameObject:
@@ -42743,13 +42748,13 @@ Script:
   m_GameObject: {fileID: 17394995871374744838}
   m_IsEnabled: true
   Script: {guid: b50644b2014968068e46c4076c31b648}
-  temp: false
-  moving: false
-  floatKey: 1
-  movingTimer: 2
-  displacement: -5
   back: false
+  displacement: -5
+  floatKey: 1
   maxTime: 5
+  moving: false
+  movingTimer: 2
+  temp: false
   door: {fileID: 17394995871374744838}  # Component
 ---
 ID: 326360912954483226
@@ -42908,13 +42913,13 @@ Script:
   m_GameObject: {fileID: 15899658294800661282}
   m_IsEnabled: true
   Script: {guid: 3ea19bc84e3882a304673d22c9143dd8}
-  temp: false
-  moving: false
-  floatKey: 0.150000006
-  movingTimer: 0.300000012
-  displacement: 0.5
   back: false
+  displacement: 0.5
+  floatKey: 0.150000006
   maxTime: 2
+  moving: false
+  movingTimer: 0.300000012
+  temp: false
   doorscript: {fileID: 16280540703059325713}  # Component
 ---
 ID: 8583491005783738606
@@ -43235,13 +43240,13 @@ Script:
   m_GameObject: {fileID: 2184944943370057333}
   m_IsEnabled: true
   Script: {guid: b50644b2014968068e46c4076c31b648}
-  temp: false
-  moving: false
-  floatKey: 1
-  movingTimer: 2
-  displacement: -5
   back: false
+  displacement: -5
+  floatKey: 1
   maxTime: 5
+  moving: false
+  movingTimer: 2
+  temp: false
   door: {fileID: 2184944943370057333}  # Component
 ---
 ID: 4933475580116248194
@@ -43502,12 +43507,12 @@ Script:
   m_GameObject: {fileID: 459776755661247557}
   m_IsEnabled: true
   Script: {guid: 815d4cc2f640fb893b32fe6f19897baa}
-  index: 2
   colors: [0, 1, 1]
+  index: 2
   interaced: false
+  glowMesh: {fileID: 15514360625503175091}  # Component
   glowObjectReference: {fileID: 13140446175095248756}  # GameObject
   terminalglowMesh: {fileID: 1805869441901542165}  # Component
-  glowMesh: {fileID: 15514360625503175091}  # Component
 ---
 ID: 14034440635431796416
 GameObject:
@@ -43612,12 +43617,12 @@ Script:
   m_GameObject: {fileID: 8599879917880996340}
   m_IsEnabled: true
   Script: {guid: 815d4cc2f640fb893b32fe6f19897baa}
-  index: 3
   colors: [0, 1, 1]
+  index: 3
   interaced: false
+  glowMesh: {fileID: 15514360625503175091}  # Component
   glowObjectReference: {fileID: 13140446175095248756}  # GameObject
   terminalglowMesh: {fileID: 7892068215044629708}  # Component
-  glowMesh: {fileID: 15514360625503175091}  # Component
 ---
 ID: 17689907852114974034
 GameObject:
@@ -43722,12 +43727,12 @@ Script:
   m_GameObject: {fileID: 16267666590116155670}
   m_IsEnabled: true
   Script: {guid: 815d4cc2f640fb893b32fe6f19897baa}
-  index: 4
   colors: [0, 1, 1]
+  index: 4
   interaced: false
+  glowMesh: {fileID: 15514360625503175091}  # Component
   glowObjectReference: {fileID: 13140446175095248756}  # GameObject
   terminalglowMesh: {fileID: 5122867251991288838}  # Component
-  glowMesh: {fileID: 15514360625503175091}  # Component
 ---
 ID: 13040872650618096360
 GameObject:
@@ -43840,13 +43845,13 @@ Script:
   m_GameObject: {fileID: 15531594244202276862}
   m_IsEnabled: true
   Script: {guid: b50644b2014968068e46c4076c31b648}
-  temp: false
-  moving: false
-  floatKey: 1
-  movingTimer: 2
-  displacement: -5
   back: false
+  displacement: -5
+  floatKey: 1
   maxTime: 5
+  moving: false
+  movingTimer: 2
+  temp: false
   door: {fileID: 15531594244202276862}  # Component
 ---
 ID: 9441645411036412144
@@ -43955,13 +43960,13 @@ Script:
   m_GameObject: {fileID: 17800889428983329805}
   m_IsEnabled: true
   Script: {guid: 3ea19bc84e3882a304673d22c9143dd8}
-  temp: false
-  moving: false
-  floatKey: 0.150000006
-  movingTimer: 0.300000012
-  displacement: 0.5
   back: false
+  displacement: 0.5
+  floatKey: 0.150000006
   maxTime: 2
+  moving: false
+  movingTimer: 0.300000012
+  temp: false
   doorscript: {fileID: 6679733462023512194}  # Component
 ---
 ID: 16323744263865723333
@@ -44150,12 +44155,12 @@ Script:
   m_GameObject: {fileID: 2821797358385303704}
   m_IsEnabled: true
   Script: {guid: 3b98078bfb28c24bc457712c63ec8f52}
-  duration: 10
   back: false
-  timer: 0
+  currentRestTimer: 0
+  duration: 10
   rest: false
   restTimer: 2
-  currentRestTimer: 0
+  timer: 0
   endPoint: {fileID: 8582466596051997587}  # Component
 ---
 ID: 6310489637018583030
@@ -44648,32 +44653,32 @@ Script:
   m_GameObject: {fileID: 15348787981169734539}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 19
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 19
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 15
+  chaseDistance: 19
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 2.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 19
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 12272238236134004843}  # Component
+  modelOffset: {fileID: 16029890143198279744}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 15348787981169734539}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 16029890143198279744}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 12272238236134004843}  # Component
 ---
 ID: 3772670757970116635
 GameObject:
@@ -44702,8 +44707,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 15348787981169734539}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 17809111819813166449
 GameObject:
@@ -44929,32 +44934,32 @@ Script:
   m_GameObject: {fileID: 5833702010696908664}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 15
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 15
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 10
+  chaseDistance: 15
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 1.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 15
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 8463150162967450214}  # Component
+  modelOffset: {fileID: 10188423731656740141}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 5833702010696908664}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 10188423731656740141}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 8463150162967450214}  # Component
 ---
 ID: 10188423731656740141
 GameObject:
@@ -45085,8 +45090,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 5833702010696908664}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8463150162967450214
 GameObject:
@@ -45210,32 +45215,32 @@ Script:
   m_GameObject: {fileID: 5771907980952992246}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 18
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 18
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 15
+  chaseDistance: 18
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 2.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 18
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 12285627020481652039}  # Component
+  modelOffset: {fileID: 4436699901220215188}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 5771907980952992246}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 4436699901220215188}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 12285627020481652039}  # Component
 ---
 ID: 12541851390780583412
 GameObject:
@@ -45264,8 +45269,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 5771907980952992246}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12285627020481652039
 GameObject:
@@ -45513,16 +45518,16 @@ Script:
   m_GameObject: {fileID: 12781163152425015258}
   m_IsEnabled: true
   Script: {guid: 0fefd0c595492ac740a129e5bbed8346}
-  duration: 2
   back: false
-  timer: 0
+  currentRestTimer: 0
+  duration: 2
   rest: false
   restTimer: 2
-  currentRestTimer: 0
-  thirdPersonController: {fileID: 0}
-  startPoint: {fileID: 10986795763633774780}  # Component
+  timer: 0
   endPoint: {fileID: 14878475516422281417}  # Component
   soundEffect: {fileID: 8854197523742005570}  # Component
+  startPoint: {fileID: 10986795763633774780}  # Component
+  thirdPersonController: {fileID: 0}
 ---
 ID: 6081245616564302075
 GameObject:
@@ -45903,42 +45908,42 @@ Script:
   m_GameObject: {fileID: 15686065745655662925}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 12
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 12
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 7
   staggerTimer: 7
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 13277852543598371328}  # Component
-  modelOffset: {fileID: 8181097202000610831}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 8176351043890245559}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 8752970089702699583}  # GameObject
+  hpBar: {fileID: 13277852543598371328}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 8181097202000610831}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13277852543598371328
 GameObject:
@@ -45967,8 +45972,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 15686065745655662925}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 9734994648591059991
 GameObject:
@@ -46363,42 +46368,42 @@ Script:
   m_GameObject: {fileID: 9623545436869127279}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 12
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 12
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 7
   staggerTimer: 7
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 10180225711759476473}  # Component
-  modelOffset: {fileID: 4651293391192650299}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 7677904935606688006}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 1859320014956264795}  # GameObject
+  hpBar: {fileID: 10180225711759476473}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 4651293391192650299}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10180225711759476473
 GameObject:
@@ -46427,8 +46432,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 9623545436869127279}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13472456630727989919
 GameObject:
@@ -46746,32 +46751,32 @@ Script:
   m_GameObject: {fileID: 5251461676284664659}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 16
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 18
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 15
+  chaseDistance: 18
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 2.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 16
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 6414466953718529613}  # Component
+  modelOffset: {fileID: 11721814958329019011}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 5251461676284664659}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 11721814958329019011}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 6414466953718529613}  # Component
 ---
 ID: 11721814958329019011
 GameObject:
@@ -46902,8 +46907,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 5251461676284664659}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 6414466953718529613
 GameObject:
@@ -47027,32 +47032,32 @@ Script:
   m_GameObject: {fileID: 3753889075612646310}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 16
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 18
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 15
+  chaseDistance: 18
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 2.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 16
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 12600217697906426368}  # Component
+  modelOffset: {fileID: 9178105057819710947}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 3753889075612646310}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 9178105057819710947}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 12600217697906426368}  # Component
 ---
 ID: 9178105057819710947
 GameObject:
@@ -47183,8 +47188,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 3753889075612646310}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12600217697906426368
 GameObject:
@@ -47308,32 +47313,32 @@ Script:
   m_GameObject: {fileID: 6979452462420876336}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 16
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 18
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 10
+  chaseDistance: 18
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 1.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 16
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 12589955185071439558}  # Component
+  modelOffset: {fileID: 8363012747927007535}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 6979452462420876336}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 8363012747927007535}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 12589955185071439558}  # Component
 ---
 ID: 8363012747927007535
 GameObject:
@@ -47464,8 +47469,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 6979452462420876336}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12589955185071439558
 GameObject:
@@ -47743,32 +47748,32 @@ Script:
   m_GameObject: {fileID: 8164294602068748032}
   m_IsEnabled: true
   Script: {guid: f39b4c91c7212dc0ba5bcda31749cfb7}
-  inRange: false
-  shootDistance: 16
-  maxHealth: 3
-  currentHealth: 3
-  navMeshduration: 0
-  moveSpeed: 0
-  timer: 0
-  back: false
   RotationSpeed: 6
-  chaseDistance: 18
-  state: 0
-  duration: 2
+  back: false
   bulletSpeed: 10
+  chaseDistance: 18
+  currentHealth: 3
+  duration: 2
   floatingY: 0.200000003
+  inRange: false
+  maxHealth: 3
   maxShootCooldown: 1.5
+  moveSpeed: 0
+  navMeshduration: 0
   navMeshtimer: 0
-  playOnce: true
   newRequest: false
+  playOnce: true
+  shootDistance: 16
+  state: 0
+  timer: 0
+  bullet: {fileID: 16905222177648308199}  # GameObject
+  hpBar: {fileID: 14912430991484494413}  # Component
+  modelOffset: {fileID: 7664205716713050393}  # Component
+  particle: {fileID: 14811258098067119871}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 8164294602068748032}  # Component
   spawnObject: {fileID: 0}
-  particle: {fileID: 14811258098067119871}  # Component
   startingPos: {fileID: 13482372997539004348}  # Component
-  modelOffset: {fileID: 7664205716713050393}  # Component
-  bullet: {fileID: 16905222177648308199}  # GameObject
-  hpBar: {fileID: 14912430991484494413}  # Component
 ---
 ID: 7664205716713050393
 GameObject:
@@ -47899,8 +47904,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 8164294602068748032}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 14912430991484494413
 GameObject:
@@ -49399,8 +49404,8 @@ Script:
   m_GameObject: {fileID: 2382527788518687964}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 13063649390164373794
 GameObject:
@@ -49696,8 +49701,8 @@ Script:
   m_GameObject: {fileID: 1067956679180165743}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 18415794179522347561
 GameObject:
@@ -49993,8 +49998,8 @@ Script:
   m_GameObject: {fileID: 10622151896594621049}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: true
+  rotateSpeed: 0.100000001
 ---
 ID: 15629379784259984253
 GameObject:
@@ -50409,42 +50414,42 @@ Script:
   m_GameObject: {fileID: 1540245306666661771}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 898546543010589386}  # Component
-  modelOffset: {fileID: 3295364860990313297}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 10420907662376377271}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12702401490049601225}  # GameObject
+  hpBar: {fileID: 898546543010589386}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 3295364860990313297}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 898546543010589386
 GameObject:
@@ -50473,8 +50478,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 1540245306666661771}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13364204845579319346
 GameObject:
@@ -51328,8 +51333,8 @@ Script:
   m_GameObject: {fileID: 16612533683547840252}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 15141569255631353795
 GameObject:
@@ -51625,8 +51630,8 @@ Script:
   m_GameObject: {fileID: 6704165647802092353}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 7515463743404676320
 GameObject:
@@ -51922,8 +51927,8 @@ Script:
   m_GameObject: {fileID: 5771174350656815954}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 14279260635301039194
 GameObject:
@@ -52203,42 +52208,42 @@ Script:
   m_GameObject: {fileID: 3478415627049949006}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 10544989079879360673}  # Component
-  modelOffset: {fileID: 16614945116669692070}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 1323850131090951798}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 9873304508655296805}  # GameObject
+  hpBar: {fileID: 10544989079879360673}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 16614945116669692070}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10544989079879360673
 GameObject:
@@ -52267,8 +52272,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 3478415627049949006}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 535833049734911862
 GameObject:
@@ -52686,8 +52691,8 @@ Script:
   m_GameObject: {fileID: 11817175780075375651}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 972587819451607496
 GameObject:
@@ -52983,8 +52988,8 @@ Script:
   m_GameObject: {fileID: 13147408879322954224}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 15130924952476962327
 GameObject:
@@ -53280,8 +53285,8 @@ Script:
   m_GameObject: {fileID: 5390388948877896605}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 7260625793403410409
 GameObject:
@@ -53577,8 +53582,8 @@ Script:
   m_GameObject: {fileID: 3153981725078364860}
   m_IsEnabled: true
   Script: {guid: 1e9e5a91693f0fcf4b662b6fcaf49586}
-  rotateSpeed: 0.100000001
   rotateClockwise: false
+  rotateSpeed: 0.100000001
 ---
 ID: 121970142424191478
 GameObject:
@@ -53858,42 +53863,42 @@ Script:
   m_GameObject: {fileID: 1746742841599475727}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 14331869571018254577}  # Component
-  modelOffset: {fileID: 15771493367344086800}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 7339897885214852959}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 11431698503551896276}  # GameObject
+  hpBar: {fileID: 14331869571018254577}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 15771493367344086800}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 15771493367344086800
 GameObject:
@@ -54116,8 +54121,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 1746742841599475727}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8241676089353080915
 GameObject:
@@ -54650,15 +54655,15 @@ Script:
   m_IsEnabled: true
   Script: {guid: 64535fc777b68da65b292651794230a2}
   promptDistance: 3
-  player: {fileID: 3977294589520766028}  # Component
-  doorPrompt_yellow: {fileID: 5769265740441844970}  # Component
-  yellowDoor2: {fileID: 2184944943370057333}  # Component
   doorPrompt_white: {fileID: 15996983871537068920}  # Component
-  yellowDoor1: {fileID: 17394995871374744838}  # Component
-  yellowDoor1Script: {fileID: 16280540703059325713}  # Component
-  yellowDoor2Script: {fileID: 11109391118221509424}  # Component
+  doorPrompt_yellow: {fileID: 5769265740441844970}  # Component
+  player: {fileID: 3977294589520766028}  # Component
   whiteDoor1: {fileID: 15531594244202276862}  # Component
   whiteDoor1Script: {fileID: 6679733462023512194}  # Component
+  yellowDoor1: {fileID: 17394995871374744838}  # Component
+  yellowDoor1Script: {fileID: 16280540703059325713}  # Component
+  yellowDoor2: {fileID: 2184944943370057333}  # Component
+  yellowDoor2Script: {fileID: 11109391118221509424}  # Component
 ---
 ID: 15996983871537068920
 GameObject:
@@ -54697,15 +54702,15 @@ Script:
   m_IsEnabled: true
   Script: {guid: 64535fc777b68da65b292651794230a2}
   promptDistance: 3
-  player: {fileID: 3977294589520766028}  # Component
-  doorPrompt_yellow: {fileID: 5769265740441844970}  # Component
-  yellowDoor2: {fileID: 2184944943370057333}  # Component
   doorPrompt_white: {fileID: 15996983871537068920}  # Component
-  yellowDoor1: {fileID: 17394995871374744838}  # Component
-  yellowDoor1Script: {fileID: 16280540703059325713}  # Component
-  yellowDoor2Script: {fileID: 11109391118221509424}  # Component
+  doorPrompt_yellow: {fileID: 5769265740441844970}  # Component
+  player: {fileID: 3977294589520766028}  # Component
   whiteDoor1: {fileID: 15531594244202276862}  # Component
   whiteDoor1Script: {fileID: 6679733462023512194}  # Component
+  yellowDoor1: {fileID: 17394995871374744838}  # Component
+  yellowDoor1Script: {fileID: 16280540703059325713}  # Component
+  yellowDoor2: {fileID: 2184944943370057333}  # Component
+  yellowDoor2Script: {fileID: 11109391118221509424}  # Component
 ---
 ID: 14731098160436409708
 GameObject:
@@ -54721,7 +54726,7 @@ ID: 13331606679983483713
 Transform:
   m_GameObject: {fileID: 14731098160436409708}
   Translation: [-0.849763691, 0.479999989, 9.07999992]
-  Rotation: [3.14156556, 0, -3.14159203]
+  Rotation: [3.14159274, 0, 0]
   Scale: [0.199967518, 0.140000001, 0.00100000005]
   Father: {fileID: 4212138099454399691}
   m_Children:
@@ -54773,9 +54778,11 @@ Script:
   m_GameObject: {fileID: 17638106604129844536}
   m_IsEnabled: true
   Script: {guid: d67c873baa7d662fa5ef2fa2b2efef6b}
-  alphaValue: 0.800000012
-  player: {fileID: 3977294589520766028}  # Component
-  Objective1: {fileID: 6595519785796661465}  # Component
+  tut1: {fileID: 0}
+  tut2: {fileID: 0}
+  tut3: {fileID: 0}
+  tut4: {fileID: 0}
+  tut5: {fileID: 0}
 ---
 ID: 7939325973346580010
 GameObject:
@@ -56091,42 +56098,42 @@ Script:
   m_GameObject: {fileID: 4992037817335595852}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 6964300282308578913}  # Component
-  modelOffset: {fileID: 2281979527073026994}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 3967483864253535775}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 5680074196717204813}  # GameObject
+  hpBar: {fileID: 6964300282308578913}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 2281979527073026994}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 2281979527073026994
 GameObject:
@@ -56349,8 +56356,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 4992037817335595852}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 9734141355227742394
 GameObject:
@@ -56481,42 +56488,42 @@ Script:
   m_GameObject: {fileID: 6553874688755371952}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 3197518610534636844}  # Component
-  modelOffset: {fileID: 17410272475223950305}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 12623166524767899496}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 17339074096294122883}  # GameObject
+  hpBar: {fileID: 3197518610534636844}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 17410272475223950305}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 17410272475223950305
 GameObject:
@@ -56739,8 +56746,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 6553874688755371952}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10921197515242892380
 GameObject:
@@ -56871,42 +56878,42 @@ Script:
   m_GameObject: {fileID: 1455824266175485744}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 8961390157855236339}  # Component
-  modelOffset: {fileID: 13679024543590507492}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 4008956330672296042}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 12635576556742298042}  # GameObject
+  hpBar: {fileID: 8961390157855236339}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 13679024543590507492}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13679024543590507492
 GameObject:
@@ -57129,8 +57136,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 1455824266175485744}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8800856949116907065
 GameObject:
@@ -57261,42 +57268,42 @@ Script:
   m_GameObject: {fileID: 697406533908281000}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 7102901748506770040}  # Component
-  modelOffset: {fileID: 10571348349847112841}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 11775922252982932051}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 5976458865903935298}  # GameObject
+  hpBar: {fileID: 7102901748506770040}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 10571348349847112841}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10571348349847112841
 GameObject:
@@ -57519,8 +57526,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 697406533908281000}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 431496387680242909
 GameObject:
@@ -57651,42 +57658,42 @@ Script:
   m_GameObject: {fileID: 7071747397128983016}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 2766190930066491268}  # Component
-  modelOffset: {fileID: 17530039533555631439}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 524863122010150736}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 10182307845023477381}  # GameObject
+  hpBar: {fileID: 2766190930066491268}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 17530039533555631439}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 17530039533555631439
 GameObject:
@@ -57909,8 +57916,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 7071747397128983016}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13506965819634274017
 GameObject:
@@ -58041,42 +58048,42 @@ Script:
   m_GameObject: {fileID: 7415176299370246757}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 1595158727373292423}  # Component
-  modelOffset: {fileID: 13301186590583378764}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 17231996208733859994}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 1034696538995432217}  # GameObject
+  hpBar: {fileID: 1595158727373292423}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 13301186590583378764}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13301186590583378764
 GameObject:
@@ -58299,8 +58306,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 7415176299370246757}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 2200863149113569029
 GameObject:
@@ -58431,42 +58438,42 @@ Script:
   m_GameObject: {fileID: 5108313163622967840}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 12
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 12
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 7
   staggerTimer: 7
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 15182354761892658855}  # Component
-  modelOffset: {fileID: 16213852318901244393}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 1299226768265844501}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 13265326449278859074}  # GameObject
+  hpBar: {fileID: 15182354761892658855}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 16213852318901244393}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 16213852318901244393
 GameObject:
@@ -58689,8 +58696,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 5108313163622967840}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 16544624610319378339
 GameObject:
@@ -58821,42 +58828,42 @@ Script:
   m_GameObject: {fileID: 17060877197459181967}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 4872432287772594624}  # Component
-  modelOffset: {fileID: 10869195669279574947}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 7335709090608580284}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 406715076858283333}  # GameObject
+  hpBar: {fileID: 4872432287772594624}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 10869195669279574947}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10869195669279574947
 GameObject:
@@ -59079,8 +59086,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 17060877197459181967}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 4361182851979646059
 GameObject:
@@ -59611,42 +59618,42 @@ Script:
   m_GameObject: {fileID: 15613771325304660657}
   m_IsEnabled: true
   Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  isDead: false
-  moveSpeed: 2
   RotationSpeed: 6
-  chaseDistance: 10
-  attackDistance: 1.20000005
-  attackCooldown: 0
-  currentHealth: 0
-  isStunned: false
-  count: 0
-  maxHealth: 8
-  inRange: false
-  timer: 0
-  back: false
-  state: 0
-  startDeathAnimationCountdown: false
-  currentAnimationTimer: 0
-  testingValue: 0
-  isAttacking: false
-  isAttackCooldown: false
-  attackCooldownTimer: 1
-  currentAttackCooldownTimer: 0
-  duration: 0.5
-  playOnce: true
-  newRequest: false
   alertedOnce: true
-  stunDuration: 1.5
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 10
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
   currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 8
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
   staggerCooldown: 5
   staggerTimer: 5
-  player: {fileID: 3977294589520766028}  # Component
-  hpBar: {fileID: 12771960829225364734}  # Component
-  modelOffset: {fileID: 10169941270709570099}  # Component
-  meleeEnemyPos: {fileID: 0}
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
   animator: {fileID: 13324091730434544865}  # Component
-  parentTransform: {fileID: 0}
   attackTrigger: {fileID: 119253268068733130}  # GameObject
+  hpBar: {fileID: 12771960829225364734}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 10169941270709570099}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10169941270709570099
 GameObject:
@@ -59869,8 +59876,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
   RotationSpeed: 2
-  player: {fileID: 3977294589520766028}  # Component
   parentTransform: {fileID: 15613771325304660657}  # Component
+  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 7367000450209866809
 GameObject:
@@ -60675,13 +60682,13 @@ Script:
   m_GameObject: {fileID: 1096119558412240361}
   m_IsEnabled: true
   Script: {guid: b50644b2014968068e46c4076c31b648}
-  temp: false
-  moving: false
-  floatKey: 1
-  movingTimer: 2
-  displacement: -5
   back: false
+  displacement: -5
+  floatKey: 1
   maxTime: 5
+  moving: false
+  movingTimer: 2
+  temp: false
   door: {fileID: 1096119558412240361}  # Component
 ---
 ID: 11801469984311413766
@@ -60790,13 +60797,13 @@ Script:
   m_GameObject: {fileID: 5167303765425212261}
   m_IsEnabled: true
   Script: {guid: 3ea19bc84e3882a304673d22c9143dd8}
-  temp: false
-  moving: false
-  floatKey: 0.150000006
-  movingTimer: 0.300000012
-  displacement: 0.5
   back: false
+  displacement: 0.5
+  floatKey: 0.150000006
   maxTime: 2
+  moving: false
+  movingTimer: 0.300000012
+  temp: false
   doorscript: {fileID: 10011340197350583576}  # Component
 ---
 ID: 15369030605171616166
@@ -60991,13 +60998,13 @@ Script:
   m_GameObject: {fileID: 6826366731733184492}
   m_IsEnabled: true
   Script: {guid: b50644b2014968068e46c4076c31b648}
-  temp: false
-  moving: false
-  floatKey: 1
-  movingTimer: 2
-  displacement: -5
   back: false
+  displacement: -5
+  floatKey: 1
   maxTime: 5
+  moving: false
+  movingTimer: 2
+  temp: false
   door: {fileID: 6826366731733184492}  # Component
 ---
 ID: 2147139393975668033
@@ -61106,13 +61113,13 @@ Script:
   m_GameObject: {fileID: 10575232747890171166}
   m_IsEnabled: true
   Script: {guid: 3ea19bc84e3882a304673d22c9143dd8}
-  temp: false
-  moving: false
-  floatKey: 0.150000006
-  movingTimer: 0.300000012
-  displacement: 0.5
   back: false
+  displacement: 0.5
+  floatKey: 0.150000006
   maxTime: 2
+  moving: false
+  movingTimer: 0.300000012
+  temp: false
   doorscript: {fileID: 9498227438957937237}  # Component
 ---
 ID: 4120425814112614980
@@ -89287,37 +89294,21 @@ Script:
   m_GameObject: {fileID: 1942411715421602675}
   m_IsEnabled: true
   Script: {guid: 1761a9cabdef2fc73e985ee6529cf8ee}
-  dodgeDuration: 1.20000005
-  chaseSpeed: 400
   basicAttackDistance: 3
-  rotationSpeed: 10
-  jumpAttackDuration: 3
+  basicAttackDuration: 3
   chaseDuration: 3
-  projectileSpeed: 40
-  ultimateSize: 40
-  ultiChargeDuration: 3
+  chaseSpeed: 400
+  dashAttackDuration: 3
+  dodgeDuration: 1.20000005
+  jumpAttackDuration: 3
   projectileAttackDuration: 4
+  projectileSpeed: 40
+  rotationSpeed: 10
+  ultiChargeDuration: 3
   ultiExplodeDuration: 2
-  slamAttackRadius: 10
-  projectileDistance: 3
-  projectileCount: 24
-  center: {fileID: 12677675870501974995}  # Component
-  attack1: {fileID: 3954294493841442950}  # Component
   animator: {fileID: 8459009170926621041}  # Component
-  attack2Right: {fileID: 18275951391343472508}  # Component
-  attack2: {fileID: 14352620589792271397}  # Component
-  attack2Left: {fileID: 7607866556281193504}  # Component
-  attack3: {fileID: 13724874653794444374}  # Component
-  attack4: {fileID: 9685087277537927549}  # Component
-  dashVFX: {fileID: 8437294198353417619}  # Component
-  ultimateVFX: {fileID: 13573415164660682840}  # Component
-  ultimateCollider: {fileID: 11381419446860823922}  # Component
-  ultiDomeVFX: {fileID: 4870146323443373287}  # Component
-  ultiLaserVFX: {fileID: 11146894328313543273}  # Component
-  ultiLight: {fileID: 8194603921550142154}  # Component
-  ultiSphere: {fileID: 14007365017478396802}  # Component
   bullet: {fileID: 16905222177648308199}  # GameObject
-  model: {fileID: 14558153006673148009}  # Component
+  ultiSphere: {fileID: 14007365017478396802}  # Component
 ---
 ID: 14558153006673148009
 GameObject:
@@ -90318,7 +90309,6 @@ Script:
   m_GameObject: {fileID: 2837008981357055987}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: false
 ---
 ID: 14788697208679019179
 GameObject:
@@ -90414,7 +90404,6 @@ Script:
   m_GameObject: {fileID: 5538696957370694748}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: false
 ---
 ID: 15787968748018171084
 GameObject:
@@ -90510,7 +90499,6 @@ Script:
   m_GameObject: {fileID: 5736667021469762943}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: false
 ---
 ID: 4807646374115555544
 GameObject:
@@ -90606,7 +90594,6 @@ Script:
   m_GameObject: {fileID: 11328768807420970668}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: false
 ---
 ID: 13488570985869759807
 GameObject:
@@ -90702,7 +90689,6 @@ Script:
   m_GameObject: {fileID: 12194373166174000320}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: false
 ---
 ID: 3395666565440052725
 GameObject:
@@ -90835,7 +90821,6 @@ Script:
   m_GameObject: {fileID: 11381419446860823922}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: false
 ---
 ID: 9685087277537927549
 GameObject:
@@ -90904,7 +90889,6 @@ Script:
   m_GameObject: {fileID: 13172367464599681666}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
-  destroyOnTrigger: false
 ---
 ID: 231873405809273270
 GameObject:
