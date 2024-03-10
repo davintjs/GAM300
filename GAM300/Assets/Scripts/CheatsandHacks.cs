@@ -18,32 +18,32 @@ public class CheatsandHacks : Script
     //Teleport Cheats
     void TeleportCheat()
     {
-        if (Input.GetKeyDown(KeyCode.KP1))
+        if (Input.GetKeyDown(KeyCode.D5))
         {
             ThirdPersonController.instance.player.localPosition = new vec3(tp1.localPosition);
         }
 
-        if (Input.GetKeyDown(KeyCode.KP2))
+        if (Input.GetKeyDown(KeyCode.D6))
         {
             ThirdPersonController.instance.player.localPosition = new vec3(tp2.localPosition);
         }
 
-        if (Input.GetKeyDown(KeyCode.KP3))
+        if (Input.GetKeyDown(KeyCode.D7))
         {
             ThirdPersonController.instance.player.localPosition = new vec3(tp3.localPosition);
         }
 
-        if (Input.GetKeyDown(KeyCode.KP4))
+        if (Input.GetKeyDown(KeyCode.D8))
         {
             ThirdPersonController.instance.player.localPosition = new vec3(tp4.localPosition);
         }
 
-        if (Input.GetKeyDown(KeyCode.KP5))
+        if (Input.GetKeyDown(KeyCode.D9))
         {
             ThirdPersonController.instance.player.localPosition = new vec3(tp5.localPosition);
         }
 
-        if (Input.GetKeyDown(KeyCode.KP6))
+        if (Input.GetKeyDown(KeyCode.D0))
         {
             ThirdPersonController.instance.player.localPosition = new vec3(tp6.localPosition);
         }
