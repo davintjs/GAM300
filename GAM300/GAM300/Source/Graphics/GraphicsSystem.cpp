@@ -344,7 +344,9 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 		DEBUGDRAW.Draw();
 
 	}
+
 	TEXTSYSTEM.Draw(_camera);
+	PARTICLERENDER.Draw2D(_camera);
 
 	FRAMEBUFFER.Unbind();
 

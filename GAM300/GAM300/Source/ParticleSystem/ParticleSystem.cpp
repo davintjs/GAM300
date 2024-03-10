@@ -41,7 +41,7 @@ void ParticleManager::Update(float dt)
                 particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = enableDirection ? vec3(particleComponent.direction) : random.NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
-                particleComponent.particles_[i].acceleration = 1.0f;
+                particleComponent.particles_[i].acceleration = particleComponent.acceleration_;
                 particleComponent.particles_[i].lifetime = random.NextFloat1(0.0f, particleComponent.particleLifetime_);
                 particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
                 particleComponent.particles_[i].speed = particleComponent.speed_;
@@ -60,7 +60,7 @@ void ParticleManager::Update(float dt)
                     //particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
                     particleComponent.particles_[i].direction = enableDirection ? vec3(particleComponent.direction) : random.NextVector3(-20.0f, 20.0f);
                     particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
-                    particleComponent.particles_[i].acceleration = 1.0f;
+                    particleComponent.particles_[i].acceleration = particleComponent.acceleration_;
                     particleComponent.particles_[i].scale = particleComponent.particleMinScale_;
                     particleComponent.particles_[i].speed = particleComponent.speed_;
 
@@ -77,45 +77,47 @@ void ParticleManager::Update(float dt)
         const float noiseMovementFactor = particleComponent.noiseMovement / 100.f;
 
         for (int i = 0; i < particleComponent.numParticles_; i++) {
+            
             Particle& particle = particleComponent.particles_[i];
             Trail& trails = particle.trails;
+            if (particleComponent.speed_ != 0) {
+                if (particleComponent.noiseMovement > 1.f) {
+                    if (particle.noiselifetime <= 0.f) {
 
-            if (particleComponent.noiseMovement > 1.f) {
-                if (particle.noiselifetime <= 0.f) {
-
-                    if (!enableDirection || particle.position == origin) {
-                        // Handle case where enableDirection is false or particle.position == origin
-                        // Assuming some default behavior here
-                        vec3 noiseDirection = glm::normalize(random.NextVector3(-20.0f, 20.0f));
-                        particle.direction = glm::normalize(noiseMovementFactor * noiseDirection + (1.f - noiseMovementFactor) * particle.direction);
-                    }
-                    else {
-                        vec3 particlePosMinusOrigin = particle.position - origin;
-                        vec3 normalizedParticlePosMinusOrigin = glm::normalize(particlePosMinusOrigin);
-                        vec3 normalizedParticleComponentDirection = glm::normalize(vec3(particleComponent.direction));
-
-                        float dotProduct = glm::dot(normalizedParticlePosMinusOrigin, normalizedParticleComponentDirection);
-                        float threshold = cosf(particleComponent.angle * 0.0174533f); // Precomputed constant
-
-                        if (dotProduct < threshold) {
-                            particle.direction = vec3(particleComponent.direction);
-                        }
-                        else {
+                        if (!enableDirection || particle.position == origin) {
+                            // Handle case where enableDirection is false or particle.position == origin
+                            // Assuming some default behavior here
                             vec3 noiseDirection = glm::normalize(random.NextVector3(-20.0f, 20.0f));
                             particle.direction = glm::normalize(noiseMovementFactor * noiseDirection + (1.f - noiseMovementFactor) * particle.direction);
                         }
-                    }
+                        else {
+                            vec3 particlePosMinusOrigin = particle.position - origin;
+                            vec3 normalizedParticlePosMinusOrigin = glm::normalize(particlePosMinusOrigin);
+                            vec3 normalizedParticleComponentDirection = glm::normalize(vec3(particleComponent.direction));
+
+                            float dotProduct = glm::dot(normalizedParticlePosMinusOrigin, normalizedParticleComponentDirection);
+                            float threshold = cosf(particleComponent.angle * 0.0174533f); // Precomputed constant
+
+                            if (dotProduct < threshold) {
+                                particle.direction = vec3(particleComponent.direction);
+                            }
+                            else {
+                                vec3 noiseDirection = glm::normalize(random.NextVector3(-20.0f, 20.0f));
+                                particle.direction = glm::normalize(noiseMovementFactor * noiseDirection + (1.f - noiseMovementFactor) * particle.direction);
+                            }
+                        }
 
 
-                    if (particleComponent.noisefrequency >= 1.f) {
-                        particle.noiselifetime = random.NextFloat1(10.f * particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ - 12.5f * particleComponent.particleLifetime_ / (particleComponent.noisefrequency)) / 10.f;
-                    }
-                    else {
-                        particle.noiselifetime = particleComponent.particleLifetime_;
-                    }
+                        if (particleComponent.noisefrequency >= 1.f) {
+                            particle.noiselifetime = random.NextFloat1(10.f * particleComponent.particleLifetime_ / particleComponent.noisefrequency, particleComponent.particleLifetime_ - 12.5f * particleComponent.particleLifetime_ / (particleComponent.noisefrequency)) / 10.f;
+                        }
+                        else {
+                            particle.noiselifetime = particleComponent.particleLifetime_;
+                        }
 
+                    }
+                    particle.noiselifetime -= dt;
                 }
-                particle.noiselifetime -= dt;
             }
 
             particle.speed += particle.acceleration * dt;

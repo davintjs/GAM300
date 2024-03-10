@@ -300,9 +300,10 @@ property_begin_name(Animator, "Animator") {
 struct TextRenderer : Object
 {
 	std::string text = "Default Text";
-	float x = 0.f, y = 0.f, fontSize = 1.f; // need to find out  how to link with existing obj srt
+	float x = 0.f, y = 0.f, fontSize = 12.f;
 	float r = 0.5, g = 0.8f, b = 0.2f;
 	float alpha = 1.f;
+	float width = 10.f, leading = 1.5f;
 	Engine::GUID<FontAsset> guid{0};
 	property_vtable();
 };
@@ -314,6 +315,8 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(x).Name("X-axis Offset"),
 		property_var(y).Name("Y-axis Offset"),
 		property_var(fontSize).Name("Font Size"),
+		property_var(width).Name("Textbox Width"),
+		property_var(leading).Name("Leading"),
 		property_var(r).Name("Color R"),
 		property_var(g).Name("Color G"),
 		property_var(b).Name("Color B"),
@@ -541,14 +544,14 @@ struct Particle : Object
 	Particle() {}
 	Particle(const vec3& position, const vec3& velocity, const float& acceleration, float lifetime, float scale)
 		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime), scale(scale) {}
-	vec3 position;
-	vec3 velocity;
-	vec3 direction;
+	vec3 position{ 0.f , 0.f, 0.f };
+	vec3 velocity{ 0.f , 0.f, 0.f };
+	vec3 direction{ 0.f , 0.f, 0.f };
 	float acceleration{0.f};
-	float lifetime;
-	float scale; 
-	float speed;
-	float noiselifetime;
+	float lifetime{ 0.f };
+	float scale{ 0.f };
+	float speed{0.f};
+	float noiselifetime{ 0.f };
 	Trail trails;
 };
 
@@ -571,6 +574,7 @@ struct ParticleComponent : Object
 	float particleMaxScale_{ 1.0f };
 	float particleScaleRate_{ 0.5f };
 	float speed_{ 0.5f };
+	float acceleration_{ 0.f };
 	float desiredLifetime{ 5.0f };
 	float noiseMovement{ 0.f };
 	float noisefrequency{ 0.f };
@@ -600,6 +604,7 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(particleMaxScale_).Name("Particle Max Scale"),
 	property_var(particleScaleRate_).Name("Particle Scale Rate"),
 	property_var(speed_).Name("Particle Speed"),
+	property_var(acceleration_).Name("Particle acceleration"),
 	property_var(noiseMovement).Name("Particle Noise Movement Percentage"),
 	property_var(noisefrequency).Name("Particle Noise Frequency"),
 	property_var(is2D).Name("2D particle"),

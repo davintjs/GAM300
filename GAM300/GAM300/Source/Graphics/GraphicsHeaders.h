@@ -606,10 +606,10 @@ public:
 		unsigned int Advance;
 		glm::vec2 AtlasCoordsMin;
 		glm::vec2 AtlasCoordsMax;
-		GLuint Texture{ 0 }; // temp will be upgraded more later
 	};
 
 	unsigned int txtVAO, txtVBO;
+
 	using FontCharacters = std::map<char, Character>;
 	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
 	std::unordered_map<Engine::GUID<FontAsset>, GLuint> mFontAtlasContainer;
@@ -622,6 +622,7 @@ public:
 
 	//std::vector<FontType> fontGroups;
 	std::vector<float> allVertices;
+	//std::vector<glm::vec4> allVertices;
 	//std::vector<GLuint> allTextures;
 
 

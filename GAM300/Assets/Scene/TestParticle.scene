@@ -21,7 +21,7 @@ GameObject:
 ID: 1373255009547200345
 Transform:
   m_GameObject: {fileID: 14989680110700367717}
-  Translation: [0, -5, 0]
+  Translation: [-1.49011612e-08, 2, -2.32830644e-10]
   Rotation: [0, 0, 0]
   Scale: [0.200000003, 0.200000003, 0.200000003]
   Father: {fileID: 0}
@@ -33,7 +33,7 @@ MeshRenderer:
   m_GameObject: {fileID: 14989680110700367717}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material_ID: {guid: 4fb2f1b05837904f2f0e2bd0b9fa1c7c}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
 ---
 ID: 8120480805772412597
 ParticleComponent:
@@ -42,21 +42,22 @@ ParticleComponent:
   Mesh: {guid: 00000000000000000000000000000002}
   Material: {guid: 86a0c5b256888901f84595d211b97767}
   Local Space: false
-  Particle Direction: [0, 1, 0]
-  Angle of Direction: 30
-  Number Of Particles: 15
-  Particle Lifetime: 1
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 0
+  Number Of Particles: 3
+  Particle Lifetime: 0.5
   Particle Emission Rate: 1
-  Particle Min Scale: 0
-  Particle Max Scale: 0
-  Particle Scale Rate: 0
-  Particle Speed: 30
-  Particle Noise Movement Percentage: 30
-  Particle Noise Frequency: 20
-  2D particle: false
-  Trailing: true
+  Particle Min Scale: 0.5
+  Particle Max Scale: 2
+  Particle Scale Rate: 2
+  Particle Speed: 1
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: true
+  Trailing: false
   Trail Size: 5
-  Trail Thickness: 10.2600002
+  Trail Thickness: 1
   Looping: true
 ---
 ID: 1589847083358243135
@@ -209,8 +210,8 @@ GameObject:
 ID: 5915572405052181223
 Transform:
   m_GameObject: {fileID: 7998039492543491522}
-  Translation: [0, 1, 10]
-  Rotation: [0, 0, 0]
+  Translation: [5, 3, 2]
+  Rotation: [-0.293215305, 0.863937974, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
@@ -237,3 +238,69 @@ ID: 16458757818606772445
 AudioListener:
   m_GameObject: {fileID: 7998039492543491522}
   m_IsEnabled: true
+---
+ID: 3355502608380733143
+GameObject:
+  m_IsActive: true
+  m_Name: Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12502860451788695578}  # Transform
+    - component: {fileID: 12057078000130006422}  # TextRenderer
+---
+ID: 12502860451788695578
+Transform:
+  m_GameObject: {fileID: 3355502608380733143}
+  Translation: [-6.41263771, 3, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 12057078000130006422
+TextRenderer:
+  m_GameObject: {fileID: 3355502608380733143}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: Default Text
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 12
+  Textbox Width: 10
+  Leading: 1.5
+  Color R: 0.5
+  Color G: 0.800000012
+  Color B: 0.200000003
+  Opacity: 1
+---
+ID: 12552665997216064040
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(8)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4085902772888537635}  # Transform
+    - component: {fileID: 11188069100270836536}  # SpriteRenderer
+---
+ID: 4085902772888537635
+Transform:
+  m_GameObject: {fileID: 12552665997216064040}
+  Translation: [1.71899652, 2.81913853, -3.20211554]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 11188069100270836536
+SpriteRenderer:
+  m_GameObject: {fileID: 12552665997216064040}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 9e357cd4d767af41bfd6b7eaf169598a}
