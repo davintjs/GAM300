@@ -74,10 +74,12 @@ public class ThirdPersonCamera : Script
         AvoidColliders();
 
         ShakeCoroutine();
+        Console.WriteLine("");
     }
 
     void OnTriggerEnter(PhysicsComponent other)
     {
+        Console.WriteLine("Enter");
         if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
         {
             zoomReset = false;
@@ -86,6 +88,7 @@ public class ThirdPersonCamera : Script
 
     void OnTriggerExit(PhysicsComponent other)
     {
+        Console.WriteLine("Exit");
         if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
         {
             timer = 0f;
