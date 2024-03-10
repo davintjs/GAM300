@@ -606,7 +606,7 @@ public class ThirdPersonController : Script
             }
             //DASH ATTACK
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
-            if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
+            if (Input.GetKeyDown(KeyCode.E) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
             {
                 //Console.WriteLine("DashAttack");
                 UseStamina(dashAttackStamina);
@@ -618,7 +618,7 @@ public class ThirdPersonController : Script
                 SetState("DashAttack", true);
             }
             //DODGE
-            if(Input.GetKey(KeyCode.C) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
+            if(Input.GetKey(KeyCode.LeftControl) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
             {
                 //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
