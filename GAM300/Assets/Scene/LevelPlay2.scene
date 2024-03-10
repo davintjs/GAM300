@@ -9067,6 +9067,7 @@ ParticleComponent:
   Particle Max Scale: 0.0599999987
   Particle Scale Rate: 0.699999988
   Particle Speed: 4
+  Particle acceleration: 0
   Particle Noise Movement Percentage: 0
   Particle Noise Frequency: 0
   2D particle: false
@@ -22219,8 +22220,8 @@ GameObject:
 ID: 1139274970601002074
 Transform:
   m_GameObject: {fileID: 8144538565677194001}
-  Translation: [105.565895, 34.3874321, -107.710899]
-  Rotation: [0, -0, 0]
+  Translation: [105.565895, 34.387001, -107.710899]
+  Rotation: [0, 0, 0]
   Scale: [0.999981165, 1, 0.999982893]
   Father: {fileID: 6570516183082402154}
   m_Children:
@@ -22296,8 +22297,8 @@ GameObject:
 ID: 15364161367057865605
 Transform:
   m_GameObject: {fileID: 17871029035517751570}
-  Translation: [105.565895, 34.3874321, -112.570419]
-  Rotation: [0, -0, 0]
+  Translation: [105.565895, 34.387001, -112.570419]
+  Rotation: [0, 0, 0]
   Scale: [0.999981165, 1, 0.999982893]
   Father: {fileID: 6570516183082402154}
   m_Children:
@@ -22374,7 +22375,7 @@ ID: 4234985425509521474
 Transform:
   m_GameObject: {fileID: 9181795941742798776}
   Translation: [105.565895, 34.3874321, -117.538048]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.999981165, 1, 0.999982893]
   Father: {fileID: 6570516183082402154}
   m_Children:
@@ -22604,8 +22605,8 @@ GameObject:
 ID: 4463708444957336829
 Transform:
   m_GameObject: {fileID: 326243636213676761}
-  Translation: [110.244621, 34.3874321, -123.216003]
-  Rotation: [0, 1.57045102, 0]
+  Translation: [110.245003, 34.3874321, -123.216003]
+  Rotation: [0, 1.57045102, 3.14159274]
   Scale: [0.999980628, 1, 0.999982357]
   Father: {fileID: 6570516183082402154}
   m_Children:
@@ -22681,7 +22682,7 @@ GameObject:
 ID: 10050368864543261561
 Transform:
   m_GameObject: {fileID: 5428764108025885957}
-  Translation: [114.84478, 34.3874321, -123.216003]
+  Translation: [114.84478, 34.387001, -123.216003]
   Rotation: [0, 1.57045102, 0]
   Scale: [0.999980628, 1, 0.999982357]
   Father: {fileID: 6570516183082402154}
@@ -23452,8 +23453,8 @@ ID: 2149390475799996515
 Transform:
   m_GameObject: {fileID: 15041391084126891095}
   Translation: [119.622078, 34.3874321, -123.216003]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [0.999980628, 1, 0.999982357]
+  Rotation: [0, 1.57045102, 3.14159274]
+  Scale: [0.99998033, 1, 0.999982059]
   Father: {fileID: 6570516183082402154}
   m_Children:
     - {fileID: 10670431208454177092}
@@ -23606,7 +23607,7 @@ ID: 13300303084845128432
 Transform:
   m_GameObject: {fileID: 7742634017606534602}
   Translation: [105.565895, 34.3874321, -102.770096]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.999981165, 1, 0.999982893]
   Father: {fileID: 6570516183082402154}
   m_Children:
@@ -32485,7 +32486,7 @@ GameObject:
 ID: 5640248415064663338
 Transform:
   m_GameObject: {fileID: 13973967014568888864}
-  Translation: [105.344223, 34.3800011, -118.675018]
+  Translation: [105.344223, 34.3600006, -118.675018]
   Rotation: [0, 0, 0]
   Scale: [4.4000001, 1, 22]
   Father: {fileID: 0}
@@ -49234,21 +49235,35 @@ SpriteRenderer:
 ID: 8932739375906657777
 GameObject:
   m_IsActive: true
-  m_Name: New GameObject(1692)
+  m_Name: OverDriveArea Light
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 6693818750374548891}  # Transform
+    - component: {fileID: 1829480176319562855}  # LightSource
 ---
 ID: 6693818750374548891
 Transform:
   m_GameObject: {fileID: 8932739375906657777}
-  Translation: [0, 0, 0]
+  Translation: [66.6154022, 46.9200401, -113.703415]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     []
+---
+ID: 1829480176319562855
+LightSource:
+  m_GameObject: {fileID: 8932739375906657777}
+  m_IsEnabled: true
+  EnableShadow: false
+  lightType: 0
+  lightpos: [0, 0, 0]
+  Intensity: 500
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
 ---
 ID: 1342498447182496088
 GameObject:
@@ -49294,6 +49309,7 @@ ParticleComponent:
   Particle Max Scale: 0
   Particle Scale Rate: 0
   Particle Speed: 30
+  Particle acceleration: 0
   Particle Noise Movement Percentage: 30
   Particle Noise Frequency: 30
   2D particle: false
