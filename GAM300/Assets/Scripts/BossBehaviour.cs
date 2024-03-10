@@ -515,7 +515,8 @@ public class BossBehaviour : Script
     {
         while (!startShoot)
             yield return null;
-        bullet.GetComponent<Rigidbody>().linearVelocity = bullet.transform.back * projectileSpeed;
+        Console.WriteLine("StartShoot");
+        StartCoroutine(EnableAttackCollider(bullet.transform, bullet.transform.back * projectileSpeed, 10f, vec3.Zero));
     }
 
     IEnumerator ProjectileAttack()
