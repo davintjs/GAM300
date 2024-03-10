@@ -44,7 +44,7 @@ public class Terminal : Script
         {
             Console.WriteLine("AtCheckpoint");
             ThirdPersonController.instance.checkpointIndex = index;
-            ThirdPersonController.instance.spawnPoint = transform.localPosition + transform.forward * 2f;
+            ThirdPersonController.instance.spawnPoint = transform.localPosition + transform.forward * 2f + vec3.UnitY * 2f;
             //CheckCheckpoint();
 
             ThirdPersonController.instance.isAtCheckpoint = true;

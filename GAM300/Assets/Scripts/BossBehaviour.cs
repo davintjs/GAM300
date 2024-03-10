@@ -143,7 +143,7 @@ public class BossBehaviour : Script
                 health = 100;
                 rb.linearVelocity = vec3.Zero;
                 SetState("Running", false);
-                StartCoroutine(ProjectileAttack());
+                StartCoroutine(UltimateAttack());
                 yield break;
             }
             SetState("Running", true);
@@ -412,11 +412,6 @@ public class BossBehaviour : Script
         ultiLaserVFX.localScale = vec3.Zero;
     }
 
-    IEnumerator UltimateSphere()
-    {
-        yield return null;
-    }
-
     IEnumerator UltimateLightVFX()
     {
         float dur = 2f;
@@ -587,9 +582,9 @@ public class BossBehaviour : Script
             {
                 timer = intervals / directions;
                 vec3 rot = new vec3(0, glm.Radians(offset * i + angle * d) + yaw, 0) ;
-                GameObject obj = Instantiate(bullet, transform.localPosition + posOffset, rot);
+/*                GameObject obj = Instantiate(bullet, transform.localPosition + posOffset, rot);
                 StartCoroutine(StartBullet(obj, intervals));
-                obj.transform.position += obj.transform.back * projectileDistance;
+                obj.transform.position += obj.transform.back * projectileDistance;*/
 
                 timer = intervals/directions;
                 while (timer > 0)
