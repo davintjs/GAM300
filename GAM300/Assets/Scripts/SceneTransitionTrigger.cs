@@ -40,7 +40,10 @@ class SceneTransitionTrigger : Script
                         SceneManager.LoadScene("LevelPlay2");
                         break;
                     case 1:
-                        SceneManager.LoadScene("VictoryScreenMenu", true);
+                        SceneManager.LoadScene("LevelBoss");
+                        break;
+                    case 2:
+                        SceneManager.LoadScene("VictoryScreen", true);
                         break;
                 }
             }
