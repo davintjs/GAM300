@@ -4,6 +4,8 @@ using BeanFactory;
 using GlmSharp;
 using System;
 using System.Runtime.InteropServices;
+using System.Diagnostics.Tracing;
+
 public class ThirdPersonCamera : Script
 {
     public static ThirdPersonCamera instance;
@@ -23,8 +25,8 @@ public class ThirdPersonCamera : Script
     public GameObject target;
 
     public float zoom = 1f;
-    private float initialZoom = 0f;
-    public float defaultZoom = 4f;
+    //private float initialZoom = 0f;
+    public float defaultZoom = 5f;
     public float zoomSpeed = 50f;
     public float zoomInSpeed = 3f;
     public float closestZoom = 1f;
@@ -34,20 +36,20 @@ public class ThirdPersonCamera : Script
 
     public float timer = 0f;
     private float duration = 1.0f;
-    private float bufferTimer = 0f;
-    private float bufferDuration = 3.0f;
+    //private float bufferTimer = 0f;
+    //private float bufferDuration = 3.0f;
+    //private float distance = 0f;
 
     public bool cutscene = false;
 
     float shakeMagnitude = 0f;
     float shakeDuration = 0f;
-    private vec3 targetPosition;
-
+    //private vec3 targetPosition;
 
 
     void Awake()
     {
-        targetPosition = target.transform.localPosition;
+        //targetPosition = target.transform.localPosition;
         camera = GetComponent<Camera>();
         instance = this;
     }
@@ -59,73 +61,73 @@ public class ThirdPersonCamera : Script
         {
             return;
         }
-        Zoom();
 
         FocusOnTarget();
+
+        if (GameManager.instance.paused)
+            return;
+
+        Zoom();
 
         UpdateCameraRotation();
 
         AvoidColliders();
 
         ShakeCoroutine();
+        Console.WriteLine("");
     }
 
     void OnTriggerEnter(PhysicsComponent other)
     {
-        if (GetTag(other) != "PlayerCollider")
+        Console.WriteLine("Enter");
+        if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
         {
-            StartZoom();
+            zoomReset = false;
         }
     }
 
     void OnTriggerExit(PhysicsComponent other)
     {
-        if (GetTag(other) != "PlayerCollider")
+        Console.WriteLine("Exit");
+        if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
         {
-            StopZoom();
+            timer = 0f;
+            zoomReset = true;
         }
-    }
-
-    void StartZoom()
-    {
-        isZooming = true;
-        zoomReset = false;
-        timer = bufferTimer = 0f;
-    }
-
-    void StopZoom()
-    {
-        isZooming = false;
     }
 
     void AvoidColliders()
     {
-        if (isZooming)
+        vec3 direction = transform.position - target.transform.position;
+        RaycastHit raycast = Physics.Raycast(target.transform.position, direction, 1.01f);
+        
+        if (raycast.hit && raycast.gameObj != null)
         {
-            zoom -= Time.deltaTime * zoomInSpeed;
-            if (zoom < closestZoom)
+            isZooming = true;
+            zoomReset = false;
+            string tagName = GetTag(raycast.gameObj);
+            if (tagName != "Camera" && tagName != "Enemy")
             {
-                zoom = closestZoom;
+                //Console.WriteLine("Name: " +  raycast.gameObj.name);
+                zoom = vec3.Distance(target.transform.position, raycast.point) * 0.95f;
+                zoom = Mathf.Clamp(zoom, closestZoom, furthestZoom);
             }
-            else if (zoom > furthestZoom)
-            {
-                zoom = furthestZoom;
-            }
+        }
+        else
+        {
+            isZooming = false;
+        }
 
-            camera.lookatDistance = zoom;
-            initialZoom = zoom;
-            zoomReset = true;
-        }
-        else if (!isZooming && zoomReset)
-        {
-            // Wait x seconds then attemp to return to initialZoom
+        if (zoomReset)
             ResetZoom();
-        }
     }
 
     void UpdateCameraRotation()
     {
         vec2 mouseDelta = Input.GetMouseDelta();
+        if (mouseDelta.LengthSqr > 1.0f)
+            return;
+
         yawAngle -= mouseDelta.x * yawRotSpeed * yawSM * Time.deltaTime * 3.14f / 180f;
 
         //Pitch Camera Rotation
@@ -140,7 +142,13 @@ public class ThirdPersonCamera : Script
 
     void Zoom()
     {
-        zoom += Input.GetScroll() * zoomSpeed;
+        float scroll = Input.GetScroll();
+
+        if (scroll == 0f || isZooming) // Dont allow manual zoom if it is doing wall collision
+            return;
+
+        zoomReset = false;
+        zoom += scroll * zoomSpeed;
         if (zoom < closestZoom)
         {
             zoom = closestZoom;
@@ -154,28 +162,30 @@ public class ThirdPersonCamera : Script
     void ResetZoom()
     {
         // Give it a buffer before reseting the camera's zoom
-        bufferTimer += Time.deltaTime;
+        //bufferTimer += Time.deltaTime;
 
-        if (bufferTimer >= bufferDuration)
-        {
-            timer += Time.deltaTime;
-            zoom = Lerp(initialZoom, defaultZoom, timer, duration);
+        //if (bufferTimer >= bufferDuration)
+        //{
+        //    timer += Time.deltaTime;
+        //    zoom = Mathf.Lerp(zoom, defaultZoom, timer);
 
-            if (timer >= duration)
-            {
-                zoomReset = false;
-                timer = bufferTimer = 0f;
-            }
-        }
+        //    if (timer >= duration)
+        //    {
+        //        isZooming = true;
+        //        timer = bufferTimer = 0f;
+        //    }
+        //}
+        zoom = Mathf.Lerp(zoom, defaultZoom, timer);
+        timer += Time.deltaTime;
     }
 
     void FocusOnTarget()
     {
         if (target != null)
         {
+            vec3 finalPosition = target.transform.position - (camera.forward * zoom);
+            transform.position = camera.position = finalPosition;
             camera.LookAt(target);
-            camera.position = target.transform.position - (camera.forward * camera.distance);
-            transform.position = camera.position;
         }
     }
 
@@ -204,7 +214,7 @@ public class ThirdPersonCamera : Script
 
     public void SetFOV(float targetFOV, float duration)
     {
-        StartCoroutine(FOVLerp(targetFOV, duration));
+        //StartCoroutine(FOVLerp(targetFOV, duration));
     }
 
     IEnumerator FOVLerp(float targetFOV, float duration)

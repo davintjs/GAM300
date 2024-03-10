@@ -168,7 +168,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime += (m_CurrentAnimation.GetTicksPerSecond() * dt * speedModifier) - startTime;
     //std::cout << "Initial: " << m_CurrentTime << "\n";
 
-    // Animation's has started blending
+    // Animation has ended and is not blending
     if (m_CurrentTime >= endTime - startTime - blendDuration && currBlendState != blending)
     {
         if (!defaultState)
@@ -202,20 +202,22 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
 
     //std::cout << "End    : " << m_CurrentTime << "\n";
-
     if (currBlendState == blending)/*if (nextState)*/
     {
         blendTimer += (m_CurrentAnimation.GetTicksPerSecond() * dt * speedModifier);
         blendedBones = 0;
         CalculateBlendedBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
         
-        if (blendedBones == m_CurrentAnimation.GetBoneCount() || blendTimer >= blendDuration)
+        if (blendedBones == m_CurrentAnimation.GetBoneCount() && blendTimer >= blendDuration)
         {
+            //std::cout << "Finished blending " << currentState->label << " and " << nextState->label << '\n';
+            //std::cout << "Bone count: " << blendedBones << " and timer: " << blendTimer << '\n';
             currBlendState = blended;
             currentState = nextState;
             nextState = nullptr;
 
             blendTimer = 0.f;
+            blendedBones = 0;
             startTime = currentState->minMax.x;
             m_CurrentTime = startTime + blendDuration;
             endTime = currentState->minMax.y;
@@ -271,28 +273,24 @@ void BaseAnimator::ChangeState()
     //    playing = false;
     //}
 
-    if (nextState && currentState != nextState)
+    if (nextState && currentState != nextState) // E.g. Idle is not equal to Jump state and Jump state exists
     {
         currBlendState = blending;
+        //std::cout << "Change state Different state blending " << currentState->label << " and " << nextState->label << '\n';
         //endTime = m_CurrentTime + blendDuration;
         blendStartTime = m_CurrentTime;
-    }
-    else // If both does not exist
-    {
-        currBlendState = notblending;
     }
 
     if (!currentState && defaultState) // If no next state, use default state
     {
         currentState = defaultState;
-
         m_CurrentTime = startTime = currentState->minMax.x;
         endTime = currentState->minMax.y;
         currBlendState = notblending;
     }
 
-    if(!nextState)
-        nextState = defaultState;
+    //if(!nextState)
+    //    nextState = defaultState;
 
     // Check that the current state exists
     if(!currentState)
@@ -376,7 +374,7 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
             float blendFactor = Bone->GetBlendFactor(Bone->GetTimeStamp(p0Index),
                 blendDuration, m_CurrentTime);
 
-            blendFactor = blendTimer / blendDuration; 
+            blendFactor = blendTimer / (blendDuration == 0.f) ? 1.f : blendDuration; 
 
             if (blendFactor >= 1.f)
             {
@@ -438,6 +436,8 @@ void BaseAnimator::SetDefaultState(const std::string& _defaultState)
 {
     Animation& animation = AnimationManager.GetAnimCopy(m_AnimationIdx);
     defaultState = animation.GetAnimationState(_defaultState);
+    CalculateBoneTransform(&animation.GetRootNode(), glm::mat4(1.f));
+
 }
 
 void BaseAnimator::SetNextState(const std::string& _nextState)

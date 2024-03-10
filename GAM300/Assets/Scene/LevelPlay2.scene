@@ -8810,7 +8810,7 @@ GameObject:
   m_Component:
     - component: {fileID: 813583600382484493}  # Transform
     - component: {fileID: 16773315215798417911}  # Camera
-    - component: {fileID: 5416340461028794432}  # BoxCollider
+    - component: {fileID: 8361005606376862120}  # SphereCollider
     - component: {fileID: 1139370946230178394}  # Rigidbody
     - component: {fileID: 12100504774977972383}  # Script
 ---
@@ -8818,7 +8818,7 @@ ID: 813583600382484493
 Transform:
   m_GameObject: {fileID: 15334681090738628473}
   Translation: [66.5078735, 38.3068237, -34.3390808]
-  Rotation: [-3.01991605e-07, 1.74845567e-07, 3.0199152e-07]
+  Rotation: [0, 0, 0]
   Scale: [0.999998093, 1, 0.999998093]
   Father: {fileID: 0}
   m_Children:
@@ -8841,18 +8841,18 @@ Camera:
   FrustumCulling: true
   DistanceCulling: 50
 ---
-ID: 5416340461028794432
-BoxCollider:
+ID: 8361005606376862120
+SphereCollider:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
-  Dimensions: [0.5, 0.5, 0.5]
+  Radius: 1
   Offset: [0, 0, 0]
 ---
 ID: 1139370946230178394
 Rigidbody:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
+  LinearVelocity: [0, 0.00999999978, 0]
   AngularVelocity: [0, 0, 0]
   Force: [0, 0, 0]
   Friction: 0.100000001
@@ -8869,12 +8869,12 @@ Script:
   Script: {guid: f204530c811d06247b59f2ef14dd1085}
   closestZoom: 0.5
   cutscene: false
-  defaultZoom: 4
+  defaultZoom: 5
   furthestZoom: 6
   invertPitch: true
   isZooming: false
-  maxPitchAngle: 170
-  minPitchAngle: -85
+  maxPitchAngle: 30
+  minPitchAngle: -50
   pitchAngle: 0
   pitchRotSpeed: 1
   timer: 0
@@ -8997,6 +8997,7 @@ Script:
   startDeathAnimationCountdown: false
   startDodgeCooldown: false
   startOverdriveCooldown: false
+  stopJump: false
   timeBeforeRegen: 1
   walkStepsInterval: 0.439999998
   CC: {fileID: 15939117778428800744}  # Component
@@ -9603,6 +9604,7 @@ Script:
   m_GameObject: {fileID: 16905222177648308199}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
+  destroyOnTrigger: true
 ---
 ID: 11170072543942258493
 GameObject:
@@ -32305,6 +32307,7 @@ Animator:
   m_GameObject: {fileID: 5297853854918785373}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 8787889187340902967
 GameObject:
@@ -32730,6 +32733,7 @@ Animator:
   m_GameObject: {fileID: 17325133999229751987}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 10613620391169950987
 GameObject:
@@ -41548,6 +41552,7 @@ Animator:
   m_GameObject: {fileID: 9983597563396382479}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 12325139730683629389
 GameObject:
@@ -45049,6 +45054,7 @@ Animator:
   m_GameObject: {fileID: 8181097202000610831}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 2441269254856014379
 GameObject:
@@ -45509,6 +45515,7 @@ Animator:
   m_GameObject: {fileID: 4651293391192650299}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 9858809955170522547
 GameObject:
@@ -47579,6 +47586,7 @@ Animator:
   m_GameObject: {fileID: 3187203319805926689}
   m_IsEnabled: true
   Animation: {guid: c4fef853906fbef85cfcf3080cfd1a6b}
+  Playing: false
 ---
 ID: 13634005917329744601
 GameObject:
@@ -49555,6 +49563,7 @@ Animator:
   m_GameObject: {fileID: 3295364860990313297}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 17574749794126389009
 GameObject:
@@ -51349,6 +51358,7 @@ Animator:
   m_GameObject: {fileID: 16614945116669692070}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 1386070044797248867
 GameObject:
@@ -52901,6 +52911,7 @@ Animator:
   m_GameObject: {fileID: 15771493367344086800}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 8135072918305409601
 GameObject:
@@ -55124,6 +55135,7 @@ Animator:
   m_GameObject: {fileID: 2281979527073026994}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 17315456125228963552
 GameObject:
@@ -55514,6 +55526,7 @@ Animator:
   m_GameObject: {fileID: 17410272475223950305}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 3514040243684930671
 GameObject:
@@ -55904,6 +55917,7 @@ Animator:
   m_GameObject: {fileID: 13679024543590507492}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 15857613104579025041
 GameObject:
@@ -56294,6 +56308,7 @@ Animator:
   m_GameObject: {fileID: 10571348349847112841}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 15210767162079200632
 GameObject:
@@ -56684,6 +56699,7 @@ Animator:
   m_GameObject: {fileID: 17530039533555631439}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 3933507260952262748
 GameObject:
@@ -57074,6 +57090,7 @@ Animator:
   m_GameObject: {fileID: 13301186590583378764}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 5082708480256293797
 GameObject:
@@ -57464,6 +57481,7 @@ Animator:
   m_GameObject: {fileID: 16213852318901244393}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 1967432145379214210
 GameObject:
@@ -57854,6 +57872,7 @@ Animator:
   m_GameObject: {fileID: 10869195669279574947}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 1608199646427759041
 GameObject:
@@ -58644,6 +58663,7 @@ Animator:
   m_GameObject: {fileID: 10169941270709570099}
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
+  Playing: false
 ---
 ID: 13667835057243733406
 GameObject:

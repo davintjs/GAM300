@@ -14,19 +14,19 @@ public class Door : Script
     public float displacement = -3.8f;
     public Transform door;
 
-    float totaltime = 0f;
+    //float totaltime = 0f;
     float displaced = 0f;
-    CharacterController player;
+    //CharacterController player;
 
     public bool back = false;
     public float floatKey = 1f;
-    float keyStartY;
+    //float keyStartY;
     public float maxTime = 5;
-    float timer = 0;
+    //float timer = 0;
 
     void Start()
     {
-        keyStartY = transform.localPosition.y;
+        //keyStartY = transform.localPosition.y;
     }
 
 
