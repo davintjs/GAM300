@@ -350,8 +350,6 @@ GameObject:
   m_Component:
     - component: {fileID: 17352915696606311330}  # Transform
     - component: {fileID: 17784311625182926207}  # MeshRenderer
-    - component: {fileID: 17814300706388022134}  # BoxCollider
-    - component: {fileID: 6917582739397988655}  # Rigidbody
 ---
 ID: 17352915696606311330
 Transform:
@@ -369,27 +367,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 17814300706388022134
-BoxCollider:
-  m_GameObject: {fileID: 15387861300162020341}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 6917582739397988655
-Rigidbody:
-  m_GameObject: {fileID: 15387861300162020341}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 6847503617641207406
 GameObject:
@@ -1770,7 +1747,7 @@ GameObject:
 ID: 15852994020001529193
 Transform:
   m_GameObject: {fileID: 12515846148885956186}
-  Translation: [45.3922119, 1.88734734, -27.6580009]
+  Translation: [45.3922119, 1.88734746, -27.6580009]
   Rotation: [0, 0, 0]
   Scale: [1.00000012, 1, 1.00000012]
   Father: {fileID: 13385808514286287486}
@@ -4043,7 +4020,7 @@ ID: 2195591374905615457
 Transform:
   m_GameObject: {fileID: 7424671051085572371}
   Translation: [-6.82189465, 1.89093757, -38.2188606]
-  Rotation: [-3.14159083, -0, -3.14159083]
+  Rotation: [-3.14159083, 0, -3.14159083]
   Scale: [0.999998927, 1, 0.999998927]
   Father: {fileID: 13385808514286287486}
   m_Children:
@@ -4407,8 +4384,6 @@ GameObject:
   m_Component:
     - component: {fileID: 17695840391874275026}  # Transform
     - component: {fileID: 13795217219211764339}  # MeshRenderer
-    - component: {fileID: 14755166737304633442}  # BoxCollider
-    - component: {fileID: 9506023736909961885}  # Rigidbody
 ---
 ID: 17695840391874275026
 Transform:
@@ -4426,27 +4401,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: beea719ad0f13246354b7aef8464bb89}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 14755166737304633442
-BoxCollider:
-  m_GameObject: {fileID: 9605661079073390682}
-  m_IsEnabled: true
-  Dimensions: [9.9998455, 7.99987793, 1.89762938]
-  Offset: [-7.7009201e-05, 3.99993896, -1.44839287e-05]
----
-ID: 9506023736909961885
-Rigidbody:
-  m_GameObject: {fileID: 9605661079073390682}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 10834837868345684089
 GameObject:
@@ -4484,8 +4438,6 @@ GameObject:
   m_Component:
     - component: {fileID: 850248861004394285}  # Transform
     - component: {fileID: 13936215950710207052}  # MeshRenderer
-    - component: {fileID: 1264665590575107825}  # BoxCollider
-    - component: {fileID: 6175925133142577229}  # Rigidbody
 ---
 ID: 850248861004394285
 Transform:
@@ -4503,27 +4455,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: beea719ad0f13246354b7aef8464bb89}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 1264665590575107825
-BoxCollider:
-  m_GameObject: {fileID: 3119860734494218304}
-  m_IsEnabled: true
-  Dimensions: [9.9998455, 7.99987793, 1.89762938]
-  Offset: [-7.7009201e-05, 3.99993896, -1.44839287e-05]
----
-ID: 6175925133142577229
-Rigidbody:
-  m_GameObject: {fileID: 3119860734494218304}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 11546684700882403661
 GameObject:
@@ -4561,8 +4492,6 @@ GameObject:
   m_Component:
     - component: {fileID: 376630437497303947}  # Transform
     - component: {fileID: 11417356158335247250}  # MeshRenderer
-    - component: {fileID: 6734460401715808972}  # BoxCollider
-    - component: {fileID: 10832666193956886078}  # Rigidbody
 ---
 ID: 376630437497303947
 Transform:
@@ -4581,27 +4510,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 6734460401715808972
-BoxCollider:
-  m_GameObject: {fileID: 9654120388744522591}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 10832666193956886078
-Rigidbody:
-  m_GameObject: {fileID: 9654120388744522591}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 14533807616142721670
 GameObject:
@@ -4720,8 +4628,6 @@ GameObject:
   m_Component:
     - component: {fileID: 18049286005089416905}  # Transform
     - component: {fileID: 10200010761160117197}  # MeshRenderer
-    - component: {fileID: 10418423250342091376}  # BoxCollider
-    - component: {fileID: 17877230795647271817}  # Rigidbody
 ---
 ID: 18049286005089416905
 Transform:
@@ -4740,27 +4646,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 10418423250342091376
-BoxCollider:
-  m_GameObject: {fileID: 16443733111411424064}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 17877230795647271817
-Rigidbody:
-  m_GameObject: {fileID: 16443733111411424064}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 9339730042853617092
 GameObject:
@@ -4825,8 +4710,6 @@ GameObject:
   m_Component:
     - component: {fileID: 9118806305371392694}  # Transform
     - component: {fileID: 9948157610220602468}  # MeshRenderer
-    - component: {fileID: 5032295425414333630}  # BoxCollider
-    - component: {fileID: 2794263989352932316}  # Rigidbody
 ---
 ID: 9118806305371392694
 Transform:
@@ -4845,27 +4728,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 5032295425414333630
-BoxCollider:
-  m_GameObject: {fileID: 7461450554749478257}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 2794263989352932316
-Rigidbody:
-  m_GameObject: {fileID: 7461450554749478257}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 2448945957099902706
 GameObject:
@@ -5166,8 +5028,6 @@ GameObject:
   m_Component:
     - component: {fileID: 3921159959777587846}  # Transform
     - component: {fileID: 10733844912936887709}  # MeshRenderer
-    - component: {fileID: 13557781255835800676}  # BoxCollider
-    - component: {fileID: 5660855269872143101}  # Rigidbody
 ---
 ID: 3921159959777587846
 Transform:
@@ -5186,27 +5046,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 13557781255835800676
-BoxCollider:
-  m_GameObject: {fileID: 8537150813031819036}
-  m_IsEnabled: true
-  Dimensions: [4.99992275, 7.99987793, 1.89762938]
-  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
----
-ID: 5660855269872143101
-Rigidbody:
-  m_GameObject: {fileID: 8537150813031819036}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 14196523319249137487
 GameObject:
