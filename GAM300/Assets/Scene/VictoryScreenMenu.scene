@@ -147,7 +147,7 @@ TextRenderer:
   Text: You are now the new Seer...
   X-axis Offset: -0.720000029
   Y-axis Offset: 0
-  Font Size: 2.11999989
+  Font Size: 1.21000004
   Textbox Width: 200
   Leading: 1.25
   Color R: 1
@@ -170,7 +170,7 @@ Transform:
   m_GameObject: {fileID: 15628350562473262138}
   Translation: [0, -0.404258549, 0.297466874]
   Rotation: [-3.14159203, 0, 0]
-  Scale: [0.466178864, 0.0815102011, 0.116827995]
+  Scale: [0.466178864, 0.532000005, -1.08299994]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []

@@ -132,7 +132,7 @@ public class BossBehaviour : Script
                     animationManager.ResetAllStates();
                     SetEnabled(rb,false);
                     SetState("Death", true);
-                    StartCoroutine(Victory());
+                    StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
                     //DIE
                 }
             }
@@ -162,6 +162,7 @@ public class BossBehaviour : Script
         rb = GetComponent<Rigidbody>();
         indicatorLocal = ultiSphere.localPosition;
         health = maxHealth;
+
     }
 
     void Start()
@@ -170,6 +171,9 @@ public class BossBehaviour : Script
         StartCoroutine(Chase());
         InitAnimStates();
         ultiSphere.gameObject.SetActive(false);
+        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
+
+        transform.localPosition = bossStartPos;
     }
 
     void Update()
@@ -771,6 +775,10 @@ public class BossBehaviour : Script
     {
         if (GetTag(rb) == "PlayerAttack")
         {
+            ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+            ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+            //CombatManager.instance.SpawnHitEffect(transform);
+            AudioManager.instance.enemyHit.Play();
             //AudioManager.instance.playerInjured.Play();
             health -= 10;
         }

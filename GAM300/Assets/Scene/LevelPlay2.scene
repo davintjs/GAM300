@@ -8878,6 +8878,7 @@ Script:
   pitchAngle: 0
   pitchRotSpeed: 1
   timer: 0
+  yawAngle: 0
   yawRotSpeed: 2
   zoom: 5.00000143
   zoomInSpeed: 3
@@ -9584,7 +9585,6 @@ Script:
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
   destroyOnTrigger: true
-  startShoot: true
 ---
 ID: 11170072543942258493
 GameObject:
@@ -49025,7 +49025,7 @@ Rigidbody:
 ---
 ID: 17866851235588629267
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: FadeBlack
   m_TagString: ""
   m_Layer: 0
@@ -49036,9 +49036,9 @@ GameObject:
 ID: 7042426106851415746
 Transform:
   m_GameObject: {fileID: 17866851235588629267}
-  Translation: [0, 0, 9]
+  Translation: [0, 0, 7.3499999]
   Rotation: [3.14158463, 0, -3.14159274]
-  Scale: [1, 1, 1]
+  Scale: [10, 10, 1]
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
@@ -49051,7 +49051,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
 ---
 ID: 8932739375906657777
 GameObject:

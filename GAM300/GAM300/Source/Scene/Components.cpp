@@ -110,6 +110,24 @@ Transform* Transform::GetParent()
 	return nullptr;
 }
 
+void Transform::UpdateEnabledFlags()
+{
+	
+	if (parent != 0)
+	{
+		Scene& scene = MySceneManager.GetCurrentScene();
+		Transform& p = scene.Get<Transform>(parent);
+		if (scene.IsActive<Entity>(p))
+			EnableFlag(Flag::WorldEnabled);
+		else
+			DisableFlag(Flag::WorldEnabled);
+		for (auto& c : child)
+		{
+			scene.Get<Transform>(c).UpdateEnabledFlags();
+		}
+	}
+}
+
 void Transform::SetLocalMatrix(vec3 _translation, vec3 _rotation, vec3 _scale)
 {
 	translation = _translation;
@@ -213,7 +231,7 @@ void Transform::SetParent(Transform* newParent)
 		scale = globalScale;
 		translation = globalPos;
 		rotation = globalRot;
-		//EnableFlag(Transform::Flag::WorldEnabled);
+		EnableFlag(Transform::Flag::WorldEnabled);
 		//EnableFlag(Transform::Flag::Modified);
 	}
 	else
@@ -226,10 +244,11 @@ void Transform::SetParent(Transform* newParent)
 		rotation = glm::eulerAngles(tmpRot);
 		parentTrans.child.push_back(EUID());
 		bool worldEnabled = parentTrans.GetFlag(Transform::Flag::WorldEnabled);
+		
 		if (worldEnabled)
-			parentTrans.EnableFlag(Transform::Flag::WorldEnabled);
+			EnableFlag(Transform::Flag::WorldEnabled);
 		else
-			parentTrans.DisableFlag(Transform::Flag::WorldEnabled);
+			DisableFlag(Transform::Flag::WorldEnabled);
 			
 		//EnableFlag(Transform::Flag::Modified);
 	}

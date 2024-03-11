@@ -78,7 +78,7 @@ public class StartingAnimation : Script
 
     void Update()
     {
-
+        Console.WriteLine(timer);
         if (Input.GetKeyDown(KeyCode.Escape)) {
             //skip to level
             timer = 65f;
@@ -88,10 +88,11 @@ public class StartingAnimation : Script
         if (timer < 10f)
         {
             SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
-            black.alpha -= Time.deltaTime;
-            if(black.alpha < 0)
+            if(black.alpha > 0)
             {
-                fadeblack.SetActive(false);
+                black.alpha -= Time.deltaTime;
+                if (black.alpha < 0)
+                    fadeblack.SetActive(false);
             }
 
             SpriteRenderer systemboot = systembooting.GetComponent<SpriteRenderer>();
@@ -236,19 +237,22 @@ public class StartingAnimation : Script
 
             
         }
+        else if (timer < 75f)
+        {
+
+        }
         else
         {
-            fadeblack.SetActive(true);
+            if (fadeblack.activeSelf == false)
+                fadeblack.SetActive(true);
             SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
             if (black.alpha < 1f)
             {
                 black.alpha += Time.deltaTime;
+                if (black.alpha >= 1f)
+                    SceneManager.LoadScene("LevelTutorial", true);
+
             }
-            else
-            {
-                //load tutorial level
-                SceneManager.LoadScene("LevelTutorial",true);
-            }          
         }
 
         //timers for subtitles
