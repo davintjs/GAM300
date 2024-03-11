@@ -81,7 +81,7 @@ void Animation_Manager::Update(float dt)
                 JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
                 EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
                 std::string tagName = IDENTIFIERS.GetTagString(ray.tag.tagName);
-                if (ray.hit && tagName.compare("Enemy")) // If it hits something
+                if (ray.hit && tagName.compare("Enemy") && ray.tag.physicsLayerIndex != 1) // If it hits something
                     continue;
             }
 
