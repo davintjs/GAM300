@@ -1033,6 +1033,34 @@ public class ThirdPersonController : Script
         }
     }
 
+    public void SetRotation(vec3 dir)
+    {
+        if (dir == vec3.Zero)
+            return;
+
+        float angle = (float)Math.Atan2(-dir.x, -dir.z);
+        quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
+
+        vec3 rot = ((vec3)newQuat.EulerAngles);
+
+        if (rot != vec3.NaN)
+        {
+            bool isNan = false;
+            foreach (float val in rot)
+            {
+                if (float.IsNaN(val))
+                {
+                    isNan = true;
+                    break;
+                }
+            }
+            if (!isNan)
+            {
+                PlayerModel.localRotation = rot;
+            }
+        }
+    }
+
 
     void OnTriggerEnter(PhysicsComponent rb)
     {
