@@ -274,8 +274,11 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 		PlayMusic(Source.currentSound, Source.fadeOutTime, Source.fadeInTime);
 		break;
 	case 1: // SFX
+		/*Source.play = true;*/
 		if (SFXEnabled()) {
-			PlaySFX(Source.currentSound);
+			Source.play = true;
+			//PlaySFX(Source.currentSound);
+			//Source.channel = AUDIOMANAGER.PlaySFX(Source.currentSound, position, Source.channel, Source.maxDistance, Source.volume, Source.volume, Source.minPitch, Source.maxPitch);
 		}
 		break;
 	default:

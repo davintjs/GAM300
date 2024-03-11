@@ -218,7 +218,7 @@ struct AudioSource : Object
 	float maxPitch{3.f};
 	float fadeInTime{1.f};
 	float fadeOutTime{1.f};
-	float maxDistance{100.f};
+	float maxDistance{1000.f};
 	Engine::GUID<AudioAsset> currentSound;
 	FMOD::Channel* channel;
 	property_vtable();
@@ -229,6 +229,7 @@ property_begin_name(AudioSource, "Audio Source") {
 		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(maxDistance).Name("max hearing Distance"),
 		property_var(minPitch).Name("SFX min Pitch"),
 		property_var(maxPitch).Name("SFX max Pitch"),
 		property_var(fadeInTime).Name("Fade In Time (s)"),

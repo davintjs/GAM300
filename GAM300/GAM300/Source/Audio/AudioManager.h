@@ -74,7 +74,7 @@ public:
 	// Play SFX once
 	FMOD::Channel* PlaySFX(Engine::GUID<AudioAsset> soundGUID,
 		FMOD_VECTOR pos = {0,0,0}, FMOD::Channel* channel = nullptr,
-		float maxDistance = 1.f,
+		float maxDistance = 1000.f,
 		float minVolume = 1, float maxVolume = 1,
 		float minPitch = -1, float maxPitch = 3);
 
