@@ -16141,6 +16141,7 @@ GameObject:
     - component: {fileID: 16693450727280184903}  # Transform
     - component: {fileID: 6495768652861786321}  # BoxCollider
     - component: {fileID: 16888008568694078254}  # Rigidbody
+    - component: {fileID: 421082031609999954}  # Script
 ---
 ID: 16693450727280184903
 Transform:
@@ -16172,6 +16173,13 @@ Rigidbody:
   IsKinematic: true
   UseGravity: false
   Is_trigger: true
+---
+ID: 421082031609999954
+Script:
+  m_GameObject: {fileID: 9496102192294917609}
+  m_IsEnabled: true
+  Script: {guid: 73a99346dabafcd80f1945f025aef51a}
+  dialogue_state: 2
 ---
 ID: 14345828798894584708
 GameObject:
