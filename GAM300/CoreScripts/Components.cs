@@ -97,6 +97,22 @@ namespace BeanFactory
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public class TextRenderer
+    {
+        public string text
+        {
+            get 
+            {
+                return InternalCalls.GetTextString(this); 
+            }
+            set 
+            { 
+                InternalCalls.SetTextString(this, value); 
+            }
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public class AudioSource
     {
         public void Play() { InternalCalls.AudioSourcePlay(this); }
