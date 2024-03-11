@@ -167,7 +167,7 @@ public class BossBehaviour : Script
     void Start()
     {
         player = ThirdPersonController.instance;
-        StartCoroutine(Chase());
+        StartCoroutine(EnterBossCutscene());
         InitAnimStates();
         ultiSphere.gameObject.SetActive(false);
     }
