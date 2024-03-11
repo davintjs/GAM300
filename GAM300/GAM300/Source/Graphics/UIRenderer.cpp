@@ -70,6 +70,8 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
+		if (!currentScene.IsActive(Sprite))
+			continue;
 		if (Sprite.state == DELETED) continue;
 
 		// This means it's 3D space

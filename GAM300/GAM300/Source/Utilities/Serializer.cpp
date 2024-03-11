@@ -581,10 +581,12 @@ void DeserializeLinker(Scene& _scene, const std::vector<YAML::Node>& _data)
 
     for (Transform& transform : _scene.GetArray<Transform>())
     {
+        //If no parent, recalc local matrices
         if (transform.parent == 0)
         {
             transform.RecalculateLocalMatrices();
         }
+        transform.UpdateEnabledFlags();
     }
 }
 

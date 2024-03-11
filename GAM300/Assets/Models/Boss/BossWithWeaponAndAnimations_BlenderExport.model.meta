@@ -7,7 +7,7 @@ animationStates:
   Idle: [5, 152]
   Ready: [156, 231]
   Walking: [232, 267]
-  Running: [269, 295]
+  Running: [269, 293]
   Sprinting: [296, 315]
   Stun: [316, 345]
   RangeAttack: [346, 418]

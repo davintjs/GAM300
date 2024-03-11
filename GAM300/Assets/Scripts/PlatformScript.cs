@@ -50,10 +50,10 @@ public class PlatformScript : Script
             diff = target - transform.localPosition;
         }
         transform.localPosition = target;
-        if (player != null)
+/*        if (player != null)
         {
             player.Move(diff * 60f);
-        }
+        }*/
 
         timer += Time.deltaTime;
         if (timer >= duration)
@@ -80,6 +80,7 @@ public class PlatformScript : Script
         if (GetTag(rb) == "Player")
         {
             player = rb.gameObject.GetComponent<CharacterController>();
+            player.gameObject.transform.SetParent(transform);
             Console.WriteLine("PlayerOnPlatform");
         }
     }
@@ -89,6 +90,7 @@ public class PlatformScript : Script
         //detect the player
         if (GetTag(rb) == "Player")
         {
+            player.gameObject.transform.SetParent(null);
             player = null;
             Console.WriteLine("Player Exit Platform");
         }
