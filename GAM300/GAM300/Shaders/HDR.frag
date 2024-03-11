@@ -17,36 +17,36 @@ out vec4 FragColor;
 in vec2 TexCoords;
 
 layout (binding = 0)uniform sampler2D hdrBuffer;
-layout (binding = 1)uniform sampler2D bloomBlur;
+//layout (binding = 1)uniform sampler2D bloomBlur;
 uniform bool hdr;
 uniform float exposure;
-uniform bool enableBloom;
-uniform float bloomStrength;
+//uniform bool enableBloom;
+//uniform float bloomStrength;
 // Testing
-uniform sampler2D depthMap;
-uniform float near_plane;
-uniform float far_plane;
+//uniform sampler2D depthMap;
+//uniform float near_plane;
+//uniform float far_plane;
 
 //End
 
-float LinearizeDepth(float depth)
-{
-    float z = depth * 2.0 - 1.0; // Back to NDC 
-    return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));	
-}
-
+//float LinearizeDepth(float depth)
+//{
+//    float z = depth * 2.0 - 1.0; // Back to NDC 
+//    return (2.0 * near_plane * far_plane) / (far_plane + near_plane - z * (far_plane - near_plane));	
+//}
+//
 
 void main()
 {        
 
     const float gamma = 2.2;
     vec3 hdrColor = texture(hdrBuffer, TexCoords).rgb;
-    if(enableBloom)
-    {
-        vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;    
-//        hdrColor += bloomColor;
-        hdrColor = mix(hdrColor, bloomColor,bloomStrength); //  bloom strength
-    }
+//    if(enableBloom)
+//    {
+//        vec3 bloomColor = texture(bloomBlur, TexCoords).rgb;    
+////        hdrColor += bloomColor;
+//        hdrColor = mix(hdrColor, bloomColor,bloomStrength); //  bloom strength
+//    }
     if(hdr)
     {
         // reinhard
