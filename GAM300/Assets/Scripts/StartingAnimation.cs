@@ -47,6 +47,7 @@ public class StartingAnimation : Script
     bool fadeout = false;
     bool playAudio = true;
     bool startText = false;
+    bool exitAnim = false;
 
     bool seq1, seq2, seq3, seq4, seq5, seq6;
 
@@ -65,6 +66,7 @@ public class StartingAnimation : Script
         seq5 = true;
         seq6 = true;
         stop = false;
+        exitAnim = false;
     }
 
     void AudioPlay()
@@ -79,16 +81,18 @@ public class StartingAnimation : Script
     void Update()
     {
         Console.WriteLine(timer);
+
+        //skip to fade out
         if (Input.GetKeyDown(KeyCode.Escape)) {
-            //skip to level
-            timer = 65f;
+            exitAnim = true;
         }
+
         timer += Time.deltaTime;
 
         if (timer < 10f)
         {
             SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
-            if(black.alpha > 0)
+            if (black.alpha > 0)
             {
                 black.alpha -= Time.deltaTime;
                 if (black.alpha < 0)
@@ -108,7 +112,7 @@ public class StartingAnimation : Script
                 }
             }
 
-            
+
         }
         else if (timer < 14f)
         {
@@ -186,8 +190,8 @@ public class StartingAnimation : Script
             systeminit.SetActive(false);
             loading.SetActive(false);
             visorconnected.SetActive(false);
-            scanning.SetActive(true);
 
+            scanning.SetActive(true);
             SpriteRenderer scan = scanning.GetComponent<SpriteRenderer>();
 
             if (!stop)
@@ -200,15 +204,15 @@ public class StartingAnimation : Script
                     scan.alpha += Time.deltaTime / 2f;
                     if (scan.alpha >= 1f)
                     {
-                        sfx1.Play();
                         fadeout = true;
                     }
                 }
             }
 
-            if (timer > 50f && scan.alpha <= 0)
+            if ((timer > 52f) && (scan.alpha <= 0))
             {
                 stop = true;
+                scanning.SetActive(false);
             }
 
 
@@ -232,23 +236,23 @@ public class StartingAnimation : Script
                     location.SetActive(true);
                     sfx1.Play();
                 }
-
             }
-
-            
-        }
-        else if (timer < 75f)
-        {
 
         }
         else
         {
-            if (fadeblack.activeSelf == false)
-                fadeblack.SetActive(true);
+            exitAnim = true;
+        }
+
+
+        if (exitAnim)
+        {
+            fadeblack.SetActive(true);
+
             SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
             if (black.alpha < 1f)
             {
-                black.alpha += Time.deltaTime;
+                black.alpha += Time.deltaTime * 2;
                 if (black.alpha >= 1f)
                     SceneManager.LoadScene("LevelTutorial", true);
 
