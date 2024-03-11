@@ -19,6 +19,7 @@ public class ThirdPersonCamera : Script
 
     public float yawAngle;
     public float pitchAngle;
+    private float setYawAngle;
     private const float yawSM = 1800f;
     private const float pitchSM = 1800f;
 
@@ -33,6 +34,7 @@ public class ThirdPersonCamera : Script
     public float furthestZoom = 10f;
     public bool isZooming = false;
     private bool zoomReset = false;
+    private bool settingYaw = false;
 
     public float timer = 0f;
     private float duration = 1.0f;
@@ -83,7 +85,7 @@ public class ThirdPersonCamera : Script
 
     void OnTriggerEnter(PhysicsComponent other)
     {
-        Console.WriteLine("Enter");
+        //Console.WriteLine("Enter");
         if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
         {
             zoomReset = false;
@@ -92,7 +94,7 @@ public class ThirdPersonCamera : Script
 
     void OnTriggerExit(PhysicsComponent other)
     {
-        Console.WriteLine("Exit");
+        //Console.WriteLine("Exit");
         if (GetTag(other) != "Player" && GetTag(other) != "Enemy")
         {
             timer = 0f;
@@ -126,13 +128,28 @@ public class ThirdPersonCamera : Script
             ResetZoom();
     }
 
+    public void SetYaw(float yaw)
+    {
+        setYawAngle = yaw;
+        settingYaw = true;
+    }
+
     void UpdateCameraRotation()
     {
         vec2 mouseDelta = Input.GetMouseDelta();
         if (mouseDelta.LengthSqr > 1.0f)
             return;
 
-        yawAngle -= mouseDelta.x * yawRotSpeed * yawSM * Time.deltaTime * 3.14f / 180f;
+        if(settingYaw)
+        {
+            settingYaw = false;
+            yawAngle = setYawAngle;
+            Console.WriteLine("Angle: " + setYawAngle);
+        }
+        else
+        {
+            yawAngle -= mouseDelta.x * yawRotSpeed * yawSM * Time.deltaTime * 3.14f / 180f;
+        }
 
         //Pitch Camera Rotation
         pitchAngle -= mouseDelta.y * (invertPitch ? -1.0f : 1.0f) * pitchRotSpeed * pitchSM * Time.deltaTime * 3.14f / 180f;

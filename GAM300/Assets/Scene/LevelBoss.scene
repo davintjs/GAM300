@@ -9809,9 +9809,9 @@ GameObject:
 ID: 813583600382484493
 Transform:
   m_GameObject: {fileID: 15334681090738628473}
-  Translation: [66.5078735, 38.3068237, -34.3390808]
-  Rotation: [0, -1.57079637, 0]
-  Scale: [0.999998093, 1, 0.999998093]
+  Translation: [50.2656975, 90.2689209, -119.223]
+  Rotation: [0, -1.57079542, 0]
+  Scale: [0.999997556, 1, 0.999997556]
   Father: {fileID: 0}
   m_Children:
     []
@@ -9866,12 +9866,12 @@ Script:
   Script: {guid: f204530c811d06247b59f2ef14dd1085}
   closestZoom: 0.5
   cutscene: false
-  defaultZoom: 4
+  defaultZoom: 5
   furthestZoom: 6
   invertPitch: true
   isZooming: false
-  maxPitchAngle: 170
-  minPitchAngle: -85
+  maxPitchAngle: 30
+  minPitchAngle: -50
   pitchAngle: 0
   pitchRotSpeed: 1
   timer: 0
@@ -48195,7 +48195,7 @@ ID: 13167244482501997278
 Transform:
   m_GameObject: {fileID: 3187203319805926689}
   Translation: [0, -0.5, 0]
-  Rotation: [-3.14159203, 0, -3.14159203]
+  Rotation: [-3.14159203, -1.57079637, -3.14159203]
   Scale: [0.00999999978, 0.00999999978, 0.00999999978]
   Father: {fileID: 3977294589520766028}
   m_Children:
