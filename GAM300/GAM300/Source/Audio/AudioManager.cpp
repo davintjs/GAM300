@@ -275,7 +275,8 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 		break;
 	case 1: // SFX
 		if (SFXEnabled()) {
-			PlaySFX(Source.currentSound);
+			Source.play = true;
+			//PlaySFX(Source.currentSound);
 		}
 		break;
 	default:
