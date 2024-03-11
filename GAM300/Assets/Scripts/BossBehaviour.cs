@@ -156,6 +156,8 @@ public class BossBehaviour : Script
 
     public Transform bossHealthPivot;
 
+    BossAudioManager bossSounds;
+
     void Awake()
     {
         yPos = transform.position.y;
@@ -167,6 +169,9 @@ public class BossBehaviour : Script
 
     void Start()
     {
+
+        bossSounds = BossAudioManager.instance;
+
         player = ThirdPersonController.instance;
         StartCoroutine(EnterBossCutscene());
         InitAnimStates();
@@ -268,20 +273,24 @@ public class BossBehaviour : Script
         SetState("Attack1", true);
         yield return new WaitForSeconds(0.65f);
         StartCoroutine(RotateAndMoveToPlayer(0.1f, 800f, rotationSpeed / 2f));
+        bossSounds.attack1SFX.Play();
         StartCoroutine(EnableAttackCollider(attack1, transform.back * 800f, .6f, vec3.UnitY + transform.back * 2f + transform.left * 0.5f));
 
         yield return new WaitForSeconds(0.55f);
         StartCoroutine(RotateAndMoveToPlayer(0.3f, 300f, rotationSpeed));
+        bossSounds.attack2SFX.Play();
         StartCoroutine(EnableAttackCollider(attack2Right, transform.back * 800f, .8f, vec3.UnitY + transform.back * 2f));
         StartCoroutine(EnableAttackCollider(attack2Left, transform.back * 800f, .8f, vec3.UnitY + transform.back * 2f));
 
         yield return new WaitForSeconds(0.45f);
         StartCoroutine(RotateAndMoveToPlayer(0.1f, 0f, rotationSpeed / 2f));
+        bossSounds.attack3SFX.Play();
         StartCoroutine(EnableAttackCollider(attack2, transform.back * 500f, .8f, vec3.UnitY + transform.back ));
 
         yield return new WaitForSeconds(0.35f);
         StartCoroutine(RotateAndMoveToPlayer(1f, 0f, rotationSpeed * 8f));
         yield return new WaitForSeconds(0.1f);
+        bossSounds.attack4SFX.Play();
         StartCoroutine(EnableAttackCollider(attack3, transform.back * 800f, 1.4f, vec3.UnitY + transform.back * 2f));
 
         yield return new WaitForSeconds(1.2f);
