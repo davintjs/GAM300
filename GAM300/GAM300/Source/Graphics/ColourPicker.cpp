@@ -68,6 +68,9 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
 		//std::cout << "enter\n";
+		if (!currentScene.IsActive(Sprite))
+			continue;
+
 		if (Sprite.state == DELETED) continue;
 
 		if (!Sprite.ColourPicked)

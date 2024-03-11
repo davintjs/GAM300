@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/GraphicsHeaders.h"
 #include "Graphics/MeshManager.h"
 #include "Physics/PhysicsSystem.h"
+#include "Scene/Identifiers.h"
 
 #include "AssetManager/ModelCompiler.h"
 #include "Core/EventsManager.h"
@@ -79,7 +80,8 @@ void Animation_Manager::Update(float dt)
                 glm::vec3 d = transForm.GetParent()->GetGlobalTranslation() - p;
                 JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
                 EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
-                if (ray.hit) // If it hits something
+                std::string tagName = IDENTIFIERS.GetTagString(ray.tag.tagName);
+                if (ray.hit && tagName.compare("Enemy") && ray.tag.physicsLayerIndex != 1) // If it hits something
                     continue;
             }
 

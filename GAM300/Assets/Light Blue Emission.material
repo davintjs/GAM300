@@ -1,7 +1,7 @@
 Material:
   Material Name: Light Blue Emission
   Shader: 1
-  Albedo: [1, 0.345098048, 0, 1]
+  Albedo: [0, 1, 0.93685174, 1]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 100

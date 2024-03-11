@@ -900,7 +900,7 @@ SpriteRenderer:
 ---
 ID: 6711356329535506755
 GameObject:
-  m_IsActive: false
+  m_IsActive: true
   m_Name: fadeblack
   m_TagString: ""
   m_Layer: 0
@@ -911,9 +911,9 @@ GameObject:
 ID: 12547162527113978062
 Transform:
   m_GameObject: {fileID: 6711356329535506755}
-  Translation: [-0.0450473242, -0.0500993803, 0.328481853]
+  Translation: [-0.0450473242, -0.0500993803, 1.37800002]
   Rotation: [3.14159083, 0, -3.14159083]
-  Scale: [0.975941896, 0.976259947, 0.970950902]
+  Scale: [28.1259995, 28, 0.970950902]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []

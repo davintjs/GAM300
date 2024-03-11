@@ -106,6 +106,8 @@ struct Transform : Object
 
 	Transform* GetParent();
 
+	void UpdateEnabledFlags();
+
 	static glm::mat4 CreateTransformationMtx(vec3 translation, vec3 rotation, vec3 scale)
 	{
 		glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));

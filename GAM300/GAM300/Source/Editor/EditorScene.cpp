@@ -435,6 +435,8 @@ void EditorScene::DisplayGizmos()
 
         for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
         {
+            if (!currentScene.IsActive(Sprite))
+                continue;
             if (Sprite.state == DELETED) continue;
             Entity& entity = currentScene.Get<Entity>(Sprite);
             if (!currentScene.IsActive(entity)) continue;

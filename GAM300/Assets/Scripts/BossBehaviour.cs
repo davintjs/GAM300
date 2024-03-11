@@ -132,7 +132,7 @@ public class BossBehaviour : Script
                     animationManager.ResetAllStates();
                     SetEnabled(rb,false);
                     SetState("Death", true);
-                    StartCoroutine(Victory());
+                    StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
                     //DIE
                 }
             }
@@ -162,14 +162,18 @@ public class BossBehaviour : Script
         rb = GetComponent<Rigidbody>();
         indicatorLocal = ultiSphere.localPosition;
         health = maxHealth;
+
     }
 
     void Start()
     {
         player = ThirdPersonController.instance;
-        StartCoroutine(Chase());
+        StartCoroutine(EnterBossCutscene());
         InitAnimStates();
         ultiSphere.gameObject.SetActive(false);
+        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
+
+        transform.localPosition = bossStartPos;
     }
 
     void Update()
@@ -194,8 +198,6 @@ public class BossBehaviour : Script
 
         vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
 
-        transform.localPosition = bossStartPos;
-
         float cutsceneDuration = 10f;
         float timer = cutsceneDuration;
         while (timer > 0)
@@ -211,8 +213,8 @@ public class BossBehaviour : Script
             yield return null;
         }
 
-        ThirdPersonCamera.instance.yawAngle = camera.localRotation.y;
-
+        ThirdPersonCamera.instance.SetYaw(openingCameraEndTarget.rotation.y);
+        ThirdPersonCamera.instance.transform.localRotation = new vec3(openingCameraEndTarget.rotation.x, openingCameraEndTarget.rotation.y, 0f);
         ThirdPersonCamera.instance.cutscene = false;
 
         StartCoroutine(Chase());
@@ -771,6 +773,10 @@ public class BossBehaviour : Script
     {
         if (GetTag(rb) == "PlayerAttack")
         {
+            ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+            ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+            //CombatManager.instance.SpawnHitEffect(transform);
+            AudioManager.instance.enemyHit.Play();
             //AudioManager.instance.playerInjured.Play();
             health -= 10;
         }
