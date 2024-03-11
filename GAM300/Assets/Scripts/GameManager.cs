@@ -12,8 +12,6 @@ public class GameManager : Script
     public AudioSource BGM_Source;
     public float fadeTime = 1f;
 
-    public TextRenderer textRenderer;
-
     public bool paused = false;
 
     void Awake()
@@ -25,9 +23,6 @@ public class GameManager : Script
 
     void Start()
     {
-        if (textRenderer != null)
-            textRenderer.text = "HELLO PUNDEH";
-        Console.WriteLine(textRenderer.text);
         Input.LockCursor(true);
     }
 
