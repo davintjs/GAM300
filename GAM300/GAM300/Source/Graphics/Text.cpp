@@ -310,13 +310,6 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 			float currlineWidth{ 0.f };
 			while (internalIter < text.text.size())
 			{
-				char internalC = text.text[internalIter];
-				////currlineWidth += mFontContainer.at(text.guid).at(internalC).Size.x * fontSize;
-				if (internalC == ' ')
-				{
-					currlineWidth += mFontContainer.at(text.guid).at(' ').Size.x * fontSize;
-					continue;
-				}
 
 				int wordIter{ internalIter };
 				char tempChar = text.text[internalIter];
@@ -355,6 +348,13 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 						xpos = xoffset + ch.Bearing.x * fontSize;
 					}
 					break;
+				}
+
+				char internalC = text.text[internalIter];
+				////currlineWidth += mFontContainer.at(text.guid).at(internalC).Size.x * fontSize;
+				if (internalC == ' ')
+				{
+					currlineWidth += mFontContainer.at(text.guid).at(' ').Size.x * fontSize;
 				}
 
 				currlineWidth += wordWidth;
