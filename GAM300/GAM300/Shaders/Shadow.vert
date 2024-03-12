@@ -42,6 +42,8 @@ void main()
         if (isAnim)
         {    
             vec4 totalPosition = vec4(0.0f);
+            mat4 boneTransform = mat4(0.0f);
+            bool breakOut = false;
             for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
             {
                 if(boneIds[i] == -1) 
@@ -49,10 +51,18 @@ void main()
                 if(boneIds[i] >=MAX_BONES) 
                 {
                     totalPosition = vec4(aPos, 1.0f);
+                    breakOut = true;
                     break;
                 }
-                vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aPos,1.0f);
-                totalPosition += localPosition * weights[i];
+            }
+
+            if(!breakOut)
+            {
+                boneTransform = finalBonesMatrices[boneIds[0]] * weights[0];
+                boneTransform += finalBonesMatrices[boneIds[1]] * weights[1];
+                boneTransform += finalBonesMatrices[boneIds[2]] * weights[2];
+                boneTransform += finalBonesMatrices[boneIds[3]] * weights[3];
+                totalPosition = boneTransform * vec4(aPos, 1.0f);
             }
 
 	        gl_Position = lightSpaceMatrix * defaultSRT * totalPosition;

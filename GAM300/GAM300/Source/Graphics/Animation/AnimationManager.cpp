@@ -77,12 +77,16 @@ void Animation_Manager::Update(float dt)
             {
                 Transform& cameraTran{ currentScene.Get<Transform>(CurrCam) };
                 glm::vec3 p = cameraTran.GetGlobalTranslation();
-                glm::vec3 d = transForm.GetParent()->GetGlobalTranslation() - p;
-                JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
-                EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
-                std::string tagName = IDENTIFIERS.GetTagString(ray.tag.tagName);
-                if (ray.hit && tagName.compare("Enemy") && ray.tag.physicsLayerIndex != 1) // If it hits something
-                    continue;
+                Transform* parent = transForm.GetParent();
+                if (parent)
+                {
+                    glm::vec3 d = parent->GetGlobalTranslation() - p;
+                    JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
+                    EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
+                    std::string tagName = IDENTIFIERS.GetTagString(ray.tag.tagName);
+                    if (ray.hit && tagName.compare("Enemy") && ray.tag.physicsLayerIndex != 1) // If it hits something
+                        continue;
+                }
             }
 
             if (animator.playing && animator.AnimationAttached())
@@ -103,7 +107,12 @@ void Animation_Manager::AddAnimation(const AnimationAsset& _animationAsset, cons
     Animation animation;
     animation.GetBoneCount() = _animationAsset.boneCounter;
     animation.GetBoneInfoMap() = _animationAsset.boneInfoMap;
-    animation.GetBones() = _animationAsset.bones;
+
+    auto& map = animation.GetBones();
+    for (const Bone bone : _animationAsset.bones)
+    {
+        map[bone.m_Name] = bone;
+    }
     animation.GetDuration() = _animationAsset.duration;
     animation.GetTicksPerSecond() = _animationAsset.ticksPerSecond;
     animation.GetRootNode() = _animationAsset.rootNode;
