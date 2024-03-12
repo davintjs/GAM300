@@ -74,7 +74,7 @@ GameObject:
 ID: 11834711623357585551
 Transform:
   m_GameObject: {fileID: 1589847083358243135}
-  Translation: [-10.3278246, 1, -3.95772304e-11]
+  Translation: [1.16661704, 1, -3.95772304e-11]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -93,14 +93,16 @@ AudioSource:
   m_GameObject: {fileID: 1589847083358243135}
   m_IsEnabled: true
   AudioChannel: 1
-  Loop: false
-  Volume: 3
+  Loop: true
+  Volume: 1
+  min hearing Distance: 10
+  max hearing Distance: 30
   SFX min Pitch: -5
   SFX max Pitch: 5
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: af49879181811b234e8b146a0ca6a75d}
-  Play: false
+  Play: true
 ---
 ID: 4728600544200370801
 GameObject:
@@ -189,6 +191,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -210,8 +214,8 @@ GameObject:
 ID: 5915572405052181223
 Transform:
   m_GameObject: {fileID: 7998039492543491522}
-  Translation: [5, 3, 2]
-  Rotation: [-0.293215305, 0.863937974, 0]
+  Translation: [0, 2, 10]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
