@@ -298,6 +298,7 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 			char internalC = text.text[iter];
 			if (internalC == ' ')
 			{
+				++iter;
 				continue;
 			}
 		}
