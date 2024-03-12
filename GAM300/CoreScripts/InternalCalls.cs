@@ -273,6 +273,15 @@ namespace BeanFactory
 
         #endregion
 
+        #region GRAPHICS
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetGamma();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetGamma(float gammaValue);
+
+        #endregion
+
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetFullscreenMode(bool fullscreenMode);
 

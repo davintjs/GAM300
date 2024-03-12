@@ -558,6 +558,8 @@ public:
 
 	glm::vec3& getAmbientRGB() { return ambient_rgb; };
 
+	float& getGamma() { return gammaCorrection; };
+
 	gBuffer m_gBuffer;
 
 	property_vtable();
@@ -571,6 +573,7 @@ private:
 	std::vector<std::vector<glm::mat4>*> finalBoneMatContainer;
 
 	// Global Graphics Settings
+	float gammaCorrection = 2.2f;
 	unsigned int bloomCount = 1;
 	float exposure = 1.f;
 	float bloomThreshold = 1.f;
@@ -590,6 +593,7 @@ property_begin_name(Renderer, "Graphics Settings"){
 	property_var(bloomThreshold).Name("Bloom Threshold"),
 	property_var(ambient).Name("Ambient"),
 	property_var(exposure).Name("Exposure"),
+	property_var(gammaCorrection).Name("Gamma Correction"),
 } property_vend_h(Renderer)
 
 
