@@ -331,7 +331,7 @@ void BaseAnimator::CalculateBoneTransform(const AssimpNodeData* node, glm::mat4 
         m_FinalBoneMatrices[index] = parentTransform * offset;
 
         // Set Rig Display
-        if (!rig.empty())
+        if (armature && !rig.empty())
         {
             Transform* transform = rig[nodeName];
             if (transform)
@@ -409,7 +409,7 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
             m_FinalBoneMatrices[index] = globalTransformation * offset;
 
             // Set Rig Display
-            if (!rig.empty())
+            if (armature && !rig.empty())
             {
                 Transform* transform = rig[nodeName];
                 if (transform)

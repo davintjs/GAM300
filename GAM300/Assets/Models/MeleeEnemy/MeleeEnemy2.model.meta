@@ -5,3 +5,8 @@ animations:
   data: {guid: 8195958d51435807d51070b601315d5d}
 animationStates:
   Idle: [2, 57]
+  Walk: [58, 98]
+  Run: [99, 121]
+  Stun: [122, 175]
+  Attack: [176, 244]
+  Death: [245, 315]
