@@ -174,6 +174,10 @@ void ShaderManager::Init()
 	vertexPath = shaderPath + "/UpSample.vert";
 	fragmentPath = shaderPath + "/UpSample.frag";
 	ShaderCompiler("UpSampling SHADER", vertexPath, fragmentPath);
+
+	vertexPath = shaderPath + "/mergingBloom.vert";
+	fragmentPath = shaderPath + "/mergingBloom.frag";
+	ShaderCompiler("Bloom Merging SHADER", vertexPath, fragmentPath);
 }
 
 void ShaderManager::Update(float)

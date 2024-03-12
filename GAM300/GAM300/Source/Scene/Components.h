@@ -302,12 +302,12 @@ property_begin_name(Animator, "Animator") {
 
 struct TextRenderer : Object
 {
-	std::string text = "Default Text";
+	Engine::GUID<FontAsset> guid{ 0 };
 	float x = 0.f, y = 0.f, fontSize = 12.f;
 	float r = 0.5, g = 0.8f, b = 0.2f;
 	float alpha = 1.f;
 	float width = 10.f, leading = 1.5f;
-	Engine::GUID<FontAsset> guid{0};
+	std::string text = "Default Text";
 	property_vtable();
 };
 

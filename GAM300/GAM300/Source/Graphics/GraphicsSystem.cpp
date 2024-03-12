@@ -273,29 +273,22 @@ void GraphicsSystem::Update(float dt)
 	}
 
 	// Game Cameras
-	EditorWindowEvent e1("Game");
-	EVENTS.Publish(&e1);
-
-	if (e1.isOpened)
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	for (Camera& camera : currentScene.GetArray<Camera>())
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (Camera& camera : currentScene.GetArray<Camera>())
-		{
-			if (camera.state == DELETED) continue;
+		if (camera.state == DELETED) continue;
 
-			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
+		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
 
-			const glm::vec3 translation = transform->GetGlobalTranslation();
-			const glm::vec3 rotation = transform->GetGlobalRotation();
-			// Update camera view 
-			camera.UpdateCamera(translation,rotation);
+		const glm::vec3 translation = transform->GetGlobalTranslation();
+		const glm::vec3 rotation = transform->GetGlobalRotation();
+		// Update camera view 
+		camera.UpdateCamera(translation, rotation);
 
-			COLOURPICKER.ColorPickingUIButton(camera);
+		COLOURPICKER.ColorPickingUIButton(camera);
 
-			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
-
-		}
+		PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 	}
 #endif	
 
@@ -327,6 +320,33 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	}
 
+	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+
+	if (RENDERER.enableBloom())
+	{
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::MERGE_BLOOM);
+		shader.Use();
+
+		// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
+		glActiveTexture(GL_TEXTURE0);
+		// glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
+
+		glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]); 
+
+
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "bloomStrength");
+		glUniform1f(uniform1, (float)(RENDERER.GetBloomCount()) / 100.f);
+
+		renderQuad(_vao, _vbo);
+		shader.UnUse();
+	}
+	
+
+
+
 	// Draw debug drawing without being affected by the bloom
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
 
@@ -346,6 +366,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	}
 
 	TEXTSYSTEM.Draw(_camera);
+
 	PARTICLERENDER.Draw2D(_camera);
 
 	FRAMEBUFFER.Unbind();
@@ -383,7 +404,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
 
-	GLint uniform3 =
+	/*GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "enableBloom");
 
 	glUniform1f(uniform3, RENDERER.enableBloom());
@@ -391,7 +412,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	GLint uniform4 =
 		glGetUniformLocation(shader.GetHandle(), "bloomStrength");
 
-	glUniform1f(uniform4, (float)(RENDERER.GetBloomCount())/100.f);
+	glUniform1f(uniform4, (float)(RENDERER.GetBloomCount())/100.f);*/
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();

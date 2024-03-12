@@ -331,6 +331,21 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		t.SetLocalScale(scale);
 	}
 #pragma endregion
+	static MonoString* GetTextString(ScriptObject<TextRenderer> pObject)
+	{
+		TextRenderer& object = pObject;
+
+		return SCRIPTING.CreateMonoString(object.text);
+	}
+
+	static void SetTextString(ScriptObject<TextRenderer> renderer, MonoString* string)
+	{
+		TextRenderer& object = renderer;
+		object.text = mono_string_to_utf8(string);
+	}
+#pragma region TEXTRENDERER
+
+#pragma endregion
 
 #pragma region PARTICLES
 
@@ -713,6 +728,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetMusicFade);
 		Register(EnableSFX);
 		Register(PauseComponent);
+
+		//Text renderer
+		Register(SetTextString);
+		Register(GetTextString);
 
 
 		// Animator Component

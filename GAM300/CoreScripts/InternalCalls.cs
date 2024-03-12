@@ -209,10 +209,10 @@ namespace BeanFactory
 
         #region TEXT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetTextString(ulong compID,out string str);
+        internal extern static string GetTextString(TextRenderer renderer);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextString(ulong compID,string str);
+        internal extern static void SetTextString(TextRenderer renderer,string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetTextColor(ulong ID, out vec4 color);

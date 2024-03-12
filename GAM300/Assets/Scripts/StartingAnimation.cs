@@ -80,7 +80,7 @@ public class StartingAnimation : Script
 
     void Update()
     {
-        Console.WriteLine(timer);
+        //Console.WriteLine(timer);
 
         //skip to fade out
         if (Input.GetKeyDown(KeyCode.Escape)) {
