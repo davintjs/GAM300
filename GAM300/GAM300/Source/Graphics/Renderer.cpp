@@ -413,7 +413,7 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1i(hasAnim, prop.isAnimatable);
 		if (prop.isAnimatable)
 		{
-			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			const std::vector<glm::mat4>& transforms = (*finalBoneMatContainer[prop.boneidx]);
 			glUniformMatrix4fv(FinalBoneMatrices, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
 
@@ -481,7 +481,7 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 		glUniform1i(hasAnim, prop.isAnimatable);
 		if (prop.isAnimatable)
 		{
-			std::vector<glm::mat4> transforms = *finalBoneMatContainer[prop.boneidx];
+			const std::vector<glm::mat4>& transforms = (*finalBoneMatContainer[prop.boneidx]);
 			glUniformMatrix4fv(FinalBoneMatrices, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 		}
 

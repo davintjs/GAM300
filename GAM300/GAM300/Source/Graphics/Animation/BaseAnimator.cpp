@@ -36,16 +36,13 @@ BaseAnimator::BaseAnimator()
     blendStartTime = 0.f;
     blendTimer = 0.f;
 
-    m_FinalBoneMatrices.reserve(100);
-
-    for (int i = 0; i < 100; i++)
-        m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
 }
 
 void BaseAnimator::CreateRig(Transform* _transform)
 {
     rigTransform = _transform;
     Scene& currentScene = MySceneManager.GetCurrentScene();
+    m_FinalBoneMatrices.clear();
 
     // If no aniamtion exists
     if (m_AnimationIdx == -1)
@@ -74,6 +71,9 @@ void BaseAnimator::CreateRig(Transform* _transform)
     else
     {
         Animation& m_CurrentAnimation = AnimationManager.GetAnimCopy(m_AnimationIdx);
+        m_FinalBoneMatrices.reserve(m_CurrentAnimation.GetBoneCount());
+        for (int i = 0; i < m_FinalBoneMatrices.capacity(); i++)
+            m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
 
         // Check for existing rig
         for (size_t i = 0; i < rigTransform->child.size(); i++)
@@ -436,8 +436,15 @@ void BaseAnimator::SetDefaultState(const std::string& _defaultState)
 {
     Animation& animation = AnimationManager.GetAnimCopy(m_AnimationIdx);
     defaultState = animation.GetAnimationState(_defaultState);
-    CalculateBoneTransform(&animation.GetRootNode(), glm::mat4(1.f));
 
+    if (m_FinalBoneMatrices.empty())
+    {
+        m_FinalBoneMatrices.reserve(animation.GetBoneCount());
+        for (int i = 0; i < m_FinalBoneMatrices.capacity(); i++)
+            m_FinalBoneMatrices.push_back(glm::mat4(1.0f));
+    }
+
+    CalculateBoneTransform(&animation.GetRootNode(), glm::mat4(1.f));
 }
 
 void BaseAnimator::SetNextState(const std::string& _nextState)
