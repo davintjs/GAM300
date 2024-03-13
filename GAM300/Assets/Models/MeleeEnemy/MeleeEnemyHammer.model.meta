@@ -1,0 +1,12 @@
+guid: f0665400fc4912d487924def0b360b3c
+meshes:
+  data: {guid: b432997a180d226a93111082e0a73d21}
+animations:
+  data: {guid: b705ca95cd0f20e4b369b0fab4c62f38}
+animationStates:
+  Idle: [2, 57]
+  Walk: [58, 98]
+  Run: [99, 121]
+  Stun: [122, 175]
+  Attack: [176, 244]
+  Death: [245, 315]

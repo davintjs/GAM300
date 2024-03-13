@@ -215,16 +215,6 @@ void EditorScene::ToolBar()
             ImGui::SetTooltip("Show All Colliders (Show all debug drawing of colliders)");
         }
 
-        ImGui::Dummy(ImVec2(10.f, 0.f));
-        if (ImGui::Checkbox("CIA", &RENDERER.EnableIsActive())) {}
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-        {
-            std::string tooltip = "Check Is Active (Enable/Disable setting of IsActive of GameObjects)\n";
-            tooltip += "Disabling this causes the Renderer to NOT check for disabled GameObjects, \n";
-            tooltip += "it temporarily increases performance while editing the scene";
-            ImGui::SetTooltip(tooltip.c_str());
-        }
-
         ImGui::EndMenuBar();
     }
 }
@@ -445,6 +435,8 @@ void EditorScene::DisplayGizmos()
 
         for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
         {
+            if (!currentScene.IsActive(Sprite))
+                continue;
             if (Sprite.state == DELETED) continue;
             Entity& entity = currentScene.Get<Entity>(Sprite);
             if (!currentScene.IsActive(entity)) continue;
@@ -566,6 +558,11 @@ void EditorScene::DisplayGizmos()
             //DEBUGDRAW.DrawCapsuleBounds(entity.EUID());
         }
 
+        if (currentScene.Has<SphereCollider>(entity) && isActive)
+        {
+            DEBUGDRAW.DrawSphereBounds(entity.EUID());
+        }
+
         if (currentScene.Has<Camera>(entity) && isActive)
         {
             DEBUGDRAW.DrawCameraBounds(entity.EUID());
@@ -574,6 +571,11 @@ void EditorScene::DisplayGizmos()
         if (currentScene.Has<LightSource>(entity) && isActive)
         {
             DEBUGDRAW.DrawLightBounds(entity.EUID());
+        }
+
+        if (currentScene.Has<SpriteRenderer>(entity) && isActive)
+        {
+            DEBUGDRAW.DrawButtonBounds(entity.EUID());
         }
 
         glm::mat4 transform_1;

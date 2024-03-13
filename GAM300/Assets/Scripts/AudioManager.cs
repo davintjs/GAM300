@@ -39,6 +39,7 @@ public class AudioManager : Script
     public AudioSource dodgeRoll2;
     public AudioSource dashAttack;
     public AudioSource enemyAlerted1, enemyAlerted2, enemyAlerted3;
+    public AudioSource obj_success;
 
     void Awake()
     {
@@ -51,7 +52,11 @@ public class AudioManager : Script
             instance = this;
         }
 
-        if(playerSlashAttack == null)
+        if (obj_success == null)
+        {
+            Console.WriteLine("Objective Success Sound missing reference");
+        }
+        if (playerSlashAttack == null)
         {
             Console.WriteLine("PlayerAttack Sound missing reference");
         }

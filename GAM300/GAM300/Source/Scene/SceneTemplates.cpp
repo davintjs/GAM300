@@ -106,10 +106,6 @@ void Scene::LinkReferences(ReferencesTable& storage)
 {
 	for (auto& old_new : storage[GetType::E<T>()])
 	{
-		if (std::is_same<T, Script>())
-		{
-			PRINT("WASSUP!");
-		}
 		Handle handle = old_new.second;
 
 		T& newObject = Get<T>(handle.euid, handle.uuid);
@@ -376,7 +372,10 @@ bool Scene::IsActive(T& object, bool checkParents)
 		bool isActive = arr.IsActiveDense(arr.GetDenseIndex(object));
 		Transform& t = Get<Transform>(object);
 
-		if (checkParents && isActive && t.parent)
+		if (!isActive)
+			return false;
+
+		if (checkParents && t.parent != Engine::UUID(0))
 		{
 			return t.GetFlag(Transform::Flag::WorldEnabled);
 		}

@@ -377,6 +377,10 @@ public:
 	
 	void Draw();
 
+	void DrawButtonOutlines();
+
+	void DrawButtonBounds(const Engine::UUID & _euid);
+
 	void DrawIcons();
 
 	void DrawCanvasOutline();
@@ -385,7 +389,11 @@ public:
 
 	void DrawCapsuleColliders();
 
+	void DrawSphereColliders();
+
 	void DrawCapsuleBounds(const Engine::UUID & _euid);
+
+	void DrawSphereBounds(const Engine::UUID & _euid);
 
 	void DrawCameraBounds(const Engine::UUID& _euid);
 	
@@ -546,11 +554,11 @@ public:
 
 	bool& EnableFrustumCulling() { return frustumCulling; };
 
-	bool& EnableIsActive() { return isActive; };
-
 	float& getAmbient() { return ambient; };
 
 	glm::vec3& getAmbientRGB() { return ambient_rgb; };
+
+	float& getGamma() { return gammaCorrection; };
 
 	gBuffer m_gBuffer;
 
@@ -565,6 +573,7 @@ private:
 	std::vector<std::vector<glm::mat4>*> finalBoneMatContainer;
 
 	// Global Graphics Settings
+	float gammaCorrection = 2.2f;
 	unsigned int bloomCount = 1;
 	float exposure = 1.f;
 	float bloomThreshold = 1.f;
@@ -573,8 +582,7 @@ private:
 	bool hdr = true;
 	bool renderShadow = true;
 	bool enablebloom;
-	bool frustumCulling = false;
-	bool isActive = true;
+	bool frustumCulling = true;
 };
 
 property_begin_name(Renderer, "Graphics Settings"){
@@ -585,6 +593,7 @@ property_begin_name(Renderer, "Graphics Settings"){
 	property_var(bloomThreshold).Name("Bloom Threshold"),
 	property_var(ambient).Name("Ambient"),
 	property_var(exposure).Name("Exposure"),
+	property_var(gammaCorrection).Name("Gamma Correction"),
 } property_vend_h(Renderer)
 
 
@@ -606,10 +615,10 @@ public:
 		unsigned int Advance;
 		glm::vec2 AtlasCoordsMin;
 		glm::vec2 AtlasCoordsMax;
-		GLuint Texture{ 0 }; // temp will be upgraded more later
 	};
 
 	unsigned int txtVAO, txtVBO;
+
 	using FontCharacters = std::map<char, Character>;
 	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;
 	std::unordered_map<Engine::GUID<FontAsset>, GLuint> mFontAtlasContainer;
@@ -622,6 +631,7 @@ public:
 
 	//std::vector<FontType> fontGroups;
 	std::vector<float> allVertices;
+	//std::vector<glm::vec4> allVertices;
 	//std::vector<GLuint> allTextures;
 
 

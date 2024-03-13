@@ -50,7 +50,7 @@ public class VictoryMenu : Script
     IEnumerator LoadScene(float seconds)
     {
         yield return new WaitForSeconds(seconds);
-        SceneManager.LoadScene("MainMenu");
+        SceneManager.LoadScene("MainMenu",true);
     }
 
     void goToPlay()

@@ -42,10 +42,9 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	//return 0;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 
-	glm::mat4 OrthoProjection = glm::ortho(-1.f * 1.777778f, 1.f * 1.777778f, -1.f, 1.f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
 	glm::mat4 IdentityMat = glm::mat4(1.f);
 	glm::mat4 projToUse, viewToUse, srtToUse, scaleMat = glm::identity<glm::mat4>();
-	scaleMat[0][0] = 1.777778f;
 
 	glViewport(0, 0, 1600, 900);
 	glBindFramebuffer(GL_FRAMEBUFFER, colorPickFBO);
@@ -69,6 +68,9 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
 	{
 		//std::cout << "enter\n";
+		if (!currentScene.IsActive(Sprite))
+			continue;
+
 		if (Sprite.state == DELETED) continue;
 
 		if (!Sprite.ColourPicked)
@@ -101,6 +103,12 @@ Engine::UUID ColourPicker::ColorPickingUIButton(BaseCamera& _camera)
 		glUniform4fv(glGetUniformLocation(shader.GetHandle(), "PickingColour")
 		, 1, glm::value_ptr(picking_color));
 
+		BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
+		if (pTexture)
+		{
+			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
+			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
+		}
 
 		if (Sprite.WorldSpace) // 3D Space UI
 		{

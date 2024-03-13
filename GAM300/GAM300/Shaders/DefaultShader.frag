@@ -240,8 +240,8 @@ float ShadowCalculation_Directional(vec4 fragPosLightSpace,vec3 Normal,vec3 ligh
     float currentDepth = projCoords.z;  
     // check whether current frag pos is in shadow
 
-    // Max is 0.05 , Min is 0.005 -> put min as 0.0005
-    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.0005);
+    // Max is 0.05 , Min is 0.005 -> put min as 0.005
+    float bias = max(0.05 * (1.0 - dot(Normal, lightDir)), 0.005);
 
     float shadow = currentDepth - bias > closestDepth  ? 1.0 : 0.0;
 
@@ -428,8 +428,8 @@ void main()
     bool hasEmissionMap =false;
     if (hasEmission != 0)
     {
-//        emission  = EmissionConstant * texture(EmmisionMap, TexCoords).xyz; 
-        emission  =  texture(EmmisionMap, TexCoords).xyz; 
+        emission  = EmissionConstant * texture(EmmisionMap, TexCoords).xyz; 
+//        emission  =  texture(EmmisionMap, TexCoords).xyz; 
         
         if(emission != vec3(0.f,0.f,0.f))
             hasEmissionMap = true;
@@ -717,7 +717,7 @@ void main()
     if( (brightness > bloomThreshold) && toBloom)
 
         Blooming = vec4(color.rgb, 1.0);
-    else
+    else if(Albedo.a == 1.0)
         Blooming = vec4(0.0, 0.0, 0.0, 1.0);
 
 

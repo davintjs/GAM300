@@ -87,6 +87,8 @@ public:
 	// Adjust Prespective projection based off viewport
 	void OnResize(const float& _width, const float& _height);
 
+	bool WithinFrustrumAnimation(Transform& _transform, const glm::vec3& _min, const glm::vec3& _max);
+
 	// Check if items are within the camera's frustum
 	bool WithinFrustum(Transform& _transform, const glm::vec3& _min, const glm::vec3& _max);
 	

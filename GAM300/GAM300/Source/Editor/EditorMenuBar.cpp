@@ -191,6 +191,14 @@ void EditorMenuBar::Update(float dt)
                 udpateGraphics = true;
             ImGui::TableNextRow();
 
+            ImGui::TableNextColumn();
+            ImGui::Text("Gamma Correction"); ImGui::SameLine();
+            ImGui::TableNextColumn();
+            ImGui::SetNextItemWidth(ImGui::GetContentRegionAvail().x);
+            if (ImGui::DragFloat("##GAMMA", &RENDERER.getGamma(), 0.01f, 0.f, 5.f))
+                udpateGraphics = true;
+            ImGui::TableNextRow();
+
             if (*hdr) {
                 ImGui::TableNextColumn();
                 ImGui::Text("Light Exposure"); ImGui::SameLine();

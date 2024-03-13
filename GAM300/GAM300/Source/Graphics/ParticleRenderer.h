@@ -13,6 +13,8 @@ public:
 	void Init();
 	void Update(float dt);
 	void Draw(BaseCamera & _camera);
+	void Draw2D(BaseCamera & _camera);
+	bool compareParticles(const glm::mat4 & particle1, const glm::mat4 & particle2, const glm::vec3 & cameraPosition);
 	void SetupInstancedQuad();
 	void SetupInstancedCylinder();
 	void Exit();

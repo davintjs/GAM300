@@ -28,7 +28,8 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AI/NavMesh.h"
 #include "AI/NavMeshBuilder.h"
 #include "Graphics/GraphicsHeaders.h"
-
+#include "Physics/PhysicsSystem.h"
+	
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
 
@@ -70,6 +71,9 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 	static MonoString* GetTag(ScriptObject<Object> pObject)
 	{
 		Object* object = pObject;
+		if (!object)
+			return nullptr;
+
 		Tag& tag = MySceneManager.GetCurrentScene().Get<Tag>(object->EUID());
 		return SCRIPTING.CreateMonoString(IDENTIFIERS.GetTagString(tag.tagName));
 	}
@@ -117,9 +121,13 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 #pragma region PHYSICS SYSTEM
 
-	static void Raycast(Vector3& position, Vector3& direction, float& distance, bool& hit, int& mask)
+	static void Raycast(Vector3& position, Vector3& direction, float distance, bool& hit, Vector3& point, ScriptObject<Entity>& obj)
 	{
-
+		JPH::RVec3 pos = { position.x, position.y, position.z };
+		EngineRayCastResult rc = PHYSICS.CastRay(pos, { direction.x, direction.y, direction.z }, distance);
+		hit = rc.hit;
+		point = rc.point;
+		obj = &MySceneManager.GetCurrentScene().Get<Entity>(rc.tag);
 	}
 
 #pragma endregion
@@ -243,6 +251,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 			transform.SetParent(nullptr);
 	}
 
+	static void GetChild(ScriptObject<Transform> pTransform, ScriptObject<Transform>& pChild)
+	{
+		Transform& t = pTransform;
+		Scene& scene = MySceneManager.GetCurrentScene();
+		Object* pObject = &scene.Get<Transform>(t.child.front());
+		pChild = pObject;
+	}
+
 	static void GetWorldPosition(ScriptObject<Transform> pTransform, Vector3& position)
 	{
 		Transform& t = pTransform;
@@ -314,6 +330,21 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Transform& t = pTransform;
 		t.SetLocalScale(scale);
 	}
+#pragma endregion
+	static MonoString* GetTextString(ScriptObject<TextRenderer> pObject)
+	{
+		TextRenderer& object = pObject;
+
+		return SCRIPTING.CreateMonoString(object.text);
+	}
+
+	static void SetTextString(ScriptObject<TextRenderer> renderer, MonoString* string)
+	{
+		TextRenderer& object = renderer;
+		object.text = mono_string_to_utf8(string);
+	}
+#pragma region TEXTRENDERER
+
 #pragma endregion
 
 #pragma region PARTICLES
@@ -523,6 +554,14 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return SCRIPTING.CreateMonoString(name);
 	}
 
+	static MonoString* GetName(ScriptObject<Entity> pEntity)
+	{
+		Entity* entity= &MySceneManager.GetCurrentScene().Get<Entity>(*pEntity);
+		if (entity == nullptr)
+			return SCRIPTING.CreateMonoString("");
+		return SCRIPTING.CreateMonoString(MySceneManager.GetCurrentScene().Get<Tag>(*entity).name);
+	}
+
 	static int GetLayer(MonoString* mString)
 	{
 		std::string name = mono_string_to_utf8(mString);
@@ -594,6 +633,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return NAVMESHBUILDER.GetNavMesh()->FindPath(_player, pDest);
 	}
 
+	// Graphics
+
+	static float GetGamma()
+	{
+		return RENDERER.getGamma();
+	}
+
+	static void SetGamma(float gammaValue)
+	{
+		float& gamma = RENDERER.getGamma();
+		gamma = gammaValue;
+	}
+
 	//Register all components to mono
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
@@ -640,6 +692,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(Get);
 		Register(GetLayer);
 		Register(GetLayerName);
+		Register(GetName);
 		Register(GetActive);
 		Register(SetActive);
 		Register(LoadScene);
@@ -666,6 +719,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// Transform Component
 		Register(SetTransformParent);
+		Register(GetChild);
 		Register(GetWorldPosition);
 		Register(GetWorldRotation);
 		Register(GetWorldScale);
@@ -687,6 +741,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		Register(SetMusicFade);
 		Register(EnableSFX);
 		Register(PauseComponent);
+
+		//Text renderer
+		Register(SetTextString);
+		Register(GetTextString);
 
 
 		// Animator Component
@@ -718,6 +776,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// SpriteRenderer Component
 		Register(IsButtonClicked);
+
+		// Graphics
+		Register(GetGamma);
+		Register(SetGamma);
 
 		//
 		Register(QuitGame);

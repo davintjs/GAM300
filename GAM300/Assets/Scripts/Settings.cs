@@ -41,7 +41,7 @@ public class Settings : Script
     private SpriteRenderer sfxVolumeButtonRenderer;
 
 
-    vec3 startGridTextSize;
+    //vec3 startGridTextSize;
 
     void Start()
     {

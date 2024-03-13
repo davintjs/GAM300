@@ -14,9 +14,9 @@ public class KeyDoor : Script
     public float displacement = -3.8f;
     public Door doorscript;
 
-    float totaltime = 0f;
-    float displaced = 0f;
-    CharacterController player;
+    //float totaltime = 0f;
+    //float displaced = 0f;
+    //CharacterController player;
 
     public bool back = false;
     public float floatKey = 1f;
@@ -62,7 +62,7 @@ public class KeyDoor : Script
             doorscript.moving = true;
             AudioManager.instance.keyCollected.Play();
             AudioManager.instance.doorOpen.Play();
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
     }
 }

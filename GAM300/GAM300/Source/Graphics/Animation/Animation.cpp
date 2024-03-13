@@ -192,14 +192,20 @@ glm::mat4 Bone::InterpolateScaling(float animationTime)
 
 Bone* Animation::FindBone(const std::string& name)
 {
-    auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
+    auto it = m_Bones.find(name);
+
+    if (it != m_Bones.end())
+        return &it->second;
+    return nullptr;
+
+    /*auto iter = std::find_if(m_Bones.begin(), m_Bones.end(),
         [&](const Bone& Bone)
         {
             return Bone.GetBoneName() == name;
         }
     );
     if (iter == m_Bones.end()) return nullptr;
-    else return &(*iter);
+    else return &(*iter);*/
 }
 
 AnimationState* Animation::GetAnimationState(const std::string& _state)

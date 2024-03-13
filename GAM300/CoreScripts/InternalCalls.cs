@@ -14,6 +14,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 *****************************************************************************************/
 
 using System;
+using System.Diagnostics.Tracing;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using GlmSharp;
@@ -101,6 +102,9 @@ namespace BeanFactory
         #region TRANSFORM
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetTransformParent(Transform gameObject, Transform parent);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void GetChild(Transform owner, out Transform child);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetLocalPosition(Transform gameObject, out vec3 position);
@@ -200,15 +204,15 @@ namespace BeanFactory
 
         #region PHYSICS_SYSTEM
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, LayerMask mask);
+        public static extern void Raycast(vec3 position, vec3 direction, float distance, ref bool hit, ref vec3 point, ref GameObject gameObj);
         #endregion
 
         #region TEXT
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void GetTextString(ulong compID,out string str);
+        internal extern static string GetTextString(TextRenderer renderer);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextString(ulong compID,string str);
+        internal extern static void SetTextString(TextRenderer renderer,string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetTextColor(ulong ID, out vec4 color);
@@ -227,6 +231,9 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern string GetLayerName(int layer);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern string GetName(GameObject gameObject);
         #endregion
 
         #region PARTICLES
@@ -263,6 +270,15 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetMaterialRaw(MeshRenderer meshRenderer, Material mat);
+
+        #endregion
+
+        #region GRAPHICS
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetGamma();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetGamma(float gammaValue);
 
         #endregion
 

@@ -1,0 +1,15 @@
+Material:
+  Material Name: CabinetMaterial
+  Shader: 1
+  Albedo: [1, 1, 1, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  Is Emission: true
+  Emission: 5
+  AlbedoTexture: {guid: 10de17fb7cfb6c176ee1511e4732c714}
+  NormalMap: {guid: fff6d60cd07e68c2bd9e18ed70cbf0f3}
+  MetallicTexture: {guid: 5a70b691d13487e9b8e2b77ee3c917d2}
+  RoughnessTexture: {guid: a1cd951b06dc6c8cd1022706a2e18e68}
+  AoTexture: {guid: 0405d21a8489f3b977fbc141d3981ad7}
+  EmissionTexture: {guid: 77e94f848bfb58f5f33a01ff465528f1}

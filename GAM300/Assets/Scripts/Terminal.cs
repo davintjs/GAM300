@@ -44,6 +44,7 @@ public class Terminal : Script
         {
             Console.WriteLine("AtCheckpoint");
             ThirdPersonController.instance.checkpointIndex = index;
+            ThirdPersonController.instance.spawnPoint = transform.localPosition + transform.forward * 2f + vec3.UnitY * 2f;
             //CheckCheckpoint();
 
             ThirdPersonController.instance.isAtCheckpoint = true;
@@ -56,7 +57,7 @@ public class Terminal : Script
         if(index == ThirdPersonController.instance.checkpointIndex)
         {
             //save checkpoint
-            if (Input.GetKeyDown(KeyCode.E) && ThirdPersonController.instance.isAtCheckpoint == true)
+            if (Input.GetKeyDown(KeyCode.F) && ThirdPersonController.instance.isAtCheckpoint == true)
             {
                 Console.WriteLine("Save Checkpoint");
                 //change glow of terminal

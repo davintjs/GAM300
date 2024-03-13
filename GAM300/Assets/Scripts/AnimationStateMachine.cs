@@ -84,13 +84,6 @@ namespace BeanFactory
                     return;
                 }
             }
-
-            if (currState != null)
-            {
-                currState = null;
-                animator.SetState("Idle");
-                animator.SetSpeed(1f);
-            }
         }
 
         public AnimationState GetState(string name)
@@ -107,6 +100,14 @@ namespace BeanFactory
             animator.SetState(state.stateName);
             currState = state;
             animator.SetSpeed(state.speed);
+        }
+
+        public void ResetAllStates()
+        {
+            foreach (var pair in animationStates)
+            {
+                pair.Value.state = false;
+            }
         }
 
         public AnimationState GetCurrentState()
