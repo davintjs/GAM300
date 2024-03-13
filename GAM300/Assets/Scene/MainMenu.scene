@@ -76,20 +76,20 @@ Script:
   m_GameObject: {fileID: 11651427043620866289}
   m_IsEnabled: true
   Script: {guid: 8e7ebaa15a9550485ebd22863125bac8}
-  isStartActive: true
-  flickerTimer: 0
-  duration: 0.665000021
   back: false
-  timer: 0
+  duration: 0.665000021
+  flickerTimer: 0
+  isStartActive: true
   sizeMultiplier: 1.25
-  mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
-  startButton: {fileID: 5144980746915515514}  # GameObject
-  mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
-  settingsButton: {fileID: 11997381317790178123}  # GameObject
-  uibutton: {fileID: 7823455904144311016}  # Component
+  timer: 0
+  ExitButton: {fileID: 7360009555949792780}  # GameObject
   HTPButton: {fileID: 15413680003274128894}  # GameObject
   bgm: {fileID: 15874991202848918549}  # Component
-  ExitButton: {fileID: 7360009555949792780}  # GameObject
+  mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
+  mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
+  settingsButton: {fileID: 11997381317790178123}  # GameObject
+  startButton: {fileID: 5144980746915515514}  # GameObject
+  uibutton: {fileID: 7823455904144311016}  # Component
 ---
 ID: 4418236984561621579
 GameObject:
@@ -119,6 +119,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
 ---
 ID: 15122834859859923062
@@ -150,6 +152,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
 ---
 ID: 5144980746915515514
@@ -165,9 +169,9 @@ GameObject:
 ID: 9737574517565939108
 Transform:
   m_GameObject: {fileID: 5144980746915515514}
-  Translation: [0, 0.200000003, 0]
-  Rotation: [-3.14159274, 0, 0]
-  Scale: [0.25, 0.25, 0.99999994]
+  Translation: [0.0014064014, 0.200000003, -0.000752151012]
+  Rotation: [3.14159226, 0, 0]
+  Scale: [0.250832379, 0.25083214, 0.996671438]
   Father: {fileID: 5799748894602307964}
   m_Children:
     []
@@ -178,8 +182,10 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
+  HoverDuration: 1
+  HoverTarget: [0.400000006, 0.400000006, 0.400000006]
   SpriteTexture: {guid: 09c6bf963ea6cc412f5b9197c588acf6}
 ---
 ID: 15413680003274128894
@@ -195,9 +201,9 @@ GameObject:
 ID: 9896614275649064532
 Transform:
   m_GameObject: {fileID: 15413680003274128894}
-  Translation: [0, 0.0500000007, 0]
-  Rotation: [-3.14159274, 0, 0]
-  Scale: [0.249999985, 0.249997735, 1.00000012]
+  Translation: [-5.96046448e-08, 0.0500000007, -4.91738319e-07]
+  Rotation: [3.14159226, 0, 0]
+  Scale: [0.146720156, 0.250577033, 0.99768281]
   Father: {fileID: 5799748894602307964}
   m_Children:
     []
@@ -208,8 +214,10 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
+  HoverDuration: 1
+  HoverTarget: [0.200000003, 0.300000012, 0.200000003]
   SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
 ---
 ID: 11997381317790178123
@@ -227,7 +235,7 @@ Transform:
   m_GameObject: {fileID: 11997381317790178123}
   Translation: [0, -0.100000001, 0]
   Rotation: [-3.14159274, 0, 0]
-  Scale: [0.249999985, 0.25000003, 1.00000012]
+  Scale: [0.250077695, 0.250077754, 0.999689281]
   Father: {fileID: 5799748894602307964}
   m_Children:
     []
@@ -238,8 +246,10 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
+  HoverDuration: 1
+  HoverTarget: [0.400000006, 0.400000006, 0.400000006]
   SpriteTexture: {guid: 9d5ca54110e8c8feb8e8edd7193210be}
 ---
 ID: 7360009555949792780
@@ -268,8 +278,10 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
+  HoverDuration: 1
+  HoverTarget: [0.400000006, 0.400000006, 0.400000006]
   SpriteTexture: {guid: 13cc4bf4e9905a9d2d9fa16d77598bc3}
 ---
 ID: 2581623557328585861
@@ -319,6 +331,8 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
@@ -351,6 +365,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
@@ -384,6 +400,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 3480112795070c938d356b88112787be}
 ---
 ID: 1790461780820641168
@@ -414,6 +432,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 0.5
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 6737957145da8e2534ce11c9505c07e1}
 ---
 ID: 5799748894602307964

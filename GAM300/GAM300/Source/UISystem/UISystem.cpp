@@ -43,7 +43,12 @@ void UISystem::Update(float dt)
 		{
 		
 			sr.onClick = false;
+			if (sr.onHover == false)
+			{
+				sr.orgScale = currentScene.Get<Transform>(sr).GetLocalScale();
+				sr.hoverTimer = 0.f;
 
+			}
 		}
 		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
 		{
@@ -51,8 +56,18 @@ void UISystem::Update(float dt)
 			{
 				if (!InputHandler::isMouseButtonPressed_L())
 				{
-					sr.onHover = false;
+					sr.onHover = true;
 					//std::cout << "buttonHover" << std::endl;
+					//To scale the size of the text when hovering 
+					Transform& t = currentScene.Get<Transform>(sr);
+					if (sr.hoverDuration > 0 && sr.hoverTimer < sr.hoverDuration)
+					{
+						vec3 targetScale = glm::mix((glm::vec3)sr.orgScale, (glm::vec3)sr.hoverTarget, sr.hoverTimer / sr.hoverDuration);	//Scale the text '
+						sr.hoverTimer += dt;
+						//std::cout << targetScale.x << "," << targetScale.y << "," << targetScale.z << std::endl;
+						t.SetLocalScale(targetScale);
+						
+					}
 					return;
 					//SpriteRenderer::onHover = true;
 				}
@@ -61,13 +76,25 @@ void UISystem::Update(float dt)
 					//SpriteRenderer::ColourPicked = true;
 
 					//sr.ColourPicked = true;
-					std::cout << "buttonClicked" << std::endl;
-					std::cout << "Object: " << currentScene.Get<Tag>(sr).name << "\n";
+					//std::cout << "buttonClicked" << std::endl;
+					//std::cout << "Object: " << currentScene.Get<Tag>(sr).name << "\n";
 					sr.onClick = true;
 
 					//SceneManager::Instance().LoadScene("Assets/Scene/LevelPlay2.scene");
 				}
 
+			}
+			else
+			{
+				Transform& t = currentScene.Get<Transform>(sr);
+				if (sr.hoverDuration > 0 && sr.hoverTimer > 0)
+				{
+					vec3 targetScale = glm::mix((glm::vec3)sr.orgScale, (glm::vec3)sr.hoverTarget, sr.hoverTimer / sr.hoverDuration);	//Scale the text '
+					sr.hoverTimer -= dt;
+					//std::cout << targetScale.x << "," << targetScale.y << "," << targetScale.z << std::endl;
+					t.SetLocalScale(targetScale);
+
+				}
 			}
 		}
 	

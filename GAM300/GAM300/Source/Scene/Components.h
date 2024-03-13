@@ -508,6 +508,10 @@ struct SpriteRenderer : Object
 		float AlphaMultiplier = 1.f;
 		bool onHover = false;
 		bool onClick = false; 
+		Vector3 hoverTarget = vec3(1.0f);
+		float hoverTimer{ 0.f }; 
+		float hoverDuration{ 0.f }; 
+		vec3 orgScale; 
 
 		Engine::GUID<TextureAsset> SpriteTexture {0};
 
@@ -520,8 +524,11 @@ property_begin_name(SpriteRenderer, "SpriteRenderer")
 		property_var(WorldSpace).Name("World Space"),
 		property_var(ColourPicked).Name("Colour Picker Mode"),
 		property_var(IncludeAlpha).Name("Include Alpha (ColourPicking)"),
-		property_var(AlphaMultiplier).Name("Alpha Scalar"),
+		property_var(AlphaMultiplier).Name("Alpha Scalar"),		
+		property_var(hoverDuration).Name("HoverDuration"),
+		property_var(hoverTarget).Name("HoverTarget"),
 		property_var(SpriteTexture).Name("SpriteTexture"),
+
 } property_vend_h(SpriteRenderer)
 
 struct Canvas : Object

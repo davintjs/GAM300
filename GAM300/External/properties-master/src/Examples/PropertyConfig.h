@@ -73,8 +73,9 @@ public:
     Vector3(float x_, float y_, float z_) : x(x_), y(y_), z(z_) {}
     Vector3(float i) : x(i), y(i), z(i) {}
 
-    Vector3(Vector3& vec) : x(vec.x), y(vec.y), z(vec.z) {}
+    Vector3(const Vector3& vec) : x(vec.x), y(vec.y), z(vec.z) {}
     Vector3(glm::vec3 vec) : x(vec.x), y(vec.y), z(vec.z) {}
+
 
     //Operator Overloads
     Vector3& operator=(const Vector3& Vec3) {

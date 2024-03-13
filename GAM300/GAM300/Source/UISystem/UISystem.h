@@ -5,7 +5,7 @@
 
 
 
-ENGINE_SYSTEM(UISystem) {
+ENGINE_RUNTIME_SYSTEM(UISystem) {
 
 
 //void HandleButtonInput(Button& button, float mouseX, float mouseY, bool mousePressed) {
