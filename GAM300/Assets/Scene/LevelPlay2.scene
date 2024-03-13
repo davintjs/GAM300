@@ -15,7 +15,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 7239797430794508520}  # Transform
-    - component: {fileID: 14502904174403692166}  # Script
+    - component: {fileID: 11362069396049829922}  # Script
 ---
 ID: 7239797430794508520
 Transform:
@@ -27,25 +27,18 @@ Transform:
   m_Children:
     []
 ---
-ID: 14502904174403692166
+ID: 11362069396049829922
 Script:
   m_GameObject: {fileID: 5342434905140024301}
   m_IsEnabled: true
-  Script: {guid: 0470ed2b8def9ecbe83ea13ee17af641}
-  text1: {fileID: 0}
-  text2: {fileID: 0}
-  text3: {fileID: 0}
-  text4: {fileID: 0}
-  text5: {fileID: 0}
-  text6: {fileID: 0}
-  text7: {fileID: 0}
-  tutorial1: {fileID: 0}
-  tutorial2: {fileID: 0}
-  tutorial3: {fileID: 0}
-  tutorial4: {fileID: 0}
-  tutorial5: {fileID: 0}
-  tutorial6: {fileID: 0}
-  tutoriallore1: {fileID: 0}
+  Script: {guid: 308f36d28486328374ac349b3503b942}
+  dialogueText: {fileID: 5676392047881511918}  # GameObject
+  level1: {fileID: 0}
+  level2: {fileID: 0}
+  level3: {fileID: 0}
+  level4: {fileID: 0}
+  level5: {fileID: 0}
+  level6: {fileID: 0}
 ---
 ID: 9202772318638598359
 GameObject:
@@ -141,6 +134,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 10614427148243844306}
     - {fileID: 8065358626952296561}
     - {fileID: 8873786281471961566}
     - {fileID: 8393117941418361269}
@@ -194,7 +188,7 @@ Script:
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyDie: {fileID: 14157919317546456730}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
-  obj_success: {fileID: 0}
+  obj_success: {fileID: 1067351355177411098}  # Component
   overdriveVFXSound: {fileID: 814352591872434956}  # Component
   playerAttack: {fileID: 3436078548414859258}  # Component
   playerFootstep: {fileID: 6518591935153270902}  # Component
@@ -251,6 +245,7 @@ Transform:
     - {fileID: 5769265740441844970}
     - {fileID: 15996983871537068920}
     - {fileID: 3787274920911425495}
+    - {fileID: 5676392047881511918}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -28429,7 +28424,7 @@ ID: 4233584647018597759
 Transform:
   m_GameObject: {fileID: 1122029141724930235}
   Translation: [-3.81469727e-06, -1.20000005, 0.5]
-  Rotation: [0, -0.00034505126, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.999999881, 1, 0.999999881]
   Father: {fileID: 15899658294800661282}
   m_Children:
@@ -38990,9 +38985,9 @@ GameObject:
 ID: 13331606679983483713
 Transform:
   m_GameObject: {fileID: 14731098160436409708}
-  Translation: [-0.899999976, 0.480000019, 9.07999992]
+  Translation: [-0.933566749, 0.479999781, 9.07999992]
   Rotation: [0, 0, 0]
-  Scale: [0.159999996, 0.140000001, 0.00100000005]
+  Scale: [0.145000011, 0.140000001, 0.00100000005]
   Father: {fileID: 3787274920911425495}
   m_Children:
     []
@@ -39010,7 +39005,7 @@ SpriteRenderer:
 ID: 17638106604129844536
 GameObject:
   m_IsActive: false
-  m_Name: Objective_1
+  m_Name: Objective1
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -39020,9 +39015,9 @@ GameObject:
 ID: 13282041324919832414
 Transform:
   m_GameObject: {fileID: 17638106604129844536}
-  Translation: [-0.815557241, 0.632983804, 9.49634266]
-  Rotation: [3.14156556, 0, -3.14159226]
-  Scale: [0.209914997, 0.200000003, 0.00100000005]
+  Translation: [-0.938978493, 0.600000024, 9.4963913]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
   Father: {fileID: 3787274920911425495}
   m_Children:
     []
@@ -39035,7 +39030,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 1aae64774a9ce331ae94e84f473e7257}
+  SpriteTexture: {guid: 511299cdb563b8ff73fcdf00a7eacd3b}
 ---
 ID: 7939325973346580010
 GameObject:
@@ -52155,13 +52150,20 @@ GameObject:
 ID: 17816823698135838938
 Transform:
   m_GameObject: {fileID: 3787274920911425495}
-  Translation: [-0.43788439, 0.930999994, 0]
-  Rotation: [0, 0, 0]
-  Scale: [0.999999821, -1, 1]
+  Translation: [-0.50045675, 0.99542141, 0]
+  Rotation: [3.14157915, 0, 0]
+  Scale: [0.999999821, 1, 1]
   Father: {fileID: 4212138099454399691}
   m_Children:
     - {fileID: 14731098160436409708}
     - {fileID: 17638106604129844536}
+    - {fileID: 2663796617609977665}
+    - {fileID: 18097957693333053037}
+    - {fileID: 14425448554615013754}
+    - {fileID: 16493046408952253451}
+    - {fileID: 17591975227681752161}
+    - {fileID: 17268750755380492874}
+    - {fileID: 12689355304111214582}
 ---
 ID: 2073570297539321515
 GameObject:
@@ -82985,3 +82987,795 @@ Rigidbody:
   IsKinematic: true
   UseGravity: true
   Is_trigger: false
+---
+ID: 2663796617609977665
+GameObject:
+  m_IsActive: false
+  m_Name: Objective2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9237703315502170662}  # Transform
+    - component: {fileID: 11657858317173642409}  # SpriteRenderer
+---
+ID: 9237703315502170662
+Transform:
+  m_GameObject: {fileID: 2663796617609977665}
+  Translation: [-0.849835455, 0.680000007, 9.49640942]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
+  Father: {fileID: 3787274920911425495}
+  m_Children:
+    []
+---
+ID: 11657858317173642409
+SpriteRenderer:
+  m_GameObject: {fileID: 2663796617609977665}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 6f6651476a6a490266dae85d1ab11dfe}
+---
+ID: 18097957693333053037
+GameObject:
+  m_IsActive: false
+  m_Name: Objective3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3462365368412641755}  # Transform
+    - component: {fileID: 4185213424108003250}  # SpriteRenderer
+---
+ID: 3462365368412641755
+Transform:
+  m_GameObject: {fileID: 18097957693333053037}
+  Translation: [-0.913226545, 0.759999752, 9.49640942]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
+  Father: {fileID: 3787274920911425495}
+  m_Children:
+    []
+---
+ID: 4185213424108003250
+SpriteRenderer:
+  m_GameObject: {fileID: 18097957693333053037}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 8d57070dae31651d7be258b195ee58a9}
+---
+ID: 14425448554615013754
+GameObject:
+  m_IsActive: false
+  m_Name: Objective4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9714401790768855959}  # Transform
+    - component: {fileID: 16899125656479654205}  # SpriteRenderer
+---
+ID: 9714401790768855959
+Transform:
+  m_GameObject: {fileID: 14425448554615013754}
+  Translation: [-0.913226545, 0.889999986, 9.49640942]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
+  Father: {fileID: 3787274920911425495}
+  m_Children:
+    []
+---
+ID: 16899125656479654205
+SpriteRenderer:
+  m_GameObject: {fileID: 14425448554615013754}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 033cec56ceec9bd3c7c4bdb317109326}
+---
+ID: 16493046408952253451
+GameObject:
+  m_IsActive: false
+  m_Name: Objective5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17089547903525481903}  # Transform
+    - component: {fileID: 5460826500303765610}  # SpriteRenderer
+---
+ID: 17089547903525481903
+Transform:
+  m_GameObject: {fileID: 16493046408952253451}
+  Translation: [-0.913226545, 1.01999998, 9.49640942]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
+  Father: {fileID: 3787274920911425495}
+  m_Children:
+    []
+---
+ID: 5460826500303765610
+SpriteRenderer:
+  m_GameObject: {fileID: 16493046408952253451}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 6d883d59b18eca908cfb3f7bf9b43eed}
+---
+ID: 17591975227681752161
+GameObject:
+  m_IsActive: false
+  m_Name: Objective6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5839366588377074602}  # Transform
+    - component: {fileID: 5101283318916719783}  # SpriteRenderer
+---
+ID: 5839366588377074602
+Transform:
+  m_GameObject: {fileID: 17591975227681752161}
+  Translation: [-0.913226545, 1.10000002, 9.49640942]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
+  Father: {fileID: 3787274920911425495}
+  m_Children:
+    []
+---
+ID: 5101283318916719783
+SpriteRenderer:
+  m_GameObject: {fileID: 17591975227681752161}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: bddbdb594e80d0d01fe5dcaab9ec4f1c}
+---
+ID: 17268750755380492874
+GameObject:
+  m_IsActive: false
+  m_Name: Objective7
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14226662674128277191}  # Transform
+    - component: {fileID: 14558487819244009746}  # SpriteRenderer
+---
+ID: 14226662674128277191
+Transform:
+  m_GameObject: {fileID: 17268750755380492874}
+  Translation: [-0.913226545, 1.22000003, 9.49640942]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
+  Father: {fileID: 3787274920911425495}
+  m_Children:
+    []
+---
+ID: 14558487819244009746
+SpriteRenderer:
+  m_GameObject: {fileID: 17268750755380492874}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 7487254f774bc6e755a1fb347ef62683}
+---
+ID: 12689355304111214582
+GameObject:
+  m_IsActive: false
+  m_Name: Objective8
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3814123260272445855}  # Transform
+    - component: {fileID: 3859612466046660125}  # SpriteRenderer
+---
+ID: 3814123260272445855
+Transform:
+  m_GameObject: {fileID: 12689355304111214582}
+  Translation: [-0.913226545, 1.29999995, 9.49640942]
+  Rotation: [0, 0, 0]
+  Scale: [0.160000011, 0.159999996, 0.00100000005]
+  Father: {fileID: 3787274920911425495}
+  m_Children:
+    []
+---
+ID: 3859612466046660125
+SpriteRenderer:
+  m_GameObject: {fileID: 12689355304111214582}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 5ad2b5f4f3e4ed1a5f789c21c24b3e62}
+---
+ID: 5676392047881511918
+GameObject:
+  m_IsActive: false
+  m_Name: subtitles
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13704200365559655184}  # Transform
+    - component: {fileID: 15588496912826152058}  # TextRenderer
+---
+ID: 13704200365559655184
+Transform:
+  m_GameObject: {fileID: 5676392047881511918}
+  Translation: [-0.634227455, -0.831888437, 7]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 15588496912826152058
+TextRenderer:
+  m_GameObject: {fileID: 5676392047881511918}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: Default Text
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.25
+  Textbox Width: 95
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 17633603467252348022
+GameObject:
+  m_IsActive: true
+  m_Name: ObjectiveManager
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11748542241483111979}  # Transform
+    - component: {fileID: 9121539396594383835}  # Script
+---
+ID: 11748542241483111979
+Transform:
+  m_GameObject: {fileID: 17633603467252348022}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9121539396594383835
+Script:
+  m_GameObject: {fileID: 17633603467252348022}
+  m_IsEnabled: true
+  Script: {guid: a8020361e0ef77579e19947ac92300c7}
+  level1: {fileID: 17638106604129844536}  # GameObject
+  level2: {fileID: 2663796617609977665}  # GameObject
+  level3: {fileID: 18097957693333053037}  # GameObject
+  level4: {fileID: 14425448554615013754}  # GameObject
+  level5: {fileID: 16493046408952253451}  # GameObject
+  level6: {fileID: 17591975227681752161}  # GameObject
+  level7: {fileID: 17268750755380492874}  # GameObject
+  level8: {fileID: 12689355304111214582}  # GameObject
+---
+ID: 16302274557395296677
+GameObject:
+  m_IsActive: true
+  m_Name: Triggers
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5393376234773534333}  # Transform
+---
+ID: 5393376234773534333
+Transform:
+  m_GameObject: {fileID: 16302274557395296677}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 3476722836763241155}
+    - {fileID: 16207680269001726648}
+    - {fileID: 8412529737597656277}
+    - {fileID: 2310634752158958975}
+    - {fileID: 5114381423122968400}
+    - {fileID: 16294717769688043480}
+    - {fileID: 16183338786677520616}
+    - {fileID: 13898223901269057467}
+    - {fileID: 14279794397136616112}
+---
+ID: 3476722836763241155
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11604910606234455406}  # Transform
+    - component: {fileID: 14415507131799248742}  # BoxCollider
+    - component: {fileID: 17820910004871152268}  # Rigidbody
+    - component: {fileID: 13420901639909252695}  # Script
+---
+ID: 11604910606234455406
+Transform:
+  m_GameObject: {fileID: 3476722836763241155}
+  Translation: [66.657486, 38.9129562, -50.5784264]
+  Rotation: [0, 0, 0]
+  Scale: [5.4603548, 5.44534731, 5.4603548]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 14415507131799248742
+BoxCollider:
+  m_GameObject: {fileID: 3476722836763241155}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 17820910004871152268
+Rigidbody:
+  m_GameObject: {fileID: 3476722836763241155}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 13420901639909252695
+Script:
+  m_GameObject: {fileID: 3476722836763241155}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 1
+---
+ID: 16207680269001726648
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9195845575189172252}  # Transform
+    - component: {fileID: 9817677021332724123}  # BoxCollider
+    - component: {fileID: 18287087113923289102}  # Rigidbody
+    - component: {fileID: 16426130034783621639}  # Script
+---
+ID: 9195845575189172252
+Transform:
+  m_GameObject: {fileID: 16207680269001726648}
+  Translation: [66.657486, 36.8833084, -78.5070801]
+  Rotation: [0, 0, 0]
+  Scale: [18.8412952, 1.69355547, 11.5670586]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 9817677021332724123
+BoxCollider:
+  m_GameObject: {fileID: 16207680269001726648}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 18287087113923289102
+Rigidbody:
+  m_GameObject: {fileID: 16207680269001726648}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 16426130034783621639
+Script:
+  m_GameObject: {fileID: 16207680269001726648}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 2
+---
+ID: 2310634752158958975
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10956531268109540033}  # Transform
+    - component: {fileID: 3856539454550262085}  # BoxCollider
+    - component: {fileID: 9682340493321039770}  # Rigidbody
+    - component: {fileID: 4084450265898331716}  # Script
+---
+ID: 10956531268109540033
+Transform:
+  m_GameObject: {fileID: 2310634752158958975}
+  Translation: [118.032906, 40.2380867, -56.4746017]
+  Rotation: [0, 0, 0]
+  Scale: [6.09813833, 7.72537327, 5.57038212]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 3856539454550262085
+BoxCollider:
+  m_GameObject: {fileID: 2310634752158958975}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 9682340493321039770
+Rigidbody:
+  m_GameObject: {fileID: 2310634752158958975}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 4084450265898331716
+Script:
+  m_GameObject: {fileID: 2310634752158958975}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 4
+---
+ID: 8412529737597656277
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2335735545226935216}  # Transform
+    - component: {fileID: 16693904628484994506}  # BoxCollider
+    - component: {fileID: 1347975970091589973}  # Rigidbody
+    - component: {fileID: 9934278760087059834}  # Script
+---
+ID: 2335735545226935216
+Transform:
+  m_GameObject: {fileID: 8412529737597656277}
+  Translation: [58.8120232, 42.7415733, -85.4823151]
+  Rotation: [0, 0, 0]
+  Scale: [0.453734338, 0.523264766, 0.336825937]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 16693904628484994506
+BoxCollider:
+  m_GameObject: {fileID: 8412529737597656277}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 1347975970091589973
+Rigidbody:
+  m_GameObject: {fileID: 8412529737597656277}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 9934278760087059834
+Script:
+  m_GameObject: {fileID: 8412529737597656277}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 3
+---
+ID: 5114381423122968400
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13154812941767734569}  # Transform
+    - component: {fileID: 7691289313050086596}  # BoxCollider
+    - component: {fileID: 8881230344936522707}  # Rigidbody
+    - component: {fileID: 11105192053925801292}  # Script
+---
+ID: 13154812941767734569
+Transform:
+  m_GameObject: {fileID: 5114381423122968400}
+  Translation: [105.494255, 37.7094955, -108.591644]
+  Rotation: [0, 0, 0]
+  Scale: [6.09813833, 7.72537327, 5.57038212]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 7691289313050086596
+BoxCollider:
+  m_GameObject: {fileID: 5114381423122968400}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 8881230344936522707
+Rigidbody:
+  m_GameObject: {fileID: 5114381423122968400}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 11105192053925801292
+Script:
+  m_GameObject: {fileID: 5114381423122968400}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 6
+---
+ID: 16294717769688043480
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12671231258861335204}  # Transform
+    - component: {fileID: 4372558200397745064}  # BoxCollider
+    - component: {fileID: 10306938910177298952}  # Rigidbody
+    - component: {fileID: 13255664204838109276}  # Script
+---
+ID: 12671231258861335204
+Transform:
+  m_GameObject: {fileID: 16294717769688043480}
+  Translation: [66.0275116, 37.7094955, -152.407623]
+  Rotation: [0, 0, 0]
+  Scale: [6.09813833, 7.72537327, 8.99904156]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 4372558200397745064
+BoxCollider:
+  m_GameObject: {fileID: 16294717769688043480}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 10306938910177298952
+Rigidbody:
+  m_GameObject: {fileID: 16294717769688043480}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 13255664204838109276
+Script:
+  m_GameObject: {fileID: 16294717769688043480}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 7
+---
+ID: 13898223901269057467
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger8
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2411959071768157731}  # Transform
+    - component: {fileID: 16757302670278543775}  # BoxCollider
+    - component: {fileID: 6794877084633755762}  # Rigidbody
+    - component: {fileID: 3609016338901197498}  # Script
+---
+ID: 2411959071768157731
+Transform:
+  m_GameObject: {fileID: 13898223901269057467}
+  Translation: [11.128274, 39.1327095, -118.165337]
+  Rotation: [0, 0, 0]
+  Scale: [6.09813833, 5.60837555, 7.26419258]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 16757302670278543775
+BoxCollider:
+  m_GameObject: {fileID: 13898223901269057467}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 6794877084633755762
+Rigidbody:
+  m_GameObject: {fileID: 13898223901269057467}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 3609016338901197498
+Script:
+  m_GameObject: {fileID: 13898223901269057467}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 9
+---
+ID: 16183338786677520616
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger7
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10074169495951410891}  # Transform
+    - component: {fileID: 9244115969206371607}  # BoxCollider
+    - component: {fileID: 8543062931139403598}  # Rigidbody
+    - component: {fileID: 4089560681701732862}  # Script
+---
+ID: 10074169495951410891
+Transform:
+  m_GameObject: {fileID: 16183338786677520616}
+  Translation: [42.8706818, 39.1327095, -78.2842636]
+  Rotation: [0, 0, 0]
+  Scale: [6.09813833, 5.40525866, 5.57038212]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 9244115969206371607
+BoxCollider:
+  m_GameObject: {fileID: 16183338786677520616}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 8543062931139403598
+Rigidbody:
+  m_GameObject: {fileID: 16183338786677520616}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 4089560681701732862
+Script:
+  m_GameObject: {fileID: 16183338786677520616}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 8
+---
+ID: 14279794397136616112
+GameObject:
+  m_IsActive: true
+  m_Name: Trigger9
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11297650401724246095}  # Transform
+    - component: {fileID: 10707208282477531455}  # BoxCollider
+    - component: {fileID: 16892829627937085888}  # Rigidbody
+    - component: {fileID: 14785345094491333235}  # Script
+---
+ID: 11297650401724246095
+Transform:
+  m_GameObject: {fileID: 14279794397136616112}
+  Translation: [-10.7020092, 37.61063, -117.552528]
+  Rotation: [0, 0, 0]
+  Scale: [0.664981484, 0.909465432, 1.17797601]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 10707208282477531455
+BoxCollider:
+  m_GameObject: {fileID: 14279794397136616112}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 16892829627937085888
+Rigidbody:
+  m_GameObject: {fileID: 14279794397136616112}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 14785345094491333235
+Script:
+  m_GameObject: {fileID: 14279794397136616112}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 10
+---
+ID: 10614427148243844306
+GameObject:
+  m_IsActive: true
+  m_Name: objsuccess
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9853825309245728733}  # Transform
+    - component: {fileID: 1067351355177411098}  # AudioSource
+---
+ID: 9853825309245728733
+Transform:
+  m_GameObject: {fileID: 10614427148243844306}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14088906961581824457}
+  m_Children:
+    []
+---
+ID: 1067351355177411098
+AudioSource:
+  m_GameObject: {fileID: 10614427148243844306}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: c1fb80ae41b44f82eca4a673253c73e6}
+  Play: false

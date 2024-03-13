@@ -46,6 +46,7 @@
     <Compile Include="Assets\Scripts\CutsceneTrigger.cs" />
     <Compile Include="Assets\Scripts\Dialogue.cs" />
     <Compile Include="Assets\Scripts\DialogueManager.cs" />
+    <Compile Include="Assets\Scripts\DialogueManagerLevel.cs" />
     <Compile Include="Assets\Scripts\Door.cs" />
     <Compile Include="Assets\Scripts\Elevator.cs" />
     <Compile Include="Assets\Scripts\EndKey.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Assets\Scripts\EnemyBullet.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
     <Compile Include="Assets\Scripts\Exit.cs" />
+    <Compile Include="Assets\Scripts\FadeEffect.cs" />
     <Compile Include="Assets\Scripts\FlashMaterial.cs" />
     <Compile Include="Assets\Scripts\FreeLookCamera.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
@@ -62,6 +64,8 @@
     <Compile Include="Assets\Scripts\KeyDoor.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MaxStatPack.cs" />
+    <Compile Include="Assets\Scripts\ObjectiveManager.cs" />
+    <Compile Include="Assets\Scripts\ObjectiveManagerLevel.cs" />
     <Compile Include="Assets\Scripts\PlatformScript.cs" />
     <Compile Include="Assets\Scripts\PlayerAttack.cs" />
     <Compile Include="Assets\Scripts\PlaySound.cs" />
@@ -75,6 +79,7 @@
     <Compile Include="Assets\Scripts\Terminal.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonController.cs" />
+    <Compile Include="Assets\Scripts\TransformEffect.cs" />
     <Compile Include="Assets\Scripts\TutorialEnemyKeyDrop.cs" />
     <Compile Include="Assets\Scripts\VictoryMenu.cs" />
     <Compile Include="CoreScripts\Application.cs" />
