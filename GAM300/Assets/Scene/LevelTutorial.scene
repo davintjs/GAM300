@@ -38560,7 +38560,7 @@ SpriteRenderer:
 ---
 ID: 7359784780702033476
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: subtitle
   m_TagString: ""
   m_Layer: 0

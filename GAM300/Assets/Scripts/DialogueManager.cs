@@ -51,9 +51,9 @@ public class DialogueManager : Script
             else
             {
                 startTimer = false;
-                if(curr_state == 7)
+                if(curr_state == 6)
                 {
-                    SetState(8);
+                    SetState(7);
                 }
                 else
                 {
@@ -116,29 +116,25 @@ public class DialogueManager : Script
                 break;
             case 5:
                 //text5.SetActive(true);
-                text.text = "Apex: Make use of your mobility modules to traverse those steps.";
+                text.text = "Apex: One last test, it should be trivial for you. Destroy that robot.";
                 ObjectiveManager.Instance.completeObjective(3);
                 ObjectiveManager.Instance.SetState(4);
                 tutorial4.Play();
                 setTimer(6f);
                 break;
             case 6:
-                //text6.SetActive(true);
-                text.text = "Apex: One last test, it should be trivial for you. Destroy that robot.";
+                text.text = "Apex: Excellent! I've outdone myself. Looks like you're ready to... what was it again?";
                 ObjectiveManager.Instance.completeObjective(4);
+                curr_state = 6;
                 tutorial5.Play();
                 setTimer(7f);
                 break;
             case 7:
                 //text7.SetActive(true);
-                text.text = "Apex: Excellent! I've outdone myself. Looks like you're ready to... what was it again?";
+                text.text = "Right… enhance and uphold societal progress. The lift should be ready for you in a moment…";
                 curr_state = 7;
                 tutorial6.Play();
                 setTimer(7f);
-                break;
-            case 8:
-                curr_state = 8;
-                text.text = "Right… enhance and uphold societal progress. The lift should be ready for you in a moment…";
                 break;
         }
     }
