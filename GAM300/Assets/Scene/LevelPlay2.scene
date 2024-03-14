@@ -204,6 +204,7 @@ Script:
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
   spark: {fileID: 1060299922073029148}  # Component
+  swoosh: {fileID: 0}
   thumpCollision1: {fileID: 12152755750733174901}  # Component
   thumpCollision2: {fileID: 10580402611710297282}  # Component
   uiSound: {fileID: 12043367231734905459}  # Component
@@ -237,8 +238,6 @@ Transform:
     - {fileID: 17344769666620842143}
     - {fileID: 12115195871797465227}
     - {fileID: 4720521423488205772}
-    - {fileID: 1953613848853671180}
-    - {fileID: 3925618525247661714}
     - {fileID: 11966624967280915999}
     - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
@@ -251,6 +250,7 @@ Transform:
     - {fileID: 5769265740441844970}
     - {fileID: 15996983871537068920}
     - {fileID: 3787274920911425495}
+    - {fileID: 3988154324715324604}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -4153,6 +4153,7 @@ Script:
   isDead: false
   isDodging: false
   isInvulnerable: false
+  isOverdriveEnabled: false
   jumpStamina: 0
   maxColliderDist: 1.5
   maxHealth: 10
@@ -4181,6 +4182,7 @@ Script:
   healthBar: {fileID: 4056269345217226233}  # Component
   healthBarFill: {fileID: 18315212324025487925}  # GameObject
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
+  overDriveBar: {fileID: 4720521423488205772}  # GameObject
   overDriveCollider: {fileID: 6669890113452856865}  # GameObject
   overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
@@ -8546,7 +8548,8 @@ Transform:
   Scale: [1, 1, -1]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    []
+    - {fileID: 1953613848853671180}
+    - {fileID: 3925618525247661714}
 ---
 ID: 15241298173543357892
 SpriteRenderer:
@@ -8571,10 +8574,10 @@ GameObject:
 ID: 17405891383651685792
 Transform:
   m_GameObject: {fileID: 1953613848853671180}
-  Translation: [-1.35000002, 0.75999999, 2]
-  Rotation: [3.14158487, 0, 0]
-  Scale: [1, 1, -1]
-  Father: {fileID: 4212138099454399691}
+  Translation: [0, 1.43051147e-06, 0.18272014]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1.00000012, 1]
+  Father: {fileID: 4720521423488205772}
   m_Children:
     []
 ---
@@ -8601,10 +8604,10 @@ GameObject:
 ID: 6440725200320908511
 Transform:
   m_GameObject: {fileID: 3925618525247661714}
-  Translation: [-1.35000002, 0.75999999, 2.0999999]
-  Rotation: [3.14158487, 0, 0]
-  Scale: [1, 1, -1]
-  Father: {fileID: 4212138099454399691}
+  Translation: [0, 2.14576721e-06, 0.282720089]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1.00000012, 1]
+  Father: {fileID: 4720521423488205772}
   m_Children:
     []
 ---
@@ -82985,3 +82988,33 @@ Rigidbody:
   IsKinematic: true
   UseGravity: true
   Is_trigger: false
+---
+ID: 3988154324715324604
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaBackground
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1806491715311056070}  # Transform
+    - component: {fileID: 1022041454998079722}  # SpriteRenderer
+---
+ID: 1806491715311056070
+Transform:
+  m_GameObject: {fileID: 3988154324715324604}
+  Translation: [-1.35000002, 0.792999983, 1.81727982]
+  Rotation: [3.14158487, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 1022041454998079722
+SpriteRenderer:
+  m_GameObject: {fileID: 3988154324715324604}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f8b993ecd8b866668c9b0ccb2fd7ccb2}

@@ -284,8 +284,6 @@ Transform:
     - {fileID: 17344769666620842143}
     - {fileID: 12115195871797465227}
     - {fileID: 4720521423488205772}
-    - {fileID: 1953613848853671180}
-    - {fileID: 3925618525247661714}
     - {fileID: 11966624967280915999}
     - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
@@ -296,6 +294,7 @@ Transform:
     - {fileID: 14843899441988254193}
     - {fileID: 4891637289365399706}
     - {fileID: 1437056029277841584}
+    - {fileID: 11071437822068726544}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -7636,7 +7635,7 @@ GameObject:
   m_Component:
     - component: {fileID: 17541858574218577380}  # Transform
     - component: {fileID: 16300796117495405251}  # MeshRenderer
-    - component: {fileID: 2068444513557785302}  # BoxCollider
+    - component: {fileID: 15729406928211464465}  # BoxCollider
     - component: {fileID: 4808706057978530858}  # Rigidbody
 ---
 ID: 17541858574218577380
@@ -7657,11 +7656,11 @@ MeshRenderer:
   Mesh: {guid: fc60f3b293da416f7d5e9b3c3eab7e22}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
 ---
-ID: 2068444513557785302
+ID: 15729406928211464465
 BoxCollider:
   m_GameObject: {fileID: 6576418665456915054}
   m_IsEnabled: true
-  Dimensions: [1, 1, 1]
+  Dimensions: [4.99992371, 7.99987793, 1.25984168]
   Offset: [3.34806156, 3.99993896, -0.129940048]
 ---
 ID: 4808706057978530858
@@ -12249,6 +12248,7 @@ Script:
   isDead: false
   isDodging: false
   isInvulnerable: false
+  isOverdriveEnabled: false
   jumpStamina: 0
   maxColliderDist: 1.5
   maxHealth: 10
@@ -12277,6 +12277,7 @@ Script:
   healthBar: {fileID: 4225260783100130983}  # Component
   healthBarFill: {fileID: 6364420056334471666}  # GameObject
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
+  overDriveBar: {fileID: 4720521423488205772}  # GameObject
   overDriveCollider: {fileID: 17412142376824622519}  # GameObject
   overDriveVFX: {fileID: 17569942394685385403}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
@@ -16702,7 +16703,8 @@ Transform:
   Scale: [1, 1, -1]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    []
+    - {fileID: 1953613848853671180}
+    - {fileID: 3925618525247661714}
 ---
 ID: 15241298173543357892
 SpriteRenderer:
@@ -16727,10 +16729,10 @@ GameObject:
 ID: 17405891383651685792
 Transform:
   m_GameObject: {fileID: 1953613848853671180}
-  Translation: [-1.35000002, 0.75999999, 2]
-  Rotation: [3.14159274, 0, 0]
-  Scale: [1, 1, -1]
-  Father: {fileID: 4212138099454399691}
+  Translation: [-1.1920929e-07, 0, 0.182720304]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4720521423488205772}
   m_Children:
     []
 ---
@@ -16757,10 +16759,10 @@ GameObject:
 ID: 6440725200320908511
 Transform:
   m_GameObject: {fileID: 3925618525247661714}
-  Translation: [-1.35000002, 0.75999999, 2.0999999]
-  Rotation: [3.14159274, 0, 0]
-  Scale: [1, 1, -1]
-  Father: {fileID: 4212138099454399691}
+  Translation: [-1.1920929e-07, 0, 0.282720238]
+  Rotation: [-8.1062326e-06, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4720521423488205772}
   m_Children:
     []
 ---
@@ -38598,3 +38600,33 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: 0d4524adfbf610750ee48a28e714500a}
   Play: false
+---
+ID: 11071437822068726544
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaBackground
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17508921107200801791}  # Transform
+    - component: {fileID: 18342534018425457262}  # SpriteRenderer
+---
+ID: 17508921107200801791
+Transform:
+  m_GameObject: {fileID: 11071437822068726544}
+  Translation: [-1.35000002, 0.792770386, 1.81727982]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [1, 0.999999523, 0.999999523]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 18342534018425457262
+SpriteRenderer:
+  m_GameObject: {fileID: 11071437822068726544}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f8b993ecd8b866668c9b0ccb2fd7ccb2}

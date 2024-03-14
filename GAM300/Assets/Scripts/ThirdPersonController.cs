@@ -175,8 +175,9 @@ public class ThirdPersonController : Script
     //overdrive bar
     //public float maxOverdrive = 10f;
     //public float currentOverdrive = 0;
-    //public GameObject overDriveBar;
+    public GameObject overDriveBar;
     public GameObject overDriveVFX;
+    public bool isOverdriveEnabled = false;
 
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
@@ -264,6 +265,11 @@ public class ThirdPersonController : Script
         //Material mat = doorTestMesh.material;
         //mat.color = vec4.Ones;
         //reference check
+        if (overDriveBar == null)
+        {
+            Console.WriteLine("Missing Overdrive Bar reference in ThirdPersonController script");
+        }
+
         if (PlayerCamera == null)
         {
             Console.WriteLine("Missing Player camere reference in ThirdPersonController script");
@@ -363,6 +369,9 @@ public class ThirdPersonController : Script
         walkSoundTime = walkStepsInterval;
         InitAnimStates();
         spawnPoint = transform.position;
+
+        //Overdrive start
+        overDriveBar.SetActive(false);
     }
 
     // Update is called once per frame
@@ -633,7 +642,7 @@ public class ThirdPersonController : Script
                 SetState("Dodge", true);
             }
             //OVERDRIVE
-            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown)
+            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown && isOverdriveEnabled == true)
             {
                 AudioManager.instance.playerOverdrive.Play();
                 AudioManager.instance.overdriveVFXSound.Play();
