@@ -41,7 +41,7 @@ void UISystem::Update(float dt)
 		Engine::UUID id = COLOURPICKER.ColorPickingUIButton(camera);
 		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
 		{
-		
+			sr.onHover = false;
 			sr.onClick = false;
 
 		}
@@ -51,7 +51,7 @@ void UISystem::Update(float dt)
 			{
 				if (!InputHandler::isMouseButtonPressed_L())
 				{
-					sr.onHover = false;
+					sr.onHover = true;
 					//std::cout << "buttonHover" << std::endl;
 					return;
 					//SpriteRenderer::onHover = true;
@@ -61,8 +61,8 @@ void UISystem::Update(float dt)
 					//SpriteRenderer::ColourPicked = true;
 
 					//sr.ColourPicked = true;
-					std::cout << "buttonClicked" << std::endl;
-					std::cout << "Object: " << currentScene.Get<Tag>(sr).name << "\n";
+					//std::cout << "buttonClicked" << std::endl;
+					//std::cout << "Object: " << currentScene.Get<Tag>(sr).name << "\n";
 					sr.onClick = true;
 
 					//SceneManager::Instance().LoadScene("Assets/Scene/LevelPlay2.scene");
