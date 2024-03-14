@@ -6,10 +6,15 @@ using System.Threading.Tasks;
 using BeanFactory;
 using GlmSharp;
 
-public class OverdriveKey : Script
+public class OverdriveChip : Script
 {
     public bool moving = false;
     public bool temp = false;
+    public float movingTimer = 2f;// takes 3 seconds to move the door down
+
+    //float totaltime = 0f;
+    //float displaced = 0f;
+    //CharacterController player;
 
     public bool back = false;
     public float floatKey = 1f;
@@ -52,8 +57,7 @@ public class OverdriveKey : Script
         //detect the player
         if (GetTag(rb) == "Player")
         {
-            ThirdPersonController.instance.overDriveBar.SetActive(true);
-            ThirdPersonController.instance.isOverdriveEnabled = true;
+            ThirdPersonController.instance.enableOverdrive();
             AudioManager.instance.keyCollected.Play();
             gameObject.SetActive(false);
         }

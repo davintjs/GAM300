@@ -774,6 +774,12 @@ public class ThirdPersonController : Script
         animationManager.UpdateState();
     }
 
+    public void enableOverdrive()
+    {
+        overDriveBar.SetActive(true);
+        isOverdriveEnabled = true;
+    }
+
     public void Respawn()
     {
         //Console.WriteLine("Respawn");
