@@ -179,7 +179,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: 09c6bf963ea6cc412f5b9197c588acf6}
 ---
@@ -218,7 +218,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
 ---
@@ -257,7 +257,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: 9d5ca54110e8c8feb8e8edd7193210be}
 ---
@@ -296,7 +296,7 @@ SpriteRenderer:
   m_IsEnabled: true
   World Space: true
   Colour Picker Mode: true
-  Include Alpha (ColourPicking): false
+  Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: 13cc4bf4e9905a9d2d9fa16d77598bc3}
 ---
@@ -327,6 +327,7 @@ Transform:
   m_Children:
     - {fileID: 12985200632528168917}
     - {fileID: 16470370342308864989}
+    - {fileID: 552926851102396472}
 ---
 ID: 12985200632528168917
 GameObject:
@@ -477,3 +478,22 @@ Transform:
     - {fileID: 15413680003274128894}
     - {fileID: 11997381317790178123}
     - {fileID: 7360009555949792780}
+---
+ID: 552926851102396472
+GameObject:
+  m_IsActive: true
+  m_Name: ButtonClick
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 987366250335975594}  # Transform
+---
+ID: 987366250335975594
+Transform:
+  m_GameObject: {fileID: 552926851102396472}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2581623557328585861}
+  m_Children:
+    []
