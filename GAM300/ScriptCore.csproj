@@ -40,6 +40,7 @@
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\BossBehaviour.cs" />
+    <Compile Include="Assets\Scripts\ButtonLogic.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\CompanionMovement.cs" />
     <Compile Include="Assets\Scripts\CutsceneCamera.cs" />

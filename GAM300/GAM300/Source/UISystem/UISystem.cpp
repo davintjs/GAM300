@@ -43,7 +43,6 @@ void UISystem::Update(float dt)
 		{
 			sr.onHover = false;
 			sr.onClick = false;
-
 		}
 		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
 		{
