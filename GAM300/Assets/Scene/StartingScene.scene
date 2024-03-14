@@ -102,6 +102,7 @@ Script:
   sfx3: {fileID: 13968833333247801396}  # Component
   stats: {fileID: 14792022944608304902}  # GameObject
   statsok: {fileID: 9717890677315299068}  # GameObject
+  swooshSound: {fileID: 7184141399517584528}  # Component
   systembooting: {fileID: 14974167627800411735}  # GameObject
   systeminit: {fileID: 3146263103583520969}  # GameObject
   text1: {fileID: 2236279902656859337}  # GameObject
@@ -136,6 +137,7 @@ Transform:
     - {fileID: 2408824139090975511}
     - {fileID: 15545378799674341849}
     - {fileID: 11824008428734800623}
+    - {fileID: 14632784178388649300}
 ---
 ID: 16470510239641695939
 GameObject:
@@ -927,3 +929,37 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+---
+ID: 14632784178388649300
+GameObject:
+  m_IsActive: true
+  m_Name: Swoosh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16186484772121365100}  # Transform
+    - component: {fileID: 7184141399517584528}  # AudioSource
+---
+ID: 16186484772121365100
+Transform:
+  m_GameObject: {fileID: 14632784178388649300}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4592072074559840146}
+  m_Children:
+    []
+---
+ID: 7184141399517584528
+AudioSource:
+  m_GameObject: {fileID: 14632784178388649300}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 0.600000024
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 0d4524adfbf610750ee48a28e714500a}
+  Play: false

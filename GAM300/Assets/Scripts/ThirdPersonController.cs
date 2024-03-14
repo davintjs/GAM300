@@ -332,9 +332,14 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("Missing animator reference in ThirdPersonController script");
         }
-
+        if (audioSource == null)
+        {
+            Console.WriteLine("Missing audioSource reference in ThirdPersonController script");
+            return;
+        }
 
         audioSource.Play();
+        AudioManager.instance.swoosh.Play();
         playerWeaponCollider1.SetActive(false);
         playerWeaponCollider2.SetActive(false);
         playerWeaponCollider3.SetActive(false);
