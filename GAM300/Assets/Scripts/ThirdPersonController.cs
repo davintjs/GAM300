@@ -390,6 +390,7 @@ public class ThirdPersonController : Script
         if (isOverdriveEnabled == true)
         {
             overDriveBar.SetActive(true);
+            UpdateOverdriveBar();
         }
         else
         {
