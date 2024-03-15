@@ -33,12 +33,15 @@ Script:
   m_IsEnabled: true
   Script: {guid: 308f36d28486328374ac349b3503b942}
   dialogueText: {fileID: 5676392047881511918}  # GameObject
-  level1: {fileID: 0}
-  level2: {fileID: 0}
-  level3: {fileID: 0}
-  level4: {fileID: 0}
-  level5: {fileID: 0}
-  level6: {fileID: 0}
+  level1: {fileID: 14369827522225455365}  # Component
+  level2: {fileID: 12036444684904803991}  # Component
+  level3: {fileID: 10572921210759547208}  # Component
+  level4: {fileID: 5261144452102410871}  # Component
+  level5: {fileID: 12397269756809271859}  # Component
+  level6: {fileID: 8830711124763251809}  # Component
+  level7: {fileID: 7536715241772279628}  # Component
+  level8: {fileID: 126530343984272677}  # Component
+  level9: {fileID: 18375827116231299126}  # Component
 ---
 ID: 9202772318638598359
 GameObject:
@@ -83104,12 +83107,12 @@ Transform:
   m_Children:
     - {fileID: 3476722836763241155}
     - {fileID: 16207680269001726648}
-    - {fileID: 8412529737597656277}
     - {fileID: 2310634752158958975}
+    - {fileID: 8412529737597656277}
     - {fileID: 5114381423122968400}
     - {fileID: 16294717769688043480}
-    - {fileID: 16183338786677520616}
     - {fileID: 13898223901269057467}
+    - {fileID: 16183338786677520616}
     - {fileID: 14279794397136616112}
 ---
 ID: 3476722836763241155
@@ -83858,4 +83861,356 @@ AudioSource:
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 0d4524adfbf610750ee48a28e714500a}
+  Play: false
+---
+ID: 9071173934758756819
+GameObject:
+  m_IsActive: true
+  m_Name: DialogueAudios
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8588413672415759123}  # Transform
+---
+ID: 8588413672415759123
+Transform:
+  m_GameObject: {fileID: 9071173934758756819}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 10651946286847081667}
+---
+ID: 10651946286847081667
+GameObject:
+  m_IsActive: true
+  m_Name: Seer
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4070044694464370387}  # Transform
+---
+ID: 4070044694464370387
+Transform:
+  m_GameObject: {fileID: 10651946286847081667}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9071173934758756819}
+  m_Children:
+    - {fileID: 3624387550513500971}
+    - {fileID: 13545084089578335454}
+    - {fileID: 3575717594698851971}
+    - {fileID: 5027206285202071028}
+    - {fileID: 7923105110617665651}
+    - {fileID: 101693351701073525}
+    - {fileID: 10811547799961982745}
+    - {fileID: 3932943520713997005}
+    - {fileID: 8731674731618989102}
+---
+ID: 3624387550513500971
+GameObject:
+  m_IsActive: true
+  m_Name: Seer1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13190910061212126112}  # Transform
+    - component: {fileID: 14369827522225455365}  # AudioSource
+---
+ID: 13190910061212126112
+Transform:
+  m_GameObject: {fileID: 3624387550513500971}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 14369827522225455365
+AudioSource:
+  m_GameObject: {fileID: 3624387550513500971}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9cecfd7704bbb846d012e4ff0dd642e0}
+  Play: false
+---
+ID: 13545084089578335454
+GameObject:
+  m_IsActive: true
+  m_Name: Seer2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14560241356302907032}  # Transform
+    - component: {fileID: 12036444684904803991}  # AudioSource
+---
+ID: 14560241356302907032
+Transform:
+  m_GameObject: {fileID: 13545084089578335454}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 12036444684904803991
+AudioSource:
+  m_GameObject: {fileID: 13545084089578335454}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 303513cf8d51efce3e128e6fa9072c4f}
+  Play: false
+---
+ID: 3575717594698851971
+GameObject:
+  m_IsActive: true
+  m_Name: Seer3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 168458395678589236}  # Transform
+    - component: {fileID: 10572921210759547208}  # AudioSource
+---
+ID: 168458395678589236
+Transform:
+  m_GameObject: {fileID: 3575717594698851971}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 10572921210759547208
+AudioSource:
+  m_GameObject: {fileID: 3575717594698851971}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 5ce910020575d51c7c71c165cc4ca51a}
+  Play: false
+---
+ID: 5027206285202071028
+GameObject:
+  m_IsActive: true
+  m_Name: Seer4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4394198973559500540}  # Transform
+    - component: {fileID: 5261144452102410871}  # AudioSource
+---
+ID: 4394198973559500540
+Transform:
+  m_GameObject: {fileID: 5027206285202071028}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 5261144452102410871
+AudioSource:
+  m_GameObject: {fileID: 5027206285202071028}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 43d0494488a0b19a0aa603207838d034}
+  Play: false
+---
+ID: 7923105110617665651
+GameObject:
+  m_IsActive: true
+  m_Name: Seer5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3241158407307785140}  # Transform
+    - component: {fileID: 12397269756809271859}  # AudioSource
+---
+ID: 3241158407307785140
+Transform:
+  m_GameObject: {fileID: 7923105110617665651}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 12397269756809271859
+AudioSource:
+  m_GameObject: {fileID: 7923105110617665651}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: d262b58db24a410675d722b6dd325447}
+  Play: false
+---
+ID: 101693351701073525
+GameObject:
+  m_IsActive: true
+  m_Name: Seer6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1734262569130953807}  # Transform
+    - component: {fileID: 8830711124763251809}  # AudioSource
+---
+ID: 1734262569130953807
+Transform:
+  m_GameObject: {fileID: 101693351701073525}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 8830711124763251809
+AudioSource:
+  m_GameObject: {fileID: 101693351701073525}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: f364df8832acbaaf5a275096d7463cbb}
+  Play: false
+---
+ID: 10811547799961982745
+GameObject:
+  m_IsActive: true
+  m_Name: Seer7
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15389457166712127509}  # Transform
+    - component: {fileID: 7536715241772279628}  # AudioSource
+---
+ID: 15389457166712127509
+Transform:
+  m_GameObject: {fileID: 10811547799961982745}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 7536715241772279628
+AudioSource:
+  m_GameObject: {fileID: 10811547799961982745}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 018a3571e4135e44e1fdba5688d88aa2}
+  Play: false
+---
+ID: 3932943520713997005
+GameObject:
+  m_IsActive: true
+  m_Name: Seer8
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9840970319929011139}  # Transform
+    - component: {fileID: 126530343984272677}  # AudioSource
+---
+ID: 9840970319929011139
+Transform:
+  m_GameObject: {fileID: 3932943520713997005}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 126530343984272677
+AudioSource:
+  m_GameObject: {fileID: 3932943520713997005}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 1284152e7a3b74f819a968cba95ade9a}
+  Play: false
+---
+ID: 8731674731618989102
+GameObject:
+  m_IsActive: true
+  m_Name: Seer9
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16187488178326297988}  # Transform
+    - component: {fileID: 18375827116231299126}  # AudioSource
+---
+ID: 16187488178326297988
+Transform:
+  m_GameObject: {fileID: 8731674731618989102}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10651946286847081667}
+  m_Children:
+    []
+---
+ID: 18375827116231299126
+AudioSource:
+  m_GameObject: {fileID: 8731674731618989102}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: abedce628745d2ab18af9e5609b24ce9}
   Play: false
