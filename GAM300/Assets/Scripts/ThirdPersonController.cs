@@ -182,6 +182,7 @@ public class ThirdPersonController : Script
     public bool isOverdriveEnabled = false;
     //used to check if in overdrive for dmg boost, regen and stamina reset
     public bool currentlyOverdriven = false;
+    public bool playOverdrivePowerUpOnce = true;
     public float maxOverdriveCharge = 15f;
     public float currentOverdriveCharge = 0f;
     public float currentOverdriveHealthTimer = 0f;
@@ -705,6 +706,9 @@ public class ThirdPersonController : Script
 
                 //set the charge to 0, so it can't be used again immediately
                 //currentOverdriveCharge = 0;
+
+                //reset powerupPlayOnce
+                playOverdrivePowerUpOnce = true;
 
                 //reset health regen timer so it doesn't stack in the next overdrive mode use.
                 currentOverdriveHealthTimer = 0f;

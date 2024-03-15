@@ -59,6 +59,7 @@ public class OverdriveChip : Script
         {
             ThirdPersonController.instance.enableOverdrive();
             AudioManager.instance.keyCollected.Play();
+            AudioManager.instance.powerUp.Play();
             gameObject.SetActive(false);
         }
     }

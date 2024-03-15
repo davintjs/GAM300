@@ -271,11 +271,23 @@ public class RangeEnemy : Script
                 {
                     ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
                     ThirdPersonController.instance.UpdateOverdriveBar();
+
+                    if(ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
+                    {
+                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                        AudioManager.instance.powerUp.Play();
+                    }
                 }
                 else
                 {
                     ThirdPersonController.instance.currentOverdriveCharge++;
                     ThirdPersonController.instance.UpdateOverdriveBar();
+
+                    if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                    {
+                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                        AudioManager.instance.powerUp.Play();
+                    }
                 }
             }
         }
