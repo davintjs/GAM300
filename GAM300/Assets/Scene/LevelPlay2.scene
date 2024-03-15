@@ -4138,9 +4138,11 @@ Script:
   currentDodgeTimer: 0
   currentHealth: 4
   currentInvulnerableTimer: 1
+  currentOverdriveCharge: 15
   currentOverdriveCooldown: 0
   currentOverdriveTimer: 0
   currentStamina: 0
+  currentlyOverdriven: false
   cutscene: false
   dashAttackCooldown: 0.899999976
   dashAttackSpeed: 10
@@ -4159,8 +4161,9 @@ Script:
   jumpStamina: 0
   maxColliderDist: 1.5
   maxHealth: 10
+  maxOverdriveCharge: 15
   maxStamina: 100
-  overDriveCooldown: 6
+  overDriveCooldown: 10
   overDriveStamina: 40
   overdriveTimer: 2
   regenRate: 60
@@ -7969,7 +7972,7 @@ ID: 1363589281020347742
 Transform:
   m_GameObject: {fileID: 10712419355432134318}
   Translation: [59.7221451, 43.954361, -76.860054]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 10907430610981256203}
   m_Children:

@@ -258,7 +258,24 @@ public class RangeEnemy : Script
                 StopCoroutine(damagedCoroutine);
             }
             damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
-            TakeDamage(1);
+
+            if (ThirdPersonController.instance.currentlyOverdriven == true)
+            {
+                TakeDamage(2);
+            }
+            else
+            {
+                TakeDamage(1);
+                //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
+                if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                {
+                    ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
+                }
+                else
+                {
+                    ThirdPersonController.instance.currentOverdriveCharge++;
+                }
+            }
         }
     }
 

@@ -177,7 +177,12 @@ public class ThirdPersonController : Script
     //public float currentOverdrive = 0;
     public GameObject overDriveBar;
     public GameObject overDriveVFX;
+    //for overdrive chip purposes
     public bool isOverdriveEnabled = false;
+    //used to check if in overdrive for dmg boost, regen and stamina reset
+    public bool currentlyOverdriven = false;
+    public float maxOverdriveCharge = 15f;
+    public float currentOverdriveCharge = 0f;
 
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
@@ -575,6 +580,9 @@ public class ThirdPersonController : Script
             overDriveVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y -2, transform.localPosition.z);
             overDriveVFX.SetActive(true);
 
+            //add regen health, stamina reset and double dmg here
+
+            //this stops the animation only
             if (currentOverdriveTimer <= 0)
             {
                 SetState("Overdrive", false);
@@ -587,14 +595,20 @@ public class ThirdPersonController : Script
                 currentOverdriveTimer = overdriveTimer;
             }
         }
+
+        //cooldown changed to OverdriveDuration
         if(startOverdriveCooldown)
         {
+            //change cooldown to duration
             currentOverdriveCooldown -= Time.deltaTime;
             if(currentOverdriveCooldown <= 0)
             {
                 //SetState("Overdrive", false);
                 startOverdriveCooldown = false;
                 currentOverdriveCooldown = overDriveCooldown;
+
+                //remove regen, stamina reset and double dmg here
+                currentlyOverdriven = false;
             }
         }
 
@@ -642,13 +656,18 @@ public class ThirdPersonController : Script
                 SetState("Dodge", true);
             }
             //OVERDRIVE
-            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown && isOverdriveEnabled == true)
+            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && currentOverdriveCharge == maxOverdriveCharge && isOverdriveEnabled == true)
             {
                 AudioManager.instance.playerOverdrive.Play();
                 AudioManager.instance.overdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use
                 //UseStamina(overDriveStamina);
                 //Console.WriteLine("Overdrive");
+
+                //set the charge to 0, so it can't be used again immediately
+                currentOverdriveCharge = 0;
+
+                currentlyOverdriven = true;
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
