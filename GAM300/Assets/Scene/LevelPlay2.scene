@@ -32,6 +32,13 @@ Script:
   m_GameObject: {fileID: 5342434905140024301}
   m_IsEnabled: true
   Script: {guid: 308f36d28486328374ac349b3503b942}
+  dialogueText: {fileID: 5676392047881511918}  # GameObject
+  level1: {fileID: 0}
+  level2: {fileID: 0}
+  level3: {fileID: 0}
+  level4: {fileID: 0}
+  level5: {fileID: 0}
+  level6: {fileID: 0}
 ---
 ID: 9202772318638598359
 GameObject:
@@ -83069,6 +83076,14 @@ Script:
   m_GameObject: {fileID: 17633603467252348022}
   m_IsEnabled: true
   Script: {guid: a8020361e0ef77579e19947ac92300c7}
+  level1: {fileID: 17638106604129844536}  # GameObject
+  level2: {fileID: 2663796617609977665}  # GameObject
+  level3: {fileID: 18097957693333053037}  # GameObject
+  level4: {fileID: 14425448554615013754}  # GameObject
+  level5: {fileID: 16493046408952253451}  # GameObject
+  level6: {fileID: 17591975227681752161}  # GameObject
+  level7: {fileID: 17268750755380492874}  # GameObject
+  level8: {fileID: 12689355304111214582}  # GameObject
 ---
 ID: 16302274557395296677
 GameObject:
@@ -83089,12 +83104,12 @@ Transform:
   m_Children:
     - {fileID: 3476722836763241155}
     - {fileID: 16207680269001726648}
-    - {fileID: 2310634752158958975}
     - {fileID: 8412529737597656277}
+    - {fileID: 2310634752158958975}
     - {fileID: 5114381423122968400}
     - {fileID: 16294717769688043480}
-    - {fileID: 13898223901269057467}
     - {fileID: 16183338786677520616}
+    - {fileID: 13898223901269057467}
     - {fileID: 14279794397136616112}
 ---
 ID: 3476722836763241155
@@ -83145,6 +83160,7 @@ Script:
   m_GameObject: {fileID: 3476722836763241155}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 1
 ---
 ID: 16207680269001726648
 GameObject:
@@ -83194,6 +83210,7 @@ Script:
   m_GameObject: {fileID: 16207680269001726648}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 2
 ---
 ID: 2310634752158958975
 GameObject:
@@ -83243,6 +83260,7 @@ Script:
   m_GameObject: {fileID: 2310634752158958975}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 4
 ---
 ID: 8412529737597656277
 GameObject:
@@ -83292,6 +83310,7 @@ Script:
   m_GameObject: {fileID: 8412529737597656277}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 3
 ---
 ID: 5114381423122968400
 GameObject:
@@ -83310,7 +83329,7 @@ Transform:
   m_GameObject: {fileID: 5114381423122968400}
   Translation: [105.494255, 37.7094955, -108.591644]
   Rotation: [0, 0, 0]
-  Scale: [6.09813833, 7.72537327, 5.57038212]
+  Scale: [6.09813833, 7.72537327, 8.37242031]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -83341,6 +83360,7 @@ Script:
   m_GameObject: {fileID: 5114381423122968400}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 6
 ---
 ID: 16294717769688043480
 GameObject:
@@ -83390,6 +83410,7 @@ Script:
   m_GameObject: {fileID: 16294717769688043480}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 7
 ---
 ID: 13898223901269057467
 GameObject:
@@ -83439,6 +83460,7 @@ Script:
   m_GameObject: {fileID: 13898223901269057467}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 9
 ---
 ID: 16183338786677520616
 GameObject:
@@ -83488,6 +83510,7 @@ Script:
   m_GameObject: {fileID: 16183338786677520616}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 8
 ---
 ID: 14279794397136616112
 GameObject:
@@ -83537,6 +83560,7 @@ Script:
   m_GameObject: {fileID: 14279794397136616112}
   m_IsEnabled: true
   Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 10
 ---
 ID: 10614427148243844306
 GameObject:
