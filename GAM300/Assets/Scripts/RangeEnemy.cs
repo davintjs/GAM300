@@ -270,10 +270,12 @@ public class RangeEnemy : Script
                 if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
                 {
                     ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
+                    ThirdPersonController.instance.UpdateOverdriveBar();
                 }
                 else
                 {
                     ThirdPersonController.instance.currentOverdriveCharge++;
+                    ThirdPersonController.instance.UpdateOverdriveBar();
                 }
             }
         }

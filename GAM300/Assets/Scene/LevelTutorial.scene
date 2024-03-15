@@ -12222,6 +12222,7 @@ Script:
   attackMoveSpeed: 160
   attackStamina: 0
   attackTimer: 1
+  chargeOverdriveTimer: 0
   checkpointIndex: -1
   colliderDist: 0
   currentAnimationTimer: 0
@@ -12231,9 +12232,12 @@ Script:
   currentDodgeTimer: 0
   currentHealth: 4
   currentInvulnerableTimer: 1
+  currentOverdriveCharge: 0
   currentOverdriveCooldown: 0
+  currentOverdriveHealthTimer: 0
   currentOverdriveTimer: 0
   currentStamina: 0
+  currentlyOverdriven: false
   cutscene: false
   dashAttackCooldown: 0.899999976
   dashAttackSpeed: 10
@@ -12252,6 +12256,7 @@ Script:
   jumpStamina: 0
   maxColliderDist: 1.5
   maxHealth: 10
+  maxOverdriveCharge: 15
   maxStamina: 100
   overDriveCooldown: 6
   overDriveStamina: 40
@@ -12279,6 +12284,7 @@ Script:
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
   overDriveBar: {fileID: 4720521423488205772}  # GameObject
   overDriveCollider: {fileID: 17412142376824622519}  # GameObject
+  overDriveTransform: {fileID: 3925618525247661714}  # Component
   overDriveVFX: {fileID: 17569942394685385403}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
