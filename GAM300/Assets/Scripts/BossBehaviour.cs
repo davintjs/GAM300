@@ -362,7 +362,6 @@ public class BossBehaviour : Script
         SetState("DashChargeUp", false);
 
         SetState("DashAttack", true);
-
         yield return StartCoroutine(RotateAndMoveToPlayer(1.3f, 0f, rotationSpeed/8f));
         animator.SetSpeed(1f);
 
@@ -411,7 +410,7 @@ public class BossBehaviour : Script
             timer -= Time.deltaTime;
             yield return null;
         }
-
+        bossSounds.jumpAttackSFX.Play();
         timer = startDur - timer;
         while (timer > 0)
         {
@@ -582,6 +581,7 @@ public class BossBehaviour : Script
         }
 
         animator.SetSpeed(1f);
+        bossSounds.screamSFX.Play();
         yield return new WaitForSeconds(0.2f);
 
         ultimateVFX.particleLooping = true;
