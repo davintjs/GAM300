@@ -172,6 +172,7 @@ public class BossBehaviour : Script
     {
 
         bossSounds = BossAudioManager.instance;
+        playerSounds = PlayerAudioManager.instance;
 
         player = ThirdPersonController.instance;
         StartCoroutine(EnterBossCutscene());

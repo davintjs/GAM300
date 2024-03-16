@@ -60,6 +60,7 @@ public class RangeEnemy : Script
 
     void Start()
     {
+        playerSounds = PlayerAudioManager.instance;
         playOnce = true;
         rb = GetComponent<Rigidbody>();
         currentHealth = maxHealth;

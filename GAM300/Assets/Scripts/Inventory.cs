@@ -36,6 +36,11 @@ public class Inventory : Script
         }
     }
 
+    void Start()
+    {
+        playerSounds = PlayerAudioManager.instance;
+    }
+
     void Update()
     {
         thePacks();

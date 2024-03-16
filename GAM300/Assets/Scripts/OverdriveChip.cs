@@ -26,6 +26,7 @@ public class OverdriveChip : Script
 
     void Start()
     {
+        playerSounds = PlayerAudioManager.instance;
         keyStartY = transform.localPosition.y;
     }
 

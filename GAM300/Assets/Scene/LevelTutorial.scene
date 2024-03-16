@@ -162,17 +162,8 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 497501804413490616}
-    - {fileID: 183898391583128112}
     - {fileID: 1704405459447429049}
     - {fileID: 11931709940185671807}
-    - {fileID: 8195998143091088379}
-    - {fileID: 5713504039664526619}
-    - {fileID: 1444839062839968456}
-    - {fileID: 3873369559540028830}
-    - {fileID: 3981423797671185435}
-    - {fileID: 12214984652809638984}
-    - {fileID: 16286294863580061652}
     - {fileID: 939250523268262297}
 ---
 ID: 12555400289260702052
@@ -196,6 +187,111 @@ Script:
   rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
   swoosh: {fileID: 8248112582194938407}  # Component
   uiSound: {fileID: 12043367231734905459}  # Component
+---
+ID: 6034621871942586701
+GameObject:
+  m_IsActive: true
+  m_Name: MeleeEnemy
+  m_TagString: Enemy
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2078812242787879120}  # Transform
+    - component: {fileID: 9883271985141862243}  # NavMeshAgent
+    - component: {fileID: 9504656451654388578}  # BoxCollider
+    - component: {fileID: 5033578668654550690}  # Rigidbody
+    - component: {fileID: 13457975659125709231}  # Script
+    - component: {fileID: 3734156682333709197}  # Script
+---
+ID: 2078812242787879120
+Transform:
+  m_GameObject: {fileID: 6034621871942586701}
+  Translation: [47.1288681, -0.651612878, -35.1256599]
+  Rotation: [-3.14159203, -1.54447472, -3.14159203]
+  Scale: [0.999984205, 1, 0.999984324]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 15952054123807579159}
+    - {fileID: 17589645519894896830}
+    - {fileID: 554005094457437961}
+---
+ID: 9883271985141862243
+NavMeshAgent:
+  m_GameObject: {fileID: 6034621871942586701}
+  m_IsEnabled: true
+  Agent Speed: 0
+---
+ID: 9504656451654388578
+BoxCollider:
+  m_GameObject: {fileID: 6034621871942586701}
+  m_IsEnabled: true
+  Dimensions: [1, 1.39999998, 1]
+  Offset: [0, 0, 0]
+---
+ID: 5033578668654550690
+Rigidbody:
+  m_GameObject: {fileID: 6034621871942586701}
+  m_IsEnabled: true
+  LinearVelocity: [-4.10645526e-07, 1.16628379e-15, -4.02849707e-07]
+  AngularVelocity: [-5.75522165e-07, -1.80022663e-13, 5.86636872e-07]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: false
+---
+ID: 13457975659125709231
+Script:
+  m_GameObject: {fileID: 6034621871942586701}
+  m_IsEnabled: true
+  Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
+  RotationSpeed: 6
+  alertedOnce: true
+  attackCooldown: 0
+  attackCooldownTimer: 1
+  attackDistance: 1.20000005
+  back: false
+  chaseDistance: 5
+  count: 0
+  currentAnimationTimer: 0
+  currentAttackCooldownTimer: 0
+  currentHealth: 0
+  currentStunDuration: 0
+  duration: 0.5
+  inRange: false
+  isAttackCooldown: false
+  isAttacking: false
+  isDead: false
+  isStunned: false
+  maxHealth: 6
+  moveSpeed: 2
+  newRequest: false
+  playOnce: true
+  staggerCooldown: 5
+  staggerTimer: 5
+  startDeathAnimationCountdown: false
+  state: 0
+  stunDuration: 1.5
+  testingValue: 0
+  timer: 0
+  animator: {fileID: 2826765051149347733}  # Component
+  attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  hpBar: {fileID: 15952054123807579159}  # Component
+  meleeEnemyPos: {fileID: 0}
+  modelOffset: {fileID: 17589645519894896830}  # Component
+  parentTransform: {fileID: 0}
+  player: {fileID: 3977294589520766028}  # Component
+---
+ID: 3734156682333709197
+Script:
+  m_GameObject: {fileID: 6034621871942586701}
+  m_IsEnabled: true
+  Script: {guid: c2842abf1019f5a501732cffb6363736}
+  cue: false
+  timeBeforeKeySpawn: 2
+  key: {fileID: 18443479616549604882}  # GameObject
+  tutorialEnemy: {fileID: 13457975659125709231}  # Component
 ---
 ID: 3977294589520766028
 GameObject:
@@ -411,12 +507,12 @@ Transform:
   Scale: [0.999998093, 1, 0.999998093]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 12641288044943282872}
-    - {fileID: 8629589438629673806}
     - {fileID: 7837859240719427374}
     - {fileID: 263938901046208410}
     - {fileID: 5382915443314468010}
     - {fileID: 8310365372469502612}
+    - {fileID: 12641288044943282872}
+    - {fileID: 8629589438629673806}
     - {fileID: 2600266064562538217}
 ---
 ID: 16773315215798417911
@@ -2112,110 +2208,6 @@ Script:
   m_IsEnabled: true
   Script: {guid: 33c9afc207fdbc1bf7e7c0f5de1e6696}
   playerController: {fileID: 13523510586901288919}  # Component
----
-ID: 6034621871942586701
-GameObject:
-  m_IsActive: true
-  m_Name: MeleeEnemy
-  m_TagString: Enemy
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2078812242787879120}  # Transform
-    - component: {fileID: 9883271985141862243}  # NavMeshAgent
-    - component: {fileID: 9504656451654388578}  # BoxCollider
-    - component: {fileID: 5033578668654550690}  # Rigidbody
-    - component: {fileID: 13457975659125709231}  # Script
-    - component: {fileID: 3734156682333709197}  # Script
----
-ID: 2078812242787879120
-Transform:
-  m_GameObject: {fileID: 6034621871942586701}
-  Translation: [47.1288681, -0.651612878, -35.1256599]
-  Rotation: [-3.14159203, -1.54447472, -3.14159203]
-  Scale: [0.999984205, 1, 0.999984324]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 15952054123807579159}
-    - {fileID: 17589645519894896830}
----
-ID: 9883271985141862243
-NavMeshAgent:
-  m_GameObject: {fileID: 6034621871942586701}
-  m_IsEnabled: true
-  Agent Speed: 0
----
-ID: 9504656451654388578
-BoxCollider:
-  m_GameObject: {fileID: 6034621871942586701}
-  m_IsEnabled: true
-  Dimensions: [1, 1.39999998, 1]
-  Offset: [0, 0, 0]
----
-ID: 5033578668654550690
-Rigidbody:
-  m_GameObject: {fileID: 6034621871942586701}
-  m_IsEnabled: true
-  LinearVelocity: [-4.10645526e-07, 1.16628379e-15, -4.02849707e-07]
-  AngularVelocity: [-5.75522165e-07, -1.80022663e-13, 5.86636872e-07]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: false
-  UseGravity: false
-  Is_trigger: false
----
-ID: 13457975659125709231
-Script:
-  m_GameObject: {fileID: 6034621871942586701}
-  m_IsEnabled: true
-  Script: {guid: 7fc0035de6408e8aafabc2a4044345f7}
-  RotationSpeed: 6
-  alertedOnce: true
-  attackCooldown: 0
-  attackCooldownTimer: 1
-  attackDistance: 1.20000005
-  back: false
-  chaseDistance: 5
-  count: 0
-  currentAnimationTimer: 0
-  currentAttackCooldownTimer: 0
-  currentHealth: 0
-  currentStunDuration: 0
-  duration: 0.5
-  inRange: false
-  isAttackCooldown: false
-  isAttacking: false
-  isDead: false
-  isStunned: false
-  maxHealth: 6
-  moveSpeed: 2
-  newRequest: false
-  playOnce: true
-  staggerCooldown: 5
-  staggerTimer: 5
-  startDeathAnimationCountdown: false
-  state: 0
-  stunDuration: 1.5
-  testingValue: 0
-  timer: 0
-  animator: {fileID: 2826765051149347733}  # Component
-  attackTrigger: {fileID: 12486642072026848141}  # GameObject
-  hpBar: {fileID: 15952054123807579159}  # Component
-  meleeEnemyPos: {fileID: 0}
-  modelOffset: {fileID: 17589645519894896830}  # Component
-  parentTransform: {fileID: 0}
-  player: {fileID: 3977294589520766028}  # Component
----
-ID: 3734156682333709197
-Script:
-  m_GameObject: {fileID: 6034621871942586701}
-  m_IsEnabled: true
-  Script: {guid: c2842abf1019f5a501732cffb6363736}
-  cue: false
-  timeBeforeKeySpawn: 2
-  key: {fileID: 18443479616549604882}  # GameObject
-  tutorialEnemy: {fileID: 13457975659125709231}  # Component
 ---
 ID: 3574560937881504822
 GameObject:
@@ -15234,9 +15226,9 @@ ID: 9394596766560980627
 Transform:
   m_GameObject: {fileID: 497501804413490616}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -15246,11 +15238,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.699999988
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: eda674df517607f98c64da16ea040919}
   Play: false
 ---
@@ -15268,9 +15260,9 @@ ID: 13812295196817184781
 Transform:
   m_GameObject: {fileID: 183898391583128112}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -15280,11 +15272,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: 06f54883e9bc513507a05a5298dba06f}
   Play: false
 ---
@@ -15868,9 +15860,9 @@ ID: 2131914696263170567
 Transform:
   m_GameObject: {fileID: 8195998143091088379}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -15880,11 +15872,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: 4390061a4fc32cdc60928c28ed7c31a4}
   Play: false
 ---
@@ -17900,9 +17892,9 @@ ID: 5544704717921281025
 Transform:
   m_GameObject: {fileID: 5713504039664526619}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -17912,11 +17904,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: 9f8df03759bd025de40156229fe387ec}
   Play: false
 ---
@@ -17934,9 +17926,9 @@ ID: 4405310670290985832
 Transform:
   m_GameObject: {fileID: 1444839062839968456}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -17946,11 +17938,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: e2c803b37e46493acc4b856df0e91f95}
   Play: false
 ---
@@ -17968,9 +17960,9 @@ ID: 5359552120802994559
 Transform:
   m_GameObject: {fileID: 3873369559540028830}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -17980,11 +17972,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: 6dfc6a4ff8d5e37c5b303cc3350fe00d}
   Play: false
 ---
@@ -19145,9 +19137,9 @@ ID: 14669385298519899881
 Transform:
   m_GameObject: {fileID: 3981423797671185435}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -19157,11 +19149,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: 7f4dca2867d7267a988760fbb9e6e63b}
   Play: false
 ---
@@ -19179,9 +19171,9 @@ ID: 8517028529970455473
 Transform:
   m_GameObject: {fileID: 12214984652809638984}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -19191,11 +19183,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: 961c5ccf4652254f50f84f2f7c5fa599}
   Play: false
 ---
@@ -19213,9 +19205,9 @@ ID: 1806405524419252118
 Transform:
   m_GameObject: {fileID: 16286294863580061652}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [-3.14156961, 1.54447591, -3.14156961]
+  Scale: [1.00001574, 1, 1.00001585]
+  Father: {fileID: 554005094457437961}
   m_Children:
     []
 ---
@@ -19225,11 +19217,11 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: 39c25d69f321816138ad9304fc599daf}
   Play: false
 ---
@@ -38687,3 +38679,46 @@ Script:
   Thump1: {fileID: 10783660871907285049}  # Component
   Thump2: {fileID: 7806304394155765163}  # Component
   UseItem: {fileID: 8508182677235274511}  # Component
+---
+ID: 554005094457437961
+GameObject:
+  m_IsActive: true
+  m_Name: Audios
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11285193933981780744}  # Transform
+    - component: {fileID: 15884681049530216524}  # Script
+---
+ID: 11285193933981780744
+Transform:
+  m_GameObject: {fileID: 554005094457437961}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6034621871942586701}
+  m_Children:
+    - {fileID: 497501804413490616}
+    - {fileID: 183898391583128112}
+    - {fileID: 8195998143091088379}
+    - {fileID: 5713504039664526619}
+    - {fileID: 1444839062839968456}
+    - {fileID: 3873369559540028830}
+    - {fileID: 3981423797671185435}
+    - {fileID: 12214984652809638984}
+    - {fileID: 16286294863580061652}
+---
+ID: 15884681049530216524
+Script:
+  m_GameObject: {fileID: 554005094457437961}
+  m_IsEnabled: true
+  Script: {guid: 47a983641cc25ec59ec0d58b0ac83d28}
+  EnemyAlerted1: {fileID: 8115481594444229779}  # Component
+  EnemyAlerted2: {fileID: 9987374737221286666}  # Component
+  EnemyAlerted3: {fileID: 2285030895218763434}  # Component
+  EnemyHit: {fileID: 14492758170611173101}  # Component
+  MeleeEnemyAttack: {fileID: 9604268664669988043}  # Component
+  MeleeEnemyDie: {fileID: 14157919317546456730}  # Component
+  MeleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  RangeEnemyBullet: {fileID: 11367208140139232291}  # Component
+  RangeEnemyDead: {fileID: 2502308778807293875}  # Component

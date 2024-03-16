@@ -69,9 +69,12 @@ public class Enemy : Script
     public bool alertedOnce = true;
     int alertedRotation = 0;
     PlayerAudioManager playerSounds;
+    EnemyAudioManager enemySounds;
 
     void Start()
     {
+        playerSounds = PlayerAudioManager.instance;
+        enemySounds = EnemyAudioManager.instance;
         playOnce = true;
         currentHealth = maxHealth;
         state = 0;//start with idle state
@@ -219,13 +222,13 @@ public class Enemy : Script
                         switch (alertedRotation)
                         {
                             case 0:
-                                AudioManager.instance.enemyAlerted1.Play();
+                                enemySounds.EnemyAlerted1.Play();
                                 break;
                             case 1:
-                                AudioManager.instance.enemyAlerted2.Play();
+                                enemySounds.EnemyAlerted2.Play();
                                 break;
                             case 2:
-                                AudioManager.instance.enemyAlerted3.Play();
+                                enemySounds.EnemyAlerted3.Play();
                                 break;
 
                         }
@@ -267,7 +270,7 @@ public class Enemy : Script
                     if (playOnce)
                     {
                         playOnce = false;
-                        AudioManager.instance.meleeEnemyAttack.Play();
+                        enemySounds.MeleeEnemyAttack.Play();
                     }
 
                     LookAt(direction);
@@ -390,8 +393,8 @@ public class Enemy : Script
         {
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
             ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
-            AudioManager.instance.enemyHit.Play();
-            AudioManager.instance.meleeEnemyInjured.Play();
+            enemySounds.EnemyHit.Play();
+            enemySounds.MeleeEnemyInjured.Play();
             currentHealth -= amount;
             vec3 hpScale = hpBar.localScale;
             hpScale.x = currentHealth / maxHealth;
@@ -413,7 +416,7 @@ public class Enemy : Script
             SetState("Death", true);
             animationManager.UpdateState();
             startDeathAnimationCountdown = true;
-            AudioManager.instance.meleeEnemyDie.Play();
+            enemySounds.MeleeEnemyDie.Play();
 
             //if (spawnObject != null)
             //    spawnObject.SetActive(true);
