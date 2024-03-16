@@ -29,6 +29,9 @@ public class PlayerAudioManager : Script
     public AudioSource PowerUp;
     public AudioSource OverdriveVFXSound;
 
+    public AudioSource DoorOpen;
+    public AudioSource Elevator;
+
     void Awake()
     {
         if (instance != null)

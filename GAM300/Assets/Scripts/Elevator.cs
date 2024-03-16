@@ -22,9 +22,11 @@ public class Elevator : Script
     bool moving = false;
     bool stoppedPermanent = false;
     CharacterController player;
+    PlayerAudioManager playerSounds;
 
     void Start()
     {
+        playerSounds = PlayerAudioManager.instance;
         currentRestTimer = restTimer;
         startinglocation = transform.localPosition;
     }
@@ -81,7 +83,7 @@ public class Elevator : Script
             player = rb.gameObject.GetComponent<CharacterController>();
             Console.WriteLine("PlayerOnPlatform");
             moving = true;
-            AudioManager.instance.elevator.Play();
+            playerSounds.Elevator.Play();
 
         }
     }

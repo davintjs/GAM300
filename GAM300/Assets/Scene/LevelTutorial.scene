@@ -162,8 +162,6 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 1704405459447429049}
-    - {fileID: 11931709940185671807}
     - {fileID: 939250523268262297}
 ---
 ID: 12555400289260702052
@@ -15294,9 +15292,9 @@ ID: 13811611442745766600
 Transform:
   m_GameObject: {fileID: 1704405459447429049}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [3.14159274, 0, 3.14159274]
+  Scale: [1.00000095, 1, 1.00000095]
+  Father: {fileID: 17382752399387768490}
   m_Children:
     []
 ---
@@ -15362,9 +15360,9 @@ ID: 9155072371493984954
 Transform:
   m_GameObject: {fileID: 11931709940185671807}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [3.14159274, 0, 3.14159274]
+  Scale: [1.00000095, 1, 1.00000095]
+  Father: {fileID: 17382752399387768490}
   m_Children:
     []
 ---
@@ -38656,6 +38654,8 @@ Transform:
     - {fileID: 11445212766906873979}
     - {fileID: 1431587650938263916}
     - {fileID: 6949508839592080895}
+    - {fileID: 1704405459447429049}
+    - {fileID: 11931709940185671807}
 ---
 ID: 14575671556032243219
 Script:
@@ -38665,6 +38665,8 @@ Script:
   DashAttack: {fileID: 5686188328230045151}  # Component
   DodgeRoll1: {fileID: 11831993938610939546}  # Component
   DodgeRoll2: {fileID: 10691427519348444029}  # Component
+  DoorOpen: {fileID: 14332204263861564631}  # Component
+  Elevator: {fileID: 2406511765798993316}  # Component
   JumpVoice: {fileID: 2598491438105149260}  # Component
   JumpVoice2: {fileID: 1439170181379000493}  # Component
   JumpVoice3: {fileID: 1767952073915406663}  # Component
