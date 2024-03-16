@@ -514,6 +514,7 @@ Transform:
     - {fileID: 2600266064562538217}
     - {fileID: 14556466426809500475}
     - {fileID: 11527602619382440876}
+    - {fileID: 14679321591021165143}
 ---
 ID: 16773315215798417911
 Camera:
@@ -38678,6 +38679,7 @@ Script:
   JumpVoice3: {fileID: 1767952073915406663}  # Component
   LowHealthHeartbeatSound: {fileID: 10173078633795339557}  # Component
   LowHealthSound: {fileID: 655381312435260763}  # Component
+  LowStaminaSound: {fileID: 15643136292507302418}  # Component
   OverdriveVFXSound: {fileID: 6255831656728013097}  # Component
   PlayerAttack: {fileID: 3436078548414859258}  # Component
   PlayerFootstep: {fileID: 6518591935153270902}  # Component
@@ -39056,9 +39058,43 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
   Sound File: {guid: b42e3aebc436cb90f3da2b5cf4e41406}
+  Play: false
+---
+ID: 14679321591021165143
+GameObject:
+  m_IsActive: true
+  m_Name: LowStaminaSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5604828916760430164}  # Transform
+    - component: {fileID: 15643136292507302418}  # AudioSource
+---
+ID: 5604828916760430164
+Transform:
+  m_GameObject: {fileID: 14679321591021165143}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15334681090738628473}
+  m_Children:
+    []
+---
+ID: 15643136292507302418
+AudioSource:
+  m_GameObject: {fileID: 14679321591021165143}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 18359f004c1c1f5a6663b304ea0af870}
   Play: false

@@ -466,6 +466,11 @@ public class ThirdPersonController : Script
             playingLowHealthSound = false;
         }
 
+        if (currentStamina >= 20f)
+        {
+            playerSounds.LowStaminaSound.Pause();
+        }
+
         vec3 dir = GetDirection();
         vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
@@ -947,6 +952,7 @@ public class ThirdPersonController : Script
         {
             currentStamina -= amount;
             UpdateStaminaBar();
+
             //staminaBar.value = currentStamina;
             //lerp timer reset the lerp effect
             //lerpTimer = 0f;
@@ -959,16 +965,17 @@ public class ThirdPersonController : Script
             }
             if (currentStamina - amount <= 0)
             {
+                playerSounds.LowStaminaSound.Play();
                 //Debug.Log("Not enough stamina");
                 //Console.WriteLine("Not enough stamina");
                 UpdateStaminaBar();
             }
 
-
             regen = StartCoroutine(RegenStamina());
         }
         else
         {
+            playerSounds.LowStaminaSound.Play();
             //Debug.Log("Not enough stamina");
             //Console.WriteLine("Not enough stamina");
             UpdateStaminaBar();
