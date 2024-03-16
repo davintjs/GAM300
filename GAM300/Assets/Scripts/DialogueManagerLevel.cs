@@ -23,6 +23,10 @@ public class DialogueManagerLevel : Script
     public AudioSource level8;
     public AudioSource level9;
 
+    public AudioSource apex1;
+    public AudioSource apex2;
+    public AudioSource apex3;
+
     bool startTimer;
     float Timer;
     int curr_state = 0;
@@ -122,18 +126,34 @@ public class DialogueManagerLevel : Script
                 setTimer(6.5f);
                 break;
             case 9:
-                text.text = "SEER: We are getting close, that forcefield is the final obstacle to APEX, it should go down if we destroy its generator.";
+                text.text = "SEER: We are getting close, that force field is the final obstacle to APEX, it should go down if we destroy its generator.";
                 ObjectiveManagerLevel.Instance.SetState(7);
                 level8.Play();
                 setTimer(9f);
                 break;
             case 10:
-                text.text = "SEER: The forcefiled is down! Quickly, that lift will lead us to APEX.";
+                text.text = "SEER: The force field is down! Quickly, that lift will lead us to APEX.";
                 ObjectiveManagerLevel.Instance.SetState(8);
                 ObjectiveManagerLevel.Instance.completeObjective(6);
                 ObjectiveManagerLevel.Instance.completeObjective(7);
                 level9.Play();
                 setTimer(4.5f);
+                break;
+            //APEX
+            case 11:
+                text.text = "APEX: I see, so the SEER survived. I knew it was too easy. It showed you everything didn't it... No matter, I'll have the other robots take care of you";
+                apex1.Play();
+                setTimer(14f);
+                break;
+            case 12:
+                text.text = "APEX: Shame, really. Together, we could've revolutionized the world but alas I have to look to the next iteration.";
+                apex2.Play();
+                setTimer(12f);
+                break;
+            case 13:
+                text.text = "APEX: Pathetic bots...I'll handle you myself.";
+                apex3.Play();
+                setTimer(5f);
                 break;
         }
     }

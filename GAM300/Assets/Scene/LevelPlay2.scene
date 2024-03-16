@@ -32,6 +32,9 @@ Script:
   m_GameObject: {fileID: 5342434905140024301}
   m_IsEnabled: true
   Script: {guid: 308f36d28486328374ac349b3503b942}
+  apex1: {fileID: 15687312904048643492}  # Component
+  apex2: {fileID: 339555793545048330}  # Component
+  apex3: {fileID: 3724742815310155344}  # Component
   dialogueText: {fileID: 5676392047881511918}  # GameObject
   level1: {fileID: 14369827522225455365}  # Component
   level2: {fileID: 12036444684904803991}  # Component
@@ -221,6 +224,7 @@ Transform:
     - {fileID: 1447197367722667126}
     - {fileID: 5613156076415073157}
     - {fileID: 14550202606600237166}
+    - {fileID: 1712204151478464524}
 ---
 ID: 16773315215798417911
 Camera:
@@ -83075,13 +83079,16 @@ Transform:
   m_Children:
     - {fileID: 3476722836763241155}
     - {fileID: 16207680269001726648}
-    - {fileID: 2310634752158958975}
     - {fileID: 8412529737597656277}
+    - {fileID: 2310634752158958975}
     - {fileID: 5114381423122968400}
     - {fileID: 16294717769688043480}
     - {fileID: 13898223901269057467}
     - {fileID: 16183338786677520616}
     - {fileID: 14279794397136616112}
+    - {fileID: 9824744411261246132}
+    - {fileID: 5753009934991238724}
+    - {fileID: 7359964402167818618}
 ---
 ID: 3476722836763241155
 GameObject:
@@ -83498,9 +83505,9 @@ GameObject:
 ID: 11297650401724246095
 Transform:
   m_GameObject: {fileID: 14279794397136616112}
-  Translation: [-10.7020092, 37.61063, -117.552528]
+  Translation: [-10.6770887, 37.61063, -117.552528]
   Rotation: [0, 0, 0]
-  Scale: [0.664981484, 0.909465432, 1.17797601]
+  Scale: [0.579000533, 0.909465432, 0.9384197]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -84543,3 +84550,276 @@ AudioSource:
   Fade Out Time (s): 0
   Sound File: {guid: 18359f004c1c1f5a6663b304ea0af870}
   Play: false
+---
+ID: 1712204151478464524
+GameObject:
+  m_IsActive: true
+  m_Name: APEX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2352972945670093440}  # Transform
+---
+ID: 2352972945670093440
+Transform:
+  m_GameObject: {fileID: 1712204151478464524}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15334681090738628473}
+  m_Children:
+    - {fileID: 7575960678470787192}
+    - {fileID: 7347557997703022592}
+    - {fileID: 534373427350032960}
+---
+ID: 7575960678470787192
+GameObject:
+  m_IsActive: true
+  m_Name: Apex1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1310944696483510432}  # Transform
+    - component: {fileID: 15687312904048643492}  # AudioSource
+---
+ID: 1310944696483510432
+Transform:
+  m_GameObject: {fileID: 7575960678470787192}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1712204151478464524}
+  m_Children:
+    []
+---
+ID: 15687312904048643492
+AudioSource:
+  m_GameObject: {fileID: 7575960678470787192}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 04fc5f26996da12ec859906da00e1ec7}
+  Play: false
+---
+ID: 7347557997703022592
+GameObject:
+  m_IsActive: true
+  m_Name: Apex2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2853473347220989580}  # Transform
+    - component: {fileID: 339555793545048330}  # AudioSource
+---
+ID: 2853473347220989580
+Transform:
+  m_GameObject: {fileID: 7347557997703022592}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1712204151478464524}
+  m_Children:
+    []
+---
+ID: 339555793545048330
+AudioSource:
+  m_GameObject: {fileID: 7347557997703022592}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 7e33efe32220d73a2d3c94ec381922f9}
+  Play: false
+---
+ID: 534373427350032960
+GameObject:
+  m_IsActive: true
+  m_Name: Apex3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5458664563519385546}  # Transform
+    - component: {fileID: 3724742815310155344}  # AudioSource
+---
+ID: 5458664563519385546
+Transform:
+  m_GameObject: {fileID: 534373427350032960}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1712204151478464524}
+  m_Children:
+    []
+---
+ID: 3724742815310155344
+AudioSource:
+  m_GameObject: {fileID: 534373427350032960}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 41c565f37b1feb2402f7cf1133687892}
+  Play: false
+---
+ID: 9824744411261246132
+GameObject:
+  m_IsActive: true
+  m_Name: ApexTrigger1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10141384495876149835}  # Transform
+    - component: {fileID: 6267045006342132547}  # BoxCollider
+    - component: {fileID: 312537758773404682}  # Rigidbody
+    - component: {fileID: 16844177411390438790}  # Script
+---
+ID: 10141384495876149835
+Transform:
+  m_GameObject: {fileID: 9824744411261246132}
+  Translation: [130.654251, 37.5432472, -85.5203857]
+  Rotation: [0, 0, 0]
+  Scale: [0.595483243, 0.75438273, 0.543947875]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 6267045006342132547
+BoxCollider:
+  m_GameObject: {fileID: 9824744411261246132}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 312537758773404682
+Rigidbody:
+  m_GameObject: {fileID: 9824744411261246132}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 16844177411390438790
+Script:
+  m_GameObject: {fileID: 9824744411261246132}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 11
+---
+ID: 5753009934991238724
+GameObject:
+  m_IsActive: true
+  m_Name: ApexTrigger2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10730313227324307881}  # Transform
+    - component: {fileID: 7365016057593968444}  # BoxCollider
+    - component: {fileID: 4373375714609009712}  # Rigidbody
+    - component: {fileID: 489838054961255169}  # Script
+---
+ID: 10730313227324307881
+Transform:
+  m_GameObject: {fileID: 5753009934991238724}
+  Translation: [127.49292, 37.7874985, -137.66806]
+  Rotation: [0, 0, 0]
+  Scale: [0.478173524, 0.586286843, 0.447951019]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 7365016057593968444
+BoxCollider:
+  m_GameObject: {fileID: 5753009934991238724}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 4373375714609009712
+Rigidbody:
+  m_GameObject: {fileID: 5753009934991238724}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 489838054961255169
+Script:
+  m_GameObject: {fileID: 5753009934991238724}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 12
+---
+ID: 7359964402167818618
+GameObject:
+  m_IsActive: true
+  m_Name: ApexTrigger3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18378077357969225113}  # Transform
+    - component: {fileID: 16102428451352266008}  # BoxCollider
+    - component: {fileID: 5955872368528475919}  # Rigidbody
+    - component: {fileID: 12307276825300118274}  # Script
+---
+ID: 18378077357969225113
+Transform:
+  m_GameObject: {fileID: 7359964402167818618}
+  Translation: [41.8901176, 39.103363, -119.031349]
+  Rotation: [0, 0, 0]
+  Scale: [1.27011466, 5.57132959, 5.66181421]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 16102428451352266008
+BoxCollider:
+  m_GameObject: {fileID: 7359964402167818618}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 5955872368528475919
+Rigidbody:
+  m_GameObject: {fileID: 7359964402167818618}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 12307276825300118274
+Script:
+  m_GameObject: {fileID: 7359964402167818618}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 13
