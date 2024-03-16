@@ -28,6 +28,8 @@ public class PlayerAudioManager : Script
     public AudioSource DashAttack;
     public AudioSource PowerUp;
     public AudioSource OverdriveVFXSound;
+    public AudioSource JumpOffGroundSound;
+    public AudioSource HitGroundSound;
 
     public AudioSource DoorOpen;
     public AudioSource Elevator;

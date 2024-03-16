@@ -38656,6 +38656,8 @@ Transform:
     - {fileID: 11445212766906873979}
     - {fileID: 1431587650938263916}
     - {fileID: 6949508839592080895}
+    - {fileID: 8511415690990079485}
+    - {fileID: 15181613681739195758}
 ---
 ID: 14575671556032243219
 Script:
@@ -38667,6 +38669,8 @@ Script:
   DodgeRoll2: {fileID: 10691427519348444029}  # Component
   DoorOpen: {fileID: 14332204263861564631}  # Component
   Elevator: {fileID: 2406511765798993316}  # Component
+  HitGroundSound: {fileID: 17790837555804688179}  # Component
+  JumpOffGroundSound: {fileID: 8361206617247598690}  # Component
   JumpVoice: {fileID: 2598491438105149260}  # Component
   JumpVoice2: {fileID: 1439170181379000493}  # Component
   JumpVoice3: {fileID: 1767952073915406663}  # Component
@@ -38917,4 +38921,72 @@ AudioSource:
   Fade In Time (s): 0
   Fade Out Time (s): 0
   Sound File: {guid: 2b04e00a2707b53bbe2eecfa2ce763c7}
+  Play: false
+---
+ID: 8511415690990079485
+GameObject:
+  m_IsActive: true
+  m_Name: jumpGroundSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7848282099944033672}  # Transform
+    - component: {fileID: 8361206617247598690}  # AudioSource
+---
+ID: 7848282099944033672
+Transform:
+  m_GameObject: {fileID: 8511415690990079485}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17382752399387768490}
+  m_Children:
+    []
+---
+ID: 8361206617247598690
+AudioSource:
+  m_GameObject: {fileID: 8511415690990079485}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1.5
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: f200c3fabffc811765d1cc977d3260d8}
+  Play: false
+---
+ID: 15181613681739195758
+GameObject:
+  m_IsActive: true
+  m_Name: hitGroundSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12358315278799195084}  # Transform
+    - component: {fileID: 17790837555804688179}  # AudioSource
+---
+ID: 12358315278799195084
+Transform:
+  m_GameObject: {fileID: 15181613681739195758}
+  Translation: [0, 0, -3.46817615e-08]
+  Rotation: [-3.14159274, 0, -3.14159274]
+  Scale: [1.00000048, 1, 1.00000048]
+  Father: {fileID: 17382752399387768490}
+  m_Children:
+    []
+---
+ID: 17790837555804688179
+AudioSource:
+  m_GameObject: {fileID: 15181613681739195758}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: cbee600a48ed806294838a52db266a7c}
   Play: false

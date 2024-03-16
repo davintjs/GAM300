@@ -31,6 +31,7 @@ public class ThirdPersonController : Script
     public bool startDashCooldown = false;
 
     public bool stopJump = false;
+    private bool jumpLandSound = false;
 
 
     public float dodgeTimer = 1f;
@@ -766,6 +767,8 @@ public class ThirdPersonController : Script
                 //Console.WriteLine("JUMP KEY PRESSED!");
                 StartCoroutine(StopJump());
                 SetState("Jump", true);
+                playerSounds.JumpOffGroundSound.Play();
+                jumpLandSound = true;
 
                 //Jump will not require stamina
                 //UseStamina(jumpStamina);
@@ -792,7 +795,15 @@ public class ThirdPersonController : Script
             {
                 //Console.WriteLine("Stopped Jumping");
                 if (stopJump)
+                {
                     SetState("Jump", false);
+                    if (jumpLandSound == true)
+                    {
+                        playerSounds.HitGroundSound.Play();
+                        jumpLandSound = false;
+                    }
+                }
+                    
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina >= sprintStamina)
                 {

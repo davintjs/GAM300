@@ -84198,6 +84198,8 @@ Transform:
     - {fileID: 3801088290079164654}
     - {fileID: 15187318079590443157}
     - {fileID: 14997646972903896270}
+    - {fileID: 365085607940253986}
+    - {fileID: 5245298092074131690}
 ---
 ID: 8160679611370606636
 Script:
@@ -84209,6 +84211,8 @@ Script:
   DodgeRoll2: {fileID: 11490585744734373202}  # Component
   DoorOpen: {fileID: 14332204263861564631}  # Component
   Elevator: {fileID: 2406511765798993316}  # Component
+  HitGroundSound: {fileID: 11708130734979929275}  # Component
+  JumpOffGroundSound: {fileID: 16729283048112337483}  # Component
   JumpVoice: {fileID: 2598491438105149260}  # Component
   JumpVoice2: {fileID: 17384956244929632316}  # Component
   JumpVoice3: {fileID: 1298934831599437468}  # Component
@@ -84322,7 +84326,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 4
+  Volume: 2.5
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -84356,10 +84360,78 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 2
+  Volume: 1.5
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
   Fade Out Time (s): 0
   Sound File: {guid: 2b04e00a2707b53bbe2eecfa2ce763c7}
+  Play: false
+---
+ID: 365085607940253986
+GameObject:
+  m_IsActive: true
+  m_Name: hitGroundSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5537031593022164116}  # Transform
+    - component: {fileID: 11708130734979929275}  # AudioSource
+---
+ID: 5537031593022164116
+Transform:
+  m_GameObject: {fileID: 365085607940253986}
+  Translation: [-7.62939453e-06, 0, -2.20233414e-06]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [1.00000072, 1, 1.00000072]
+  Father: {fileID: 3086226640464916968}
+  m_Children:
+    []
+---
+ID: 11708130734979929275
+AudioSource:
+  m_GameObject: {fileID: 365085607940253986}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: cbee600a48ed806294838a52db266a7c}
+  Play: false
+---
+ID: 5245298092074131690
+GameObject:
+  m_IsActive: true
+  m_Name: jumpGroundSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13295721499763935599}  # Transform
+    - component: {fileID: 16729283048112337483}  # AudioSource
+---
+ID: 13295721499763935599
+Transform:
+  m_GameObject: {fileID: 5245298092074131690}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3086226640464916968}
+  m_Children:
+    []
+---
+ID: 16729283048112337483
+AudioSource:
+  m_GameObject: {fileID: 5245298092074131690}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: f200c3fabffc811765d1cc977d3260d8}
   Play: false
