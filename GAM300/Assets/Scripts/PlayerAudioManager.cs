@@ -30,6 +30,8 @@ public class PlayerAudioManager : Script
     public AudioSource OverdriveVFXSound;
     public AudioSource JumpOffGroundSound;
     public AudioSource HitGroundSound;
+    public AudioSource LowHealthSound;
+    public AudioSource LowHealthHeartbeatSound;
 
     public AudioSource DoorOpen;
     public AudioSource Elevator;

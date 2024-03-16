@@ -474,7 +474,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.699999988
+  Volume: 0.25
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -512,6 +512,8 @@ Transform:
     - {fileID: 12641288044943282872}
     - {fileID: 8629589438629673806}
     - {fileID: 2600266064562538217}
+    - {fileID: 14556466426809500475}
+    - {fileID: 11527602619382440876}
 ---
 ID: 16773315215798417911
 Camera:
@@ -38674,6 +38676,8 @@ Script:
   JumpVoice: {fileID: 2598491438105149260}  # Component
   JumpVoice2: {fileID: 1439170181379000493}  # Component
   JumpVoice3: {fileID: 1767952073915406663}  # Component
+  LowHealthHeartbeatSound: {fileID: 10173078633795339557}  # Component
+  LowHealthSound: {fileID: 655381312435260763}  # Component
   OverdriveVFXSound: {fileID: 6255831656728013097}  # Component
   PlayerAttack: {fileID: 3436078548414859258}  # Component
   PlayerFootstep: {fileID: 6518591935153270902}  # Component
@@ -38989,4 +38993,72 @@ AudioSource:
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: cbee600a48ed806294838a52db266a7c}
+  Play: false
+---
+ID: 14556466426809500475
+GameObject:
+  m_IsActive: true
+  m_Name: LowHealthSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10729880228993677917}  # Transform
+    - component: {fileID: 655381312435260763}  # AudioSource
+---
+ID: 10729880228993677917
+Transform:
+  m_GameObject: {fileID: 14556466426809500475}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15334681090738628473}
+  m_Children:
+    []
+---
+ID: 655381312435260763
+AudioSource:
+  m_GameObject: {fileID: 14556466426809500475}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 0.400000006
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 3f7368c53311a3c7d06d00f9a9f6d3ad}
+  Play: false
+---
+ID: 11527602619382440876
+GameObject:
+  m_IsActive: true
+  m_Name: LowHealthHeartbeatSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11422145505203014444}  # Transform
+    - component: {fileID: 10173078633795339557}  # AudioSource
+---
+ID: 11422145505203014444
+Transform:
+  m_GameObject: {fileID: 11527602619382440876}
+  Translation: [-1.90734863e-06, 2.38418579e-07, 1.37381721e-06]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
+  m_Children:
+    []
+---
+ID: 10173078633795339557
+AudioSource:
+  m_GameObject: {fileID: 11527602619382440876}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: b42e3aebc436cb90f3da2b5cf4e41406}
   Play: false

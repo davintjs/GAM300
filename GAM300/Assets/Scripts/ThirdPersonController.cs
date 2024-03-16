@@ -152,6 +152,8 @@ public class ThirdPersonController : Script
     vec3 initialHealthBarPos;
     float initialHealthBarXpos;
     float initialHealthBarXScale;
+    bool lowHealthSound = false;
+    bool playingLowHealthSound = false;
 
     //stamina bar
     public float maxStamina = 100f;
@@ -450,6 +452,20 @@ public class ThirdPersonController : Script
         {
             HealHealth(1);
         }
+
+        if (lowHealthSound)
+        {
+            playerSounds.LowHealthSound.Play();
+            playerSounds.LowHealthHeartbeatSound.Play();
+            playingLowHealthSound = true;
+        }
+        else
+        {
+            playerSounds.LowHealthSound.Pause();
+            playerSounds.LowHealthHeartbeatSound.Pause();
+            playingLowHealthSound = false;
+        }
+
         vec3 dir = GetDirection();
         vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
@@ -1041,11 +1057,17 @@ public class ThirdPersonController : Script
             isInvulnerable = true;
             currentInvulnerableTimer = invulnerableTimer;
             currentHealth -= amount;
+            if (currentHealth <= 3f && playingLowHealthSound == false)
+            {
+                lowHealthSound = true;
+            }
             UpdatehealthBar();
         }
         
         if (currentHealth <= 0)
         {
+            playerSounds.LowHealthSound.Pause();
+            playerSounds.LowHealthHeartbeatSound.Pause();
             //Console.WriteLine("YouDied");
             isDead = true;
             SetState("Death", true);
@@ -1062,6 +1084,14 @@ public class ThirdPersonController : Script
     {
         currentHealth += amount;
         UpdatehealthBar();
+
+        if (currentHealth > 3f)
+        {
+            //playerSounds.LowHealthHeartbeatSound.Pause();
+            //playerSounds.LowHealthSound.Pause();
+            lowHealthSound = false;
+            playingLowHealthSound = false;
+        }
 
         if(currentHealth > maxHealth)
         {

@@ -218,6 +218,8 @@ Transform:
     - {fileID: 10614427148243844306}
     - {fileID: 15626645732971549666}
     - {fileID: 10651946286847081667}
+    - {fileID: 1447197367722667126}
+    - {fileID: 5613156076415073157}
 ---
 ID: 16773315215798417911
 Camera:
@@ -83820,7 +83822,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 0.25
   SFX min Pitch: 1
   SFX max Pitch: 1
   Fade In Time (s): 1
@@ -84216,6 +84218,8 @@ Script:
   JumpVoice: {fileID: 2598491438105149260}  # Component
   JumpVoice2: {fileID: 17384956244929632316}  # Component
   JumpVoice3: {fileID: 1298934831599437468}  # Component
+  LowHealthHeartbeatSound: {fileID: 11619846964706491910}  # Component
+  LowHealthSound: {fileID: 8637039550407242664}  # Component
   OverdriveVFXSound: {fileID: 814352591872434956}  # Component
   PlayerAttack: {fileID: 3436078548414859258}  # Component
   PlayerFootstep: {fileID: 6518591935153270902}  # Component
@@ -84434,4 +84438,72 @@ AudioSource:
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: f200c3fabffc811765d1cc977d3260d8}
+  Play: false
+---
+ID: 1447197367722667126
+GameObject:
+  m_IsActive: true
+  m_Name: LowHealthSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11018812944523106803}  # Transform
+    - component: {fileID: 8637039550407242664}  # AudioSource
+---
+ID: 11018812944523106803
+Transform:
+  m_GameObject: {fileID: 1447197367722667126}
+  Translation: [7.62939453e-06, 0, -6.4674532e-07]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
+  m_Children:
+    []
+---
+ID: 8637039550407242664
+AudioSource:
+  m_GameObject: {fileID: 1447197367722667126}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 0.25
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 3f7368c53311a3c7d06d00f9a9f6d3ad}
+  Play: false
+---
+ID: 5613156076415073157
+GameObject:
+  m_IsActive: true
+  m_Name: LowHealthHeartBeatSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9152520629431121524}  # Transform
+    - component: {fileID: 11619846964706491910}  # AudioSource
+---
+ID: 9152520629431121524
+Transform:
+  m_GameObject: {fileID: 5613156076415073157}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15334681090738628473}
+  m_Children:
+    []
+---
+ID: 11619846964706491910
+AudioSource:
+  m_GameObject: {fileID: 5613156076415073157}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: b42e3aebc436cb90f3da2b5cf4e41406}
   Play: false
