@@ -29110,6 +29110,7 @@ Transform:
   m_Children:
     - {fileID: 13040872650618096360}
     - {fileID: 11822844031916533458}
+    - {fileID: 8060106756170756044}
 ---
 ID: 12070751329832844618
 BoxCollider:
@@ -84265,3 +84266,100 @@ Script:
   MeleeEnemyInjured: {fileID: 9193573896841228309}  # Component
   RangeEnemyBullet: {fileID: 11367208140139232291}  # Component
   RangeEnemyDead: {fileID: 2502308778807293875}  # Component
+---
+ID: 8060106756170756044
+GameObject:
+  m_IsActive: true
+  m_Name: Audios
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 97782724184304367}  # Transform
+    - component: {fileID: 12727516642865765271}  # Script
+---
+ID: 97782724184304367
+Transform:
+  m_GameObject: {fileID: 8060106756170756044}
+  Translation: [-7.62939544e-06, 0, -9.33604042e-06]
+  Rotation: [0, 0, 0]
+  Scale: [1.00002766, 1, 1.00002718]
+  Father: {fileID: 16267666590116155670}
+  m_Children:
+    - {fileID: 4172438093011154459}
+    - {fileID: 4494046752849441675}
+---
+ID: 12727516642865765271
+Script:
+  m_GameObject: {fileID: 8060106756170756044}
+  m_IsEnabled: true
+  Script: {guid: df6c0f0ae2c51bb01b52bbb6f73a4ed7}
+  ComputerAmbient: {fileID: 16375721200398266535}  # Component
+  SparkAmbient: {fileID: 1741116689334075358}  # Component
+---
+ID: 4172438093011154459
+GameObject:
+  m_IsActive: true
+  m_Name: ComputerAmbient
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13089020310756749858}  # Transform
+    - component: {fileID: 16375721200398266535}  # AudioSource
+---
+ID: 13089020310756749858
+Transform:
+  m_GameObject: {fileID: 4172438093011154459}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 8060106756170756044}
+  m_Children:
+    []
+---
+ID: 16375721200398266535
+AudioSource:
+  m_GameObject: {fileID: 4172438093011154459}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 0687146e684caf94c5611b44e8270aa6}
+  Play: false
+---
+ID: 4494046752849441675
+GameObject:
+  m_IsActive: true
+  m_Name: Spark
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10814582797997542439}  # Transform
+    - component: {fileID: 1741116689334075358}  # AudioSource
+---
+ID: 10814582797997542439
+Transform:
+  m_GameObject: {fileID: 4494046752849441675}
+  Translation: [7.62939453e-06, 3.81469727e-06, -9.42731367e-06]
+  Rotation: [0, 0, 0]
+  Scale: [0.99999994, 1, 0.99999994]
+  Father: {fileID: 8060106756170756044}
+  m_Children:
+    []
+---
+ID: 1741116689334075358
+AudioSource:
+  m_GameObject: {fileID: 4494046752849441675}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 2b04e00a2707b53bbe2eecfa2ce763c7}
+  Play: false
