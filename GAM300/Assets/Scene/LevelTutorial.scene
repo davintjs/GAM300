@@ -74,13 +74,7 @@ Script:
   m_GameObject: {fileID: 5342434905140024301}
   m_IsEnabled: true
   Script: {guid: 0470ed2b8def9ecbe83ea13ee17af641}
-  text1: {fileID: 0}
-  text2: {fileID: 0}
-  text3: {fileID: 0}
-  text4: {fileID: 0}
-  text5: {fileID: 0}
-  text6: {fileID: 0}
-  text7: {fileID: 0}
+  dialogueText: {fileID: 7359784780702033476}  # GameObject
   tutorial1: {fileID: 5543069040450218211}  # Component
   tutorial2: {fileID: 6580851559421791966}  # Component
   tutorial3: {fileID: 10502151295172925409}  # Component
