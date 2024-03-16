@@ -12251,7 +12251,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1.5
+  Volume: 3.20000005
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -18909,7 +18909,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1.5
+  Volume: 3.20000005
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -18943,7 +18943,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1.5
+  Volume: 3.20000005
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -18977,7 +18977,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1.5
+  Volume: 3.5
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19011,7 +19011,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1.5
+  Volume: 3.5
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19045,7 +19045,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1.5
+  Volume: 3.20000005
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19079,7 +19079,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1.5
+  Volume: 3.20000005
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
