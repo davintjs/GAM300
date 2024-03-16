@@ -212,7 +212,6 @@ public class ThirdPersonController : Script
             if (value == false && _wasMoving)
             {
                 walkSoundTimer = 0f;
-                Console.Write("Footsteps...");
                 playerSounds.PlayerFootstep.Play();
             }
 
@@ -223,7 +222,6 @@ public class ThirdPersonController : Script
             }
             if (walkSoundTimer > walkSoundTime)
             {
-                Console.Write("Footsteps...");
                 playerSounds.PlayerFootstep.Play();
                 walkSoundTimer = 0;
             }
@@ -366,7 +364,7 @@ public class ThirdPersonController : Script
 
         playerSounds = PlayerAudioManager.instance;
         //audioSource.Play();
-        //AudioManager.instance.swoosh.Play();
+        AudioManager.instance.swoosh.Play();
         playerWeaponCollider1.SetActive(false);
         playerWeaponCollider2.SetActive(false);
         playerWeaponCollider3.SetActive(false);

@@ -162,14 +162,11 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 263938901046208410}
     - {fileID: 497501804413490616}
     - {fileID: 183898391583128112}
     - {fileID: 1704405459447429049}
     - {fileID: 11931709940185671807}
     - {fileID: 8195998143091088379}
-    - {fileID: 5382915443314468010}
-    - {fileID: 8310365372469502612}
     - {fileID: 5713504039664526619}
     - {fileID: 1444839062839968456}
     - {fileID: 3873369559540028830}
@@ -177,8 +174,6 @@ Transform:
     - {fileID: 12214984652809638984}
     - {fileID: 16286294863580061652}
     - {fileID: 939250523268262297}
-    - {fileID: 2600266064562538217}
-    - {fileID: 7837859240719427374}
 ---
 ID: 12555400289260702052
 Script:
@@ -358,6 +353,151 @@ Script:
   staminaPackCount: 0
   staminaPackValue: 50
   thirdPersonController: {fileID: 0}
+---
+ID: 7837859240719427374
+GameObject:
+  m_IsActive: true
+  m_Name: swoosh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11271623668421314356}  # Transform
+    - component: {fileID: 8248112582194938407}  # AudioSource
+---
+ID: 11271623668421314356
+Transform:
+  m_GameObject: {fileID: 7837859240719427374}
+  Translation: [0, 2.38418579e-07, 1.37381721e-06]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
+  m_Children:
+    []
+---
+ID: 8248112582194938407
+AudioSource:
+  m_GameObject: {fileID: 7837859240719427374}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 0.699999988
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 0d4524adfbf610750ee48a28e714500a}
+  Play: false
+---
+ID: 15334681090738628473
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 813583600382484493}  # Transform
+    - component: {fileID: 16773315215798417911}  # Camera
+    - component: {fileID: 12342723185901535107}  # AudioListener
+    - component: {fileID: 12394528796078550483}  # SphereCollider
+    - component: {fileID: 1139370946230178394}  # Rigidbody
+    - component: {fileID: 5692009074999031082}  # AudioSource
+    - component: {fileID: 12100504774977972383}  # Script
+---
+ID: 813583600382484493
+Transform:
+  m_GameObject: {fileID: 15334681090738628473}
+  Translation: [-19.6676083, 2.1999948, 24.7202759]
+  Rotation: [0, 0, 0]
+  Scale: [0.999998093, 1, 0.999998093]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 12641288044943282872}
+    - {fileID: 8629589438629673806}
+    - {fileID: 7837859240719427374}
+    - {fileID: 263938901046208410}
+    - {fileID: 5382915443314468010}
+    - {fileID: 8310365372469502612}
+    - {fileID: 2600266064562538217}
+---
+ID: 16773315215798417911
+Camera:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
+  ClearFlags: "\x00"
+  CullingMask: "\x00"
+  NearClip: 0.100000001
+  FarClip: 100
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 50
+---
+ID: 12342723185901535107
+AudioListener:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+---
+ID: 12394528796078550483
+SphereCollider:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  Radius: 1
+  Offset: [0, 0, 0]
+---
+ID: 1139370946230178394
+Rigidbody:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0.00999999978, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 5692009074999031082
+AudioSource:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  AudioChannel: 0
+  Loop: true
+  Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 10
+  Fade Out Time (s): 5
+  Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
+  Play: false
+---
+ID: 12100504774977972383
+Script:
+  m_GameObject: {fileID: 15334681090738628473}
+  m_IsEnabled: true
+  Script: {guid: f204530c811d06247b59f2ef14dd1085}
+  closestZoom: 0.5
+  cutscene: false
+  defaultZoom: 5
+  furthestZoom: 6
+  invertPitch: true
+  isZooming: false
+  maxPitchAngle: 30
+  minPitchAngle: -50
+  pitchAngle: 0
+  pitchRotSpeed: 1
+  timer: 0
+  yawAngle: 0
+  yawRotSpeed: 2
+  zoom: 5.00000143
+  zoomInSpeed: 3
+  zoomSpeed: 50
+  target: {fileID: 6663313825132233637}  # GameObject
 ---
 ID: 4212138099454399691
 GameObject:
@@ -12171,112 +12311,6 @@ Transform:
     - {fileID: 6782325576054681553}
     - {fileID: 15854388602861755}
 ---
-ID: 15334681090738628473
-GameObject:
-  m_IsActive: true
-  m_Name: Camera
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 813583600382484493}  # Transform
-    - component: {fileID: 16773315215798417911}  # Camera
-    - component: {fileID: 12342723185901535107}  # AudioListener
-    - component: {fileID: 12394528796078550483}  # SphereCollider
-    - component: {fileID: 1139370946230178394}  # Rigidbody
-    - component: {fileID: 5692009074999031082}  # AudioSource
-    - component: {fileID: 12100504774977972383}  # Script
----
-ID: 813583600382484493
-Transform:
-  m_GameObject: {fileID: 15334681090738628473}
-  Translation: [-19.6676083, 2.1999948, 24.7202759]
-  Rotation: [0, 0, 0]
-  Scale: [0.999998093, 1, 0.999998093]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 12641288044943282872}
-    - {fileID: 8629589438629673806}
----
-ID: 16773315215798417911
-Camera:
-  m_GameObject: {fileID: 15334681090738628473}
-  m_IsEnabled: true
-  BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
-  ClearFlags: "\x00"
-  CullingMask: "\x00"
-  NearClip: 0.100000001
-  FarClip: 100
-  FieldOfView: 45
-  Orthographic: false
-  TargetDisplay: 0
-  HDR: true
-  OcclusionCulling: false
-  FrustumCulling: true
-  DistanceCulling: 50
----
-ID: 12342723185901535107
-AudioListener:
-  m_GameObject: {fileID: 15334681090738628473}
-  m_IsEnabled: true
----
-ID: 12394528796078550483
-SphereCollider:
-  m_GameObject: {fileID: 15334681090738628473}
-  m_IsEnabled: true
-  Radius: 1
-  Offset: [0, 0, 0]
----
-ID: 1139370946230178394
-Rigidbody:
-  m_GameObject: {fileID: 15334681090738628473}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0.00999999978, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: false
-  IsKinematic: true
-  UseGravity: false
-  Is_trigger: true
----
-ID: 5692009074999031082
-AudioSource:
-  m_GameObject: {fileID: 15334681090738628473}
-  m_IsEnabled: true
-  AudioChannel: 0
-  Loop: true
-  Volume: 1
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 10
-  Fade Out Time (s): 5
-  Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
-  Play: false
----
-ID: 12100504774977972383
-Script:
-  m_GameObject: {fileID: 15334681090738628473}
-  m_IsEnabled: true
-  Script: {guid: f204530c811d06247b59f2ef14dd1085}
-  closestZoom: 0.5
-  cutscene: false
-  defaultZoom: 5
-  furthestZoom: 6
-  invertPitch: true
-  isZooming: false
-  maxPitchAngle: 30
-  minPitchAngle: -50
-  pitchAngle: 0
-  pitchRotSpeed: 1
-  timer: 0
-  yawAngle: 0
-  yawRotSpeed: 2
-  zoom: 5.00000143
-  zoomInSpeed: 3
-  zoomSpeed: 50
-  target: {fileID: 6663313825132233637}  # GameObject
----
 ID: 17611351097031071778
 GameObject:
   m_IsActive: true
@@ -15167,8 +15201,8 @@ Transform:
   m_GameObject: {fileID: 263938901046208410}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
   m_Children:
     []
 ---
@@ -15268,7 +15302,7 @@ ID: 13811611442745766600
 Transform:
   m_GameObject: {fileID: 1704405459447429049}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -15336,7 +15370,7 @@ ID: 9155072371493984954
 Transform:
   m_GameObject: {fileID: 11931709940185671807}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 14088906961581824457}
   m_Children:
@@ -15868,9 +15902,9 @@ ID: 6380692802903293290
 Transform:
   m_GameObject: {fileID: 5382915443314468010}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, 0, 0]
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
   m_Children:
     []
 ---
@@ -16236,8 +16270,8 @@ Transform:
   m_GameObject: {fileID: 8310365372469502612}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
   m_Children:
     []
 ---
@@ -38395,8 +38429,8 @@ Transform:
   m_GameObject: {fileID: 2600266064562538217}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
   m_Children:
     []
 ---
@@ -38560,40 +38594,6 @@ TextRenderer:
   Color G: 1
   Color B: 1
   Opacity: 1
----
-ID: 7837859240719427374
-GameObject:
-  m_IsActive: true
-  m_Name: swoosh
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11271623668421314356}  # Transform
-    - component: {fileID: 8248112582194938407}  # AudioSource
----
-ID: 11271623668421314356
-Transform:
-  m_GameObject: {fileID: 7837859240719427374}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 8248112582194938407
-AudioSource:
-  m_GameObject: {fileID: 7837859240719427374}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  SFX min Pitch: 1
-  SFX max Pitch: 1
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 0d4524adfbf610750ee48a28e714500a}
-  Play: false
 ---
 ID: 6949508839592080895
 GameObject:
