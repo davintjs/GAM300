@@ -122,15 +122,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 497501804413490616}
-    - {fileID: 183898391583128112}
-    - {fileID: 8195998143091088379}
-    - {fileID: 5713504039664526619}
-    - {fileID: 1444839062839968456}
-    - {fileID: 3873369559540028830}
-    - {fileID: 7345429221838225698}
-    - {fileID: 2597072424818364743}
-    - {fileID: 6687611820943646563}
+    []
 ---
 ID: 12555400289260702052
 Script:
@@ -153,6 +145,49 @@ Script:
   rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
   swoosh: {fileID: 10476719927036047151}  # Component
   uiSound: {fileID: 12043367231734905459}  # Component
+---
+ID: 10907430610981256203
+GameObject:
+  m_IsActive: true
+  m_Name: Enemies
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5785462746989366190}  # Transform
+---
+ID: 5785462746989366190
+Transform:
+  m_GameObject: {fileID: 10907430610981256203}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 10712419355432134318}
+    - {fileID: 8640499112490309379}
+    - {fileID: 505178339176436673}
+    - {fileID: 7216264740618189409}
+    - {fileID: 15348787981169734539}
+    - {fileID: 5833702010696908664}
+    - {fileID: 5771907980952992246}
+    - {fileID: 15686065745655662925}
+    - {fileID: 9623545436869127279}
+    - {fileID: 5251461676284664659}
+    - {fileID: 3753889075612646310}
+    - {fileID: 6979452462420876336}
+    - {fileID: 8164294602068748032}
+    - {fileID: 1540245306666661771}
+    - {fileID: 3478415627049949006}
+    - {fileID: 1746742841599475727}
+    - {fileID: 4992037817335595852}
+    - {fileID: 6553874688755371952}
+    - {fileID: 1455824266175485744}
+    - {fileID: 697406533908281000}
+    - {fileID: 7071747397128983016}
+    - {fileID: 7415176299370246757}
+    - {fileID: 5108313163622967840}
+    - {fileID: 17060877197459181967}
+    - {fileID: 15613771325304660657}
 ---
 ID: 15334681090738628473
 GameObject:
@@ -177,11 +212,11 @@ Transform:
   Scale: [0.999998093, 1, 0.999998093]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 15626645732971549666}
     - {fileID: 263938901046208410}
     - {fileID: 5382915443314468010}
     - {fileID: 8310365372469502612}
     - {fileID: 10614427148243844306}
+    - {fileID: 15626645732971549666}
     - {fileID: 10651946286847081667}
 ---
 ID: 16773315215798417911
@@ -6965,9 +7000,9 @@ ID: 9394596766560980627
 Transform:
   m_GameObject: {fileID: 497501804413490616}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -6999,9 +7034,9 @@ ID: 13812295196817184781
 Transform:
   m_GameObject: {fileID: 183898391583128112}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -7576,9 +7611,9 @@ ID: 2131914696263170567
 Transform:
   m_GameObject: {fileID: 8195998143091088379}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -22641,9 +22676,9 @@ ID: 5544704717921281025
 Transform:
   m_GameObject: {fileID: 5713504039664526619}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -22675,9 +22710,9 @@ ID: 4405310670290985832
 Transform:
   m_GameObject: {fileID: 1444839062839968456}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -22709,9 +22744,9 @@ ID: 5359552120802994559
 Transform:
   m_GameObject: {fileID: 3873369559540028830}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -22752,6 +22787,7 @@ Transform:
   m_Children:
     - {fileID: 18081422161438025274}
     - {fileID: 5297853854918785373}
+    - {fileID: 14259422015049707415}
 ---
 ID: 11732227708627796629
 NavMeshAgent:
@@ -38776,9 +38812,9 @@ ID: 5474435996662912753
 Transform:
   m_GameObject: {fileID: 7345429221838225698}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -38810,9 +38846,9 @@ ID: 6953088724175365596
 Transform:
   m_GameObject: {fileID: 2597072424818364743}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -38844,9 +38880,9 @@ ID: 17408746616720987109
 Transform:
   m_GameObject: {fileID: 6687611820943646563}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Rotation: [0, -0.0871608928, 0]
+  Scale: [1.00004148, 1, 1.00003922]
+  Father: {fileID: 14259422015049707415}
   m_Children:
     []
 ---
@@ -43053,49 +43089,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 10907430610981256203
-GameObject:
-  m_IsActive: true
-  m_Name: Enemies
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5785462746989366190}  # Transform
----
-ID: 5785462746989366190
-Transform:
-  m_GameObject: {fileID: 10907430610981256203}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 10712419355432134318}
-    - {fileID: 8640499112490309379}
-    - {fileID: 505178339176436673}
-    - {fileID: 7216264740618189409}
-    - {fileID: 15348787981169734539}
-    - {fileID: 5833702010696908664}
-    - {fileID: 5771907980952992246}
-    - {fileID: 15686065745655662925}
-    - {fileID: 9623545436869127279}
-    - {fileID: 5251461676284664659}
-    - {fileID: 3753889075612646310}
-    - {fileID: 6979452462420876336}
-    - {fileID: 8164294602068748032}
-    - {fileID: 1540245306666661771}
-    - {fileID: 3478415627049949006}
-    - {fileID: 1746742841599475727}
-    - {fileID: 4992037817335595852}
-    - {fileID: 6553874688755371952}
-    - {fileID: 1455824266175485744}
-    - {fileID: 697406533908281000}
-    - {fileID: 7071747397128983016}
-    - {fileID: 7415176299370246757}
-    - {fileID: 5108313163622967840}
-    - {fileID: 17060877197459181967}
-    - {fileID: 15613771325304660657}
 ---
 ID: 3696346706909243258
 GameObject:
@@ -84229,3 +84222,46 @@ Script:
   Thump1: {fileID: 12152755750733174901}  # Component
   Thump2: {fileID: 10580402611710297282}  # Component
   UseItem: {fileID: 8508182677235274511}  # Component
+---
+ID: 14259422015049707415
+GameObject:
+  m_IsActive: true
+  m_Name: Audios
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8689155080249249964}  # Transform
+    - component: {fileID: 5823139587629919073}  # Script
+---
+ID: 8689155080249249964
+Transform:
+  m_GameObject: {fileID: 14259422015049707415}
+  Translation: [0, 1, 4.76837158e-06]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000012, 1, 1.00000012]
+  Father: {fileID: 8640499112490309379}
+  m_Children:
+    - {fileID: 497501804413490616}
+    - {fileID: 183898391583128112}
+    - {fileID: 8195998143091088379}
+    - {fileID: 5713504039664526619}
+    - {fileID: 1444839062839968456}
+    - {fileID: 3873369559540028830}
+    - {fileID: 7345429221838225698}
+    - {fileID: 2597072424818364743}
+    - {fileID: 6687611820943646563}
+---
+ID: 5823139587629919073
+Script:
+  m_GameObject: {fileID: 14259422015049707415}
+  m_IsEnabled: true
+  Script: {guid: 47a983641cc25ec59ec0d58b0ac83d28}
+  EnemyAlerted1: {fileID: 12262929383047051249}  # Component
+  EnemyAlerted2: {fileID: 6670779144662544128}  # Component
+  EnemyAlerted3: {fileID: 998502570275308366}  # Component
+  EnemyHit: {fileID: 14492758170611173101}  # Component
+  MeleeEnemyAttack: {fileID: 9604268664669988043}  # Component
+  MeleeEnemyDie: {fileID: 14157919317546456730}  # Component
+  MeleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  RangeEnemyBullet: {fileID: 11367208140139232291}  # Component
+  RangeEnemyDead: {fileID: 2502308778807293875}  # Component
