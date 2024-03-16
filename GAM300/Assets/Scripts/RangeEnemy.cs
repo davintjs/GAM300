@@ -56,6 +56,8 @@ public class RangeEnemy : Script
 
     public GameObject spawnObject;
 
+    PlayerAudioManager playerSounds;
+
     void Start()
     {
         playOnce = true;
@@ -275,7 +277,7 @@ public class RangeEnemy : Script
                     if(ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
                     {
                         ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
+                        playerSounds.PowerUp.Play();
                     }
                 }
                 else
@@ -286,7 +288,7 @@ public class RangeEnemy : Script
                     if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
                     {
                         ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
+                        playerSounds.PowerUp.Play();
                     }
                 }
             }

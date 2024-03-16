@@ -120,9 +120,9 @@ public class ThirdPersonController : Script
             {
                 selectedWeaponCollider.transform.rotation = new vec3(PlayerModel.rotation);
                 SetState("Attack" + comboCount, true);
-                AudioManager.instance.playerSlashAttack.Play();
-                AudioManager.instance.spark.Play();
-                AudioManager.instance.playerAttack.Play();
+                playerSounds.PlayerSlashAttack.Play();
+                playerSounds.Spark.Play();
+                playerSounds.PlayerAttack.Play();
                 ++comboCount;
                 if (comboCount > 3) { comboCount = 1; }
             }
@@ -201,6 +201,8 @@ public class ThirdPersonController : Script
 
     int comboCount = 1;
 
+    PlayerAudioManager playerSounds;
+
     bool _wasMoving = false;
     bool wasMoving
     {
@@ -210,7 +212,8 @@ public class ThirdPersonController : Script
             if (value == false && _wasMoving)
             {
                 walkSoundTimer = 0f;
-                AudioManager.instance.playerFootstep.Play();
+                Console.Write("Footsteps...");
+                playerSounds.PlayerFootstep.Play();
             }
 
             _wasMoving = value;
@@ -220,7 +223,8 @@ public class ThirdPersonController : Script
             }
             if (walkSoundTimer > walkSoundTime)
             {
-                AudioManager.instance.playerFootstep.Play();
+                Console.Write("Footsteps...");
+                playerSounds.PlayerFootstep.Play();
                 walkSoundTimer = 0;
             }
         }
@@ -360,8 +364,9 @@ public class ThirdPersonController : Script
             return;
         }
 
-        audioSource.Play();
-        AudioManager.instance.swoosh.Play();
+        playerSounds = PlayerAudioManager.instance;
+        //audioSource.Play();
+        //AudioManager.instance.swoosh.Play();
         playerWeaponCollider1.SetActive(false);
         playerWeaponCollider2.SetActive(false);
         playerWeaponCollider3.SetActive(false);
@@ -556,10 +561,10 @@ public class ThirdPersonController : Script
                 switch (dodgeRollAudioRotation)
                 {
                     case 0:
-                        AudioManager.instance.dodgeRoll1.Play();
+                        playerSounds.DodgeRoll1.Play();
                         break;
                     case 1:
-                        AudioManager.instance.dodgeRoll2.Play();
+                        playerSounds.DodgeRoll2.Play();
                         break;
                 }
             }
@@ -671,7 +676,7 @@ public class ThirdPersonController : Script
             if (GetState("Falling"))
             {
                 SetState("Falling", false);
-                AudioManager.instance.playerFootstep.Play();
+                playerSounds.PlayerFootstep.Play();
             }
             //DASH ATTACK
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
@@ -679,8 +684,8 @@ public class ThirdPersonController : Script
             {
                 //Console.WriteLine("DashAttack");
                 UseStamina(dashAttackStamina);
-                AudioManager.instance.dashAttack.Play();
-                AudioManager.instance.playerAttack.Play();
+                playerSounds.DashAttack.Play();
+                playerSounds.PlayerAttack.Play();
                 _isDashAttacking = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
@@ -699,8 +704,8 @@ public class ThirdPersonController : Script
             //OVERDRIVE
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && currentOverdriveCharge == maxOverdriveCharge && isOverdriveEnabled == true && currentlyOverdriven == false)
             {
-                AudioManager.instance.playerOverdrive.Play();
-                AudioManager.instance.overdriveVFXSound.Play();
+                playerSounds.PlayerOverdrive.Play();
+                playerSounds.OverdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use
                 //UseStamina(overDriveStamina);
                 //Console.WriteLine("Overdrive");
@@ -773,13 +778,13 @@ public class ThirdPersonController : Script
                 switch (jumpAudioRotation)
                 {
                     case 0:
-                        AudioManager.instance.jumpVoice.Play();
+                        playerSounds.JumpVoice.Play();
                         break;
                     case 1:
-                        AudioManager.instance.jumpVoice2.Play();
+                        playerSounds.JumpVoice2.Play();
                         break;
                     case 2:
-                        AudioManager.instance.jumpVoice3.Play();
+                        playerSounds.JumpVoice3.Play();
                         break;
                 }
                 
@@ -1007,7 +1012,7 @@ public class ThirdPersonController : Script
         {
             IsAttacking = false;
             //dmg noise
-            AudioManager.instance.playerInjured.Play();
+            playerSounds.PlayerInjured.Play();
 
             Random rd = new Random();
             damageAudioRotation = rd.Next(0, 1);
@@ -1015,10 +1020,10 @@ public class ThirdPersonController : Script
             switch (damageAudioRotation)
             {
                 case 0:
-                    AudioManager.instance.thumpCollision1.Play();
+                    playerSounds.Thump1.Play();
                     break;
                 case 1:
-                    AudioManager.instance.thumpCollision2.Play();
+                    playerSounds.Thump2.Play();
                     break;
             }
 
@@ -1063,7 +1068,7 @@ public class ThirdPersonController : Script
     {
         HealHealth(1);
         //play audio here
-        AudioManager.instance.useItem.Play();
+        playerSounds.UseItem.Play();
     }
 
 

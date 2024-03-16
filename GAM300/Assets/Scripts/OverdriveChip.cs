@@ -22,6 +22,8 @@ public class OverdriveChip : Script
     public float maxTime = 5;
     float timer = 0;
 
+    PlayerAudioManager playerSounds;
+
     void Start()
     {
         keyStartY = transform.localPosition.y;
@@ -59,7 +61,7 @@ public class OverdriveChip : Script
         {
             ThirdPersonController.instance.enableOverdrive();
             AudioManager.instance.keyCollected.Play();
-            AudioManager.instance.powerUp.Play();
+            playerSounds.PowerUp.Play();
             gameObject.SetActive(false);
         }
     }

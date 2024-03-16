@@ -68,6 +68,7 @@ public class Enemy : Script
     public bool playOnce = true;
     public bool alertedOnce = true;
     int alertedRotation = 0;
+    PlayerAudioManager playerSounds;
 
     void Start()
     {
@@ -462,7 +463,7 @@ public class Enemy : Script
                     if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
                     {
                         ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
+                        playerSounds.PowerUp.Play();
                     }
                 }
                 else
@@ -473,7 +474,7 @@ public class Enemy : Script
                     if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
                     {
                         ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
+                        playerSounds.PowerUp.Play();
                     }
                 }
             }

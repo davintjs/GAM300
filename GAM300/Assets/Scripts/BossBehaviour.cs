@@ -157,6 +157,7 @@ public class BossBehaviour : Script
     public Transform bossHealthPivot;
 
     BossAudioManager bossSounds;
+    PlayerAudioManager playerSounds;
 
     void Awake()
     {
@@ -810,7 +811,7 @@ public class BossBehaviour : Script
                     if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
                     {
                         ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
+                        playerSounds.PowerUp.Play();
                     }
                 }
                 else
@@ -821,7 +822,7 @@ public class BossBehaviour : Script
                     if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
                     {
                         ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
+                        playerSounds.PowerUp.Play();
                     }
                 }
             }

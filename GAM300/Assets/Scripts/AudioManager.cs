@@ -11,37 +11,20 @@ public class AudioManager : Script
     public static AudioManager instance;
 
     //ADD A GAMEOBJECT FOR EACH SOUND
-    public AudioSource playerSlashAttack;
-    public AudioSource playerInjured;
-    public AudioSource jumpVoice;
-    public AudioSource jumpVoice2;
-    public AudioSource jumpVoice3;
-    public AudioSource spark;
     public AudioSource itemCollected;
     public AudioSource rangeEnemyFiring;
     public AudioSource rangeEnemyDead;
     public AudioSource doorOpen;
     public AudioSource elevator;
-    public AudioSource playerFootstep;
-    public AudioSource playerAttack;
     public AudioSource enemyHit;
     public AudioSource keyCollected;
     public AudioSource uiSound;
-    public AudioSource useItem;
     public AudioSource meleeEnemyDie;
     public AudioSource meleeEnemyAttack;
     public AudioSource meleeEnemyInjured;
-    public AudioSource playerOverdrive;
-    public AudioSource overdriveVFXSound;
-    public AudioSource thumpCollision1;
-    public AudioSource thumpCollision2;
-    public AudioSource dodgeRoll1;
-    public AudioSource dodgeRoll2;
-    public AudioSource dashAttack;
     public AudioSource enemyAlerted1, enemyAlerted2, enemyAlerted3;
     public AudioSource obj_success;
     public AudioSource swoosh;
-    public AudioSource powerUp;
 
     void Awake()
     {
@@ -52,32 +35,6 @@ public class AudioManager : Script
         else
         {
             instance = this;
-        }
-
-        if (powerUp == null)
-        {
-            Console.WriteLine("Objective power up Sound missing reference");
-        }
-
-        if (obj_success == null)
-        {
-            Console.WriteLine("Objective Success Sound missing reference");
-        }
-        if (playerSlashAttack == null)
-        {
-            Console.WriteLine("PlayerAttack Sound missing reference");
-        }
-        if(playerInjured == null)
-        {
-            Console.WriteLine("PlayerInjured Sound missing reference");
-        }
-        if (jumpVoice == null)
-        {
-            Console.WriteLine("JumpVoice Sound missing reference");
-        }
-        if (spark == null)
-        {
-            Console.WriteLine("Spark Sound missing reference");
         }
         if (itemCollected == null)
         {
@@ -99,14 +56,6 @@ public class AudioManager : Script
         {
             Console.WriteLine("Elevator Sound missing reference");
         }
-        if (playerFootstep == null)
-        {
-            Console.WriteLine("PlayerFootstep Sound missing reference");
-        }
-        if (playerAttack == null)
-        {
-            Console.WriteLine("PlayerAttack Sound missing reference");
-        }
         if (enemyHit == null)
         {
             Console.WriteLine("EnemyHit Sound missing reference");
@@ -119,10 +68,6 @@ public class AudioManager : Script
         {
             Console.WriteLine("UI Sound missing reference");
         }
-        if (useItem == null)
-        {
-            Console.WriteLine("UseItem Sound missing reference");
-        }
         if (meleeEnemyDie == null)
         {
             Console.WriteLine("MeleeEnemyDie Sound missing reference");
@@ -134,14 +79,6 @@ public class AudioManager : Script
         if (meleeEnemyInjured == null)
         {
             Console.WriteLine("MeleeEnemyInjured Sound missing reference");
-        }
-        if (playerOverdrive == null)
-        {
-            Console.WriteLine("PlayerOverdrive Sound missing reference");
-        }
-        if (overdriveVFXSound == null)
-        {
-            Console.WriteLine("OverdriveVFX Sound missing reference");
         }
         if (swoosh == null)
         {
