@@ -12,7 +12,7 @@ public class AmbientAudioManager : Script
 
     //ADD A GAMEOBJECT FOR EACH SOUND
     public AudioSource ComputerAmbient;
-
+    public AudioSource SparkAmbient;
 
     void Awake()
     {
@@ -33,6 +33,15 @@ public class AmbientAudioManager : Script
 
     void Update()
     {
-        this.ComputerAmbient.Play();
+        if (ComputerAmbient != null)
+        {
+            ComputerAmbient.Play();
+        }
+        
+        if (SparkAmbient != null)
+        {
+            SparkAmbient.Play();
+        }
+        
     }
 }

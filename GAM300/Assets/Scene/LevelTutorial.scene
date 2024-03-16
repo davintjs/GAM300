@@ -38744,6 +38744,7 @@ Transform:
   Father: {fileID: 11469065857754787418}
   m_Children:
     - {fileID: 15728780146072188416}
+    - {fileID: 11614451648004114691}
 ---
 ID: 10055052262915449511
 Script:
@@ -38751,6 +38752,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: df6c0f0ae2c51bb01b52bbb6f73a4ed7}
   ComputerAmbient: {fileID: 7961986387473548068}  # Component
+  SparkAmbient: {fileID: 919546075579077702}  # Component
 ---
 ID: 15728780146072188416
 GameObject:
@@ -38805,6 +38807,7 @@ Transform:
   Father: {fileID: 13781640949463880887}
   m_Children:
     - {fileID: 16598012808757602300}
+    - {fileID: 9471086215952125408}
 ---
 ID: 9881427236378036586
 Script:
@@ -38812,6 +38815,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: df6c0f0ae2c51bb01b52bbb6f73a4ed7}
   ComputerAmbient: {fileID: 896233567214900220}  # Component
+  SparkAmbient: {fileID: 91391539492562696}  # Component
 ---
 ID: 16598012808757602300
 GameObject:
@@ -38845,4 +38849,72 @@ AudioSource:
   Fade In Time (s): 0
   Fade Out Time (s): 0
   Sound File: {guid: ff2abf4a8090158c52b33c52c6be61bb}
+  Play: false
+---
+ID: 11614451648004114691
+GameObject:
+  m_IsActive: true
+  m_Name: SparkAmbient
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14317889372703625837}  # Transform
+    - component: {fileID: 919546075579077702}  # AudioSource
+---
+ID: 14317889372703625837
+Transform:
+  m_GameObject: {fileID: 11614451648004114691}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11664784420503493764}
+  m_Children:
+    []
+---
+ID: 919546075579077702
+AudioSource:
+  m_GameObject: {fileID: 11614451648004114691}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 2b04e00a2707b53bbe2eecfa2ce763c7}
+  Play: false
+---
+ID: 9471086215952125408
+GameObject:
+  m_IsActive: true
+  m_Name: SparkAmbient2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9519415005474484968}  # Transform
+    - component: {fileID: 91391539492562696}  # AudioSource
+---
+ID: 9519415005474484968
+Transform:
+  m_GameObject: {fileID: 9471086215952125408}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15422140002165886818}
+  m_Children:
+    []
+---
+ID: 91391539492562696
+AudioSource:
+  m_GameObject: {fileID: 9471086215952125408}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 2
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 2b04e00a2707b53bbe2eecfa2ce763c7}
   Play: false
