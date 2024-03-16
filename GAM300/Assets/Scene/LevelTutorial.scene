@@ -27850,7 +27850,7 @@ Transform:
   Scale: [0.999834538, 0.999922216, 0.999891579]
   Father: {fileID: 12795225566957534865}
   m_Children:
-    []
+    - {fileID: 11664784420503493764}
 ---
 ID: 18015940158417673263
 MeshRenderer:
@@ -29050,7 +29050,7 @@ Transform:
   Scale: [0.999959826, 1, 0.999966979]
   Father: {fileID: 12795225566957534865}
   m_Children:
-    []
+    - {fileID: 15422140002165886818}
 ---
 ID: 6672404366101245943
 MeshRenderer:
@@ -38640,7 +38640,9 @@ Transform:
     - {fileID: 8065358626952296561}
     - {fileID: 8873786281471961566}
     - {fileID: 8393117941418361269}
+    - {fileID: 1704405459447429049}
     - {fileID: 7505235272623281090}
+    - {fileID: 11931709940185671807}
     - {fileID: 2723553382536766900}
     - {fileID: 10419665452268142691}
     - {fileID: 4679045281971681028}
@@ -38654,8 +38656,6 @@ Transform:
     - {fileID: 11445212766906873979}
     - {fileID: 1431587650938263916}
     - {fileID: 6949508839592080895}
-    - {fileID: 1704405459447429049}
-    - {fileID: 11931709940185671807}
 ---
 ID: 14575671556032243219
 Script:
@@ -38724,3 +38724,125 @@ Script:
   MeleeEnemyInjured: {fileID: 9193573896841228309}  # Component
   RangeEnemyBullet: {fileID: 11367208140139232291}  # Component
   RangeEnemyDead: {fileID: 2502308778807293875}  # Component
+---
+ID: 11664784420503493764
+GameObject:
+  m_IsActive: true
+  m_Name: Audio
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9541844576861435370}  # Transform
+    - component: {fileID: 10055052262915449511}  # Script
+---
+ID: 9541844576861435370
+Transform:
+  m_GameObject: {fileID: 11664784420503493764}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1.00000024, 1.00000012, 1.00000012]
+  Father: {fileID: 11469065857754787418}
+  m_Children:
+    - {fileID: 15728780146072188416}
+---
+ID: 10055052262915449511
+Script:
+  m_GameObject: {fileID: 11664784420503493764}
+  m_IsEnabled: true
+  Script: {guid: df6c0f0ae2c51bb01b52bbb6f73a4ed7}
+  ComputerAmbient: {fileID: 7961986387473548068}  # Component
+---
+ID: 15728780146072188416
+GameObject:
+  m_IsActive: true
+  m_Name: ComputerAmbient
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7148093077515052605}  # Transform
+    - component: {fileID: 7961986387473548068}  # AudioSource
+---
+ID: 7148093077515052605
+Transform:
+  m_GameObject: {fileID: 15728780146072188416}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11664784420503493764}
+  m_Children:
+    []
+---
+ID: 7961986387473548068
+AudioSource:
+  m_GameObject: {fileID: 15728780146072188416}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 3
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: ff2abf4a8090158c52b33c52c6be61bb}
+  Play: false
+---
+ID: 15422140002165886818
+GameObject:
+  m_IsActive: true
+  m_Name: Audio
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6264004692065079095}  # Transform
+    - component: {fileID: 9881427236378036586}  # Script
+---
+ID: 6264004692065079095
+Transform:
+  m_GameObject: {fileID: 15422140002165886818}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13781640949463880887}
+  m_Children:
+    - {fileID: 16598012808757602300}
+---
+ID: 9881427236378036586
+Script:
+  m_GameObject: {fileID: 15422140002165886818}
+  m_IsEnabled: true
+  Script: {guid: df6c0f0ae2c51bb01b52bbb6f73a4ed7}
+  ComputerAmbient: {fileID: 896233567214900220}  # Component
+---
+ID: 16598012808757602300
+GameObject:
+  m_IsActive: true
+  m_Name: ComputerAmbient3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14199686513412242128}  # Transform
+    - component: {fileID: 896233567214900220}  # AudioSource
+---
+ID: 14199686513412242128
+Transform:
+  m_GameObject: {fileID: 16598012808757602300}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15422140002165886818}
+  m_Children:
+    []
+---
+ID: 896233567214900220
+AudioSource:
+  m_GameObject: {fileID: 16598012808757602300}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 3
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: ff2abf4a8090158c52b33c52c6be61bb}
+  Play: false
