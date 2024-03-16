@@ -12071,7 +12071,8 @@ Transform:
   Scale: [0.999998093, 1, 0.999998093]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 12641288044943282872}
+    - {fileID: 8629589438629673806}
 ---
 ID: 16773315215798417911
 Camera:
@@ -12152,6 +12153,25 @@ Script:
   zoomInSpeed: 3
   zoomSpeed: 50
   target: {fileID: 6663313825132233637}  # GameObject
+---
+ID: 3771108746803477636
+GameObject:
+  m_IsActive: true
+  m_Name: Dialogues
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3629049853853760154}  # Transform
+---
+ID: 3629049853853760154
+Transform:
+  m_GameObject: {fileID: 3771108746803477636}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
 ---
 ID: 3977294589520766028
 GameObject:
@@ -37556,26 +37576,6 @@ MeshRenderer:
   Mesh: {guid: f037536c8f69d86407ab03aeb2164551}
   Material_ID: {guid: 3317ca259ad46e5cd6684cba9975bd8b}
 ---
-ID: 3771108746803477636
-GameObject:
-  m_IsActive: true
-  m_Name: Dialogues
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3629049853853760154}  # Transform
----
-ID: 3629049853853760154
-Transform:
-  m_GameObject: {fileID: 3771108746803477636}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 12641288044943282872}
-    - {fileID: 8629589438629673806}
----
 ID: 12641288044943282872
 GameObject:
   m_IsActive: true
@@ -37590,8 +37590,8 @@ Transform:
   m_GameObject: {fileID: 12641288044943282872}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 3771108746803477636}
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
   m_Children:
     - {fileID: 4364241136402014883}
     - {fileID: 11886052673971164807}
@@ -37615,8 +37615,8 @@ Transform:
   m_GameObject: {fileID: 8629589438629673806}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 3771108746803477636}
+  Scale: [1.00000191, 1, 1.00000191]
+  Father: {fileID: 15334681090738628473}
   m_Children:
     - {fileID: 10667393824899659090}
     - {fileID: 16334240390322277725}
