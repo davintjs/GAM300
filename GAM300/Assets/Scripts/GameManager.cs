@@ -13,7 +13,28 @@ public class GameManager : Script
     public float fadeTime = 1f;
     public GameObject pauseCanvas;
 
-    public bool paused = false;
+    bool _paused = false;
+
+    public bool paused
+    {
+        get
+        {
+            return _paused;
+        }
+        set
+        {
+            _paused = value;
+            if (value)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+            if (pauseCanvas != null) pauseCanvas.SetActive(value);
+        }
+    } 
 
     void Awake()
     {
@@ -33,18 +54,6 @@ public class GameManager : Script
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             paused = !paused;
-            if (paused)
-            {
-                Time.timeScale = 0;
-                if(pauseCanvas != null) pauseCanvas.SetActive(true);
-                Console.WriteLine("Paused");
-
-            }
-            else
-            {
-                Time.timeScale = 1;
-                if (pauseCanvas != null) pauseCanvas.SetActive(false);
-            }
         }
 
         if (paused)

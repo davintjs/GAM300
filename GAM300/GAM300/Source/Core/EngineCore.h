@@ -223,6 +223,7 @@ public:
 	{
 		(void)pEvent;
 		mode = ENUM_SYSTEM_RUNTIME;
+		MyFrameRateController.timeScale = 1.f;
 	}
 	void CallbackSceneStop(SceneStopEvent * pEvent)
 	{

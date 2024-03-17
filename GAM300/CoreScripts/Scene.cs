@@ -25,6 +25,7 @@ namespace BeanFactory
         public static void LoadScene(string sceneName, bool loadDirect = false)
         {
             InternalCalls.LoadScene(sceneName, loadDirect);
+            Time.timeScale = 1;
         }
 
         public static void LoadNext()

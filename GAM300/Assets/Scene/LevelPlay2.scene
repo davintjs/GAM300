@@ -117,6 +117,7 @@ GameObject:
   m_Component:
     - component: {fileID: 15771131599214855093}  # Transform
     - component: {fileID: 4428148251743601674}  # SpriteRenderer
+    - component: {fileID: 9949772174506210583}  # Script
 ---
 ID: 15771131599214855093
 Transform:
@@ -138,6 +139,16 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: aa4944261068a155e7fead90ae30023e}
 ---
+ID: 9949772174506210583
+Script:
+  m_GameObject: {fileID: 14866259166967195886}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  hoverDuration: 0.300000012
+  targetScaleMultiplier: [1.10000002, 1.10000002, 1.10000002]
+  clickSound: {fileID: 0}
+  hoverSound: {fileID: 0}
+---
 ID: 5208993662452398043
 GameObject:
   m_IsActive: true
@@ -147,6 +158,7 @@ GameObject:
   m_Component:
     - component: {fileID: 7853065787214570747}  # Transform
     - component: {fileID: 1123036212792590798}  # SpriteRenderer
+    - component: {fileID: 4187643514961324118}  # Script
 ---
 ID: 7853065787214570747
 Transform:
@@ -168,6 +180,16 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
 ---
+ID: 4187643514961324118
+Script:
+  m_GameObject: {fileID: 5208993662452398043}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  hoverDuration: 0.300000012
+  targetScaleMultiplier: [1.10000002, 1.10000002, 1.10000002]
+  clickSound: {fileID: 0}
+  hoverSound: {fileID: 0}
+---
 ID: 1254823211106383066
 GameObject:
   m_IsActive: true
@@ -177,6 +199,7 @@ GameObject:
   m_Component:
     - component: {fileID: 17477336443118772393}  # Transform
     - component: {fileID: 17162719882944816835}  # SpriteRenderer
+    - component: {fileID: 11882738958470826661}  # Script
 ---
 ID: 17477336443118772393
 Transform:
@@ -197,6 +220,16 @@ SpriteRenderer:
   Include Alpha (ColourPicking): true
   Alpha Scalar: 1
   SpriteTexture: {guid: 46fac10793b9305f4186b5dc00d54fbf}
+---
+ID: 11882738958470826661
+Script:
+  m_GameObject: {fileID: 1254823211106383066}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  hoverDuration: 0.300000012
+  targetScaleMultiplier: [1.10000002, 1.10000002, 1.10000002]
+  clickSound: {fileID: 0}
+  hoverSound: {fileID: 0}
 ---
 ID: 5342434905140024301
 GameObject:
@@ -85096,10 +85129,10 @@ Transform:
   Scale: [0.999983549, 1, 0.99998337]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 3337015355190818504}
     - {fileID: 2420084808271522827}
-    - {fileID: 3638449239809990498}
+    - {fileID: 3337015355190818504}
     - {fileID: 18594434029681539}
+    - {fileID: 3638449239809990498}
     - {fileID: 16911691310441525962}
 ---
 ID: 7228443089687736001

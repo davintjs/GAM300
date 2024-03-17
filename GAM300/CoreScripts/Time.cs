@@ -26,7 +26,8 @@ namespace BeanFactory
     {
         //static float timeScale_ = 1f;
         static float deltaTime_ = 0f;
-        public static float deltaTime { get { return deltaTime_; } }
+        public static float unscaledDeltaTime { get { return deltaTime_; } }
+        public static float deltaTime { get { return deltaTime_ * timeScale; } }
         public static float timeScale { get { return InternalCalls.GetTimeScale(); } set { InternalCalls.SetTimeScale(value); } }
     }
 }

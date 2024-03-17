@@ -84,60 +84,37 @@ public class MainMenu : Script
         // Get refto Button
         if (startButtonRenderer != null && startButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("StartingScene", true);
-
+            Action loadScene = () => SceneManager.LoadScene("StartingScene", true);
+            StartCoroutine(QueueAction(loadScene));
         }
 
         if (settingsButtonRenderer != null && settingsButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("Settings", true);
+            Action loadScene = () => SceneManager.LoadScene("Settings", true);
+
+            StartCoroutine(QueueAction(loadScene));
 
         }
 
         if (HTPButtonRenderer != null && HTPButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("HowToPlay",true);
+            Action loadScene = () => SceneManager.LoadScene("HowToPlay",true);
 
+            StartCoroutine(QueueAction(loadScene));
         }
 
         if (ExitButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("Exit", true);
-
+            Action loadScene = () => SceneManager.LoadScene("Exit", true);
+            StartCoroutine(QueueAction(loadScene));
         }
 
-        // Check if button state is clicked
-
-        // Do something(Load)
-        goToPlay();
 
         //code not working atm
         //selfFlicker();
         movement();
     }
 
-    IEnumerator LoadScene(float seconds)
-    {
-        yield return new WaitForSeconds(seconds);
-        SceneManager.LoadScene("LevelPlay2");
-    }
-
-    void goToPlay()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            uibutton.Play();
-            StartCoroutine(LoadScene(0.1f));
-        }
-    }
 
 
     void movement()
@@ -157,5 +134,9 @@ public class MainMenu : Script
             back = !back;
         }
     }
-
+    IEnumerator QueueAction(Action action)
+    {
+        yield return new WaitForSeconds(0.2f);
+        action();
+    }
 }

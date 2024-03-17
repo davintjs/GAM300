@@ -17,7 +17,12 @@ public class Pause : Script
 
     public GameObject HTPButton; 
 
-    public GameObject MainMenu; 
+    public GameObject MainMenu;
+
+    public GameObject HowToPlayBack;
+
+    public GameObject HowToPlayPanel;
+    public GameObject PausePanel;
 
     public bool isStartActive = true;
     public float flickerTimer = 0f;
@@ -35,6 +40,8 @@ public class Pause : Script
     private SpriteRenderer HTPButtonRenderer;
 
     private SpriteRenderer MainMenuRenderer;
+
+    private SpriteRenderer HowToPlayBackRenderer;
 
 
     void Start()
@@ -54,7 +61,12 @@ public class Pause : Script
         {
             MainMenuRenderer = MainMenu.GetComponent<SpriteRenderer>();
         }
-            
+
+        if (HowToPlayBack.HasComponent<SpriteRenderer>())
+        {
+            HowToPlayBackRenderer = HowToPlayBack.GetComponent<SpriteRenderer>();
+        }
+
     }
 
     void Update()
@@ -62,29 +74,47 @@ public class Pause : Script
         // Get refto Button
         if (resumeButtonRenderer != null && resumeButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("LevelTutorial");
-
+            Action resume = () =>
+            {
+                GameManager.instance.paused = false;
+            };
+            StartCoroutine(QueueAction(resume));
         }
 
         if (HTPButtonRenderer != null && HTPButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("HowToPlay",true);
-
+            Action htpPlay = () =>
+            {
+                HowToPlayPanel.SetActive(true);
+                PausePanel.SetActive(false);
+            };
+            StartCoroutine(QueueAction(htpPlay));
         }
 
         if (MainMenuRenderer != null && MainMenuRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("MainMenu", true);
+            Action loadMain = () =>
+            {
+                SceneManager.LoadScene("MainMenu", true);
+            };
+            StartCoroutine(QueueAction(loadMain));
+        }
 
+        if (HowToPlayBackRenderer != null && HowToPlayBackRenderer.IsButtonClicked())
+        {
+            Action closeHTP = () =>
+            {
+                HowToPlayPanel.SetActive(false);
+                PausePanel.SetActive(true);
+            };
+            StartCoroutine(QueueAction(closeHTP));
         }
 
     }
 
-
+    IEnumerator QueueAction (Action action)
+    {
+        yield return new WaitForSeconds(0.2f);
+        action();
+    }
 }
