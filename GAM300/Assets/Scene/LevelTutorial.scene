@@ -75,6 +75,10 @@ Script:
   m_IsEnabled: true
   Script: {guid: 0470ed2b8def9ecbe83ea13ee17af641}
   dialogueText: {fileID: 7359784780702033476}  # GameObject
+  seer_1: {fileID: 0}
+  seer_2: {fileID: 0}
+  seer_3: {fileID: 0}
+  seer_4: {fileID: 0}
   tutorial1: {fileID: 5543069040450218211}  # Component
   tutorial2: {fileID: 6580851559421791966}  # Component
   tutorial3: {fileID: 10502151295172925409}  # Component
@@ -31291,7 +31295,7 @@ Animator:
   m_GameObject: {fileID: 15669505871049363587}
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
-  Playing: false
+  Playing: true
   Enable Armature: true
 ---
 ID: 4047165905438159748
@@ -31334,7 +31338,7 @@ ID: 13265842246020118488
 Transform:
   m_GameObject: {fileID: 3902498254366648580}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [2.82129974e-07, -0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 15669505871049363587}
   m_Children:
@@ -33709,7 +33713,7 @@ ID: 804372682911444336
 Transform:
   m_GameObject: {fileID: 3693973677644537234}
   Translation: [0, 0, 0]
-  Rotation: [2.82129974e-07, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 15510257497109923983}
   m_Children:
