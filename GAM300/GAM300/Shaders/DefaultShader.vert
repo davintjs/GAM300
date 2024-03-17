@@ -107,7 +107,8 @@ void main()
     if(!breakOut)
     {
         vec4 NormalL = boneTransform * vec4(aVertexNormal, 0.0);
-        Normal = mat3(transpose(inverse(SRT))) * vec3(NormalL);
+//        Normal = mat3(transpose(inverse(SRT))) * vec3(NormalL);
+        Normal = (SRT * NormalL).xyz;
     }
 
 }

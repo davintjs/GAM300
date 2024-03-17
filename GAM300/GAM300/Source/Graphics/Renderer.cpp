@@ -327,6 +327,7 @@ void Renderer::DrawPBR(BaseCamera& _camera)
 
 void Renderer::DrawDefault(BaseCamera& _camera)
 {
+	glEnable(GL_DEPTH_TEST);
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::DEFAULT);
 	shader.Use();
 
