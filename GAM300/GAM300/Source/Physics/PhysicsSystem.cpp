@@ -253,7 +253,8 @@ void PhysicsSystem::UpdateJoltTransforms()
 
 
 void PhysicsSystem::Update(float dt) {
-
+	if (dt == 0)
+		return;
 	if (!physicsSystem)
 		return;
 

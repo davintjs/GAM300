@@ -106,7 +106,7 @@ void ParticleRenderer::Update(float dt) {
         }
 
         //sort particle
-        if (particleComponent.is2D) {
+        if (particleComponent.is2D && !particleSRT.size() > 1) {
             std::sort(particleSRT.begin() + particleCounter, particleSRT.end(),
                 [&](const glm::mat4& particle1, const glm::mat4& particle2) {
                     return compareParticles(particle1, particle2, camTranslate);

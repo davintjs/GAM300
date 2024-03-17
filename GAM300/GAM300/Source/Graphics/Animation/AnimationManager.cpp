@@ -33,6 +33,9 @@ void Animation_Manager::Init()
 
 void Animation_Manager::Update(float dt)
 {
+    //std::cout << "Anim DT: " << dt << std::endl;
+    if (dt == 0)
+        return;
     Scene& currentScene = MySceneManager.GetCurrentScene();
 
     for (Camera& CurrCam : currentScene.GetArray<Camera>())

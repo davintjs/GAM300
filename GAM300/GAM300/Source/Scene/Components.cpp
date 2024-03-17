@@ -53,6 +53,9 @@ void Transform::EnableFlag(Flag flag)
 	for (const auto& childID : child)
 	{
 		Transform& tChild = scene.Get<Transform>(childID);
+		//Child might still be false
+		if (flag == Flag::WorldEnabled && scene.IsActive<Entity>(tChild,false) == false)
+			continue;
 		tChild.EnableFlag(flag);
 	}
 }

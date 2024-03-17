@@ -147,7 +147,7 @@ public:
 	{
 		//Start ImGui Frames
 #if defined(_BUILD)
-		AllSystems::Update(dt);
+		AllSystems::Update(dt * MyFrameRateController.timeScale);
 #else
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();

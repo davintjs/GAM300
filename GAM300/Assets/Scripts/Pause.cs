@@ -83,12 +83,8 @@ public class Pause : Script
 
         if (HTPButtonRenderer != null && HTPButtonRenderer.IsButtonClicked())
         {
-            Action htpPlay = () =>
-            {
-                HowToPlayPanel.SetActive(true);
-                PausePanel.SetActive(false);
-            };
-            StartCoroutine(QueueAction(htpPlay));
+            HowToPlayPanel.SetActive(true);
+            PausePanel.SetActive(false);
         }
 
         if (MainMenuRenderer != null && MainMenuRenderer.IsButtonClicked())
@@ -114,7 +110,7 @@ public class Pause : Script
 
     IEnumerator QueueAction (Action action)
     {
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForUnscaledSeconds(0.2f);
         action();
     }
 }
