@@ -178,9 +178,6 @@ public class BossBehaviour : Script
         StartCoroutine(EnterBossCutscene());
         InitAnimStates();
         ultiSphere.gameObject.SetActive(false);
-        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
-
-        transform.localPosition = bossStartPos;
     }
 
     void Update()
@@ -203,9 +200,10 @@ public class BossBehaviour : Script
         ThirdPersonCamera.instance.cutscene = true;
         Transform camera = ThirdPersonCamera.instance.transform;
 
-        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
+        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f + vec3.UnitX * 5f;
+        transform.localPosition = bossStartPos;
 
-        float cutsceneDuration = 10f;
+        float cutsceneDuration = 8f;
         float timer = cutsceneDuration;
         while (timer > 0)
         {
@@ -276,23 +274,27 @@ public class BossBehaviour : Script
         yield return new WaitForSeconds(0.65f);
         StartCoroutine(RotateAndMoveToPlayer(0.1f, 800f, rotationSpeed / 2f));
         bossSounds.attack1SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack1, transform.back * 800f, .6f, vec3.UnitY + transform.back * 2f + transform.left * 0.5f));
 
         yield return new WaitForSeconds(0.55f);
         StartCoroutine(RotateAndMoveToPlayer(0.3f, 300f, rotationSpeed));
         bossSounds.attack2SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack2Right, transform.back * 800f, .8f, vec3.UnitY + transform.back * 2f));
         StartCoroutine(EnableAttackCollider(attack2Left, transform.back * 800f, .8f, vec3.UnitY + transform.back * 2f));
 
         yield return new WaitForSeconds(0.45f);
         StartCoroutine(RotateAndMoveToPlayer(0.1f, 0f, rotationSpeed / 2f));
         bossSounds.attack3SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack2, transform.back * 500f, .8f, vec3.UnitY + transform.back ));
 
         yield return new WaitForSeconds(0.35f);
         StartCoroutine(RotateAndMoveToPlayer(1f, 0f, rotationSpeed * 8f));
         yield return new WaitForSeconds(0.1f);
         bossSounds.attack4SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack3, transform.back * 800f, 1.4f, vec3.UnitY + transform.back * 2f));
 
         yield return new WaitForSeconds(1.2f);
@@ -356,6 +358,7 @@ public class BossBehaviour : Script
         dashed = true;
 
         SetState("DashChargeUp", true);
+        BossAudioManager.instance.dashChargeUpVoice.Play();
         vec3 startPos = transform.localPosition;
         yield return StartCoroutine(RotateAndMoveToPlayer(1f,0f,rotationSpeed*2f));
         animator.SetSpeed(0f);
@@ -365,6 +368,9 @@ public class BossBehaviour : Script
 
         SetState("DashAttack", true);
         yield return StartCoroutine(RotateAndMoveToPlayer(1.3f, 0f, rotationSpeed/8f));
+        BossAudioManager.instance.dashShoutVoiceOver.Play();
+        BossAudioManager.instance.dashLaserSound.Play();
+        BossAudioManager.instance.dashWhoosh.Play();
         animator.SetSpeed(1f);
 
         dashVFX.particleLooping = false;
@@ -493,6 +499,7 @@ public class BossBehaviour : Script
         float vfxDuration = 3f;
         float timer = 0;
         ThirdPersonCamera.instance.ShakeCamera(0.2f, timer);
+        bossSounds.ultimateLaser.Play();
         while (timer < vfxDuration)
         {
             yield return null;
@@ -513,6 +520,7 @@ public class BossBehaviour : Script
 
         LightSource lightSource = ultiLight.gameObject.GetComponent<LightSource>();
         float intensity = lightSource.intensity;
+
         lightSource.intensity = 0f;
         while (timer < dur)
         {
@@ -552,18 +560,20 @@ public class BossBehaviour : Script
         ThirdPersonCamera.instance.ShakeCamera(0.05f, timer);
         SetState("Ultimate", true);
         animator.SetSpeed(0.2f);
-        while(timer > ultiChargeDuration - 0.05f)
+        while (timer > ultiChargeDuration - 0.05f)
         {
             ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
             timer -= Time.deltaTime;
             yield return null;
         }
+        bossSounds.ultimateEnergy.Play();
         while (timer > 2.3f)
         {
             ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
             timer -= Time.deltaTime;
             yield return null;
         }
+        bossSounds.ultimateRumbling.Play();
         animator.SetSpeed(0f);
         while (timer > 0f)
         {
@@ -583,8 +593,10 @@ public class BossBehaviour : Script
         }
 
         animator.SetSpeed(1f);
+        bossSounds.ultimateExplosion.Play();
         bossSounds.screamSFX.Play();
         yield return new WaitForSeconds(0.2f);
+        bossSounds.ultimateRinging.Play();
 
         ultimateVFX.particleLooping = true;
         while (timer > 0)

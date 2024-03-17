@@ -95,80 +95,6 @@ Script:
   sceneIndex: 2
   fadeBlackSR: {fileID: 2293742353939863974}  # Component
 ---
-ID: 14088906961581824457
-GameObject:
-  m_IsActive: true
-  m_Name: AudioManager
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15434041396282750435}  # Transform
-    - component: {fileID: 12555400289260702052}  # Script
----
-ID: 15434041396282750435
-Transform:
-  m_GameObject: {fileID: 14088906961581824457}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    - {fileID: 8065358626952296561}
-    - {fileID: 8873786281471961566}
-    - {fileID: 8393117941418361269}
-    - {fileID: 263938901046208410}
-    - {fileID: 497501804413490616}
-    - {fileID: 183898391583128112}
-    - {fileID: 1704405459447429049}
-    - {fileID: 7505235272623281090}
-    - {fileID: 11931709940185671807}
-    - {fileID: 2723553382536766900}
-    - {fileID: 10419665452268142691}
-    - {fileID: 8195998143091088379}
-    - {fileID: 5382915443314468010}
-    - {fileID: 8310365372469502612}
-    - {fileID: 4679045281971681028}
-    - {fileID: 5713504039664526619}
-    - {fileID: 1444839062839968456}
-    - {fileID: 3873369559540028830}
-    - {fileID: 16052600457545288926}
-    - {fileID: 13027737300980970512}
-    - {fileID: 17811278805382620369}
-    - {fileID: 18125044553674274218}
-    - {fileID: 12153697188064801473}
-    - {fileID: 7888217747071975113}
-    - {fileID: 7702311490355860096}
-    - {fileID: 3801088290079164654}
-    - {fileID: 15187318079590443157}
-    - {fileID: 7345429221838225698}
-    - {fileID: 2597072424818364743}
-    - {fileID: 6687611820943646563}
-    - {fileID: 13591043639879680109}
-    - {fileID: 18181770936856234779}
-    - {fileID: 11929105701366530362}
----
-ID: 12555400289260702052
-Script:
-  m_GameObject: {fileID: 14088906961581824457}
-  m_IsEnabled: true
-  Script: {guid: b01c0159e88a0504f824d8bcb6303ee8}
-  doorOpen: {fileID: 14332204263861564631}  # Component
-  elevator: {fileID: 2406511765798993316}  # Component
-  enemyAlerted1: {fileID: 12262929383047051249}  # Component
-  enemyAlerted2: {fileID: 6670779144662544128}  # Component
-  enemyAlerted3: {fileID: 998502570275308366}  # Component
-  enemyHit: {fileID: 14492758170611173101}  # Component
-  itemCollected: {fileID: 3483838879810750950}  # Component
-  keyCollected: {fileID: 12067369461903983448}  # Component
-  meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
-  meleeEnemyDie: {fileID: 14157919317546456730}  # Component
-  meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
-  obj_success: {fileID: 7580998763032436151}  # Component
-  rangeEnemyDead: {fileID: 2502308778807293875}  # Component
-  rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
-  swoosh: {fileID: 12533648897811303029}  # Component
-  uiSound: {fileID: 12043367231734905459}  # Component
----
 ID: 4212138099454399691
 GameObject:
   m_IsActive: true
@@ -9197,114 +9123,6 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: b9dcab9e8bd76d6ce1bfa6bad0e324d8}
 ---
-ID: 8065358626952296561
-GameObject:
-  m_IsActive: true
-  m_Name: playerSlashAttack
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2429932456632985597}  # Transform
-    - component: {fileID: 8829355492810947455}  # AudioSource
----
-ID: 2429932456632985597
-Transform:
-  m_GameObject: {fileID: 8065358626952296561}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 8829355492810947455
-AudioSource:
-  m_GameObject: {fileID: 8065358626952296561}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 4bdfa959f8e2dc7ae0d617c8e6620ad8}
-  Play: false
----
-ID: 8873786281471961566
-GameObject:
-  m_IsActive: true
-  m_Name: spark
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14556033001105864622}  # Transform
-    - component: {fileID: 1060299922073029148}  # AudioSource
----
-ID: 14556033001105864622
-Transform:
-  m_GameObject: {fileID: 8873786281471961566}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 1060299922073029148
-AudioSource:
-  m_GameObject: {fileID: 8873786281471961566}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 5e16beacb1259528db74e50fb01bad43}
-  Play: false
----
-ID: 8393117941418361269
-GameObject:
-  m_IsActive: true
-  m_Name: jumpVoice
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11061822046921806353}  # Transform
-    - component: {fileID: 2598491438105149260}  # AudioSource
----
-ID: 11061822046921806353
-Transform:
-  m_GameObject: {fileID: 8393117941418361269}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 2598491438105149260
-AudioSource:
-  m_GameObject: {fileID: 8393117941418361269}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 965dacd9fe8d8f88ea7cd6ed360787ac}
-  Play: false
----
 ID: 16642481857729093895
 GameObject:
   m_IsActive: true
@@ -9750,6 +9568,7 @@ Transform:
   m_Children:
     - {fileID: 6663313825132233637}
     - {fileID: 3187203319805926689}
+    - {fileID: 13473461968099949338}
 ---
 ID: 15939117778428800744
 CharacterController:
@@ -12829,294 +12648,6 @@ Transform:
   m_Children:
     []
 ---
-ID: 263938901046208410
-GameObject:
-  m_IsActive: true
-  m_Name: ItemCollected
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18372212286040797480}  # Transform
-    - component: {fileID: 3483838879810750950}  # AudioSource
----
-ID: 18372212286040797480
-Transform:
-  m_GameObject: {fileID: 263938901046208410}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 3483838879810750950
-AudioSource:
-  m_GameObject: {fileID: 263938901046208410}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
-  Play: false
----
-ID: 497501804413490616
-GameObject:
-  m_IsActive: true
-  m_Name: RangeEnemyBullet
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9394596766560980627}  # Transform
-    - component: {fileID: 11367208140139232291}  # AudioSource
----
-ID: 9394596766560980627
-Transform:
-  m_GameObject: {fileID: 497501804413490616}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 11367208140139232291
-AudioSource:
-  m_GameObject: {fileID: 497501804413490616}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 0.300000012
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: eda674df517607f98c64da16ea040919}
-  Play: false
----
-ID: 183898391583128112
-GameObject:
-  m_IsActive: true
-  m_Name: RangeEnemyDead
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13812295196817184781}  # Transform
-    - component: {fileID: 2502308778807293875}  # AudioSource
----
-ID: 13812295196817184781
-Transform:
-  m_GameObject: {fileID: 183898391583128112}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 2502308778807293875
-AudioSource:
-  m_GameObject: {fileID: 183898391583128112}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 06f54883e9bc513507a05a5298dba06f}
-  Play: false
----
-ID: 1704405459447429049
-GameObject:
-  m_IsActive: true
-  m_Name: DoorOpen
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13811611442745766600}  # Transform
-    - component: {fileID: 14332204263861564631}  # AudioSource
----
-ID: 13811611442745766600
-Transform:
-  m_GameObject: {fileID: 1704405459447429049}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 14332204263861564631
-AudioSource:
-  m_GameObject: {fileID: 1704405459447429049}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 42dcb3de127c7dba6b7c233d0d648a80}
-  Play: false
----
-ID: 7505235272623281090
-GameObject:
-  m_IsActive: true
-  m_Name: playerInjured
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 17431661257437165654}  # Transform
-    - component: {fileID: 3760519619074301342}  # AudioSource
----
-ID: 17431661257437165654
-Transform:
-  m_GameObject: {fileID: 7505235272623281090}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 3760519619074301342
-AudioSource:
-  m_GameObject: {fileID: 7505235272623281090}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: e163082ab73fa95c5d0a07c82df6920c}
-  Play: false
----
-ID: 11931709940185671807
-GameObject:
-  m_IsActive: true
-  m_Name: elevator
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 9155072371493984954}  # Transform
-    - component: {fileID: 2406511765798993316}  # AudioSource
----
-ID: 9155072371493984954
-Transform:
-  m_GameObject: {fileID: 11931709940185671807}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 2406511765798993316
-AudioSource:
-  m_GameObject: {fileID: 11931709940185671807}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: c4f9a933d2103f414ffbc861e92d5bb1}
-  Play: false
----
-ID: 2723553382536766900
-GameObject:
-  m_IsActive: true
-  m_Name: playerFootstep
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 8100482910037792098}  # Transform
-    - component: {fileID: 6518591935153270902}  # AudioSource
----
-ID: 8100482910037792098
-Transform:
-  m_GameObject: {fileID: 2723553382536766900}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 6518591935153270902
-AudioSource:
-  m_GameObject: {fileID: 2723553382536766900}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: bd4e3caa61f828ba04cc26ade0063cec}
-  Play: false
----
-ID: 10419665452268142691
-GameObject:
-  m_IsActive: true
-  m_Name: playerAttack
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6832024306486094958}  # Transform
-    - component: {fileID: 3436078548414859258}  # AudioSource
----
-ID: 6832024306486094958
-Transform:
-  m_GameObject: {fileID: 10419665452268142691}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 3436078548414859258
-AudioSource:
-  m_GameObject: {fileID: 10419665452268142691}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: f4bb7a459a14c3256accf4e34b46c4d0}
-  Play: false
----
 ID: 9805023284151831907
 GameObject:
   m_IsActive: true
@@ -13536,78 +13067,6 @@ MeshRenderer:
   Mesh: {guid: 09cbe2fe44a37c754d640ced0cb5a257}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
-ID: 8195998143091088379
-GameObject:
-  m_IsActive: true
-  m_Name: enemyHit
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2131914696263170567}  # Transform
-    - component: {fileID: 14492758170611173101}  # AudioSource
----
-ID: 2131914696263170567
-Transform:
-  m_GameObject: {fileID: 8195998143091088379}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 14492758170611173101
-AudioSource:
-  m_GameObject: {fileID: 8195998143091088379}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 4390061a4fc32cdc60928c28ed7c31a4}
-  Play: false
----
-ID: 5382915443314468010
-GameObject:
-  m_IsActive: true
-  m_Name: keyCollected
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6380692802903293290}  # Transform
-    - component: {fileID: 12067369461903983448}  # AudioSource
----
-ID: 6380692802903293290
-Transform:
-  m_GameObject: {fileID: 5382915443314468010}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 12067369461903983448
-AudioSource:
-  m_GameObject: {fileID: 5382915443314468010}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: ee37dab8ea79937bfa6ed2bfd1d10e3b}
-  Play: false
----
 ID: 6826500622308863951
 GameObject:
   m_IsActive: false
@@ -13872,78 +13331,6 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 2c86b31c6fd13537742a42c83a8b516a}
----
-ID: 8310365372469502612
-GameObject:
-  m_IsActive: true
-  m_Name: uiSound
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14053836816538118579}  # Transform
-    - component: {fileID: 12043367231734905459}  # AudioSource
----
-ID: 14053836816538118579
-Transform:
-  m_GameObject: {fileID: 8310365372469502612}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 12043367231734905459
-AudioSource:
-  m_GameObject: {fileID: 8310365372469502612}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
-  Play: false
----
-ID: 4679045281971681028
-GameObject:
-  m_IsActive: true
-  m_Name: useItem
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2509363505227465543}  # Transform
-    - component: {fileID: 8508182677235274511}  # AudioSource
----
-ID: 2509363505227465543
-Transform:
-  m_GameObject: {fileID: 4679045281971681028}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 8508182677235274511
-AudioSource:
-  m_GameObject: {fileID: 4679045281971681028}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: d3e0ca517ffb61df5488c7a95ea3e53e}
-  Play: false
 ---
 ID: 12660956963810181687
 GameObject:
@@ -31795,114 +31182,6 @@ Transform:
   m_Children:
     []
 ---
-ID: 5713504039664526619
-GameObject:
-  m_IsActive: true
-  m_Name: MeleeEnemyDie
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5544704717921281025}  # Transform
-    - component: {fileID: 14157919317546456730}  # AudioSource
----
-ID: 5544704717921281025
-Transform:
-  m_GameObject: {fileID: 5713504039664526619}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 14157919317546456730
-AudioSource:
-  m_GameObject: {fileID: 5713504039664526619}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 9f8df03759bd025de40156229fe387ec}
-  Play: false
----
-ID: 1444839062839968456
-GameObject:
-  m_IsActive: true
-  m_Name: MeleeEnemyAttack
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4405310670290985832}  # Transform
-    - component: {fileID: 9604268664669988043}  # AudioSource
----
-ID: 4405310670290985832
-Transform:
-  m_GameObject: {fileID: 1444839062839968456}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 9604268664669988043
-AudioSource:
-  m_GameObject: {fileID: 1444839062839968456}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: e2c803b37e46493acc4b856df0e91f95}
-  Play: false
----
-ID: 3873369559540028830
-GameObject:
-  m_IsActive: true
-  m_Name: MeleeEnemyInjured
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5359552120802994559}  # Transform
-    - component: {fileID: 9193573896841228309}  # AudioSource
----
-ID: 5359552120802994559
-Transform:
-  m_GameObject: {fileID: 3873369559540028830}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 9193573896841228309
-AudioSource:
-  m_GameObject: {fileID: 3873369559540028830}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 6dfc6a4ff8d5e37c5b303cc3350fe00d}
-  Play: false
----
 ID: 15048552052095329301
 GameObject:
   m_IsActive: true
@@ -41495,42 +40774,6 @@ MeshRenderer:
   Mesh: {guid: e214dd11388cd9523838aef018205bc6}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
-ID: 16052600457545288926
-GameObject:
-  m_IsActive: true
-  m_Name: playerOverdrive
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5287081828516019792}  # Transform
-    - component: {fileID: 4330194544441596099}  # AudioSource
----
-ID: 5287081828516019792
-Transform:
-  m_GameObject: {fileID: 16052600457545288926}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 4330194544441596099
-AudioSource:
-  m_GameObject: {fileID: 16052600457545288926}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: ce12584be0c04eb1d9f8412474d73214}
-  Play: false
----
 ID: 18315212324025487925
 GameObject:
   m_IsActive: true
@@ -42735,7 +41978,7 @@ Animator:
   m_GameObject: {fileID: 3187203319805926689}
   m_IsEnabled: true
   Animation: {guid: c4fef853906fbef85cfcf3080cfd1a6b}
-  Playing: false
+  Playing: true
   Enable Armature: true
 ---
 ID: 13634005917329744601
@@ -42914,42 +42157,6 @@ ParticleComponent:
   Trail Thickness: 1
   Looping: true
 ---
-ID: 13027737300980970512
-GameObject:
-  m_IsActive: true
-  m_Name: overDriveVFXSound
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 17205113147846528527}  # Transform
-    - component: {fileID: 814352591872434956}  # AudioSource
----
-ID: 17205113147846528527
-Transform:
-  m_GameObject: {fileID: 13027737300980970512}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 814352591872434956
-AudioSource:
-  m_GameObject: {fileID: 13027737300980970512}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: a958b6a910add424e67c4da7f3a70c45}
-  Play: false
----
 ID: 10827055824572101424
 GameObject:
   m_IsActive: true
@@ -43026,258 +42233,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: d8e5ab9b8db9eb6276f31a61cfdff225}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 17811278805382620369
-GameObject:
-  m_IsActive: true
-  m_Name: jumpVoice2
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 16950316186164793293}  # Transform
-    - component: {fileID: 17384956244929632316}  # AudioSource
----
-ID: 16950316186164793293
-Transform:
-  m_GameObject: {fileID: 17811278805382620369}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 17384956244929632316
-AudioSource:
-  m_GameObject: {fileID: 17811278805382620369}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 6635dccdc4753cd50eebb7c17dcd59eb}
-  Play: false
----
-ID: 18125044553674274218
-GameObject:
-  m_IsActive: true
-  m_Name: jumpVoice3
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 1399664433149929236}  # Transform
-    - component: {fileID: 1298934831599437468}  # AudioSource
----
-ID: 1399664433149929236
-Transform:
-  m_GameObject: {fileID: 18125044553674274218}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 1298934831599437468
-AudioSource:
-  m_GameObject: {fileID: 18125044553674274218}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 2583585c5ab5496aac276a46ee35beb6}
-  Play: false
----
-ID: 12153697188064801473
-GameObject:
-  m_IsActive: true
-  m_Name: thump1
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11495029340857605506}  # Transform
-    - component: {fileID: 12152755750733174901}  # AudioSource
----
-ID: 11495029340857605506
-Transform:
-  m_GameObject: {fileID: 12153697188064801473}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 12152755750733174901
-AudioSource:
-  m_GameObject: {fileID: 12153697188064801473}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 4879d8cbccffbd2c22b3508a370ec969}
-  Play: false
----
-ID: 7888217747071975113
-GameObject:
-  m_IsActive: true
-  m_Name: thump2
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 905309707759191102}  # Transform
-    - component: {fileID: 10580402611710297282}  # AudioSource
----
-ID: 905309707759191102
-Transform:
-  m_GameObject: {fileID: 7888217747071975113}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 10580402611710297282
-AudioSource:
-  m_GameObject: {fileID: 7888217747071975113}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 1682f86f9df2666b5d45632da015dcd5}
-  Play: false
----
-ID: 7702311490355860096
-GameObject:
-  m_IsActive: true
-  m_Name: dodgeRoll1
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 15155954054943357669}  # Transform
-    - component: {fileID: 1086886035799123363}  # AudioSource
----
-ID: 15155954054943357669
-Transform:
-  m_GameObject: {fileID: 7702311490355860096}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 1086886035799123363
-AudioSource:
-  m_GameObject: {fileID: 7702311490355860096}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: d44bdb32a0aa5d9f4fde6eeee09a0a91}
-  Play: false
----
-ID: 3801088290079164654
-GameObject:
-  m_IsActive: true
-  m_Name: dodgeRoll2
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3199961399440766800}  # Transform
-    - component: {fileID: 11490585744734373202}  # AudioSource
----
-ID: 3199961399440766800
-Transform:
-  m_GameObject: {fileID: 3801088290079164654}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 11490585744734373202
-AudioSource:
-  m_GameObject: {fileID: 3801088290079164654}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 29893a407f7feda308faf18ac1404e2b}
-  Play: false
----
-ID: 15187318079590443157
-GameObject:
-  m_IsActive: true
-  m_Name: dashAttack
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6180669855135387070}  # Transform
-    - component: {fileID: 3292439134972329249}  # AudioSource
----
-ID: 6180669855135387070
-Transform:
-  m_GameObject: {fileID: 15187318079590443157}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 3292439134972329249
-AudioSource:
-  m_GameObject: {fileID: 15187318079590443157}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: afa9ddd7bcf5a5b847cc23aadd0521f6}
-  Play: false
 ---
 ID: 3100779827254322048
 GameObject:
@@ -43359,114 +42314,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 7345429221838225698
-GameObject:
-  m_IsActive: true
-  m_Name: enemyAlerted1
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5474435996662912753}  # Transform
-    - component: {fileID: 12262929383047051249}  # AudioSource
----
-ID: 5474435996662912753
-Transform:
-  m_GameObject: {fileID: 7345429221838225698}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 12262929383047051249
-AudioSource:
-  m_GameObject: {fileID: 7345429221838225698}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 7f4dca2867d7267a988760fbb9e6e63b}
-  Play: false
----
-ID: 2597072424818364743
-GameObject:
-  m_IsActive: true
-  m_Name: enemyAlerted2
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 6953088724175365596}  # Transform
-    - component: {fileID: 6670779144662544128}  # AudioSource
----
-ID: 6953088724175365596
-Transform:
-  m_GameObject: {fileID: 2597072424818364743}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 6670779144662544128
-AudioSource:
-  m_GameObject: {fileID: 2597072424818364743}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 961c5ccf4652254f50f84f2f7c5fa599}
-  Play: false
----
-ID: 6687611820943646563
-GameObject:
-  m_IsActive: true
-  m_Name: enemyAlerted3
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 17408746616720987109}  # Transform
-    - component: {fileID: 998502570275308366}  # AudioSource
----
-ID: 17408746616720987109
-Transform:
-  m_GameObject: {fileID: 6687611820943646563}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
-  m_Children:
-    []
----
-ID: 998502570275308366
-AudioSource:
-  m_GameObject: {fileID: 6687611820943646563}
-  m_IsEnabled: true
-  AudioChannel: 1
-  Loop: false
-  Volume: 1
-  min hearing Distance: 1
-  max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
-  Fade In Time (s): 1
-  Fade Out Time (s): 1
-  Sound File: {guid: 39c25d69f321816138ad9304fc599daf}
-  Play: false
 ---
 ID: 5769265740441844970
 GameObject:
@@ -47728,8 +46575,8 @@ GameObject:
 ID: 685744806671200059
 Transform:
   m_GameObject: {fileID: 383668116300315972}
-  Translation: [-0.00866199099, 80.3359528, 0.0122749992]
-  Rotation: [3.49081461e-06, -6.63118699e-05, 0.00213464815]
+  Translation: [0.235707849, 73.291626, -0.228707358]
+  Rotation: [-0.0855037794, -0.752459347, -6.734005e-05]
   Scale: [1.00000036, 1.00000036, 1]
   Father: {fileID: 6521774849105860025}
   m_Children:
@@ -47749,9 +46596,9 @@ GameObject:
 ID: 9169780922658253905
 Transform:
   m_GameObject: {fileID: 10589105948784954568}
-  Translation: [-2.25518306e-08, 7.33337164, -0.310161352]
-  Rotation: [-0.042272713, 6.69513684e-05, -0.00213414687]
-  Scale: [0.999999642, 0.99999994, 1.00000012]
+  Translation: [-2.12039382e-08, 7.33337164, -0.310161352]
+  Rotation: [0.0514295325, 0.0837232322, -0.00980835594]
+  Scale: [0.999999702, 0.99999994, 1.00000012]
   Father: {fileID: 383668116300315972}
   m_Children:
     - {fileID: 15644903726965661429}
@@ -47768,9 +46615,9 @@ GameObject:
 ID: 12968763061992519596
 Transform:
   m_GameObject: {fileID: 15644903726965661429}
-  Translation: [-6.39488462e-12, 8.5632391, 4.44074288e-08]
-  Rotation: [-1.86264515e-08, 0, 0]
-  Scale: [1, 1, 1]
+  Translation: [-2.68739324e-08, 8.5632391, 2.45991867e-08]
+  Rotation: [0.187903225, 0.163788214, -0.0112359123]
+  Scale: [1, 0.99999994, 1]
   Father: {fileID: 10589105948784954568}
   m_Children:
     - {fileID: 12625122234547198232}
@@ -47787,9 +46634,9 @@ GameObject:
 ID: 3641279889224830698
 Transform:
   m_GameObject: {fileID: 12625122234547198232}
-  Translation: [-2.94568281e-09, 9.78656292, 1.0400916e-07]
-  Rotation: [1.86264515e-08, -0, 0]
-  Scale: [1, 1, 1]
+  Translation: [7.86778021e-09, 9.78656292, 1.12412053e-07]
+  Rotation: [0.187903196, 0.163788363, -0.0112359058]
+  Scale: [0.99999994, 1, 1]
   Father: {fileID: 15644903726965661429}
   m_Children:
     - {fileID: 15451108774404083626}
@@ -47808,9 +46655,9 @@ GameObject:
 ID: 12243501860609445251
 Transform:
   m_GameObject: {fileID: 15451108774404083626}
-  Translation: [8.39918357e-10, 11.0098896, 4.61633391e-07]
-  Rotation: [0.0422693416, -0, 0]
-  Scale: [1, 0.999999642, 0.999999702]
+  Translation: [3.30622036e-08, 11.0098896, 5.04964362e-07]
+  Rotation: [0.0148673374, -0.0215104092, 0.00203219405]
+  Scale: [1, 0.999999642, 0.999999821]
   Father: {fileID: 12625122234547198232}
   m_Children:
     - {fileID: 7373735031783903797}
@@ -47827,9 +46674,9 @@ GameObject:
 ID: 15771838774996569190
 Transform:
   m_GameObject: {fileID: 7373735031783903797}
-  Translation: [-1.51187507e-09, 6.19826508, 1.60749602]
-  Rotation: [0, -0, 0]
-  Scale: [1, 1, 1]
+  Translation: [4.25180247e-08, 6.19826508, 1.60749602]
+  Rotation: [-0.0914056599, 0.35413599, -0.0260149166]
+  Scale: [1, 0.99999994, 1]
   Father: {fileID: 15451108774404083626}
   m_Children:
     - {fileID: 6857050562182340046}
@@ -47846,8 +46693,8 @@ GameObject:
 ID: 12597363393304422230
 Transform:
   m_GameObject: {fileID: 6857050562182340046}
-  Translation: [1.92039806e-09, 19.5204639, 5.06255913]
-  Rotation: [0, -0, 0]
+  Translation: [1.26241879e-08, 19.5204639, 5.06255913]
+  Rotation: [1.36437445e-10, -0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 7373735031783903797}
   m_Children:
@@ -47866,8 +46713,8 @@ ID: 5170380601840858327
 Transform:
   m_GameObject: {fileID: 11406192150390888869}
   Translation: [4.38922024, 9.37733936, -0.084542051]
-  Rotation: [-1.18695188, 1.55715919, -2.9804883]
-  Scale: [0.999999583, 0.999999881, 0.999999881]
+  Rotation: [-1.87948132, 1.52218723, 2.53064871]
+  Scale: [0.999999523, 1, 0.999999762]
   Father: {fileID: 12625122234547198232}
   m_Children:
     - {fileID: 8886665999065384408}
@@ -47884,9 +46731,9 @@ GameObject:
 ID: 9809591277645126838
 Transform:
   m_GameObject: {fileID: 8886665999065384408}
-  Translation: [2.68220901e-07, 9.38611603, -8.57561827e-06]
-  Rotation: [-0.222700804, -0.000858201005, 0.0139973266]
-  Scale: [1.0000006, 1.00000036, 1.00000024]
+  Translation: [2.78296284e-07, 9.38611603, -8.63153673e-06]
+  Rotation: [0.925435066, -0.216889963, -0.0177703183]
+  Scale: [1.00000083, 1.00000048, 1.00000024]
   Father: {fileID: 11406192150390888869}
   m_Children:
     - {fileID: 671105312912157445}
@@ -47903,9 +46750,9 @@ GameObject:
 ID: 6247257680772360694
 Transform:
   m_GameObject: {fileID: 671105312912157445}
-  Translation: [-2.03315722e-07, 20.2059975, 2.97030783e-06]
-  Rotation: [8.20211028e-07, 8.53464189e-06, -7.14774089e-08]
-  Scale: [0.999999642, 0.999999881, 0.999999642]
+  Translation: [-1.5037152e-07, 20.2059975, 2.94635061e-06]
+  Rotation: [0.0798369572, 0.105838716, 0.868409574]
+  Scale: [0.999999642, 0.999999821, 0.999999642]
   Father: {fileID: 8886665999065384408}
   m_Children:
     - {fileID: 4902761444011782099}
@@ -47922,9 +46769,9 @@ GameObject:
 ID: 14525660022689860585
 Transform:
   m_GameObject: {fileID: 4902761444011782099}
-  Translation: [-3.38557584e-07, 20.5680351, -4.29860665e-06]
-  Rotation: [-7.93605466e-07, -7.5493037e-05, 3.27313103e-07]
-  Scale: [0.999999523, 1, 0.999999583]
+  Translation: [-3.84662457e-07, 20.5680351, -4.24471182e-06]
+  Rotation: [-0.227004901, 0.275383472, 0.00342734437]
+  Scale: [0.999999523, 1, 0.999999464]
   Father: {fileID: 671105312912157445}
   m_Children:
     - {fileID: 15469753426419407164}
@@ -47941,8 +46788,8 @@ GameObject:
 ID: 4750217415614287460
 Transform:
   m_GameObject: {fileID: 15469753426419407164}
-  Translation: [6.63578248e-07, 8.22125149, 6.48762216e-06]
-  Rotation: [-2.78669518e-06, 0.000143768251, 7.17041303e-07]
+  Translation: [6.70116492e-07, 8.22125149, 6.3414027e-06]
+  Rotation: [0.0943868235, -0.017682502, 0.117860988]
   Scale: [1.00000012, 1, 1.00000012]
   Father: {fileID: 4902761444011782099}
   m_Children:
@@ -47960,9 +46807,9 @@ GameObject:
 ID: 10888064048767530507
 Transform:
   m_GameObject: {fileID: 17724991590097540518}
-  Translation: [4.86455974e-07, 1.03478706, 1.53132714e-06]
-  Rotation: [-0.227070794, -0.00144509692, -0.0126737999]
-  Scale: [1, 1.00000024, 1.00000012]
+  Translation: [5.6146871e-07, 1.03478706, 1.71175509e-06]
+  Rotation: [0.0838588253, 0.00458073476, -0.0384329036]
+  Scale: [1, 1.00000024, 1]
   Father: {fileID: 15469753426419407164}
   m_Children:
     - {fileID: 17541111240106376838}
@@ -47979,8 +46826,8 @@ GameObject:
 ID: 14537779899461678870
 Transform:
   m_GameObject: {fileID: 17541111240106376838}
-  Translation: [-0.0236917734, 1.82187414, 0.421014816]
-  Rotation: [0.0793509334, -0.0978576541, 0.359124869]
+  Translation: [-0.0236918889, 1.82187426, 0.421014756]
+  Rotation: [0.0793509409, -0.0978576392, 0.359124869]
   Scale: [1.0000006, 1.00000024, 1.00000012]
   Father: {fileID: 17724991590097540518}
   m_Children:
@@ -47998,8 +46845,8 @@ GameObject:
 ID: 15996088269861930637
 Transform:
   m_GameObject: {fileID: 4323466049185102717}
-  Translation: [0.478870273, 1.26751697, 0.161733791]
-  Rotation: [2.04890931e-08, 1.67638028e-08, -5.12227309e-08]
+  Translation: [0.478870481, 1.26751697, 0.16173394]
+  Rotation: [1.96914591e-08, 1.51265525e-08, -5.00682589e-08]
   Scale: [1.00000012, 1.00000012, 1.00000012]
   Father: {fileID: 17541111240106376838}
   m_Children:
@@ -48017,9 +46864,9 @@ GameObject:
 ID: 17867349393058468341
 Transform:
   m_GameObject: {fileID: 16116952986532813985}
-  Translation: [-4.38922024, 9.37602806, -0.0536090322]
-  Rotation: [-1.15616369, -1.56419098, 2.95000362]
-  Scale: [1.00000012, 1.00000036, 0.999999881]
+  Translation: [-4.38922024, 9.37602806, -0.0536089726]
+  Rotation: [2.17266536, -1.45324039, -0.265946716]
+  Scale: [1.00000024, 1.00000048, 1]
   Father: {fileID: 12625122234547198232}
   m_Children:
     - {fileID: 11657059819254827832}
@@ -48036,9 +46883,9 @@ GameObject:
 ID: 14977086574586303114
 Transform:
   m_GameObject: {fileID: 11657059819254827832}
-  Translation: [-6.40749931e-07, 9.38611698, 2.10553408e-05]
-  Rotation: [-0.223022759, 0.00227635819, -0.00717219757]
-  Scale: [0.99999994, 0.999999344, 1]
+  Translation: [-6.20934998e-07, 9.38611698, 2.0309426e-05]
+  Rotation: [0.874038398, 0.0141283395, 0.439298421]
+  Scale: [0.999999881, 0.999999523, 1]
   Father: {fileID: 16116952986532813985}
   m_Children:
     - {fileID: 17441072719817854021}
@@ -48055,9 +46902,9 @@ GameObject:
 ID: 11746041496916025940
 Transform:
   m_GameObject: {fileID: 17441072719817854021}
-  Translation: [4.01450961e-08, 20.2061787, 4.55707777e-07]
-  Rotation: [-3.76634262e-07, -2.34656054e-05, -2.76231987e-07]
-  Scale: [0.999999881, 1, 1]
+  Translation: [4.99873671e-08, 20.2061787, 3.80954503e-07]
+  Rotation: [0.146736249, 0.0604678467, -0.738111436]
+  Scale: [0.99999994, 1, 0.99999994]
   Father: {fileID: 11657059819254827832}
   m_Children:
     - {fileID: 16634065559162262692}
@@ -48074,9 +46921,9 @@ GameObject:
 ID: 14605186223236703644
 Transform:
   m_GameObject: {fileID: 16634065559162262692}
-  Translation: [-4.04164894e-07, 20.5738373, -2.12294981e-06]
-  Rotation: [4.93701975e-07, -0.000311270356, -7.85696045e-07]
-  Scale: [1, 1, 1]
+  Translation: [-2.55343792e-07, 20.5738373, -2.3222849e-06]
+  Rotation: [0.232809648, -0.0770359784, -0.18380399]
+  Scale: [1.00000024, 0.99999994, 1.00000024]
   Father: {fileID: 17441072719817854021}
   m_Children:
     - {fileID: 984123964470655071}
@@ -48093,9 +46940,9 @@ GameObject:
 ID: 16635150066762236943
 Transform:
   m_GameObject: {fileID: 984123964470655071}
-  Translation: [-6.18725608e-07, 8.54798508, -7.11076427e-06]
-  Rotation: [-3.85401972e-06, -0.480348557, 1.4708944e-06]
-  Scale: [0.999999821, 1, 0.999999762]
+  Translation: [-5.6447908e-07, 8.54798508, -6.92363255e-06]
+  Rotation: [0.0813843161, -0.459113777, -0.0126384385]
+  Scale: [0.999999702, 0.99999994, 0.999999762]
   Father: {fileID: 16634065559162262692}
   m_Children:
     - {fileID: 10113698751386435710}
@@ -48112,9 +46959,9 @@ GameObject:
 ID: 13122963032168764499
 Transform:
   m_GameObject: {fileID: 10113698751386435710}
-  Translation: [-4.19426942e-06, 1.07092547, -3.15491343e-06]
-  Rotation: [-0.0232292246, 0.00224559801, 0.192762792]
-  Scale: [0.999999881, 1.00000012, 0.999999464]
+  Translation: [-4.13063572e-06, 1.07092547, -3.08649396e-06]
+  Rotation: [0.249455929, -0.0352901593, 0.0820517018]
+  Scale: [0.999999821, 1.00000012, 0.999999523]
   Father: {fileID: 984123964470655071}
   m_Children:
     - {fileID: 5444904012753809056}
@@ -48131,8 +46978,8 @@ GameObject:
 ID: 6603166045705448227
 Transform:
   m_GameObject: {fileID: 5444904012753809056}
-  Translation: [0.316689491, 1.62205791, 0.0383665562]
-  Rotation: [0.0608067401, -0.0167278554, 0.0868183225]
+  Translation: [0.316689372, 1.6220578, 0.0383665971]
+  Rotation: [0.0608068071, -0.0167278722, 0.08681833]
   Scale: [1.00000048, 1.00000036, 1.00000036]
   Father: {fileID: 10113698751386435710}
   m_Children:
@@ -48150,8 +46997,8 @@ GameObject:
 ID: 6353013219495860802
 Transform:
   m_GameObject: {fileID: 12693500668012381918}
-  Translation: [0.351121426, 1.22030544, -0.0506368279]
-  Rotation: [7.45058149e-09, -2.70083582e-08, 7.63684653e-08]
+  Translation: [0.351121426, 1.22030568, -0.0506367907]
+  Rotation: [7.61063212e-09, -2.69348917e-08, 7.59906413e-08]
   Scale: [0.999999881, 0.999999821, 0.999999881]
   Father: {fileID: 5444904012753809056}
   m_Children:
@@ -48169,9 +47016,9 @@ GameObject:
 ID: 305440016805971351
 Transform:
   m_GameObject: {fileID: 10135853011229652345}
-  Translation: [6.95866013, -4.07769012, -0.0718273968]
-  Rotation: [0.0940074623, -0.00252259104, 3.13823485]
-  Scale: [0.999999702, 0.999999702, 1.00001895]
+  Translation: [6.95866013, -4.07769012, -0.0718274117]
+  Rotation: [0.497628719, -0.197736919, -2.98446202]
+  Scale: [0.999999762, 0.999999583, 1.0000186]
   Father: {fileID: 383668116300315972}
   m_Children:
     - {fileID: 13615188213946496173}
@@ -48188,9 +47035,9 @@ GameObject:
 ID: 15274597969882924618
 Transform:
   m_GameObject: {fileID: 13615188213946496173}
-  Translation: [3.94880772e-07, 34.2050819, -2.51270831e-06]
-  Rotation: [-0.245387301, 0.000311232987, 0.0025379695]
-  Scale: [0.999999881, 1.0000006, 0.999999285]
+  Translation: [3.91354405e-07, 34.2050819, -2.52190216e-06]
+  Rotation: [-0.820803642, 0.191265628, -0.147420824]
+  Scale: [0.999999821, 1.0000006, 0.999999464]
   Father: {fileID: 10135853011229652345}
   m_Children:
     - {fileID: 3379739674516997151}
@@ -48207,9 +47054,9 @@ GameObject:
 ID: 1969890257816951743
 Transform:
   m_GameObject: {fileID: 3379739674516997151}
-  Translation: [1.36438757e-07, 35.2011337, -2.06008554e-06]
-  Rotation: [1.05036259, -0.174146324, -0.058370363]
-  Scale: [1.0000006, 0.999999583, 0.999999642]
+  Translation: [1.81725497e-07, 35.2011337, -2.07142034e-06]
+  Rotation: [1.12588644, -0.151043817, -0.191202745]
+  Scale: [1.0000006, 0.999999642, 0.999999523]
   Father: {fileID: 13615188213946496173}
   m_Children:
     - {fileID: 14194568042189172184}
@@ -48226,9 +47073,9 @@ GameObject:
 ID: 8871496359509913418
 Transform:
   m_GameObject: {fileID: 14194568042189172184}
-  Translation: [4.93382686e-07, 11.8128815, 1.73778972e-06]
-  Rotation: [0.67896539, 0.0256033894, -5.31027844e-08]
-  Scale: [0.999999225, 1.00000072, 0.99999994]
+  Translation: [4.73315623e-07, 11.8128815, 1.76674462e-06]
+  Rotation: [0.719505787, 0.0706395358, -0.0360150039]
+  Scale: [0.999999225, 1.00000072, 0.999999821]
   Father: {fileID: 3379739674516997151}
   m_Children:
     - {fileID: 12456166221076740122}
@@ -48245,8 +47092,8 @@ GameObject:
 ID: 4319847582320009785
 Transform:
   m_GameObject: {fileID: 12456166221076740122}
-  Translation: [-5.14586475e-07, 4.19208193, 5.07134246e-09]
-  Rotation: [2.0765583e-08, -4.83123586e-09, -3.82595999e-09]
+  Translation: [-4.59925531e-07, 4.19208193, 5.46081225e-09]
+  Rotation: [2.07593516e-08, -4.84041918e-09, -4.31552971e-09]
   Scale: [1, 0.999999881, 1]
   Father: {fileID: 14194568042189172184}
   m_Children:
@@ -48264,9 +47111,9 @@ GameObject:
 ID: 15276006101954605580
 Transform:
   m_GameObject: {fileID: 4531933770347002735}
-  Translation: [-6.95866013, -4.07769823, -0.0521364585]
-  Rotation: [0.09805765, 0.00224733399, 3.14069223]
-  Scale: [1, 1.00000012, 1.00002217]
+  Translation: [-6.95866013, -4.07769823, -0.0521364734]
+  Rotation: [0.0778476745, 0.250926375, 2.87409043]
+  Scale: [1.00000012, 1.0000006, 1.00002217]
   Father: {fileID: 383668116300315972}
   m_Children:
     - {fileID: 8151223594706926168}
@@ -48283,9 +47130,9 @@ GameObject:
 ID: 8393528978029827649
 Transform:
   m_GameObject: {fileID: 8151223594706926168}
-  Translation: [-2.18395144e-07, 34.206234, 1.3615936e-06]
-  Rotation: [-0.253914356, -0.00017729486, -0.00259104092]
-  Scale: [0.999999583, 0.999999881, 0.999999285]
+  Translation: [-3.20943627e-07, 34.206234, 1.34702623e-06]
+  Rotation: [-0.779858589, 0.124970414, -0.102370545]
+  Scale: [0.999999583, 1.00000012, 0.999999344]
   Father: {fileID: 4531933770347002735}
   m_Children:
     - {fileID: 11126160581785034402}
@@ -48302,9 +47149,9 @@ GameObject:
 ID: 1987385922703475645
 Transform:
   m_GameObject: {fileID: 11126160581785034402}
-  Translation: [4.60073352e-07, 35.2078362, 4.22820449e-07]
-  Rotation: [1.06342733, 0.171311349, 0.0597425848]
-  Scale: [1.00000036, 1.00000024, 1.00000036]
+  Translation: [4.5507764e-07, 35.2078362, 4.20007751e-07]
+  Rotation: [1.38019311, 0.0617049821, 0.409551829]
+  Scale: [1.00000024, 1.00000048, 1.00000048]
   Father: {fileID: 8151223594706926168}
   m_Children:
     - {fileID: 17458590961539025008}
@@ -48321,9 +47168,9 @@ GameObject:
 ID: 8228418226091831146
 Transform:
   m_GameObject: {fileID: 17458590961539025008}
-  Translation: [5.74218575e-07, 11.939352, 8.54837708e-07]
-  Rotation: [0.670438945, -0.0282720774, 3.07459338e-08]
-  Scale: [1.00000024, 0.999999821, 0.99999994]
+  Translation: [5.99017369e-07, 11.939352, 9.06098819e-07]
+  Rotation: [0.700360477, -0.0161886979, 0.00232298207]
+  Scale: [1.00000024, 0.999999702, 0.999999881]
   Father: {fileID: 11126160581785034402}
   m_Children:
     - {fileID: 5896971703054616886}
@@ -48340,8 +47187,8 @@ GameObject:
 ID: 12704620880707535262
 Transform:
   m_GameObject: {fileID: 5896971703054616886}
-  Translation: [7.34628998e-07, 4.29187202, 1.0302756e-08]
-  Rotation: [5.69198093e-08, -8.48522177e-08, 1.26433948e-08]
+  Translation: [6.46001297e-07, 4.29187202, 1.07422418e-08]
+  Rotation: [5.69157095e-08, -8.4834177e-08, 1.28470257e-08]
   Scale: [0.99999994, 1, 1.00000012]
   Father: {fileID: 17458590961539025008}
   m_Children:
@@ -52624,7 +51471,7 @@ GameObject:
 ID: 12482176911374323989
 Transform:
   m_GameObject: {fileID: 2113435125538773491}
-  Translation: [49.6586342, 90.41082, -119.31881]
+  Translation: [48, 89.5999985, -119.199997]
   Rotation: [0, -1.57079637, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -52646,7 +51493,7 @@ GameObject:
 ID: 17149314940871356897
 Transform:
   m_GameObject: {fileID: 1942411715421602675}
-  Translation: [70.8810806, 88.41082, -119.278999]
+  Translation: [88.1283875, 88.41082, -119.278999]
   Rotation: [0, 1.57079542, 0]
   Scale: [0.999999464, 1, 0.999999464]
   Father: {fileID: 0}
@@ -54588,6 +53435,20 @@ Transform:
     - {fileID: 7121521198489864277}
     - {fileID: 16096202439671032096}
     - {fileID: 209067376732095031}
+    - {fileID: 17551623148535520813}
+    - {fileID: 5234222229103409958}
+    - {fileID: 13415544848430155920}
+    - {fileID: 11232539215232381191}
+    - {fileID: 14388309133077633013}
+    - {fileID: 12746390770728073897}
+    - {fileID: 855061789285419521}
+    - {fileID: 15139845554880798671}
+    - {fileID: 2972217476736685682}
+    - {fileID: 15708117517967306487}
+    - {fileID: 14230129546471471033}
+    - {fileID: 12030156553640365637}
+    - {fileID: 16101217154727375357}
+    - {fileID: 9825461919111984364}
 ---
 ID: 10130115803858671499
 Script:
@@ -54598,6 +53459,10 @@ Script:
   attack2SFX: {fileID: 2765498480740017601}  # Component
   attack3SFX: {fileID: 8259032411702765289}  # Component
   attack4SFX: {fileID: 11233223311985278054}  # Component
+  dashChargeUpVoice: {fileID: 14504879596500664672}  # Component
+  dashLaserSound: {fileID: 11127244754664066039}  # Component
+  dashShoutVoiceOver: {fileID: 2033104995783605459}  # Component
+  dashWhoosh: {fileID: 11743538447865725685}  # Component
   deathSFX: {fileID: 12986896308288814518}  # Component
   deathVoiceOver: {fileID: 14987428444197951236}  # Component
   jumpAttackSFX: {fileID: 17546242654524584838}  # Component
@@ -54605,7 +53470,17 @@ Script:
   openingVoiceOver: {fileID: 15789646197016879343}  # Component
   phase2VoiceOver: {fileID: 3968315487089637574}  # Component
   screamSFX: {fileID: 14467069234642334672}  # Component
+  slamAttack: {fileID: 6257151143959393049}  # Component
+  slamFallWhoosh: {fileID: 11535772321654970970}  # Component
+  slamJumpWhoosh: {fileID: 304709637848024456}  # Component
+  slashRelease: {fileID: 6249287962995714079}  # Component
   stunSFX: {fileID: 2011630405300126539}  # Component
+  ultimateEnergy: {fileID: 15134541091752470799}  # Component
+  ultimateExplosion: {fileID: 4136746733778135909}  # Component
+  ultimateForceField: {fileID: 17840145174517726664}  # Component
+  ultimateLaser: {fileID: 9630957613135560050}  # Component
+  ultimateRinging: {fileID: 16527872293977920803}  # Component
+  ultimateRumbling: {fileID: 4594362598268104287}  # Component
 ---
 ID: 7591023916419477039
 GameObject:
@@ -54670,7 +53545,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54705,7 +53580,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 10
+  Volume: 3
   min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -54742,7 +53617,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54778,7 +53653,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54814,7 +53689,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54850,7 +53725,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54886,7 +53761,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54922,7 +53797,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54958,7 +53833,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -54994,7 +53869,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 6
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -55030,7 +53905,7 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
@@ -55065,120 +53940,1379 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 3
+  Volume: 5
   min hearing Distance: 999
   max hearing Distance: 1000
-  SFX min Pitch: -5
-  SFX max Pitch: 6
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 574722816220698f94437eb662542335}
   Play: false
 ---
-ID: 13591043639879680109
+ID: 13473461968099949338
 GameObject:
   m_IsActive: true
-  m_Name: objsuccess
+  m_Name: PlayerAudio
   m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 7045638710779284070}  # Transform
-    - component: {fileID: 7580998763032436151}  # AudioSource
+    - component: {fileID: 5206312602172794777}  # Transform
+    - component: {fileID: 12562373168528833563}  # Script
 ---
-ID: 7045638710779284070
+ID: 5206312602172794777
 Transform:
-  m_GameObject: {fileID: 13591043639879680109}
+  m_GameObject: {fileID: 13473461968099949338}
+  Translation: [-0.100002289, 0.799995422, -1.41987484e-05]
+  Rotation: [3.14159274, 0, 3.14159274]
+  Scale: [0.999999702, 1, 0.999999702]
+  Father: {fileID: 3977294589520766028}
+  m_Children:
+    - {fileID: 17917497366404436755}
+    - {fileID: 13222766623294917706}
+    - {fileID: 16135739960840012489}
+    - {fileID: 16743009486613223700}
+    - {fileID: 8938953965819836986}
+    - {fileID: 12484802652779234844}
+    - {fileID: 3788640692592073214}
+    - {fileID: 2260502259691150027}
+    - {fileID: 17493283773790106900}
+    - {fileID: 1346005021394586309}
+    - {fileID: 11304891861827435579}
+    - {fileID: 6185684159330433034}
+    - {fileID: 12193724622390349851}
+    - {fileID: 11001207072364626226}
+    - {fileID: 8923048358961660542}
+    - {fileID: 14427564878202903062}
+    - {fileID: 7020477515570584107}
+    - {fileID: 2600449401935274286}
+    - {fileID: 11997371929298863690}
+    - {fileID: 15039360664003085266}
+    - {fileID: 5419820445839963468}
+    - {fileID: 14761373311957592271}
+---
+ID: 12562373168528833563
+Script:
+  m_GameObject: {fileID: 13473461968099949338}
+  m_IsEnabled: true
+  Script: {guid: 0c938ad68c8c1f41083419c39efd323e}
+  DashAttack: {fileID: 14368955798387385449}  # Component
+  DodgeRoll1: {fileID: 11935521886572414780}  # Component
+  DodgeRoll2: {fileID: 17925493202789455074}  # Component
+  DoorOpen: {fileID: 0}
+  Elevator: {fileID: 0}
+  HitGroundSound: {fileID: 5707317159587304517}  # Component
+  JumpOffGroundSound: {fileID: 13964940024550258939}  # Component
+  JumpVoice: {fileID: 15917941008441951207}  # Component
+  JumpVoice2: {fileID: 9326124362697404788}  # Component
+  JumpVoice3: {fileID: 10601961906516940841}  # Component
+  LowHealthHeartbeatSound: {fileID: 15589134646573234033}  # Component
+  LowHealthSound: {fileID: 12859687672487809686}  # Component
+  LowStaminaSound: {fileID: 13182344949791841334}  # Component
+  OverdriveVFXSound: {fileID: 1276052171882490509}  # Component
+  PlayerAttack: {fileID: 282571994485993294}  # Component
+  PlayerFootstep: {fileID: 2926429064304356576}  # Component
+  PlayerInjured: {fileID: 14465580857004351906}  # Component
+  PlayerOverdrive: {fileID: 578075700273281523}  # Component
+  PlayerSlashAttack: {fileID: 3595734293969793222}  # Component
+  PowerUp: {fileID: 16713471863097464088}  # Component
+  Spark: {fileID: 12544414145891185642}  # Component
+  Thump1: {fileID: 15086038427859121365}  # Component
+  Thump2: {fileID: 6318274473111213226}  # Component
+  UseItem: {fileID: 2924600146483311312}  # Component
+---
+ID: 17917497366404436755
+GameObject:
+  m_IsActive: true
+  m_Name: DashAttackSFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11116587659547624738}  # Transform
+    - component: {fileID: 14368955798387385449}  # AudioSource
+---
+ID: 11116587659547624738
+Transform:
+  m_GameObject: {fileID: 17917497366404436755}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Father: {fileID: 13473461968099949338}
   m_Children:
     []
 ---
-ID: 7580998763032436151
+ID: 14368955798387385449
 AudioSource:
-  m_GameObject: {fileID: 13591043639879680109}
+  m_GameObject: {fileID: 17917497366404436755}
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
   Volume: 1
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
-  SFX min Pitch: 1
-  SFX max Pitch: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: c1fb80ae41b44f82eca4a673253c73e6}
+  Sound File: {guid: afa9ddd7bcf5a5b847cc23aadd0521f6}
   Play: false
 ---
-ID: 18181770936856234779
+ID: 13222766623294917706
 GameObject:
   m_IsActive: true
-  m_Name: powerup
+  m_Name: DodgeRoll1SFX
   m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 16500787639973298151}  # Transform
-    - component: {fileID: 8656399848736768661}  # AudioSource
+    - component: {fileID: 10833205720687801543}  # Transform
+    - component: {fileID: 11935521886572414780}  # AudioSource
 ---
-ID: 16500787639973298151
+ID: 10833205720687801543
 Transform:
-  m_GameObject: {fileID: 18181770936856234779}
+  m_GameObject: {fileID: 13222766623294917706}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Father: {fileID: 13473461968099949338}
   m_Children:
     []
 ---
-ID: 8656399848736768661
+ID: 11935521886572414780
 AudioSource:
-  m_GameObject: {fileID: 18181770936856234779}
+  m_GameObject: {fileID: 13222766623294917706}
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
   Volume: 1
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
-  SFX min Pitch: 1
-  SFX max Pitch: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: d44bdb32a0aa5d9f4fde6eeee09a0a91}
+  Play: false
+---
+ID: 16135739960840012489
+GameObject:
+  m_IsActive: true
+  m_Name: DodgeRoll2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7054992104948326148}  # Transform
+    - component: {fileID: 17925493202789455074}  # AudioSource
+---
+ID: 7054992104948326148
+Transform:
+  m_GameObject: {fileID: 16135739960840012489}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 17925493202789455074
+AudioSource:
+  m_GameObject: {fileID: 16135739960840012489}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 29893a407f7feda308faf18ac1404e2b}
+  Play: false
+---
+ID: 16743009486613223700
+GameObject:
+  m_IsActive: true
+  m_Name: PowerUp
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10143061017989658903}  # Transform
+    - component: {fileID: 16713471863097464088}  # AudioSource
+---
+ID: 10143061017989658903
+Transform:
+  m_GameObject: {fileID: 16743009486613223700}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 16713471863097464088
+AudioSource:
+  m_GameObject: {fileID: 16743009486613223700}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 6204e2d34fc8a79d764c237aaaeffc97}
   Play: false
 ---
-ID: 11929105701366530362
+ID: 8938953965819836986
 GameObject:
   m_IsActive: true
-  m_Name: swoosh
+  m_Name: OverdriveVFXSound
   m_TagString: ""
   m_Layer: 0
   m_Component:
-    - component: {fileID: 8326628554670817014}  # Transform
-    - component: {fileID: 12533648897811303029}  # AudioSource
+    - component: {fileID: 285991343758884255}  # Transform
+    - component: {fileID: 1276052171882490509}  # AudioSource
 ---
-ID: 8326628554670817014
+ID: 285991343758884255
 Transform:
-  m_GameObject: {fileID: 11929105701366530362}
+  m_GameObject: {fileID: 8938953965819836986}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 14088906961581824457}
+  Father: {fileID: 13473461968099949338}
   m_Children:
     []
 ---
-ID: 12533648897811303029
+ID: 1276052171882490509
 AudioSource:
-  m_GameObject: {fileID: 11929105701366530362}
+  m_GameObject: {fileID: 8938953965819836986}
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
   Volume: 1
-  min hearing Distance: 1
+  min hearing Distance: 999
   max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
+  SFX min Pitch: 0
+  SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 0d4524adfbf610750ee48a28e714500a}
+  Sound File: {guid: a958b6a910add424e67c4da7f3a70c45}
+  Play: false
+---
+ID: 12484802652779234844
+GameObject:
+  m_IsActive: true
+  m_Name: JumpOffGroundSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9280542802455558037}  # Transform
+    - component: {fileID: 13964940024550258939}  # AudioSource
+---
+ID: 9280542802455558037
+Transform:
+  m_GameObject: {fileID: 12484802652779234844}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 13964940024550258939
+AudioSource:
+  m_GameObject: {fileID: 12484802652779234844}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: f200c3fabffc811765d1cc977d3260d8}
+  Play: false
+---
+ID: 3788640692592073214
+GameObject:
+  m_IsActive: true
+  m_Name: HitGroundSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9346239864537621197}  # Transform
+    - component: {fileID: 5707317159587304517}  # AudioSource
+---
+ID: 9346239864537621197
+Transform:
+  m_GameObject: {fileID: 3788640692592073214}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 5707317159587304517
+AudioSource:
+  m_GameObject: {fileID: 3788640692592073214}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 0.5
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: cbee600a48ed806294838a52db266a7c}
+  Play: false
+---
+ID: 2260502259691150027
+GameObject:
+  m_IsActive: true
+  m_Name: LowHealthSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 590028644370987434}  # Transform
+    - component: {fileID: 15589134646573234033}  # AudioSource
+---
+ID: 590028644370987434
+Transform:
+  m_GameObject: {fileID: 2260502259691150027}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 15589134646573234033
+AudioSource:
+  m_GameObject: {fileID: 2260502259691150027}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 75efa8092b5c4c535919831f5d83e81e}
+  Play: false
+---
+ID: 17493283773790106900
+GameObject:
+  m_IsActive: true
+  m_Name: LowHealthHeartbeatSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3693630203399030266}  # Transform
+    - component: {fileID: 12859687672487809686}  # AudioSource
+---
+ID: 3693630203399030266
+Transform:
+  m_GameObject: {fileID: 17493283773790106900}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 12859687672487809686
+AudioSource:
+  m_GameObject: {fileID: 17493283773790106900}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: b42e3aebc436cb90f3da2b5cf4e41406}
+  Play: false
+---
+ID: 1346005021394586309
+GameObject:
+  m_IsActive: true
+  m_Name: LowStaminaSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5217671129804619195}  # Transform
+    - component: {fileID: 13182344949791841334}  # AudioSource
+---
+ID: 5217671129804619195
+Transform:
+  m_GameObject: {fileID: 1346005021394586309}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 13182344949791841334
+AudioSource:
+  m_GameObject: {fileID: 1346005021394586309}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 18359f004c1c1f5a6663b304ea0af870}
+  Play: false
+---
+ID: 11304891861827435579
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerSlashAttack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7696675802035393384}  # Transform
+    - component: {fileID: 3595734293969793222}  # AudioSource
+---
+ID: 7696675802035393384
+Transform:
+  m_GameObject: {fileID: 11304891861827435579}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 3595734293969793222
+AudioSource:
+  m_GameObject: {fileID: 11304891861827435579}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4bdfa959f8e2dc7ae0d617c8e6620ad8}
+  Play: false
+---
+ID: 6185684159330433034
+GameObject:
+  m_IsActive: true
+  m_Name: Spark
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16627401801925075575}  # Transform
+    - component: {fileID: 12544414145891185642}  # AudioSource
+---
+ID: 16627401801925075575
+Transform:
+  m_GameObject: {fileID: 6185684159330433034}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 12544414145891185642
+AudioSource:
+  m_GameObject: {fileID: 6185684159330433034}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 5e16beacb1259528db74e50fb01bad43}
+  Play: false
+---
+ID: 12193724622390349851
+GameObject:
+  m_IsActive: true
+  m_Name: JumpVoice
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17831441798818756672}  # Transform
+    - component: {fileID: 15917941008441951207}  # AudioSource
+---
+ID: 17831441798818756672
+Transform:
+  m_GameObject: {fileID: 12193724622390349851}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 15917941008441951207
+AudioSource:
+  m_GameObject: {fileID: 12193724622390349851}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 965dacd9fe8d8f88ea7cd6ed360787ac}
+  Play: false
+---
+ID: 11001207072364626226
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerInjured
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10522796898135706029}  # Transform
+    - component: {fileID: 14465580857004351906}  # AudioSource
+---
+ID: 10522796898135706029
+Transform:
+  m_GameObject: {fileID: 11001207072364626226}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 14465580857004351906
+AudioSource:
+  m_GameObject: {fileID: 11001207072364626226}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8c96cd51bb61d49d4a351e8c9984dacf}
+  Play: false
+---
+ID: 8923048358961660542
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerFootstep
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 495815386146209586}  # Transform
+    - component: {fileID: 2926429064304356576}  # AudioSource
+---
+ID: 495815386146209586
+Transform:
+  m_GameObject: {fileID: 8923048358961660542}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 2926429064304356576
+AudioSource:
+  m_GameObject: {fileID: 8923048358961660542}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 7ea8fb553399a4eba3df2a0d19e0a815}
+  Play: false
+---
+ID: 14427564878202903062
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerAttack
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2967269691236250984}  # Transform
+    - component: {fileID: 282571994485993294}  # AudioSource
+---
+ID: 2967269691236250984
+Transform:
+  m_GameObject: {fileID: 14427564878202903062}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 282571994485993294
+AudioSource:
+  m_GameObject: {fileID: 14427564878202903062}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 2c4af9dd0bb284e8546a1ffac5f798a0}
+  Play: false
+---
+ID: 7020477515570584107
+GameObject:
+  m_IsActive: true
+  m_Name: UseItem
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9264748760693939217}  # Transform
+    - component: {fileID: 2924600146483311312}  # AudioSource
+---
+ID: 9264748760693939217
+Transform:
+  m_GameObject: {fileID: 7020477515570584107}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 2924600146483311312
+AudioSource:
+  m_GameObject: {fileID: 7020477515570584107}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: d3e0ca517ffb61df5488c7a95ea3e53e}
+  Play: false
+---
+ID: 2600449401935274286
+GameObject:
+  m_IsActive: true
+  m_Name: PlayerOverdrive
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2554596290776672245}  # Transform
+    - component: {fileID: 578075700273281523}  # AudioSource
+---
+ID: 2554596290776672245
+Transform:
+  m_GameObject: {fileID: 2600449401935274286}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 578075700273281523
+AudioSource:
+  m_GameObject: {fileID: 2600449401935274286}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: ce12584be0c04eb1d9f8412474d73214}
+  Play: false
+---
+ID: 11997371929298863690
+GameObject:
+  m_IsActive: true
+  m_Name: JumpVoice2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16071965167435800449}  # Transform
+    - component: {fileID: 9326124362697404788}  # AudioSource
+---
+ID: 16071965167435800449
+Transform:
+  m_GameObject: {fileID: 11997371929298863690}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 9326124362697404788
+AudioSource:
+  m_GameObject: {fileID: 11997371929298863690}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 6635dccdc4753cd50eebb7c17dcd59eb}
+  Play: false
+---
+ID: 15039360664003085266
+GameObject:
+  m_IsActive: true
+  m_Name: JumpVoice3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5916532416815109355}  # Transform
+    - component: {fileID: 10601961906516940841}  # AudioSource
+---
+ID: 5916532416815109355
+Transform:
+  m_GameObject: {fileID: 15039360664003085266}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 10601961906516940841
+AudioSource:
+  m_GameObject: {fileID: 15039360664003085266}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 2583585c5ab5496aac276a46ee35beb6}
+  Play: false
+---
+ID: 5419820445839963468
+GameObject:
+  m_IsActive: true
+  m_Name: Thump1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3639526329578262733}  # Transform
+    - component: {fileID: 15086038427859121365}  # AudioSource
+---
+ID: 3639526329578262733
+Transform:
+  m_GameObject: {fileID: 5419820445839963468}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 15086038427859121365
+AudioSource:
+  m_GameObject: {fileID: 5419820445839963468}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4879d8cbccffbd2c22b3508a370ec969}
+  Play: false
+---
+ID: 14761373311957592271
+GameObject:
+  m_IsActive: true
+  m_Name: Thump2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13283904406374292375}  # Transform
+    - component: {fileID: 6318274473111213226}  # AudioSource
+---
+ID: 13283904406374292375
+Transform:
+  m_GameObject: {fileID: 14761373311957592271}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13473461968099949338}
+  m_Children:
+    []
+---
+ID: 6318274473111213226
+AudioSource:
+  m_GameObject: {fileID: 14761373311957592271}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 1682f86f9df2666b5d45632da015dcd5}
+  Play: false
+---
+ID: 17551623148535520813
+GameObject:
+  m_IsActive: true
+  m_Name: SlamAttackSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14031669360781010736}  # Transform
+    - component: {fileID: 6257151143959393049}  # AudioSource
+---
+ID: 14031669360781010736
+Transform:
+  m_GameObject: {fileID: 17551623148535520813}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 6257151143959393049
+AudioSource:
+  m_GameObject: {fileID: 17551623148535520813}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 3b26490146bdc13e271b846fb3b5b201}
+  Play: false
+---
+ID: 5234222229103409958
+GameObject:
+  m_IsActive: true
+  m_Name: SlamFallingWhoosh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15575813643968237797}  # Transform
+    - component: {fileID: 11535772321654970970}  # AudioSource
+---
+ID: 15575813643968237797
+Transform:
+  m_GameObject: {fileID: 5234222229103409958}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 11535772321654970970
+AudioSource:
+  m_GameObject: {fileID: 5234222229103409958}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 47cf21d8fe7757a037b861d3cb4c6208}
+  Play: false
+---
+ID: 13415544848430155920
+GameObject:
+  m_IsActive: true
+  m_Name: SlamJumpWhoosh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 306559137933351577}  # Transform
+    - component: {fileID: 304709637848024456}  # AudioSource
+---
+ID: 306559137933351577
+Transform:
+  m_GameObject: {fileID: 13415544848430155920}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 304709637848024456
+AudioSource:
+  m_GameObject: {fileID: 13415544848430155920}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: cb20f388b4e3fb94282c62c92da800b3}
+  Play: false
+---
+ID: 11232539215232381191
+GameObject:
+  m_IsActive: true
+  m_Name: SlashProjectileReleaseSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12710639550884302369}  # Transform
+    - component: {fileID: 6249287962995714079}  # AudioSource
+---
+ID: 12710639550884302369
+Transform:
+  m_GameObject: {fileID: 11232539215232381191}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 6249287962995714079
+AudioSource:
+  m_GameObject: {fileID: 11232539215232381191}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: -5
+  SFX max Pitch: -1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 41b421fe757e6e7ef1b7a39056dae6e8}
+  Play: false
+---
+ID: 14388309133077633013
+GameObject:
+  m_IsActive: true
+  m_Name: DashChargeUpVoiceOver
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14683613052838994071}  # Transform
+    - component: {fileID: 14504879596500664672}  # AudioSource
+---
+ID: 14683613052838994071
+Transform:
+  m_GameObject: {fileID: 14388309133077633013}
+  Translation: [-0.000331485731, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.999999464, 1, 0.999999464]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 14504879596500664672
+AudioSource:
+  m_GameObject: {fileID: 14388309133077633013}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 006ec2202f8b12a269546f75f3ffd7e9}
+  Play: false
+---
+ID: 12746390770728073897
+GameObject:
+  m_IsActive: true
+  m_Name: DashLazerSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7684192877846209965}  # Transform
+    - component: {fileID: 11127244754664066039}  # AudioSource
+---
+ID: 7684192877846209965
+Transform:
+  m_GameObject: {fileID: 12746390770728073897}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 11127244754664066039
+AudioSource:
+  m_GameObject: {fileID: 12746390770728073897}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 572d62e6279ff965a59875318456a39c}
+  Play: false
+---
+ID: 855061789285419521
+GameObject:
+  m_IsActive: true
+  m_Name: DashWhoosh
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 527229785419156731}  # Transform
+    - component: {fileID: 11743538447865725685}  # AudioSource
+---
+ID: 527229785419156731
+Transform:
+  m_GameObject: {fileID: 855061789285419521}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 11743538447865725685
+AudioSource:
+  m_GameObject: {fileID: 855061789285419521}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 0f792e5789541e2afd2800ac178bfeef}
+  Play: false
+---
+ID: 15139845554880798671
+GameObject:
+  m_IsActive: true
+  m_Name: EnergyChargeUpSoundUltimate
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1222847501825667686}  # Transform
+    - component: {fileID: 15134541091752470799}  # AudioSource
+---
+ID: 1222847501825667686
+Transform:
+  m_GameObject: {fileID: 15139845554880798671}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 15134541091752470799
+AudioSource:
+  m_GameObject: {fileID: 15139845554880798671}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4452d4d4d7b69730cd1ec123264e3dd2}
+  Play: false
+---
+ID: 2972217476736685682
+GameObject:
+  m_IsActive: true
+  m_Name: ExplosionRingingSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7379984864202279765}  # Transform
+    - component: {fileID: 16527872293977920803}  # AudioSource
+---
+ID: 7379984864202279765
+Transform:
+  m_GameObject: {fileID: 2972217476736685682}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 16527872293977920803
+AudioSource:
+  m_GameObject: {fileID: 2972217476736685682}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 2
+  Fade Out Time (s): 5
+  Sound File: {guid: 0dd849ea490db5b4351add3dcda6a4d6}
+  Play: false
+---
+ID: 15708117517967306487
+GameObject:
+  m_IsActive: true
+  m_Name: ForceFieldBreakSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15450588032382884336}  # Transform
+    - component: {fileID: 1480835597177860529}  # AudioSource
+---
+ID: 15450588032382884336
+Transform:
+  m_GameObject: {fileID: 15708117517967306487}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 1480835597177860529
+AudioSource:
+  m_GameObject: {fileID: 15708117517967306487}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: fbf77472b4e9527067efb7120c9d02ae}
+  Play: false
+---
+ID: 14230129546471471033
+GameObject:
+  m_IsActive: true
+  m_Name: ForceFieldHitSound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5091178268011792696}  # Transform
+    - component: {fileID: 17840145174517726664}  # AudioSource
+---
+ID: 5091178268011792696
+Transform:
+  m_GameObject: {fileID: 14230129546471471033}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 17840145174517726664
+AudioSource:
+  m_GameObject: {fileID: 14230129546471471033}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 4a2fd5abe29c32639571184b6572d2b0}
+  Play: false
+---
+ID: 12030156553640365637
+GameObject:
+  m_IsActive: true
+  m_Name: LaserSoundFading
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15507124122688459503}  # Transform
+    - component: {fileID: 9630957613135560050}  # AudioSource
+---
+ID: 15507124122688459503
+Transform:
+  m_GameObject: {fileID: 12030156553640365637}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 9630957613135560050
+AudioSource:
+  m_GameObject: {fileID: 12030156553640365637}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 3
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 453bf5670a5411d97e22eb1bdecb1253}
+  Play: false
+---
+ID: 16101217154727375357
+GameObject:
+  m_IsActive: true
+  m_Name: RumblingSoundForUltCharge
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7758008589176554806}  # Transform
+    - component: {fileID: 4594362598268104287}  # AudioSource
+---
+ID: 7758008589176554806
+Transform:
+  m_GameObject: {fileID: 16101217154727375357}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 4594362598268104287
+AudioSource:
+  m_GameObject: {fileID: 16101217154727375357}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 2
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 2
+  Fade Out Time (s): 5
+  Sound File: {guid: a79fafc74ddf86098954a2f083b6079c}
+  Play: false
+---
+ID: 9825461919111984364
+GameObject:
+  m_IsActive: true
+  m_Name: DashShoutVoiceOver
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13699021136390255697}  # Transform
+    - component: {fileID: 2033104995783605459}  # AudioSource
+---
+ID: 13699021136390255697
+Transform:
+  m_GameObject: {fileID: 9825461919111984364}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6975212495902246439}
+  m_Children:
+    []
+---
+ID: 2033104995783605459
+AudioSource:
+  m_GameObject: {fileID: 9825461919111984364}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 19999
+  max hearing Distance: 20000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: d9f8000252b8d521cb0e011f468faaa1}
   Play: false

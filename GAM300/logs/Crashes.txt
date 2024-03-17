@@ -1,5 +1,6 @@
-[2024-03-12 16:57:01.887] [Error] [critical] 
+[2024-03-17 11:33:09.722] [Error] [critical] 
 Caused By:	false
-Info:		Could not find handle!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)
+Info:		Failed to load .scene file "Assets\Scene\LevelBoss.scene" due to: yaml-cpp: error at line 55186, column 3: illegal map value
+
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 359)
 

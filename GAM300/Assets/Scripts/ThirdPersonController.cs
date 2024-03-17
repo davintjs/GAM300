@@ -282,74 +282,60 @@ public class ThirdPersonController : Script
         if (overDriveTransform == null)
         {
             Console.WriteLine("Missing OverdriveBarTransform reference in ThirdPersonController script");
-            return;
         }
 
         if (overDriveBar == null)
         {
             Console.WriteLine("Missing Overdrive Bar reference in ThirdPersonController script");
-            return;
         }
 
         if (PlayerCamera == null)
         {
             Console.WriteLine("Missing Player camere reference in ThirdPersonController script");
-            return;
         }
         if(PlayerModel == null)
         {
             Console.WriteLine("Missing PlayerModel reference in ThirdPersonController script");
-            return;
         }
         if(player == null)
         {
             Console.WriteLine("Missing player reference in ThirdPersonController script");
-            return;
         }
         if(attackLight == null)
         {
             Console.WriteLine("Missing attack light reference in ThirdPersonController script");
-            return;
         }
         if(overDriveCollider == null)
         {
             Console.WriteLine("Missing overDriveCollider reference in ThirdPersonController script");
-            return;
         }
         if(playerWeaponCollider1 == null)
         {
             Console.WriteLine("Missing playerWeaponCollider1 reference in ThirdPersonController script");
-            return;
         }
         if(playerWeaponCollider2 == null)
         {
             Console.WriteLine("Missing playerWeaponCollider2 reference in ThirdPersonController script");
-            return;
         }
         if(playerWeaponCollider3 == null)
         {
             Console.WriteLine("Missing playerWeaponCollider3 reference in ThirdPersonController script");
-            return;
         }
         if(audioSource == null)
         {
             Console.WriteLine("Missing audioSource reference in ThirdPersonController script");
-            return;
         }
         if(healthBarFill == null)
         {
             Console.WriteLine("Missing healthBarFill reference in ThirdPersonController script");
-            return;
         }
         if(healthStaminaCanvas == null)
         {
             Console.WriteLine("Missing healthStaminaCanvas reference in ThirdPersonController script");
-            return;
         }
         if(staminaBarFill == null)
         {
             Console.WriteLine("Missing staminaBarFill reference in ThirdPersonController script");
-            return;
         }
         if(staminaBarPos == null)
         {
@@ -359,15 +345,8 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("Missing animator reference in ThirdPersonController script");
         }
-        if (audioSource == null)
-        {
-            Console.WriteLine("Missing audioSource reference in ThirdPersonController script");
-            return;
-        }
 
         playerSounds = PlayerAudioManager.instance;
-        //audioSource.Play();
-        AudioManager.instance.swoosh.Play();
         playerWeaponCollider1.SetActive(false);
         playerWeaponCollider2.SetActive(false);
         playerWeaponCollider3.SetActive(false);
