@@ -19,6 +19,8 @@ void ParticleRenderer::Update(float dt) {
     glm::mat4 _2dmtx(1.f);
     glm::vec3 camTranslate(1.f);
     glm::vec3 camUp(0.f, 1.f, 0.f);
+    int particleCounter{ 0 };
+
     for (Camera& cam : currentScene.GetArray<Camera>()) {
         Transform& camTransform = currentScene.Get<Transform>(cam);
         //_2dmtx = glm::inverse(camTransform.GetWorldMatrix());
@@ -33,7 +35,7 @@ void ParticleRenderer::Update(float dt) {
         Transform& transform = currentScene.Get<Transform>(particleComponent);
         if (!currentScene.IsActive(entity))
             continue;
-        for (int i = 0; i < particleComponent.particles_.size(); ++i) {
+        for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
             scale[3] = glm::vec4(0, 0, 0, 1);
@@ -64,6 +66,7 @@ void ParticleRenderer::Update(float dt) {
             glm::mat4 srt = translate * rotate * scale;
 
             particleSRT.emplace_back(srt);
+
             float thicc = particleComponent.trailThiccness / 10.f;
 
             // update trail
@@ -97,13 +100,15 @@ void ParticleRenderer::Update(float dt) {
             }
 
         }
+
         //sort particle
         if (particleComponent.is2D) {
-            std::sort(particleSRT.begin(), particleSRT.end(),
+            std::sort(particleSRT.begin() + particleCounter, particleSRT.end(),
                 [&](const glm::mat4& particle1, const glm::mat4& particle2) {
                     return compareParticles(particle1, particle2, camTranslate);
                 });
         }
+        particleCounter += particleComponent.numParticles_;
     }
 }
 
@@ -130,8 +135,10 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         Entity& entity = currentScene.Get<Entity>(particleComponent);
         if (!currentScene.IsActive(entity))
             continue;
-        if (particleComponent.is2D)
+        if (particleComponent.is2D) {
+            counter += particleComponent.numParticles_;
             continue;
+        }
         if (particleComponent.numParticles_ == 0)
             continue;
         if (particleSRT.size() == 0)
@@ -216,8 +223,10 @@ void ParticleRenderer::Draw2D(BaseCamera& _camera) {
         Entity& entity = currentScene.Get<Entity>(particleComponent);
         if (!currentScene.IsActive(entity))
             continue;
-        if (!particleComponent.is2D)
+        if (!particleComponent.is2D) {
+            counter += particleComponent.numParticles_;
             continue;
+        }
         if (particleComponent.numParticles_ == 0)
             continue;
         if (particleSRT.size() == 0)

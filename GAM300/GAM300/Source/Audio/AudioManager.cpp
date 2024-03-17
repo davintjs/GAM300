@@ -274,9 +274,11 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 		PlayMusic(Source.currentSound, Source.fadeOutTime, Source.fadeInTime);
 		break;
 	case 1: // SFX
+		/*Source.play = true;*/
 		if (SFXEnabled()) {
 			Source.play = true;
 			//PlaySFX(Source.currentSound);
+			//Source.channel = AUDIOMANAGER.PlaySFX(Source.currentSound, position, Source.channel, Source.maxDistance, Source.volume, Source.volume, Source.minPitch, Source.maxPitch);
 		}
 		break;
 	default:
@@ -302,15 +304,16 @@ void AudioManager::PauseComponent(AudioSource& source) {
 
 FMOD::Channel* AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	FMOD_VECTOR pos, FMOD::Channel* channel,
+	float minDistance,
 	float maxDistance,
-	float minVolume, float maxVolume,
+	float volume,
 	float minPitch, float maxPitch)
 {
 	SoundMap::iterator sound = sounds[CATEGORY_SFX].find(name);
 	if (sound == sounds[CATEGORY_SFX].end()) {
 		return nullptr;
 	}
-	if (maxVolume == 0.f)
+	if (volume == 0.f)
 	{
 		return nullptr;
 	}
@@ -318,8 +321,7 @@ FMOD::Channel* AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	system->playSound(sound->second, 0, false, &channel);
 	float frequency;
 	static float semitone_ratio = pow(2.0f, 1.0f / 12.0f);
-	float volume, pitch;
-	volume = RandFloat(minVolume, maxVolume);
+	float pitch;
 	pitch = RandFloat(minPitch, maxPitch);
 	channel->setChannelGroup(groups[CATEGORY_SFX]);
 	channel->setVolume(volume);
@@ -330,7 +332,7 @@ FMOD::Channel* AudioManager::PlaySFX(const Engine::GUID<AudioAsset> name,
 	channel->setPaused(false);/**/
 	FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f };
 	channel->set3DAttributes(&pos, &velocity);
-	channel->set3DMinMaxDistance(1.f, maxDistance);
+	channel->set3DMinMaxDistance(minDistance, maxDistance);
 	return channel;
 }
 

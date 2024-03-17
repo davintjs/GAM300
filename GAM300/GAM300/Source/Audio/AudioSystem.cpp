@@ -25,6 +25,29 @@ void AudioSystem::Init() {
 
 void AudioSystem::Update(float dt) {
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	glm::vec3 campos(0.f);
+	bool hasListener = false;
+	for (AudioListener& listener : currentScene.GetArray<AudioListener>()) {
+
+		Transform& transform = currentScene.Get<Transform>(listener);
+		campos = transform.GetGlobalTranslation();
+		FMOD_VECTOR pos = { campos.x , campos.y, campos.z };
+		FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
+		FMOD_VECTOR up = { 0.f, 1.f, 0.f };
+		glm::vec3 gl_forward = transform.GetGlobalRotation() * glm::vec3{ 0.f, 0.f, -1.f };
+		FMOD_VECTOR forward = { gl_forward.x, gl_forward.y, gl_forward.z };
+
+		if (currentScene.Has<Camera>(currentScene.Get<Entity>(listener))) {
+			hasListener = true;
+			Camera& cam = currentScene.Get<Camera>(listener);
+
+			forward = { cam.GetForwardVec().x, cam.GetForwardVec().y, cam.GetForwardVec().z };
+			up = { cam.GetUpVec().x, cam.GetUpVec().y, cam.GetUpVec().z };
+			AUDIOMANAGER.system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
+			break;
+		}
+	}
+
 	for (AudioSource& audio : currentScene.GetArray<AudioSource>()) {
 		if (audio.state == DELETED) continue;
 		// if audio is not playing, skip this loop unless it is music
@@ -58,47 +81,31 @@ void AudioSystem::Update(float dt) {
 		if (audio.current_channel == (int)AudioSource::Channel::SFX && AUDIOMANAGER.SFXEnabled()) {
 
 			Transform& pos = currentScene.Get<Transform>(audio);
+			glm::vec3 glmPos = pos.GetGlobalTranslation();
 			AUDIOMANAGER.SetSFXVolume(audio.volume);
 			FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // Assuming no velocity for now
-			FMOD_VECTOR position = { pos.GetGlobalTranslation().x, pos.GetGlobalTranslation().y, pos.GetGlobalTranslation().z };
-
+			FMOD_VECTOR position = { glmPos.x, glmPos.y, glmPos.z };
+			float newVol = audio.volume;
+			if (glm::length(glmPos - campos) >= audio.maxDistance) {
+				newVol = 0;
+			}
 			if (audio.loop) {
 				audio.channel->set3DAttributes(&position, &velocity);
 				bool isPlaying;
 				audio.channel->isPlaying(&isPlaying);
 				if (!isPlaying) {
-					audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound, position, audio.channel, audio.maxDistance, audio.volume, audio.volume, audio.minPitch, audio.maxPitch);
+					audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound, position, audio.channel, audio.minDistance, audio.maxDistance, newVol, audio.minPitch, audio.maxPitch);
 				}
 			}
 			else {
-				audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound, position, audio.channel, audio.maxDistance, audio.volume, audio.volume, audio.minPitch, audio.maxPitch);
+				audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound, position, audio.channel, audio.minDistance, audio.maxDistance, newVol, audio.minPitch, audio.maxPitch);
 				audio.play = false;
 			}
 
 			continue;
 		}
 	}
-
-	for (AudioListener& listener : currentScene.GetArray<AudioListener>()) {
-
-		Transform& transform = currentScene.Get<Transform>(listener);
-
-		FMOD_VECTOR pos = { transform.GetGlobalTranslation().x , transform.GetGlobalTranslation().y, transform.GetGlobalTranslation().z };
-		FMOD_VECTOR vel = { 0.0f, 0.0f, 0.0f };
-		FMOD_VECTOR up = { 0.f, 1.f, 0.f };
-		glm::vec3 gl_forward = transform.GetGlobalRotation() * glm::vec3{0.f, 0.f, -1.f};
-		FMOD_VECTOR forward = { gl_forward.x, gl_forward.y, gl_forward.z };
-
-		if (currentScene.Has<Camera>(currentScene.Get<Entity>(listener))) {
-
-			Camera& cam = currentScene.Get<Camera>(listener);
-			
-			forward = { cam.GetForwardVec().x, cam.GetForwardVec().y, cam.GetForwardVec().z };
-			up = { cam.GetUpVec().x, cam.GetUpVec().y, cam.GetUpVec().z};
-			AUDIOMANAGER.system->set3DListenerAttributes(0, &pos, &vel, &forward, &up);
-			break;
-		}
-	}
+	
 	AUDIOMANAGER.Update(dt); // this is for loops and other fancy stuff
 }
 void AudioSystem::Exit() {
