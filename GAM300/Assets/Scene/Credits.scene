@@ -53,14 +53,14 @@ GameObject:
   m_Component:
     - component: {fileID: 15419434749458504632}  # Transform
     - component: {fileID: 2748547964756519209}  # Canvas
-    - component: {fileID: 2124126422752448800}  # Script
+    - component: {fileID: 17555996497018254840}  # Script
 ---
 ID: 15419434749458504632
 Transform:
   m_GameObject: {fileID: 11651427043620866289}
   Translation: [0.0155261923, 0, -0.874936759]
   Rotation: [0, 0, 0]
-  Scale: [1.66123903, 1, 1]
+  Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 4418236984561621579}
@@ -71,22 +71,14 @@ Canvas:
   m_GameObject: {fileID: 11651427043620866289}
   m_IsEnabled: true
 ---
-ID: 2124126422752448800
+ID: 17555996497018254840
 Script:
   m_GameObject: {fileID: 11651427043620866289}
   m_IsEnabled: true
-  Script: {guid: 951d2373956a6a3883805d764974ea3b}
-  back: true
-  duration: 0.649999976
-  flickerTimer: 7.41286888e-43
-  isStartActive: true
-  sizeMultiplier: 1.10000002
-  timer: 7.41286888e-43
+  Script: {guid: 07590604a451c92074c181837a233670}
+  scrollspeed: 0.100000001
   bgm: {fileID: 12773935355036224696}  # Component
-  mainMenuBGImage: {fileID: 0}
-  mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
-  pressStartText: {fileID: 15628350562473262138}  # GameObject
-  uibutton: {fileID: 1586736388842185412}  # Component
+  credits: {fileID: 15628350562473262138}  # GameObject
 ---
 ID: 4418236984561621579
 GameObject:
@@ -101,7 +93,7 @@ GameObject:
 ID: 16773861268096498698
 Transform:
   m_GameObject: {fileID: 4418236984561621579}
-  Translation: [0, 0, 0]
+  Translation: [0.0155261923, 0, -0.874936759]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 11651427043620866289}
@@ -121,7 +113,7 @@ SpriteRenderer:
 ID: 15628350562473262138
 GameObject:
   m_IsActive: true
-  m_Name: PressMReturn_Text
+  m_Name: Credits
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -131,9 +123,9 @@ GameObject:
 ID: 445726148051528729
 Transform:
   m_GameObject: {fileID: 15628350562473262138}
-  Translation: [0.0578148477, -1.51755524, 0.297466874]
+  Translation: [0, -0.893340647, 0.297466874]
   Rotation: [-3.14159226, 0, 0]
-  Scale: [1.92264903, 1.33093607, 1.08180678]
+  Scale: [1, 1, 1]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []

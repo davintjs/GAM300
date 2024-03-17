@@ -43,6 +43,7 @@
     <Compile Include="Assets\Scripts\ButtonLogic.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\CompanionMovement.cs" />
+    <Compile Include="Assets\Scripts\Credits.cs" />
     <Compile Include="Assets\Scripts\CutsceneCamera.cs" />
     <Compile Include="Assets\Scripts\CutsceneTrigger.cs" />
     <Compile Include="Assets\Scripts\Dialogue.cs" />
