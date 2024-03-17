@@ -7,6 +7,197 @@ Scene Settings:
   m_LightMapSettings: None
   m_NavMeshSettings: None  # All settings above are just examples
 ---
+ID: 17065559468612678914
+GameObject:
+  m_IsActive: true
+  m_Name: PauseCanvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11736666798754351607}  # Transform
+    - component: {fileID: 3757701296965781500}  # Script
+---
+ID: 11736666798754351607
+Transform:
+  m_GameObject: {fileID: 17065559468612678914}
+  Translation: [0.0160000008, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [5.01602983, 2.72924638, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 9386478579826465449}
+    - {fileID: 13236326914152460117}
+    - {fileID: 14866259166967195886}
+    - {fileID: 5208993662452398043}
+    - {fileID: 1254823211106383066}
+---
+ID: 3757701296965781500
+Script:
+  m_GameObject: {fileID: 17065559468612678914}
+  m_IsEnabled: true
+  Script: {guid: 57a77298b44f5fb3470ba29cc7d74265}
+  back: false
+  duration: 2
+  flickerTimer: 0
+  isStartActive: true
+  sizeMultiplier: 1.5
+  timer: 0
+  HTPButton: {fileID: 5208993662452398043}  # GameObject
+  MainMenu: {fileID: 1254823211106383066}  # GameObject
+  PauseImage: {fileID: 9386478579826465449}  # GameObject
+  pauseTitle: {fileID: 17065559468612678914}  # GameObject
+  resumeButton: {fileID: 14866259166967195886}  # GameObject
+---
+ID: 9386478579826465449
+GameObject:
+  m_IsActive: true
+  m_Name: PauseImage
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10434548019950719823}  # Transform
+    - component: {fileID: 6685538826684972588}  # SpriteRenderer
+---
+ID: 10434548019950719823
+Transform:
+  m_GameObject: {fileID: 9386478579826465449}
+  Translation: [-0.0113316327, 0.00498580933, 0.0521978252]
+  Rotation: [0, 0, 0]
+  Scale: [0.113548666, 0.200679213, 1.19988382]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 6685538826684972588
+SpriteRenderer:
+  m_GameObject: {fileID: 9386478579826465449}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a46b62f739f85d1148a3ae8b46e05027}
+---
+ID: 13236326914152460117
+GameObject:
+  m_IsActive: true
+  m_Name: Pause
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4585798291201254240}  # Transform
+    - component: {fileID: 15272266936174703665}  # SpriteRenderer
+---
+ID: 4585798291201254240
+Transform:
+  m_GameObject: {fileID: 13236326914152460117}
+  Translation: [-0.0201404765, 0.139270782, 0.0703699663]
+  Rotation: [3.14159179, 0, 0]
+  Scale: [0.238438874, 0.2617535, 0.807827175]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 15272266936174703665
+SpriteRenderer:
+  m_GameObject: {fileID: 13236326914152460117}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 6f6b1874101cbc6dbd99cf55cc23372a}
+---
+ID: 14866259166967195886
+GameObject:
+  m_IsActive: true
+  m_Name: Resume
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15771131599214855093}  # Transform
+    - component: {fileID: 4428148251743601674}  # SpriteRenderer
+---
+ID: 15771131599214855093
+Transform:
+  m_GameObject: {fileID: 14866259166967195886}
+  Translation: [-0.0148964841, 0.0503959656, 0.0699917823]
+  Rotation: [3.14159179, 0, 0]
+  Scale: [0.0595825016, 0.147217408, 0.999960124]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 4428148251743601674
+SpriteRenderer:
+  m_GameObject: {fileID: 14866259166967195886}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: aa4944261068a155e7fead90ae30023e}
+---
+ID: 5208993662452398043
+GameObject:
+  m_IsActive: true
+  m_Name: HTP
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7853065787214570747}  # Transform
+    - component: {fileID: 1123036212792590798}  # SpriteRenderer
+---
+ID: 7853065787214570747
+Transform:
+  m_GameObject: {fileID: 5208993662452398043}
+  Translation: [-0.0105227809, -0.0469932556, 0.0699888766]
+  Rotation: [3.14159179, 0, 0]
+  Scale: [0.0557131432, 0.133553356, 0.999942541]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 1123036212792590798
+SpriteRenderer:
+  m_GameObject: {fileID: 5208993662452398043}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
+---
+ID: 1254823211106383066
+GameObject:
+  m_IsActive: true
+  m_Name: MainMenu
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17477336443118772393}  # Transform
+    - component: {fileID: 17162719882944816835}  # SpriteRenderer
+---
+ID: 17477336443118772393
+Transform:
+  m_GameObject: {fileID: 1254823211106383066}
+  Translation: [-0.0119832344, -0.149612427, 0.0699974597]
+  Rotation: [3.14159179, 0, 0]
+  Scale: [0.0673884973, 0.126263082, 0.999976397]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 17162719882944816835
+SpriteRenderer:
+  m_GameObject: {fileID: 1254823211106383066}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 46fac10793b9305f4186b5dc00d54fbf}
+---
 ID: 17412142376824622519
 GameObject:
   m_IsActive: true
@@ -147,6 +338,7 @@ Script:
   fadeTime: 1
   paused: false
   BGM_Source: {fileID: 5692009074999031082}  # Component
+  pauseCanvas: {fileID: 17065559468612678914}  # GameObject
 ---
 ID: 14088906961581824457
 GameObject:
@@ -341,6 +533,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -479,6 +673,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 0.25
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -570,6 +766,8 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 10
@@ -618,6 +816,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 17065559468612678914}
     - {fileID: 2866402867161245437}
     - {fileID: 9228689185262017297}
     - {fileID: 3525555548824268013}
@@ -2141,6 +2340,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 0.0500000007
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -12191,6 +12392,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -12225,6 +12428,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -12259,6 +12464,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -15210,6 +15417,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -15244,6 +15453,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -15278,6 +15489,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -15312,6 +15525,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -15346,6 +15561,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -15380,6 +15597,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -15414,6 +15633,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -15448,6 +15669,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -15878,6 +16101,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -15912,6 +16137,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -16279,6 +16506,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -16465,6 +16694,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -17910,6 +18141,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -17944,6 +18177,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -17978,6 +18213,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -18796,6 +19033,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -18883,6 +19122,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -18917,6 +19158,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -18951,6 +19194,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -18985,6 +19230,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19019,6 +19266,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19053,6 +19302,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19087,6 +19338,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 3.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19121,6 +19374,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -19155,6 +19410,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -19189,6 +19446,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -19223,6 +19482,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -19304,6 +19565,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -31318,7 +31581,7 @@ ID: 13265842246020118488
 Transform:
   m_GameObject: {fileID: 3902498254366648580}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [2.82129974e-07, -0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 15669505871049363587}
   m_Children:
@@ -32161,7 +32424,7 @@ ID: 804372682911444336
 Transform:
   m_GameObject: {fileID: 3693973677644537234}
   Translation: [0, 0, 0]
-  Rotation: [2.82129974e-07, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 15510257497109923983}
   m_Children:
@@ -32446,7 +32709,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.850000024
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -32480,7 +32745,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.850000024
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -32514,7 +32781,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.850000024
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -32548,7 +32817,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.850000024
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -32582,7 +32853,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.850000024
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -32616,7 +32889,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.850000024
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -32650,7 +32925,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.850000024
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -32684,7 +32961,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.699999988
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 1
   SFX max Pitch: 1
   Fade In Time (s): 0
@@ -32718,7 +32997,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.699999988
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 1
   SFX max Pitch: 1
   Fade In Time (s): 0
@@ -32752,7 +33033,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.699999988
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 1
   SFX max Pitch: 1
   Fade In Time (s): 0
@@ -32786,7 +33069,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 0.699999988
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 1
   SFX max Pitch: 1
   Fade In Time (s): 0
@@ -33256,6 +33541,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 1
   SFX max Pitch: 1
   Fade In Time (s): 1
@@ -33437,6 +33724,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 1
   SFX max Pitch: 1
   Fade In Time (s): 1
@@ -33613,6 +33902,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 3
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -33676,6 +33967,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 3
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -33710,6 +34003,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -33744,6 +34039,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 2
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -33778,6 +34075,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -33812,6 +34111,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -33846,6 +34147,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 0.400000006
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -33880,6 +34183,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0
@@ -33914,6 +34219,8 @@ AudioSource:
   AudioChannel: 1
   Loop: true
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 0

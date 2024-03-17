@@ -28,7 +28,30 @@ public class BossAudioManager : Script
     public AudioSource stunSFX;
     public AudioSource deathSFX;
     public AudioSource laughingSFX;
+
+    //DASH ATTACK
+    public AudioSource dashLaserSound;
+    public AudioSource dashChargeUpVoice;
+    public AudioSource dashWhoosh;
+    public AudioSource dashShoutVoiceOver;
+
+    //Ultimate
+    public AudioSource ultimateEnergy;
     public AudioSource screamSFX;
+    public AudioSource ultimateLaser;
+    public AudioSource ultimateExplosion;
+    public AudioSource ultimateRinging;
+    public AudioSource ultimateRumbling;
+    public AudioSource ultimateForceField;
+
+    //Slam attack
+    public AudioSource slamAttack;
+    public AudioSource slamJumpWhoosh;
+    public AudioSource slamFallWhoosh;
+
+    //Projectile Attack
+    public AudioSource slashRelease;
+
     void Awake()
     {
         if (instance != null)

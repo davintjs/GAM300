@@ -78,12 +78,12 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 4cf27c0d93a1496bb047824f4b69d79a}
-  isStartActive: true
-  flickerTimer: 0
-  duration: 2
   back: false
-  timer: 0
+  duration: 2
+  flickerTimer: 0
+  isStartActive: true
   sizeMultiplier: 1.5
+  timer: 0
   mainMenuBGImage: {fileID: 9386478579826465449}  # GameObject
   noButton: {fileID: 13236326914152460117}  # GameObject
   yesButton: {fileID: 12690634969259096449}  # GameObject
@@ -131,9 +131,9 @@ GameObject:
 ID: 7029561702410403906
 Transform:
   m_GameObject: {fileID: 12690634969259096449}
-  Translation: [-0.107464127, -0.0499872416, 0.131215349]
-  Rotation: [-3.13925648, -0.09978576, 0.0135172568]
-  Scale: [0.200000003, 0.200000003, 0.200000003]
+  Translation: [-0.388723463, 0, 0]
+  Rotation: [3.14159226, 0, 0]
+  Scale: [0.451648593, 0.999998927, 0.999980867]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -161,9 +161,9 @@ GameObject:
 ID: 4585798291201254240
 Transform:
   m_GameObject: {fileID: 13236326914152460117}
-  Translation: [0.18459554, -0.0644943789, 0.0727835372]
+  Translation: [0.465494186, 0, 0]
   Rotation: [-3.14159226, 0, 0]
-  Scale: [0.225000039, 0.224999949, 0.199993297]
+  Scale: [0.452000052, 1.00000024, 0.999964297]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -191,9 +191,9 @@ GameObject:
 ID: 3837679008896948487
 Transform:
   m_GameObject: {fileID: 15290233428529554524}
-  Translation: [2.79396795e-09, 0.411597997, 0]
+  Translation: [2.79396795e-09, 0.611886084, 0]
   Rotation: [-3.14159226, 0, 0]
-  Scale: [0.800000131, 0.350000024, 0.99998945]
+  Scale: [0.800000489, 2.16556334, 0.999976158]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []

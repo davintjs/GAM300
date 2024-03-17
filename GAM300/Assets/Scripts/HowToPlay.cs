@@ -29,7 +29,7 @@ public class HowToPlay : Script
 
     private SpriteRenderer backButtonRenderer;
 
-    vec3 startGridTextSize;
+
 
     void Start()
     {

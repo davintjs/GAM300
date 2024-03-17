@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.PerformanceData;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -82,11 +83,12 @@ public class BossBehaviour : Script
     public Transform ultiLaserVFX;
     public Transform ultiLight;
 
-    public AudioSource bossOpeningSFX;
     public Transform openingCameraStartTarget;
     public Transform openingCameraEndTarget;
-    public AudioSource bossPhase2SFX;
-    public AudioSource bossDeathSpeechSFX;
+
+    //public AudioSource bossOpeningSFX;
+    //public AudioSource bossPhase2SFX;
+    //public AudioSource bossDeathSpeechSFX;
 
     vec3 indicatorLocal = new vec3();
 
@@ -100,9 +102,17 @@ public class BossBehaviour : Script
 
     public Transform model;
 
+    private DialogueManagerBoss instance;
+
     public int maxHealth = 100;
 
     int _health;
+
+    bool isDead = false;
+    bool isDashPlayed = false;
+    bool isSlamplayed = false;
+    bool halfHealth1 = false;
+    bool halfHealth2 = false;
 
     int health
     {
@@ -113,6 +123,19 @@ public class BossBehaviour : Script
         set 
         {
             _health = value;
+            if (_health <= maxHealth / 2)
+            {
+                if (phase == 1 && !halfHealth1)
+                {
+                    halfHealth1 = true;
+                    instance.SetState(6); //half health, phase 1
+                }
+                else if (phase == 2 && !halfHealth2) {
+                    halfHealth2 = true;
+                    instance.SetState(7); //half health, phase 2
+                }
+            }
+
             if (_health <= 0)
             {
                 if (phase == 1)
@@ -125,13 +148,21 @@ public class BossBehaviour : Script
                     SetState("Idle", true);
                     StartCoroutine(UltimateAttack());
                 }
-                else
+                else if(!isDead)
                 {
+                    isDead = true;
                     StopAllCoroutines();
                     rb.linearVelocity = vec3.Zero;
                     animationManager.ResetAllStates();
+                    
                     SetEnabled(rb,false);
+
                     SetState("Death", true);
+
+                    //if (animator.GetProgress() >= 0.5)
+                    StartCoroutine(Death());
+
+                    instance.SetState(3); //Death dialogue
                     StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
                     //DIE
                 }
@@ -164,13 +195,12 @@ public class BossBehaviour : Script
         yPos = transform.position.y;
         rb = GetComponent<Rigidbody>();
         indicatorLocal = ultiSphere.localPosition;
-        health = maxHealth;
-
+        health = maxHealth;       
     }
 
     void Start()
     {
-
+        instance = DialogueManagerBoss.Instance;
         bossSounds = BossAudioManager.instance;
         playerSounds = PlayerAudioManager.instance;
 
@@ -178,9 +208,6 @@ public class BossBehaviour : Script
         StartCoroutine(EnterBossCutscene());
         InitAnimStates();
         ultiSphere.gameObject.SetActive(false);
-        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
-
-        transform.localPosition = bossStartPos;
     }
 
     void Update()
@@ -197,15 +224,22 @@ public class BossBehaviour : Script
         SceneManager.LoadScene("VictoryScreenMenu",true);
     }
 
+    IEnumerator Death()
+    {
+        yield return new WaitForSeconds(3);
+        animator.SetSpeed(0f);
+    }
+
     IEnumerator EnterBossCutscene()
     {
-        bossOpeningSFX.Play();
+        instance.SetState(1); //apex opening dialogue
         ThirdPersonCamera.instance.cutscene = true;
         Transform camera = ThirdPersonCamera.instance.transform;
 
-        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f;
+        vec3 bossStartPos = center.localPosition + vec3.UnitY / 2f + vec3.UnitX * 5f;
+        transform.localPosition = bossStartPos;
 
-        float cutsceneDuration = 10f;
+        float cutsceneDuration = 8f;
         float timer = cutsceneDuration;
         while (timer > 0)
         {
@@ -276,23 +310,27 @@ public class BossBehaviour : Script
         yield return new WaitForSeconds(0.65f);
         StartCoroutine(RotateAndMoveToPlayer(0.1f, 800f, rotationSpeed / 2f));
         bossSounds.attack1SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack1, transform.back * 800f, .6f, vec3.UnitY + transform.back * 2f + transform.left * 0.5f));
 
         yield return new WaitForSeconds(0.55f);
         StartCoroutine(RotateAndMoveToPlayer(0.3f, 300f, rotationSpeed));
         bossSounds.attack2SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack2Right, transform.back * 800f, .8f, vec3.UnitY + transform.back * 2f));
         StartCoroutine(EnableAttackCollider(attack2Left, transform.back * 800f, .8f, vec3.UnitY + transform.back * 2f));
 
         yield return new WaitForSeconds(0.45f);
         StartCoroutine(RotateAndMoveToPlayer(0.1f, 0f, rotationSpeed / 2f));
         bossSounds.attack3SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack2, transform.back * 500f, .8f, vec3.UnitY + transform.back ));
 
         yield return new WaitForSeconds(0.35f);
         StartCoroutine(RotateAndMoveToPlayer(1f, 0f, rotationSpeed * 8f));
         yield return new WaitForSeconds(0.1f);
         bossSounds.attack4SFX.Play();
+        bossSounds.slashRelease.Play();
         StartCoroutine(EnableAttackCollider(attack3, transform.back * 800f, 1.4f, vec3.UnitY + transform.back * 2f));
 
         yield return new WaitForSeconds(1.2f);
@@ -354,8 +392,14 @@ public class BossBehaviour : Script
     IEnumerator DashAttack()
     {
         dashed = true;
+        if(!isDashPlayed)
+        {
+            instance.SetState(4); //apex dash attack
+            isDashPlayed = true;
+        }
 
         SetState("DashChargeUp", true);
+        BossAudioManager.instance.dashChargeUpVoice.Play();
         vec3 startPos = transform.localPosition;
         yield return StartCoroutine(RotateAndMoveToPlayer(1f,0f,rotationSpeed*2f));
         animator.SetSpeed(0f);
@@ -365,6 +409,9 @@ public class BossBehaviour : Script
 
         SetState("DashAttack", true);
         yield return StartCoroutine(RotateAndMoveToPlayer(1.3f, 0f, rotationSpeed/8f));
+        BossAudioManager.instance.dashShoutVoiceOver.Play();
+        BossAudioManager.instance.dashLaserSound.Play();
+        BossAudioManager.instance.dashWhoosh.Play();
         animator.SetSpeed(1f);
 
         dashVFX.particleLooping = false;
@@ -394,6 +441,11 @@ public class BossBehaviour : Script
 
     IEnumerator SlamAttack()
     {
+        if (!isSlamplayed)
+        {
+            isSlamplayed = true;
+            instance.SetState(5); //Apex slam attack
+        }
         float jumpDur = jumpAttackDuration * 0.3f;
         float startDur = jumpAttackDuration * 0.7f;
 
@@ -493,6 +545,7 @@ public class BossBehaviour : Script
         float vfxDuration = 3f;
         float timer = 0;
         ThirdPersonCamera.instance.ShakeCamera(0.2f, timer);
+        bossSounds.ultimateLaser.Play();
         while (timer < vfxDuration)
         {
             yield return null;
@@ -513,6 +566,7 @@ public class BossBehaviour : Script
 
         LightSource lightSource = ultiLight.gameObject.GetComponent<LightSource>();
         float intensity = lightSource.intensity;
+
         lightSource.intensity = 0f;
         while (timer < dur)
         {
@@ -543,6 +597,8 @@ public class BossBehaviour : Script
 
     IEnumerator UltimateAttack()
     {
+        instance.SetState(2); //apex phase 2 dialogue
+
         float timer = ultiChargeDuration;
 
         vec3 sphereScale = ultiSphere.localScale;
@@ -552,18 +608,20 @@ public class BossBehaviour : Script
         ThirdPersonCamera.instance.ShakeCamera(0.05f, timer);
         SetState("Ultimate", true);
         animator.SetSpeed(0.2f);
-        while(timer > ultiChargeDuration - 0.05f)
+        while (timer > ultiChargeDuration - 0.05f)
         {
             ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
             timer -= Time.deltaTime;
             yield return null;
         }
+        bossSounds.ultimateEnergy.Play();
         while (timer > 2.3f)
         {
             ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
             timer -= Time.deltaTime;
             yield return null;
         }
+        bossSounds.ultimateRumbling.Play();
         animator.SetSpeed(0f);
         while (timer > 0f)
         {
@@ -583,8 +641,10 @@ public class BossBehaviour : Script
         }
 
         animator.SetSpeed(1f);
+        bossSounds.ultimateExplosion.Play();
         bossSounds.screamSFX.Play();
         yield return new WaitForSeconds(0.2f);
+        bossSounds.ultimateRinging.Play();
 
         ultimateVFX.particleLooping = true;
         while (timer > 0)
@@ -790,7 +850,7 @@ public class BossBehaviour : Script
                 ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
                 ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
                 //CombatManager.instance.SpawnHitEffect(transform);
-                AudioManager.instance.enemyHit.Play();
+                //AudioManager.instance.enemyHit.Play();
                 //AudioManager.instance.playerInjured.Play();
                 health -= 20;
             }
@@ -799,7 +859,7 @@ public class BossBehaviour : Script
                 ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
                 ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
                 //CombatManager.instance.SpawnHitEffect(transform);
-                AudioManager.instance.enemyHit.Play();
+                //AudioManager.instance.enemyHit.Play();
                 //AudioManager.instance.playerInjured.Play();
                 health -= 10;
 
