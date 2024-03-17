@@ -37,8 +37,6 @@ public class Pause : Script
     private SpriteRenderer MainMenuRenderer;
 
 
-    vec3 startGridTextSize;
-
     void Start()
     {
         //Play Button
@@ -56,8 +54,6 @@ public class Pause : Script
         {
             MainMenuRenderer = MainMenu.GetComponent<SpriteRenderer>();
         }
-
-
             
     }
 

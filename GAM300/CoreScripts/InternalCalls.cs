@@ -36,7 +36,7 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void StopAnimation(Animator animator);
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetAnimatorDelay(ulong ID,float timeDelay);
+        internal extern static void SetAnimatorDelay(ulong ID, float timeDelay);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static float GetAnimatorDelay(ulong ID);
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -90,12 +90,12 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static T AddComponent<T>(GameObject gameObject, Type componentType);
-        internal static T AddComponent<T>(GameObject gameObject) { return AddComponent<T>(gameObject, typeof(T));}
+        internal static T AddComponent<T>(GameObject gameObject) { return AddComponent<T>(gameObject, typeof(T)); }
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void Get<T>(Object owner, Type objType, out T newObject);
 
-        public static void Get<T>(Object owner, out T newObject) { Get(owner,typeof(T), out newObject); }
+        public static void Get<T>(Object owner, out T newObject) { Get(owner, typeof(T), out newObject); }
 
         #endregion
 
@@ -212,7 +212,7 @@ namespace BeanFactory
         internal extern static string GetTextString(TextRenderer renderer);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        internal extern static void SetTextString(TextRenderer renderer,string str);
+        internal extern static void SetTextString(TextRenderer renderer, string str);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetTextColor(ulong ID, out vec4 color);
@@ -258,9 +258,6 @@ namespace BeanFactory
         #region SPRITERENDERER
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsButtonClicked(SpriteRenderer spriteRenderer);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool IsButtonHovered(SpriteRenderer spriteRenderer);
 
         #endregion
 
@@ -314,5 +311,15 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ResetPather(NavMeshAgent pEnemy);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool IsButtonHovered(SpriteRenderer spriteRenderer);
+
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetTimeScale(float timescale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetTimeScale();
     }
 }

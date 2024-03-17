@@ -378,7 +378,6 @@ namespace BeanFactory
         {
             return InternalCalls.IsButtonClicked(this);
         }
-
         public bool IsButtonHovered()
         {
             return InternalCalls.IsButtonHovered(this);
