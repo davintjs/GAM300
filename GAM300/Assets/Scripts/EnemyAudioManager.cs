@@ -8,7 +8,6 @@ using GlmSharp;
 
 public class EnemyAudioManager : Script
 {
-    public static EnemyAudioManager instance;
 
     //ADD A GAMEOBJECT FOR EACH SOUND
     public AudioSource RangeEnemyBullet;
@@ -23,14 +22,7 @@ public class EnemyAudioManager : Script
 
     void Awake()
     {
-        if (instance != null)
-        {
-            //Debug.LogError("More than one AudioManager in the scene.");
-        }
-        else
-        {
-            instance = this;
-        }
+        
     }
 
     void Start()

@@ -279,6 +279,7 @@ Script:
   timer: 0
   animator: {fileID: 2826765051149347733}  # Component
   attackTrigger: {fileID: 12486642072026848141}  # GameObject
+  enemySounds: {fileID: 15884681049530216524}  # Component
   hpBar: {fileID: 15952054123807579159}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 17589645519894896830}  # Component
@@ -33614,7 +33615,7 @@ Script:
 ID: 554005094457437961
 GameObject:
   m_IsActive: true
-  m_Name: Audios
+  m_Name: AudiosTutEnemy
   m_TagString: ""
   m_Layer: 0
   m_Component:

@@ -69,12 +69,17 @@ public class Enemy : Script
     public bool alertedOnce = true;
     int alertedRotation = 0;
     PlayerAudioManager playerSounds;
-    EnemyAudioManager enemySounds;
+    public EnemyAudioManager enemySounds;
 
     void Start()
     {
+        if (enemySounds == null)
+        {
+            Console.WriteLine("Missing Enemy audio manager in enemy");
+            return;
+        }
         playerSounds = PlayerAudioManager.instance;
-        enemySounds = EnemyAudioManager.instance;
+        //enemySounds = EnemyAudioManager.instance;
         playOnce = true;
         currentHealth = maxHealth;
         state = 0;//start with idle state
