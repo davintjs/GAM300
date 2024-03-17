@@ -1,0 +1,254 @@
+"%Serializer Version 1.1"
+---
+Scene Settings:
+  Name: VictoryScreenMenu
+  m_OcclusionCullingSettings: None
+  m_RenderSettings: None
+  m_LightMapSettings: None
+  m_NavMeshSettings: None  # All settings above are just examples
+---
+ID: 5255847082789301257
+GameObject:
+  m_IsActive: true
+  m_Name: Camera
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4704708302287558388}  # Transform
+    - component: {fileID: 6290748605718139895}  # Camera
+---
+ID: 4704708302287558388
+Transform:
+  m_GameObject: {fileID: 5255847082789301257}
+  Translation: [0, 0, 0.349982262]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 6290748605718139895
+Camera:
+  m_GameObject: {fileID: 5255847082789301257}
+  m_IsEnabled: true
+  BackgroundColor: [0, 0, 0, 0]
+  ClearFlags: "\x01"
+  CullingMask: "\x00"
+  NearClip: 0.100000001
+  FarClip: 10000
+  FieldOfView: 45
+  Orthographic: false
+  TargetDisplay: 0
+  HDR: true
+  OcclusionCulling: false
+  FrustumCulling: true
+  DistanceCulling: 5
+---
+ID: 11651427043620866289
+GameObject:
+  m_IsActive: true
+  m_Name: VictoryMenu_Canvas
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15419434749458504632}  # Transform
+    - component: {fileID: 2748547964756519209}  # Canvas
+    - component: {fileID: 17555996497018254840}  # Script
+---
+ID: 15419434749458504632
+Transform:
+  m_GameObject: {fileID: 11651427043620866289}
+  Translation: [0.0155261923, 0, -0.874936759]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 7816141683958995786}
+---
+ID: 2748547964756519209
+Canvas:
+  m_GameObject: {fileID: 11651427043620866289}
+  m_IsEnabled: true
+---
+ID: 17555996497018254840
+Script:
+  m_GameObject: {fileID: 11651427043620866289}
+  m_IsEnabled: true
+  Script: {guid: 07590604a451c92074c181837a233670}
+  scrollDuration: 10
+  scrollspeed: 0.100000001
+  yOffset: 2
+  bgm: {fileID: 12773935355036224696}  # Component
+  credits: {fileID: 7816141683958995786}  # GameObject
+---
+ID: 4418236984561621579
+GameObject:
+  m_IsActive: true
+  m_Name: BG_Image
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16773861268096498698}  # Transform
+    - component: {fileID: 13350653658282748155}  # SpriteRenderer
+---
+ID: 16773861268096498698
+Transform:
+  m_GameObject: {fileID: 4418236984561621579}
+  Translation: [0.0155261923, 0, -0.874936759]
+  Rotation: [0, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 7816141683958995786}
+  m_Children:
+    []
+---
+ID: 13350653658282748155
+SpriteRenderer:
+  m_GameObject: {fileID: 4418236984561621579}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+---
+ID: 15628350562473262138
+GameObject:
+  m_IsActive: true
+  m_Name: Credits
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 445726148051528729}  # Transform
+    - component: {fileID: 5030680011077784730}  # SpriteRenderer
+---
+ID: 445726148051528729
+Transform:
+  m_GameObject: {fileID: 15628350562473262138}
+  Translation: [0, -0.893340647, 0.297466874]
+  Rotation: [-3.14159226, -0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 7816141683958995786}
+  m_Children:
+    []
+---
+ID: 5030680011077784730
+SpriteRenderer:
+  m_GameObject: {fileID: 15628350562473262138}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4420be7e606704b825d52c28acc1607c}
+---
+ID: 4826080389101304482
+GameObject:
+  m_IsActive: true
+  m_Name: Sounds
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8319623420107139277}  # Transform
+---
+ID: 8319623420107139277
+Transform:
+  m_GameObject: {fileID: 4826080389101304482}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 18376747485499058925}
+    - {fileID: 14533969767781839941}
+---
+ID: 18376747485499058925
+GameObject:
+  m_IsActive: true
+  m_Name: BGM
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3895450169950802102}  # Transform
+    - component: {fileID: 12773935355036224696}  # AudioSource
+---
+ID: 3895450169950802102
+Transform:
+  m_GameObject: {fileID: 18376747485499058925}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4826080389101304482}
+  m_Children:
+    []
+---
+ID: 12773935355036224696
+AudioSource:
+  m_GameObject: {fileID: 18376747485499058925}
+  m_IsEnabled: true
+  AudioChannel: 0
+  Loop: true
+  Volume: 0.699999988
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
+  Play: false
+---
+ID: 14533969767781839941
+GameObject:
+  m_IsActive: true
+  m_Name: Ui-Button
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 810750522281297347}  # Transform
+    - component: {fileID: 1586736388842185412}  # AudioSource
+---
+ID: 810750522281297347
+Transform:
+  m_GameObject: {fileID: 14533969767781839941}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4826080389101304482}
+  m_Children:
+    []
+---
+ID: 1586736388842185412
+AudioSource:
+  m_GameObject: {fileID: 14533969767781839941}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
+  Play: false
+---
+ID: 7816141683958995786
+GameObject:
+  m_IsActive: true
+  m_Name: CreditsPanel
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5246372874881440655}  # Transform
+---
+ID: 5246372874881440655
+Transform:
+  m_GameObject: {fileID: 7816141683958995786}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    - {fileID: 4418236984561621579}
+    - {fileID: 15628350562473262138}

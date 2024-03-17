@@ -54,7 +54,7 @@ public class SceneTransitionTrigger : Script
                 SceneManager.LoadScene("LevelBoss", true);
                 break;
             case 2:
-                SceneManager.LoadScene("VictoryScreenMenu", true);
+                SceneManager.LoadScene("Credits", true);
                 break;
         }
     }

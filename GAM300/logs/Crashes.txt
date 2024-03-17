@@ -1,6 +1,5 @@
-[2024-03-17 20:06:41.112] [Error] [critical] 
-Caused By:	false
-Info:		Failed to load .scene file "Assets\Scene\LevelTutorial.scene" due to: yaml-cpp: error at line 34038, column 3: illegal map value
-
-Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Utilities\Serializer.cpp (Line: 359)
+[2024-03-17 23:00:26.052] [Error] [critical] 
+Caused By:	mClass
+Info:		MONO CLASS NOT LOADED
+Source:		C:\Users\FLESH\Desktop\SDP\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 300)
 
