@@ -87,7 +87,7 @@ void main()
             totalPosition = boneTransform * vec4(aVertexPosition, 1.0f);
         }
 
-	    WorldPos = vec3(SRT * totalPosition);
+	    WorldPos = vec3(SRT * (totalPosition / totalPosition.w));
     }
     else
     {
@@ -96,13 +96,6 @@ void main()
         breakOut = true;
     }
         
-	gl_Position = persp_projection * View * SRT * totalPosition;
-
-//    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
-//
-//    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
-//
-
     Normal = mat3(transpose(inverse(SRT))) * aVertexNormal;
     if(!breakOut)
     {
@@ -111,4 +104,10 @@ void main()
         Normal = (SRT * NormalL).xyz;
     }
 
+	gl_Position = persp_projection * View * SRT * totalPosition;
+
+//    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
+//
+//    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
+//
 }
