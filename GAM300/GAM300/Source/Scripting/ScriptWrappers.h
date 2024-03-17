@@ -29,6 +29,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "AI/NavMeshBuilder.h"
 #include "Graphics/GraphicsHeaders.h"
 #include "Physics/PhysicsSystem.h"
+#include "Core/FramerateController.h"
 	
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -646,6 +647,20 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		gamma = gammaValue;
 	}
 
+	static void SetTimeScale(float timescale)
+	{
+		if (timescale < 0)
+		{
+			timescale = 0; 
+		}
+		MyFrameRateController.timeScale = timescale;
+	}
+
+	static float GetTimeScale()
+	{
+		return MyFrameRateController.timeScale;
+	}
+
 	//Register all components to mono
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
@@ -780,6 +795,10 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		// Graphics
 		Register(GetGamma);
 		Register(SetGamma);
+
+		//TimeScale
+		Register(SetTimeScale);
+		Register(GetTimeScale);
 
 		//
 		Register(QuitGame);

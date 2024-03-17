@@ -311,5 +311,11 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ResetPather(NavMeshAgent pEnemy);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetTimeScale(float timescale);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetTimeScale();
     }
 }

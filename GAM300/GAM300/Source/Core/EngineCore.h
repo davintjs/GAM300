@@ -158,6 +158,7 @@ public:
 			float elapsedtime = 0;
 			bool update = false;
 
+
 			//performance viewer update timer (1s)
 			if (update_timer > 0.f) {
 				update_timer -= dt;
@@ -184,12 +185,13 @@ public:
 				}
 			};
 
-			AllSystems::Update(dt, func);
+			AllSystems::Update(dt * MyFrameRateController.timeScale, func);
 
 			if (update) {
 				systemtotaltime = elapsedtime;
 				update = false;
 			}
+
 				
 
 			ImGui::EndFrame();

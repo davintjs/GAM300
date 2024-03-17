@@ -24,9 +24,9 @@ namespace BeanFactory
 {
     public static class Time
     {
-        static float timeScale_ = 1f;
+        //static float timeScale_ = 1f;
         static float deltaTime_ = 0f;
         public static float deltaTime{ get { return deltaTime_; } }
-        public static float timeScale { get { return timeScale_; } set { timeScale_ = value; } }
+        public static float timeScale { get { return InternalCalls.GetTimeScale(); } set { InternalCalls.SetTimeScale(value); } }
     }
 }

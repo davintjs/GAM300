@@ -47,7 +47,7 @@ Camera:
 ID: 17065559468612678914
 GameObject:
   m_IsActive: true
-  m_Name: SettingsCanvas
+  m_Name: PauseCanvas
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -79,17 +79,17 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 3a293a05220805f984c4c9a6239f9535}
-  isStartActive: true
-  flickerTimer: 0
-  duration: 2
   back: false
-  timer: 0
+  duration: 2
+  flickerTimer: 0
+  isStartActive: true
   sizeMultiplier: 1.5
-  resumeButton: {fileID: 14866259166967195886}  # GameObject
-  PauseImage: {fileID: 9386478579826465449}  # GameObject
-  pauseTitle: {fileID: 13236326914152460117}  # GameObject
+  timer: 0
   HTPButton: {fileID: 5208993662452398043}  # GameObject
   MainMenu: {fileID: 1254823211106383066}  # GameObject
+  PauseImage: {fileID: 9386478579826465449}  # GameObject
+  pauseTitle: {fileID: 13236326914152460117}  # GameObject
+  resumeButton: {fileID: 14866259166967195886}  # GameObject
 ---
 ID: 9386478579826465449
 GameObject:
@@ -119,6 +119,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: a46b62f739f85d1148a3ae8b46e05027}
 ---
 ID: 13236326914152460117
@@ -149,6 +151,8 @@ SpriteRenderer:
   Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 6f6b1874101cbc6dbd99cf55cc23372a}
 ---
 ID: 14866259166967195886
@@ -179,6 +183,8 @@ SpriteRenderer:
   Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: aa4944261068a155e7fead90ae30023e}
 ---
 ID: 4592072074559840146
@@ -262,6 +268,8 @@ SpriteRenderer:
   Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
 ---
 ID: 1254823211106383066
@@ -292,6 +300,8 @@ SpriteRenderer:
   Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 46fac10793b9305f4186b5dc00d54fbf}
 ---
 ID: 17412142376824622519
@@ -451,6 +461,7 @@ Script:
   fadeTime: 1
   paused: false
   BGM_Source: {fileID: 688516125537709214}  # Component
+  pauseCanvas: {fileID: 17065559468612678914}  # GameObject
 ---
 ID: 14088906961581824457
 GameObject:
@@ -615,6 +626,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: d29d736eed7c382add8fff654aae3b6b}
 ---
 ID: 16279065018212808363
@@ -12177,6 +12190,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: b531347e23ddc645f011247c1cf2d80b}
 ---
 ID: 3525555548824268013
@@ -12207,6 +12222,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: b9dcab9e8bd76d6ce1bfa6bad0e324d8}
 ---
 ID: 8065358626952296561
@@ -15270,6 +15287,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: 89cd3e721b631a1495a6a99e369bbe75}
   Playing: false
+  Enable Armature: false
 ---
 ID: 14790332214141994081
 GameObject:
@@ -16222,6 +16240,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: e310cfb163a2014181faa3229530b5ed}
 ---
 ID: 3827453200974574750
@@ -16846,6 +16866,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: ed67f80cc8530c2f1eb31d14779f6a88}
 ---
 ID: 8603716528774636938
@@ -16876,6 +16898,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: f1e2252c9bed7adeab8c9cfea67d8e5c}
 ---
 ID: 17837455119039999797
@@ -16906,6 +16930,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: e8f1b5b7e6ccf016426fb9befbdcb1cb}
 ---
 ID: 17344769666620842143
@@ -16936,6 +16962,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: e94a3b58c1e9691c92035ec7508476ab}
 ---
 ID: 12115195871797465227
@@ -16966,6 +16994,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: f62a10c6eebe5cecb5fc9c075222d6a3}
 ---
 ID: 4720521423488205772
@@ -16996,6 +17026,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: f8b993ecd8b866668c9b0ccb2fd7ccb2}
 ---
 ID: 1953613848853671180
@@ -17026,6 +17058,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 4032521077463f2715840b35c4b4e13e}
 ---
 ID: 3925618525247661714
@@ -17056,6 +17090,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 05eabcd5686e83c719e179558b23b1a3}
 ---
 ID: 11966624967280915999
@@ -17086,6 +17122,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
 ---
 ID: 10673191397735378312
@@ -17116,6 +17154,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
 ---
 ID: 9691624766500435789
@@ -17146,6 +17186,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
 ---
 ID: 13993313988089347944
@@ -17176,6 +17218,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: a9e8426212023b5f8e4ba5d639f3d3f6}
 ---
 ID: 1370432261870288088
@@ -17206,6 +17250,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
 ---
 ID: 12478379518054110186
@@ -17236,6 +17282,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
 ---
 ID: 6043762608075201925
@@ -18430,6 +18478,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 7108dee2a28a8eb101c2cfa6acd8536f}
 ---
 ID: 744309730467464853
@@ -18858,6 +18908,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: c4fef853906fbef85cfcf3080cfd1a6b}
   Playing: false
+  Enable Armature: false
 ---
 ID: 9943126827848380058
 GameObject:
@@ -19040,6 +19091,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 0.300000012
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
 ---
 ID: 10168314299232393249
@@ -19532,6 +19585,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 5d5163d870b2132fbeb9cf39d42cc125}
 ---
 ID: 12315257505574490681
@@ -31385,6 +31440,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 753809476943699335
 GameObject:
@@ -31493,6 +31549,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 1623534928352961348
 GameObject:
@@ -31567,6 +31624,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 4047165905438159748
 GameObject:
@@ -31641,6 +31699,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 1349513878504722503
 GameObject:
@@ -31715,6 +31774,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 15711137359260023424
 GameObject:
@@ -31789,6 +31849,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 12457116077250561074
 GameObject:
@@ -31863,6 +31924,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 7290074301244601604
 GameObject:
@@ -31937,6 +31999,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 15533686484031719707
 GameObject:
@@ -32011,6 +32074,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 10804453106490890491
 GameObject:
@@ -32811,6 +32875,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 6274921673985774657
 GameObject:
@@ -33612,6 +33677,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 12335589281662497447
 GameObject:
@@ -33686,6 +33752,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 809389782365583713
 GameObject:
@@ -33761,6 +33828,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 16095588920017826408
 GameObject:
@@ -33836,6 +33904,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 9400033833607715623
 GameObject:
@@ -33911,6 +33980,7 @@ Animator:
   m_IsEnabled: true
   Animation: {guid: dd1ca8e3945b3533c6244b0f2d39d5f3}
   Playing: false
+  Enable Armature: false
 ---
 ID: 16841797880432146567
 GameObject:
@@ -38282,6 +38352,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 98545adaddcc150c62c9c079589ac4b7}
 ---
 ID: 17790085058091368515
@@ -38312,6 +38384,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: c384e7c127e21d2a871c454dcce7e3b1}
 ---
 ID: 11939442157565375580
@@ -38342,6 +38416,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 476efab2d8bc128ed962e46675d07c2d}
 ---
 ID: 12453848994260951130
@@ -38372,6 +38448,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 4768bcdfde1cd1e700336136cf925084}
 ---
 ID: 1992794203811998182
@@ -38402,6 +38480,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 6bf2c94a20ea359961ca3d371f6eb078}
 ---
 ID: 2043297276640200885
@@ -38432,6 +38512,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 072bbb6e071614a06f5ef1e65daef037}
 ---
 ID: 13147063740590517297
@@ -38462,6 +38544,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: fc2bc9d6bc316527e8c2fdd641b803f9}
 ---
 ID: 9222681530778407771
@@ -38566,6 +38650,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 8bc854365fdc7a36838180a2c1c954dd}
 ---
 ID: 2466358863812534734
@@ -38596,6 +38682,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 58eccffad2398362c678178481cb6e85}
 ---
 ID: 6204762089956289151
@@ -38626,6 +38714,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 45961fabfba25705f6a8e7159d415149}
 ---
 ID: 17573608102870250931
@@ -38656,6 +38746,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: 0f0994ef0051629b0eaaeb8b40fae1b3}
 ---
 ID: 6390126378225169005
@@ -38801,6 +38893,8 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: bcd2a0a8fa6916c30eef9c555a8012e7}
 ---
 ID: 13783988464981512054
@@ -38831,4 +38925,6 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
+  HoverDuration: 0
+  HoverTarget: [1, 1, 1]
   SpriteTexture: {guid: eb9590cd5e26bf938b869e03dca63091}
