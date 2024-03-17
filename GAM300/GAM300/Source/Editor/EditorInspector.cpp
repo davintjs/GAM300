@@ -117,7 +117,7 @@ void DisplayType(Change& change, const char* name, std::string& val)
     idName += name;
     static char buffer[TEXT_BUFFER_SIZE];
     strcpy(buffer, val.c_str());
-    if(ImGui::InputText(idName.c_str(), buffer, 1024, ImGuiInputTextFlags_EnterReturnsTrue))
+    if(ImGui::InputText(idName.c_str(), buffer, ImGuiInputTextFlags_EnterReturnsTrue))
     {
         std::string newString = buffer;
         EDITOR.History.SetPropertyValue(change, val, newString);

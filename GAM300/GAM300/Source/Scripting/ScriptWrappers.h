@@ -425,12 +425,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return sr.onClick;
 	}
 
-	static bool IsButtonHovered(ScriptObject<SpriteRenderer> spriteRenderer)
-	{
-		SpriteRenderer& sr = spriteRenderer;
-		return sr.onHover;
-	}
-
 
 #pragma endregion
 
@@ -782,7 +776,6 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// SpriteRenderer Component
 		Register(IsButtonClicked);
-		Register(IsButtonHovered);
 
 		// Graphics
 		Register(GetGamma);

@@ -259,9 +259,6 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsButtonClicked(SpriteRenderer spriteRenderer);
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern bool IsButtonHovered(SpriteRenderer spriteRenderer);
-
         #endregion
 
         #region MESH_RENDERER

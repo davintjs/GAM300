@@ -40,8 +40,6 @@ public class AudioManager : Script
     public AudioSource dashAttack;
     public AudioSource enemyAlerted1, enemyAlerted2, enemyAlerted3;
     public AudioSource obj_success;
-    public AudioSource swoosh;
-    public AudioSource powerUp;
 
     void Awake()
     {
@@ -52,11 +50,6 @@ public class AudioManager : Script
         else
         {
             instance = this;
-        }
-
-        if (powerUp == null)
-        {
-            Console.WriteLine("Objective power up Sound missing reference");
         }
 
         if (obj_success == null)
@@ -142,10 +135,6 @@ public class AudioManager : Script
         if (overdriveVFXSound == null)
         {
             Console.WriteLine("OverdriveVFX Sound missing reference");
-        }
-        if (swoosh == null)
-        {
-            Console.WriteLine("Swoosh Sound missing reference");
         }
 
     }

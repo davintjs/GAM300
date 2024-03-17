@@ -27,16 +27,13 @@ public class StartingAnimation : Script
 
     public GameObject fadeblack;
 
-    //public GameObject text1;
-    //public GameObject text2;
-    //public GameObject text3;
-    //public GameObject text4;
-    //public GameObject text5;
-    //public GameObject text6;
-    //public GameObject text7;
-
-    public GameObject subtitles;
-    TextRenderer text;
+    public GameObject text1;
+    public GameObject text2;
+    public GameObject text3;
+    public GameObject text4;
+    public GameObject text5;
+    public GameObject text6;
+    public GameObject text7;
 
     public AudioSource audio;
 
@@ -70,7 +67,6 @@ public class StartingAnimation : Script
         seq6 = true;
         stop = false;
         exitAnim = false;
-        text = subtitles.GetComponent<TextRenderer>();
     }
 
     void AudioPlay()
@@ -268,47 +264,40 @@ public class StartingAnimation : Script
         {
             textTimer += Time.deltaTime;
 
-            if(textTimer < 9f)
+            if(textTimer < 14f)
             {
-                subtitles.SetActive(true);
-                text.text = "Apex: Hmm...good, looks like it worked. Oh I almost forgot about the welcoming speech.";
+                text1.SetActive(true);
             }
-            else if(textTimer < 17f)
+            else if(textTimer < 19f)
             {
-                text.text = "Apex: Ahem... Welcome to the GRID, one of the world's premier robotics facilities,";
-                // text1.SetActive(false);
-                //text2.SetActive(true);
+                text1.SetActive(false);
+                text2.SetActive(true);
             }
-            else if(textTimer < 25f)
+            else if(textTimer < 34f)
             {
-                text.text = "Apex: where cutting-edge robotics constructs such as yourself are manufactured to enhance and uphold societal progress.";
-                //text2.SetActive(false);
-                //text3.SetActive(true);            
+                text2.SetActive(false);
+                text3.SetActive(true);            
             }
-            else if (textTimer < 30f)
+            else if (textTimer < 39f)
             {
-                text.text = "Here, innovation thrives, and the future is forged.";
-                //text3.SetActive(false);
-                //text4.SetActive(true);
+                scanning.SetActive(false);
+                text3.SetActive(false);
+                text4.SetActive(true);
             }
-            else if (textTimer < 37f)
+            else if (textTimer < 48f)
             {
-                text.text = "My designation is APEX and I am the current overseer of this facility. You are the first in a new line of robots of my design.";
-                //text4.SetActive(false);
-                //text5.SetActive(true);
+                text4.SetActive(false);
+                text5.SetActive(true);
             }
-            else if (textTimer < 44f)
+            else if (textTimer < 56f)
             {
-                // Fear not, these tests should prove to be rudimentary for any creation of mine.
-                text.text = "As per facility protocols, you must undergo some tests before authorisation for deployment.";
-                //text5.SetActive(false);
-                //text6.SetActive(true);
+                text5.SetActive(false);
+                text6.SetActive(true);
             }
-            else if (textTimer < 50f)
+            else if (textTimer < 63f)
             {
-                text.text = "Fear not, these tests should prove to be rudimentary for any creation of mine.";
-                //text6.SetActive(false);
-                //text7.SetActive(true);
+                text6.SetActive(false);
+                text7.SetActive(true);
             }
         }
     }

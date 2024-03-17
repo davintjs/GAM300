@@ -244,125 +244,38 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 	float xoffset{ text.x }, yoffset { text.y };
 	float fontSize { 0.001f * text.fontSize };
 	float maxWidth { 0.01f * text.width };
-	int iter{ 0 }, newlineIter{ 0 };
-	float charHeight = mFontContainer.at(text.guid).at('A').Size.y;
-	bool newlinefound{ false };
-
+	int iter{ 0 }; 
 	for (const char& c : text.text) {
 		Character ch = mFontContainer.at(text.guid).at(c);  // Use .at() to ensure the character exists in the map
 
 		float xpos, ypos;
 		xpos = xoffset + ch.Bearing.x * fontSize;
 
-		//if (c == ' ')
-		//{
-		//	int internalIter{ iter };
-		//	char tempChar = text.text[iter + 1];
-		//	float wordWidth{ xpos };
-		//	while (tempChar != ' ')
-		//	{
-		//		wordWidth += mFontContainer.at(text.guid).at(tempChar).Size.x * fontSize;
-
-		//		if (wordWidth > maxWidth + text.x)
-		//		{
-		//			yoffset -= charHeight * fontSize * 2 * text.leading;
-		//			xoffset = text.x;
-		//			xpos = xoffset + ch.Bearing.x * fontSize;
-		//			break;
-		//		}
-
-		//		++internalIter;
-
-		//		if (internalIter >= text.text.size())
-		//			break;
-
-		//		tempChar = text.text[internalIter]; // move on
-		//	}
-		//}
-
-
-		if (iter == newlineIter)
-		{
-			yoffset -= charHeight * fontSize * 2 * text.leading;
-			//xoffset = text.x;
-			//xpos = xoffset + ch.Bearing.x * fontSize;
-
-			if (!text.centerAlign)
-			{
-				xoffset = text.x;
-				xpos = xoffset + ch.Bearing.x * fontSize;
-			}
-
-			newlinefound = false;
-
-			char internalC = text.text[iter];
-			if (internalC == ' ')
-			{
-				++iter;
-				continue;
-			}
-		}
-
-
-		if (!newlinefound)
+		if (c == ' ')
 		{
 			int internalIter{ iter };
-			float currlineWidth{ 0.f };
-			while (internalIter < text.text.size())
+			char tempChar = text.text[iter + 1];
+			float wordWidth{ xpos };
+			while (tempChar != ' ')
 			{
+				wordWidth += mFontContainer.at(text.guid).at(tempChar).Size.x * fontSize;
 
-				int wordIter{ internalIter };
-				char tempChar = text.text[internalIter];
-				float wordWidth{ 0.f };
-				while (tempChar != ' ')
+				if (wordWidth > maxWidth + text.x)
 				{
-					wordWidth += mFontContainer.at(text.guid).at(tempChar).Size.x * fontSize;
-
-					if (wordWidth + currlineWidth >= maxWidth)
-					{
-						// new xpos/offset
-						newlinefound = true;
-						newlineIter = internalIter;
-						currlineWidth -= mFontContainer.at(text.guid).at(' ').Size.x * fontSize;
-						break;
-					}
-
-					++wordIter;
-
-					if (wordIter >= text.text.size()) // if next letter out of bounds
-					{
-						// new xpos/offset
-						currlineWidth += wordWidth;
-						newlinefound = true;
-						break;
-					}
-
-					tempChar = text.text[wordIter]; // move on
-				}
-				//}
-				if (newlinefound)
-				{
-					if (text.centerAlign)
-					{
-						xoffset = text.x + (maxWidth - currlineWidth) * 0.5f;
-						xpos = xoffset + ch.Bearing.x * fontSize;
-					}
+					float charHeight = mFontContainer.at(text.guid).at('A').Size.y;
+					yoffset -= charHeight * fontSize * 2 * text.leading;
+					xoffset = text.x;
+					xpos = xoffset + ch.Bearing.x * fontSize;
 					break;
 				}
 
-				char internalC = text.text[internalIter];
-				////currlineWidth += mFontContainer.at(text.guid).at(internalC).Size.x * fontSize;
-				if (internalC == ' ')
-				{
-					currlineWidth += mFontContainer.at(text.guid).at(' ').Size.x * fontSize;
-				}
-
-				currlineWidth += wordWidth;
-				internalIter = wordIter;
-
 				++internalIter;
-			}
 
+				if (internalIter >= text.text.size())
+					break;
+
+				tempChar = text.text[internalIter]; // move on
+			}
 		}
 
 		ypos = yoffset - (ch.Bearing.y * 2.f) * fontSize;

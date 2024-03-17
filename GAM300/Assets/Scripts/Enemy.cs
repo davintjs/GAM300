@@ -444,39 +444,7 @@ public class Enemy : Script
                 StopCoroutine(damagedCoroutine);
             }
             damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
-
-            if (ThirdPersonController.instance.currentlyOverdriven == true)
-            {
-                TakeDamage(2);
-            }
-            else
-            {
-                TakeDamage(1);
-
-                //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
-                if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
-                {
-                    ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
-                    ThirdPersonController.instance.UpdateOverdriveBar();
-
-                    if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
-                    {
-                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
-                    }
-                }
-                else
-                {
-                    ThirdPersonController.instance.currentOverdriveCharge++;
-                    ThirdPersonController.instance.UpdateOverdriveBar();
-
-                    if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
-                    {
-                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        AudioManager.instance.powerUp.Play();
-                    }
-                }
-            }
+            TakeDamage(1);
         }
     }
 

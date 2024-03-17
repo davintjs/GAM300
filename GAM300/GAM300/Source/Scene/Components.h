@@ -306,7 +306,6 @@ struct TextRenderer : Object
 	float r = 0.5, g = 0.8f, b = 0.2f;
 	float alpha = 1.f;
 	float width = 10.f, leading = 1.5f;
-	bool centerAlign = false;
 	std::string text = "Default Text";
 	property_vtable();
 };
@@ -320,7 +319,6 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(fontSize).Name("Font Size"),
 		property_var(width).Name("Textbox Width"),
 		property_var(leading).Name("Leading"),
-		property_var(centerAlign).Name("Center Alignment"),
 		property_var(r).Name("Color R"),
 		property_var(g).Name("Color G"),
 		property_var(b).Name("Color B"),
