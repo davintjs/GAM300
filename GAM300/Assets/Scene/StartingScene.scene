@@ -20,7 +20,7 @@ GameObject:
 ID: 4864774252226257722
 Transform:
   m_GameObject: {fileID: 7305319039410813174}
-  Translation: [0, 0, 0.728640199]
+  Translation: [0, 0, 0.816037178]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -78,6 +78,7 @@ Transform:
     - {fileID: 12813299083475271808}
     - {fileID: 16526287598854957340}
     - {fileID: 6711356329535506755}
+    - {fileID: 15177962187234400664}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -102,15 +103,9 @@ Script:
   sfx3: {fileID: 13968833333247801396}  # Component
   stats: {fileID: 14792022944608304902}  # GameObject
   statsok: {fileID: 9717890677315299068}  # GameObject
+  subtitles: {fileID: 15177962187234400664}  # GameObject
   systembooting: {fileID: 14974167627800411735}  # GameObject
   systeminit: {fileID: 3146263103583520969}  # GameObject
-  text1: {fileID: 2236279902656859337}  # GameObject
-  text2: {fileID: 5398994860624719857}  # GameObject
-  text3: {fileID: 13538724703945953344}  # GameObject
-  text4: {fileID: 16227894090463972377}  # GameObject
-  text5: {fileID: 11681293369109369984}  # GameObject
-  text6: {fileID: 4454479509132717219}  # GameObject
-  text7: {fileID: 18020263174201275437}  # GameObject
   transmission: {fileID: 1925772060971598989}  # GameObject
   view: {fileID: 12813299083475271808}  # GameObject
   visorconnected: {fileID: 16526287598854957340}  # GameObject
@@ -900,7 +895,7 @@ SpriteRenderer:
 ---
 ID: 6711356329535506755
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: fadeblack
   m_TagString: ""
   m_Layer: 0
@@ -927,3 +922,40 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+---
+ID: 15177962187234400664
+GameObject:
+  m_IsActive: false
+  m_Name: subtitles
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5296641902821484860}  # Transform
+    - component: {fileID: 9612762767100087751}  # TextRenderer
+---
+ID: 5296641902821484860
+Transform:
+  m_GameObject: {fileID: 15177962187234400664}
+  Translation: [-0.629999995, -0.769999981, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 9612762767100087751
+TextRenderer:
+  m_GameObject: {fileID: 15177962187234400664}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: hmm...good. Looks like it worked
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.25
+  Textbox Width: 92
+  Leading: 2
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1

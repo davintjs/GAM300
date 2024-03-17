@@ -362,7 +362,6 @@ public class BossBehaviour : Script
         SetState("DashChargeUp", false);
 
         SetState("DashAttack", true);
-
         yield return StartCoroutine(RotateAndMoveToPlayer(1.3f, 0f, rotationSpeed/8f));
         animator.SetSpeed(1f);
 
@@ -411,7 +410,7 @@ public class BossBehaviour : Script
             timer -= Time.deltaTime;
             yield return null;
         }
-
+        bossSounds.jumpAttackSFX.Play();
         timer = startDur - timer;
         while (timer > 0)
         {
@@ -582,6 +581,7 @@ public class BossBehaviour : Script
         }
 
         animator.SetSpeed(1f);
+        bossSounds.screamSFX.Play();
         yield return new WaitForSeconds(0.2f);
 
         ultimateVFX.particleLooping = true;
@@ -782,12 +782,49 @@ public class BossBehaviour : Script
     {
         if (GetTag(rb) == "PlayerAttack")
         {
-            ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
-            ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
-            //CombatManager.instance.SpawnHitEffect(transform);
-            AudioManager.instance.enemyHit.Play();
-            //AudioManager.instance.playerInjured.Play();
-            health -= 10;
+            //While being in overdrive, deals double dmg.
+            if (ThirdPersonController.instance.currentlyOverdriven == true)
+            {
+                ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+                ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+                //CombatManager.instance.SpawnHitEffect(transform);
+                AudioManager.instance.enemyHit.Play();
+                //AudioManager.instance.playerInjured.Play();
+                health -= 20;
+            }
+            else
+            {
+                ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+                ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+                //CombatManager.instance.SpawnHitEffect(transform);
+                AudioManager.instance.enemyHit.Play();
+                //AudioManager.instance.playerInjured.Play();
+                health -= 10;
+
+                //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
+                if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                {
+                    ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
+                    ThirdPersonController.instance.UpdateOverdriveBar();
+
+                    if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
+                    {
+                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                        AudioManager.instance.powerUp.Play();
+                    }
+                }
+                else
+                {
+                    ThirdPersonController.instance.currentOverdriveCharge++;
+                    ThirdPersonController.instance.UpdateOverdriveBar();
+
+                    if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                    {
+                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                        AudioManager.instance.powerUp.Play();
+                    }
+                }
+            }
         }
         ////Not working
         //if(GetTag(rb) == "PuzzleKey")

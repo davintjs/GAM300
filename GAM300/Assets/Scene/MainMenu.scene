@@ -165,6 +165,7 @@ GameObject:
   m_Component:
     - component: {fileID: 9737574517565939108}  # Transform
     - component: {fileID: 8787861963102089585}  # SpriteRenderer
+    - component: {fileID: 10832890570671246421}  # Script
 ---
 ID: 9737574517565939108
 Transform:
@@ -188,6 +189,14 @@ SpriteRenderer:
   HoverTarget: [0.400000006, 0.400000006, 0.400000006]
   SpriteTexture: {guid: 09c6bf963ea6cc412f5b9197c588acf6}
 ---
+ID: 10832890570671246421
+Script:
+  m_GameObject: {fileID: 5144980746915515514}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  hoverSound: {fileID: 7823455904144311016}  # Component
+---
 ID: 15413680003274128894
 GameObject:
   m_IsActive: true
@@ -197,6 +206,7 @@ GameObject:
   m_Component:
     - component: {fileID: 9896614275649064532}  # Transform
     - component: {fileID: 12546639874184648046}  # SpriteRenderer
+    - component: {fileID: 15536831487318201753}  # Script
 ---
 ID: 9896614275649064532
 Transform:
@@ -220,6 +230,14 @@ SpriteRenderer:
   HoverTarget: [0.200000003, 0.300000012, 0.200000003]
   SpriteTexture: {guid: 0e96252724f61818ad44dcf660ec245c}
 ---
+ID: 15536831487318201753
+Script:
+  m_GameObject: {fileID: 15413680003274128894}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  hoverSound: {fileID: 7823455904144311016}  # Component
+---
 ID: 11997381317790178123
 GameObject:
   m_IsActive: true
@@ -229,6 +247,7 @@ GameObject:
   m_Component:
     - component: {fileID: 1850640387793568597}  # Transform
     - component: {fileID: 10863135329541942688}  # SpriteRenderer
+    - component: {fileID: 8761451245657598969}  # Script
 ---
 ID: 1850640387793568597
 Transform:
@@ -252,6 +271,14 @@ SpriteRenderer:
   HoverTarget: [0.400000006, 0.400000006, 0.400000006]
   SpriteTexture: {guid: 9d5ca54110e8c8feb8e8edd7193210be}
 ---
+ID: 8761451245657598969
+Script:
+  m_GameObject: {fileID: 11997381317790178123}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  hoverSound: {fileID: 7823455904144311016}  # Component
+---
 ID: 7360009555949792780
 GameObject:
   m_IsActive: true
@@ -261,6 +288,7 @@ GameObject:
   m_Component:
     - component: {fileID: 12705835085396231503}  # Transform
     - component: {fileID: 5968777689254699825}  # SpriteRenderer
+    - component: {fileID: 15548749836118318245}  # Script
 ---
 ID: 12705835085396231503
 Transform:
@@ -284,6 +312,14 @@ SpriteRenderer:
   HoverTarget: [0.400000006, 0.400000006, 0.400000006]
   SpriteTexture: {guid: 13cc4bf4e9905a9d2d9fa16d77598bc3}
 ---
+ID: 15548749836118318245
+Script:
+  m_GameObject: {fileID: 7360009555949792780}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  hoverSound: {fileID: 7823455904144311016}  # Component
+---
 ID: 2581623557328585861
 GameObject:
   m_IsActive: true
@@ -303,6 +339,7 @@ Transform:
   m_Children:
     - {fileID: 12985200632528168917}
     - {fileID: 16470370342308864989}
+    - {fileID: 552926851102396472}
 ---
 ID: 12985200632528168917
 GameObject:
@@ -457,3 +494,37 @@ Transform:
     - {fileID: 15413680003274128894}
     - {fileID: 11997381317790178123}
     - {fileID: 7360009555949792780}
+---
+ID: 552926851102396472
+GameObject:
+  m_IsActive: true
+  m_Name: ButtonClick
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 987366250335975594}  # Transform
+    - component: {fileID: 10922656780418682009}  # AudioSource
+---
+ID: 987366250335975594
+Transform:
+  m_GameObject: {fileID: 552926851102396472}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2581623557328585861}
+  m_Children:
+    []
+---
+ID: 10922656780418682009
+AudioSource:
+  m_GameObject: {fileID: 552926851102396472}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: a3a5008eddc5deff41fd807ad3c839f2}
+  Play: false
