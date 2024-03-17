@@ -269,27 +269,30 @@ public class RangeEnemy : Script
             else
             {
                 TakeDamage(1);
-                //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
-                if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                if (ThirdPersonController.instance.isOverdriveEnabled == true)
                 {
-                    ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
-                    ThirdPersonController.instance.UpdateOverdriveBar();
-
-                    if(ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
+                    //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
+                    if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
                     {
-                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        playerSounds.PowerUp.Play();
+                        ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
+                        ThirdPersonController.instance.UpdateOverdriveBar();
+
+                        if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
+                        {
+                            ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                            playerSounds.PowerUp.Play();
+                        }
                     }
-                }
-                else
-                {
-                    ThirdPersonController.instance.currentOverdriveCharge++;
-                    ThirdPersonController.instance.UpdateOverdriveBar();
-
-                    if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                    else
                     {
-                        ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
-                        playerSounds.PowerUp.Play();
+                        ThirdPersonController.instance.currentOverdriveCharge++;
+                        ThirdPersonController.instance.UpdateOverdriveBar();
+
+                        if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                        {
+                            ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                            playerSounds.PowerUp.Play();
+                        }
                     }
                 }
             }
