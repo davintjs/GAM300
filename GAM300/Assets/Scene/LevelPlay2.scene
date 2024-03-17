@@ -3959,9 +3959,9 @@ GameObject:
 ID: 1190925597282428397
 Transform:
   m_GameObject: {fileID: 4490157770252088129}
-  Translation: [0.117640615, 0, 1]
+  Translation: [0.180000007, 0, 1]
   Rotation: [3.14159274, 0, 0]
-  Scale: [0.5, 0.5, 0.5]
+  Scale: [0.600000024, 0.5, 0.5]
   Father: {fileID: 1155348055569638397}
   m_Children:
     []
@@ -30170,7 +30170,7 @@ GameObject:
 ID: 15678506457491043011
 Transform:
   m_GameObject: {fileID: 18315212324025487925}
-  Translation: [0, 0, 3]
+  Translation: [0.360000014, 0, 4]
   Rotation: [3.14159274, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 4056269345217226233}
@@ -30199,7 +30199,7 @@ GameObject:
 ID: 11860368498721011032
 Transform:
   m_GameObject: {fileID: 1155348055569638397}
-  Translation: [-0.119530022, -0.00747156143, 1]
+  Translation: [-0.181999996, -0.00747156143, 1]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 15115753960540565494}
@@ -31318,7 +31318,7 @@ GameObject:
 ID: 12631365225660443833
 Transform:
   m_GameObject: {fileID: 4056269345217226233}
-  Translation: [0, 0, 0]
+  Translation: [-0.340000004, 0, -1.79999995]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 17033157074617951400}
