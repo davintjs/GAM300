@@ -25,7 +25,7 @@ public class GameManager : Script
     void Start()
     {
         Input.LockCursor(true);
-        pauseCanvas.SetActive(false);
+        if (pauseCanvas != null) pauseCanvas.SetActive(false);
     }
 
     void Update()

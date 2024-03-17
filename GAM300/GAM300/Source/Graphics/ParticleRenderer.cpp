@@ -37,6 +37,10 @@ void ParticleRenderer::Update(float dt) {
             continue;
         for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
+            if (i >= particleComponent.particles_.size())
+            {
+                break;
+            }
             glm::mat4 scale = glm::mat4(1.f) * particleComponent.particles_[i].scale;
             scale[3] = glm::vec4(0, 0, 0, 1);
 
