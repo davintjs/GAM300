@@ -23,9 +23,11 @@ public class KeyDoor : Script
     float keyStartY;
     public float maxTime = 5;
     float timer = 0;
+    PlayerAudioManager playerSounds;
 
     void Start()
     {
+        playerSounds = PlayerAudioManager.instance;
         keyStartY = transform.localPosition.y;
     }
 
@@ -61,7 +63,7 @@ public class KeyDoor : Script
         {
             doorscript.moving = true;
             AudioManager.instance.keyCollected.Play();
-            AudioManager.instance.doorOpen.Play();
+            playerSounds.DoorOpen.Play();
             gameObject.SetActive(false);
         }
     }

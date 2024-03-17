@@ -21,6 +21,13 @@ using GlmSharp;
 
 namespace BeanFactory
 {
+
+    static class Graphics
+    {
+        public static float gamma { get { return InternalCalls.GetGamma(); } set { InternalCalls.SetGamma(value); } }
+    
+    }
+
     public struct AssetID
     {
         Int64 id;

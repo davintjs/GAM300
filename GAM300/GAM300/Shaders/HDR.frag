@@ -20,6 +20,7 @@ layout (binding = 0)uniform sampler2D hdrBuffer;
 //layout (binding = 1)uniform sampler2D bloomBlur;
 uniform bool hdr;
 uniform float exposure;
+uniform float gammaCorrection;
 //uniform bool enableBloom;
 //uniform float bloomStrength;
 // Testing
@@ -39,7 +40,7 @@ uniform float exposure;
 void main()
 {        
 
-    const float gamma = 2.2;
+//    const float gamma = 2.2;
     vec3 hdrColor = texture(hdrBuffer, TexCoords).rgb;
 //    if(enableBloom)
 //    {
@@ -54,12 +55,12 @@ void main()
         // exposure
         vec3 result = vec3(1.0) - exp(-hdrColor * exposure);
         // also gamma correct while we're at it       
-        result = pow(result, vec3(1.0 / gamma));
+        result = pow(result, vec3(1.0 / gammaCorrection));
         FragColor = vec4(result, 1.0);
     }
     else
     {
-        vec3 result = pow(hdrColor, vec3(1.0 / gamma));
+        vec3 result = pow(hdrColor, vec3(1.0 / gammaCorrection));
         FragColor = vec4(result, 1.0);
     }
 

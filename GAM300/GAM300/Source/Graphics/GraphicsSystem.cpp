@@ -404,6 +404,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	glUniform1f(uniform2, RENDERER.GetExposure());
 
+	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "gammaCorrection");
+
+	glUniform1f(uniform3, RENDERER.getGamma());
+
 	/*GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "enableBloom");
 

@@ -56,8 +56,11 @@ public class RangeEnemy : Script
 
     public GameObject spawnObject;
 
+    PlayerAudioManager playerSounds;
+
     void Start()
     {
+        playerSounds = PlayerAudioManager.instance;
         playOnce = true;
         rb = GetComponent<Rigidbody>();
         currentHealth = maxHealth;
@@ -258,7 +261,41 @@ public class RangeEnemy : Script
                 StopCoroutine(damagedCoroutine);
             }
             damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
-            TakeDamage(1);
+
+            if (ThirdPersonController.instance.currentlyOverdriven == true)
+            {
+                TakeDamage(2);
+            }
+            else
+            {
+                TakeDamage(1);
+                if (ThirdPersonController.instance.isOverdriveEnabled == true)
+                {
+                    //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
+                    if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                    {
+                        ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
+                        ThirdPersonController.instance.UpdateOverdriveBar();
+
+                        if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
+                        {
+                            ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                            playerSounds.PowerUp.Play();
+                        }
+                    }
+                    else
+                    {
+                        ThirdPersonController.instance.currentOverdriveCharge++;
+                        ThirdPersonController.instance.UpdateOverdriveBar();
+
+                        if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                        {
+                            ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                            playerSounds.PowerUp.Play();
+                        }
+                    }
+                }
+            }
         }
     }
 

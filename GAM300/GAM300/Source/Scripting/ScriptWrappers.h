@@ -425,6 +425,12 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return sr.onClick;
 	}
 
+	static bool IsButtonHovered(ScriptObject<SpriteRenderer> spriteRenderer)
+	{
+		SpriteRenderer& sr = spriteRenderer;
+		return sr.onHover;
+	}
+
 
 #pragma endregion
 
@@ -633,6 +639,19 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 		return NAVMESHBUILDER.GetNavMesh()->FindPath(_player, pDest);
 	}
 
+	// Graphics
+
+	static float GetGamma()
+	{
+		return RENDERER.getGamma();
+	}
+
+	static void SetGamma(float gammaValue)
+	{
+		float& gamma = RENDERER.getGamma();
+		gamma = gammaValue;
+	}
+
 	//Register all components to mono
 	template<typename T,typename... Ts>
 	static void RegisterComponent()
@@ -763,6 +782,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 
 		// SpriteRenderer Component
 		Register(IsButtonClicked);
+		Register(IsButtonHovered);
+
+		// Graphics
+		Register(GetGamma);
+		Register(SetGamma);
 
 		//
 		Register(QuitGame);

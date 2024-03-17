@@ -27,13 +27,16 @@ public class StartingAnimation : Script
 
     public GameObject fadeblack;
 
-    public GameObject text1;
-    public GameObject text2;
-    public GameObject text3;
-    public GameObject text4;
-    public GameObject text5;
-    public GameObject text6;
-    public GameObject text7;
+    //public GameObject text1;
+    //public GameObject text2;
+    //public GameObject text3;
+    //public GameObject text4;
+    //public GameObject text5;
+    //public GameObject text6;
+    //public GameObject text7;
+
+    public GameObject subtitles;
+    TextRenderer text;
 
     public AudioSource audio;
 
@@ -67,6 +70,7 @@ public class StartingAnimation : Script
         seq6 = true;
         stop = false;
         exitAnim = false;
+        text = subtitles.GetComponent<TextRenderer>();
     }
 
     void AudioPlay()
@@ -129,7 +133,7 @@ public class StartingAnimation : Script
             }
 
 
-            if (timer >= 12f)
+            if (timer >= 13f)
             {
                 if (playAudio)
                 {
@@ -139,7 +143,7 @@ public class StartingAnimation : Script
             }
 
         }
-        else if (timer < 35f)
+        else if (timer < 30f)
         {
             if (seq1)
             {
@@ -169,7 +173,7 @@ public class StartingAnimation : Script
 
             }
 
-            if (timer >= 30f)
+            if (timer >= 27f)
             {
                 if (seq3)
                 {
@@ -179,13 +183,13 @@ public class StartingAnimation : Script
                 }
             }
 
-            if (timer >= 32)
+            if (timer >= 29)
             {
                 view.SetActive(true);
             }
 
         }
-        else if (timer < 64f)
+        else if (timer < 56f)
         {
             systeminit.SetActive(false);
             loading.SetActive(false);
@@ -209,14 +213,14 @@ public class StartingAnimation : Script
                 }
             }
 
-            if ((timer > 52f) && (scan.alpha <= 0))
+            if ((timer > 50f) && (scan.alpha <= 0))
             {
                 stop = true;
                 scanning.SetActive(false);
             }
 
 
-            if (timer >= 44f)
+            if (timer >= 36f)
             {
                 if (seq5)
                 {
@@ -227,7 +231,7 @@ public class StartingAnimation : Script
 
             }
 
-            if (timer >= 47f)
+            if (timer >= 39f)
             {
                 if (seq6)
                 {
@@ -264,40 +268,47 @@ public class StartingAnimation : Script
         {
             textTimer += Time.deltaTime;
 
-            if(textTimer < 14f)
+            if(textTimer < 7f)
             {
-                text1.SetActive(true);
+                subtitles.SetActive(true);
+                text.text = "Hmm...good, looks like it worked. Oh I almost forgot about the welcoming speech.";
+            }
+            else if(textTimer < 12f)
+            {
+                text.text = "Welcome to the GRID, one of the world's premier robotics facilities,";
+                // text1.SetActive(false);
+                //text2.SetActive(true);
             }
             else if(textTimer < 19f)
             {
-                text1.SetActive(false);
-                text2.SetActive(true);
+                text.text = "where cutting-edge robotics constructs such as yourself are manufactured to enhance and uphold societal progress.";
+                //text2.SetActive(false);
+                //text3.SetActive(true);            
             }
-            else if(textTimer < 34f)
+            else if (textTimer < 23f)
             {
-                text2.SetActive(false);
-                text3.SetActive(true);            
+                text.text = "Here, innovation thrives, and the future is forged.";
+                //text3.SetActive(false);
+                //text4.SetActive(true);
             }
-            else if (textTimer < 39f)
+            else if (textTimer < 31f)
             {
-                scanning.SetActive(false);
-                text3.SetActive(false);
-                text4.SetActive(true);
+                text.text = "My designation is APEX and I am the current overseer of this facility. You are the first in a new line of robots of my design.";
+                //text4.SetActive(false);
+                //text5.SetActive(true);
             }
-            else if (textTimer < 48f)
+            else if (textTimer < 38f)
             {
-                text4.SetActive(false);
-                text5.SetActive(true);
+                // Fear not, these tests should prove to be rudimentary for any creation of mine.
+                text.text = "As per facility protocols, you must undergo some tests before authorisation for deployment.";
+                //text5.SetActive(false);
+                //text6.SetActive(true);
             }
-            else if (textTimer < 56f)
+            else if (textTimer < 43f)
             {
-                text5.SetActive(false);
-                text6.SetActive(true);
-            }
-            else if (textTimer < 63f)
-            {
-                text6.SetActive(false);
-                text7.SetActive(true);
+                text.text = "Fear not, these tests should prove to be rudimentary for any creation of mine.";
+                //text6.SetActive(false);
+                //text7.SetActive(true);
             }
         }
     }

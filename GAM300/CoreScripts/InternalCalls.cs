@@ -259,6 +259,9 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsButtonClicked(SpriteRenderer spriteRenderer);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool IsButtonHovered(SpriteRenderer spriteRenderer);
+
         #endregion
 
         #region MESH_RENDERER
@@ -270,6 +273,15 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetMaterialRaw(MeshRenderer meshRenderer, Material mat);
+
+        #endregion
+
+        #region GRAPHICS
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetGamma();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetGamma(float gammaValue);
 
         #endregion
 
