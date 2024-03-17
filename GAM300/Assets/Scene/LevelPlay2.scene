@@ -105,7 +105,7 @@ Script:
   Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
   fadeTime: 1
   BGM_Source: {fileID: 13334384434134814286}  # Component
-  pauseCanvas: {fileID: 17065559468612678914}  # GameObject
+  pauseCanvas: {fileID: 624169214278105939}  # GameObject
 ---
 ID: 14088906961581824457
 GameObject:
@@ -485,6 +485,7 @@ Transform:
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 17065559468612678914}
     - {fileID: 2866402867161245437}
     - {fileID: 3525555548824268013}
     - {fileID: 6826500622308863951}
@@ -508,7 +509,6 @@ Transform:
     - {fileID: 15996983871537068920}
     - {fileID: 3787274920911425495}
     - {fileID: 5676392047881511918}
-    - {fileID: 17065559468612678914}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -22905,6 +22905,7 @@ Script:
   timer: 0
   animator: {fileID: 13665857943017219500}  # Component
   attackTrigger: {fileID: 13608063128582373505}  # GameObject
+  enemySounds: {fileID: 5823139587629919073}  # Component
   hpBar: {fileID: 18081422161438025274}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 5297853854918785373}  # Component
@@ -23193,6 +23194,7 @@ Script:
   timer: 0
   animator: {fileID: 13228710214417602934}  # Component
   attackTrigger: {fileID: 5976458865903935298}  # GameObject
+  enemySounds: {fileID: 4116794832389696516}  # Component
   hpBar: {fileID: 13563546279246814984}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 17325133999229751987}  # Component
@@ -28087,6 +28089,7 @@ Script:
   timer: 0
   animator: {fileID: 15490750772518730921}  # Component
   attackTrigger: {fileID: 10182307845023477381}  # GameObject
+  enemySounds: {fileID: 10721390715215017099}  # Component
   hpBar: {fileID: 17338308076949455477}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 9983597563396382479}  # Component
@@ -31312,6 +31315,7 @@ Script:
   timer: 0
   animator: {fileID: 8176351043890245559}  # Component
   attackTrigger: {fileID: 1034696538995432217}  # GameObject
+  enemySounds: {fileID: 483918539485333787}  # Component
   hpBar: {fileID: 13277852543598371328}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 8181097202000610831}  # Component
@@ -31635,6 +31639,7 @@ Script:
   timer: 0
   animator: {fileID: 7677904935606688006}  # Component
   attackTrigger: {fileID: 13265326449278859074}  # GameObject
+  enemySounds: {fileID: 2491182710776698818}  # Component
   hpBar: {fileID: 10180225711759476473}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 4651293391192650299}  # Component
@@ -35158,6 +35163,7 @@ Script:
   timer: 0
   animator: {fileID: 10420907662376377271}  # Component
   attackTrigger: {fileID: 12702401490049601225}  # GameObject
+  enemySounds: {fileID: 6424638694905317363}  # Component
   hpBar: {fileID: 898546543010589386}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 3295364860990313297}  # Component
@@ -36815,6 +36821,7 @@ Script:
   timer: 0
   animator: {fileID: 1323850131090951798}  # Component
   attackTrigger: {fileID: 8752970089702699583}  # GameObject
+  enemySounds: {fileID: 12592328208421319411}  # Component
   hpBar: {fileID: 10544989079879360673}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 16614945116669692070}  # Component
@@ -38333,6 +38340,7 @@ Script:
   timer: 0
   animator: {fileID: 7339897885214852959}  # Component
   attackTrigger: {fileID: 2036189163671800282}  # GameObject
+  enemySounds: {fileID: 1310818332231878035}  # Component
   hpBar: {fileID: 14331869571018254577}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 15771493367344086800}  # Component
@@ -40201,6 +40209,7 @@ Script:
   timer: 0
   animator: {fileID: 3967483864253535775}  # Component
   attackTrigger: {fileID: 1859320014956264795}  # GameObject
+  enemySounds: {fileID: 11812070836746058474}  # Component
   hpBar: {fileID: 6964300282308578913}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 2281979527073026994}  # Component
@@ -40454,6 +40463,7 @@ Script:
   timer: 0
   animator: {fileID: 12623166524767899496}  # Component
   attackTrigger: {fileID: 8737543050631908055}  # GameObject
+  enemySounds: {fileID: 7216130535535194682}  # Component
   hpBar: {fileID: 3197518610534636844}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 17410272475223950305}  # Component
@@ -40707,6 +40717,7 @@ Script:
   timer: 0
   animator: {fileID: 4008956330672296042}  # Component
   attackTrigger: {fileID: 9873304508655296805}  # GameObject
+  enemySounds: {fileID: 8949505384541374368}  # Component
   hpBar: {fileID: 8961390157855236339}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 13679024543590507492}  # Component
@@ -40960,6 +40971,7 @@ Script:
   timer: 0
   animator: {fileID: 11775922252982932051}  # Component
   attackTrigger: {fileID: 11728886119229421634}  # GameObject
+  enemySounds: {fileID: 869581446478740379}  # Component
   hpBar: {fileID: 7102901748506770040}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 10571348349847112841}  # Component
@@ -41213,6 +41225,7 @@ Script:
   timer: 0
   animator: {fileID: 524863122010150736}  # Component
   attackTrigger: {fileID: 11431698503551896276}  # GameObject
+  enemySounds: {fileID: 14110353535689561705}  # Component
   hpBar: {fileID: 2766190930066491268}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 17530039533555631439}  # Component
@@ -41466,6 +41479,7 @@ Script:
   timer: 0
   animator: {fileID: 17231996208733859994}  # Component
   attackTrigger: {fileID: 5680074196717204813}  # GameObject
+  enemySounds: {fileID: 3329376242550333741}  # Component
   hpBar: {fileID: 1595158727373292423}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 13301186590583378764}  # Component
@@ -41719,6 +41733,7 @@ Script:
   timer: 0
   animator: {fileID: 1299226768265844501}  # Component
   attackTrigger: {fileID: 406715076858283333}  # GameObject
+  enemySounds: {fileID: 6528720743386414643}  # Component
   hpBar: {fileID: 15182354761892658855}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 16213852318901244393}  # Component
@@ -41972,6 +41987,7 @@ Script:
   timer: 0
   animator: {fileID: 7335709090608580284}  # Component
   attackTrigger: {fileID: 17339074096294122883}  # GameObject
+  enemySounds: {fileID: 11252108063346152311}  # Component
   hpBar: {fileID: 4872432287772594624}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 10869195669279574947}  # Component
@@ -42525,6 +42541,7 @@ Script:
   timer: 0
   animator: {fileID: 13324091730434544865}  # Component
   attackTrigger: {fileID: 12635576556742298042}  # GameObject
+  enemySounds: {fileID: 16363258364260532132}  # Component
   hpBar: {fileID: 12771960829225364734}  # Component
   meleeEnemyPos: {fileID: 0}
   modelOffset: {fileID: 10169941270709570099}  # Component
@@ -94813,7 +94830,7 @@ Transform:
   m_GameObject: {fileID: 14830359691614853383}
   Translation: [0, 0, 0.150000006]
   Rotation: [0, 0, 0]
-  Scale: [19.2999992, 23.5, 1]
+  Scale: [14.5, 23.5, 1]
   Father: {fileID: 17452717900490079642}
   m_Children:
     []
