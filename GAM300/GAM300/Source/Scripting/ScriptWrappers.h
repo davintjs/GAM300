@@ -426,6 +426,12 @@ static bool IsButtonClicked(ScriptObject<SpriteRenderer> spriteRenderer)
 	return sr.onClick;
 }
 
+static bool IsButtonHovered(ScriptObject<SpriteRenderer> spriteRenderer)
+{
+	SpriteRenderer& sr = spriteRenderer;
+	return sr.onHover;
+}
+
 
 #pragma endregion
 
@@ -791,6 +797,8 @@ static void RegisterScriptWrappers()
 
 	// SpriteRenderer Component
 	Register(IsButtonClicked);
+	Register(IsButtonHovered);
+
 
 	// Graphics
 	Register(GetGamma);
