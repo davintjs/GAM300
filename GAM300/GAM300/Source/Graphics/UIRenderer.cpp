@@ -46,7 +46,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
-
+	std::vector<std::pair<SpriteRenderer, float>> Sorted_SR;
 	const Transform* canvasTransform{ nullptr };
 
 	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
@@ -86,8 +86,32 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 
 		Transform& transform = currentScene.Get<Transform>(entity);
 
+		bool been_inserted = false;
+		float dist = glm::distance(transform.GetGlobalTranslation(), _camera.GetCameraPosition());
+		std::pair<SpriteRenderer, float> temp{ Sprite,dist };
+		for (int i = 0; i < Sorted_SR.size(); ++i)
+		{
+			if (dist > Sorted_SR[i].second)
+			{
+				Sorted_SR.insert(Sorted_SR.begin() + i, temp);
+				been_inserted = true;
+				break;
+			}
+		}
+		if (!been_inserted)
+		{
+			Sorted_SR.push_back(temp);
+		}
+	}
+
+	for (int i = 0; i < Sorted_SR.size(); ++i)
+	{
+		SpriteRenderer& Sprite = Sorted_SR[i].first;
+		Transform& transform = currentScene.Get<Transform>(Sprite);
+
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
 			Sprite.AlphaMultiplier);
+
 		// Setting bool to see if there is a sprite to render
 		GLint uniform1 =
 			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
@@ -102,8 +126,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
 			// SRT uniform
 			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					canvasMatrix * transform.GetWorldMatrix() * scaleMat)
+				1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix() * scaleMat)
 			);
 
 			if (Sprite.SpriteTexture == 0)
@@ -119,8 +142,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		{
 			// SRT uniform
 			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					canvasMatrix * transform.GetWorldMatrix())
+				1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix())
 			);
 
 			glUniform1f(uniform1, false);
@@ -189,7 +211,7 @@ void UIRenderer::UIDraw_3D(BaseCamera& _camera)
 
 	for (int i = 0; i < Sorted_SR.size(); ++i)
 	{
-		SpriteRenderer Sprite = Sorted_SR[i].first;
+		SpriteRenderer& Sprite = Sorted_SR[i].first;
 		Transform& transform = currentScene.Get<Transform>(Sprite);
 
 		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
@@ -265,20 +287,6 @@ void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
 
 	glm::mat4 scaleMat = glm::identity<glm::mat4>();
 	scaleMat[0][0] = AR;
-	/*for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
-	{
-		if (currCanvas.state == DELETED) continue;
-		Entity& entity = currentScene.Get<Entity>(currCanvas);
-		Transform& transform = currentScene.Get<Transform>(entity);
-
-		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix() * scaleMat));
-
-		glLineWidth(20.f);
-		renderQuadWireMesh(Renderer_quadVAO_WM, Renderer_quadVBO_WM);
-	}*/
-	glLineWidth(1.f);
-
 
 	// Setting the projection here since all of them use the same projection
 	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())

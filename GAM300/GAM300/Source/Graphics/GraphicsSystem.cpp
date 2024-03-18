@@ -310,22 +310,16 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	{
 		BLOOMER.RenderBloomTexture(0.005, _camera, cameraQuadVAO, cameraQuadVBO);
 		
-		
+		FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::MERGE_BLOOM);
+		shader.Use();
+
 		//bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
 		
 		glActiveTexture(GL_TEXTURE1);
 		//glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]);
 
 		glBindTexture(GL_TEXTURE_2D, BLOOMER.BloomTexture());
-
-	}
-
-	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
-
-	if (RENDERER.enableBloom())
-	{
-		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::MERGE_BLOOM);
-		shader.Use();
 
 		// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
 		glActiveTexture(GL_TEXTURE0);
@@ -342,10 +336,9 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 		renderQuad(_vao, _vbo);
 		shader.UnUse();
+
+		FRAMEBUFFER.Unbind();
 	}
-	
-
-
 
 	// Draw debug drawing without being affected by the bloom
 	FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
@@ -362,7 +355,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
 		DEBUGDRAW.Draw();
-
 	}
 
 	TEXTSYSTEM.Draw(_camera);
