@@ -679,7 +679,7 @@ public class ThirdPersonController : Script
             }
             //DASH ATTACK
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
-            if (Input.GetKeyDown(KeyCode.E) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
+            if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
             {
                 //Console.WriteLine("DashAttack");
                 UseStamina(dashAttackStamina);

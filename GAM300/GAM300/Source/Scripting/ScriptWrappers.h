@@ -100,7 +100,11 @@ static int GetScrollState()
 static bool GetMouseDown(int mouseCode)
 {
 	UNREFERENCED_PARAMETER(mouseCode);
-	return InputHandler::isMouseButtonPressed_L();
+	if (mouseCode == 0)
+	{
+		return InputHandler::isMouseButtonPressed_L();
+	}
+	return InputHandler::isMouseButtonPressed_R();
 }
 
 //Checks if key is held
