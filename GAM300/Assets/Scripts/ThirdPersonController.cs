@@ -205,6 +205,7 @@ public class ThirdPersonController : Script
     int comboCount = 1;
 
     PlayerAudioManager playerSounds;
+    private bool noInterpolate = true;
 
     bool _wasMoving = false;
     bool wasMoving
@@ -245,9 +246,9 @@ public class ThirdPersonController : Script
         AnimationState attack1 = animationManager.GetState("Attack1");
         AnimationState attack2 = animationManager.GetState("Attack2");
         AnimationState attack3 = animationManager.GetState("Attack3");
+        AnimationState dashAttack = animationManager.GetState("DashAttack");
         AnimationState sprint = animationManager.GetState("Sprint");
         AnimationState run = animationManager.GetState("Run");
-        AnimationState dashAttack = animationManager.GetState("DashAttack");
         AnimationState dodge = animationManager.GetState("Dodge");
         AnimationState overdrive = animationManager.GetState("Overdrive");
         AnimationState idle = animationManager.GetState("Idle");
@@ -682,12 +683,38 @@ public class ThirdPersonController : Script
             if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
             {
                 //Console.WriteLine("DashAttack");
+                IsAttacking = false;
                 UseStamina(dashAttackStamina);
                 playerSounds.DashAttack.Play();
                 playerSounds.PlayerAttack.Play();
                 _isDashAttacking = true;
+
+                // No interpolation for dash attack
+                noInterpolate = false;
+
+                // Snap the direction to wasd keys
+                if (Input.GetKey(KeyCode.W))
+                {
+                    dir = (PlayerCamera.back);
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    dir = (PlayerCamera.left);
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    dir = (PlayerCamera.forward);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    dir = (PlayerCamera.right);
+                }
+
                 SetState("Run", false);
                 SetState("Sprint", false);
+                SetState("Attack1", false);
+                SetState("Attack2", false);
+                SetState("Attack3", false);
                 SetState("DashAttack", true);
             }
             //DODGE
@@ -696,8 +723,33 @@ public class ThirdPersonController : Script
                 //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
                 isDodging = true;
+
+                // No interpolation for dodging
+                noInterpolate = false;
+
+                // Snap the direction to wasd keys
+                if (Input.GetKey(KeyCode.W))
+                {
+                    dir = (PlayerCamera.back);
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    dir = (PlayerCamera.left);
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    dir = (PlayerCamera.forward);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    dir = (PlayerCamera.right);
+                }
+
                 SetState("Run", false);
                 SetState("Sprint", false);
+                SetState("Attack1", false);
+                SetState("Attack2", false);
+                SetState("Attack3", false);
                 SetState("Dodge", true);
             }
             //OVERDRIVE
@@ -844,9 +896,16 @@ public class ThirdPersonController : Script
             movement += vec3.UnitY * -Gravity;
         }
         wasMoving = moved;
-        UpdateRotation(dir);
-
-
+        if (noInterpolate) // Update rotation of the player as normal
+        {
+            UpdateRotation(dir);
+        }
+        else
+        {
+            UpdateRotationNoInterpolate(dir);
+            noInterpolate = true;
+        }
+        noInterpolate = true;
         CC.Move(movement);
 
 
@@ -1145,6 +1204,36 @@ public class ThirdPersonController : Script
         quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
 
         vec3 rot = ((vec3)midQuat.EulerAngles);
+
+        if (rot != vec3.NaN)
+        {
+            bool isNan = false;
+            foreach (float val in rot)
+            {
+                if (float.IsNaN(val))
+                {
+                    isNan = true;
+                    break;
+                }
+            }
+            if (!isNan)
+            {
+                PlayerModel.localRotation = rot;
+            }
+        }
+    }
+
+    public void UpdateRotationNoInterpolate(vec3 dir)
+    {
+        if (dir == vec3.Zero)
+        {
+            return;
+        }
+
+        float angle = (float)Math.Atan2(-dir.x, -dir.z);
+        quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
+
+        vec3 rot = (vec3)newQuat.EulerAngles;
 
         if (rot != vec3.NaN)
         {
