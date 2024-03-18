@@ -147,7 +147,7 @@ public:
 	{
 		//Start ImGui Frames
 #if defined(_BUILD)
-		AllSystems::Update(dt);
+		AllSystems::Update(dt * MyFrameRateController.timeScale);
 #else
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
@@ -223,6 +223,7 @@ public:
 	{
 		(void)pEvent;
 		mode = ENUM_SYSTEM_RUNTIME;
+		MyFrameRateController.timeScale = 1.f;
 	}
 	void CallbackSceneStop(SceneStopEvent * pEvent)
 	{

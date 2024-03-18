@@ -4,7 +4,7 @@ meshes:
 animations:
   data: {guid: b705ca95cd0f20e4b369b0fab4c62f38}
 animationStates:
-  Idle: [2, 57]
+  Idle: [2, 56]
   Walk: [58, 98]
   Run: [99, 121]
   Stun: [122, 175]

@@ -369,7 +369,10 @@ bool Scene::IsActive(T& object, bool checkParents)
 
 	if constexpr (std::is_same_v<T, Entity>)
 	{
+		auto id = arr.GetDenseIndex(object);
 		bool isActive = arr.IsActiveDense(arr.GetDenseIndex(object));
+		auto& obj = arr.DenseSubscript(id);
+
 		Transform& t = Get<Transform>(object);
 
 		if (!isActive)
@@ -379,7 +382,6 @@ bool Scene::IsActive(T& object, bool checkParents)
 		{
 			return t.GetFlag(Transform::Flag::WorldEnabled);
 		}
-
 		return isActive;
 	}
 	else if constexpr (SingleComponentTypes::Has<T>())

@@ -21,7 +21,7 @@ ID: 13698561299413981399
 Transform:
   m_GameObject: {fileID: 15940527509356147059}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [32.3499985, 1, 28.2999992]
   Father: {fileID: 17252896917273487941}
   m_Children:
@@ -47,10 +47,10 @@ GameObject:
 ID: 6000174059185605174
 Transform:
   m_GameObject: {fileID: 12573530769374537231}
-  Translation: [8.15622902, 13.514636, 22.0265064]
-  Rotation: [-0.289973289, 0.407077461, 0]
-  Scale: [0.999998569, 0.999999344, 0.999999285]
-  Father: {fileID: 0}
+  Translation: [0.599975586, 18.6102905, 34.5742188]
+  Rotation: [-0.289972812, 0.407077223, 0]
+  Scale: [9.99998283, 9.99999428, 9.99999237]
+  Father: {fileID: 17252896917273487941}
   m_Children:
     []
 ---
@@ -58,8 +58,8 @@ ID: 5451799661244729913
 Camera:
   m_GameObject: {fileID: 12573530769374537231}
   m_IsEnabled: true
-  BackgroundColor: [-431602080, -431602080, -431602080, -431602080]
-  ClearFlags: "\x01"
+  BackgroundColor: [1, 0.999899983, 0.999899983, -431602080]
+  ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
   FarClip: 100
@@ -79,19 +79,19 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 7420717423398481206}  # Transform
-    - component: {fileID: 4431655654045634671}  # LightSource
+    - component: {fileID: 8181251902546109621}  # LightSource
 ---
 ID: 7420717423398481206
 Transform:
   m_GameObject: {fileID: 6704001879042179055}
   Translation: [0, 18.6903267, 4.42546844]
-  Rotation: [0, 1.57079637, 0.0174532924]
+  Rotation: [0, 1.57079637, -0.486946851]
   Scale: [1, 0.999949396, 0.999949634]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 4431655654045634671
+ID: 8181251902546109621
 LightSource:
   m_GameObject: {fileID: 6704001879042179055}
   m_IsEnabled: true
@@ -118,7 +118,7 @@ ID: 9279086835543639943
 Transform:
   m_GameObject: {fileID: 16520467601722342322}
   Translation: [-8.0956831, 2.10975413e-05, 3.53519726]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 1.55508828, 0]
   Scale: [0.100000001, 0.100000001, 0.100000001]
   Father: {fileID: 17252896917273487941}
   m_Children:
@@ -2192,7 +2192,7 @@ ID: 6357977998395153951
 Transform:
   m_GameObject: {fileID: 3048328437722287102}
   Translation: [-6.58818007, 23.1616764, 3.14279509]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [10, 1, 10]
   Father: {fileID: 17252896917273487941}
   m_Children:
@@ -2225,3 +2225,4 @@ Transform:
     - {fileID: 15940527509356147059}
     - {fileID: 16520467601722342322}
     - {fileID: 3048328437722287102}
+    - {fileID: 12573530769374537231}

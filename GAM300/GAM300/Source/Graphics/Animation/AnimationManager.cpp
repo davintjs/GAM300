@@ -33,6 +33,9 @@ void Animation_Manager::Init()
 
 void Animation_Manager::Update(float dt)
 {
+    //std::cout << "Anim DT: " << dt << std::endl;
+    if (dt == 0)
+        return;
     Scene& currentScene = MySceneManager.GetCurrentScene();
 
     for (Camera& CurrCam : currentScene.GetArray<Camera>())
@@ -78,15 +81,17 @@ void Animation_Manager::Update(float dt)
                 Transform& cameraTran{ currentScene.Get<Transform>(CurrCam) };
                 glm::vec3 p = cameraTran.GetGlobalTranslation();
                 Transform* parent = transForm.GetParent();
+                glm::vec3 d;
                 if (parent)
-                {
-                    glm::vec3 d = parent->GetGlobalTranslation() - p;
-                    JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
-                    EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
-                    std::string tagName = IDENTIFIERS.GetTagString(ray.tag.tagName);
-                    if (ray.hit && tagName.compare("Enemy") && ray.tag.physicsLayerIndex != 1) // If it hits something
-                        continue;
-                }
+                    d = parent->GetGlobalTranslation() - p;
+                else
+                    d = transForm.GetGlobalTranslation() - p;
+
+                JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
+                EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
+                std::string tagName = IDENTIFIERS.GetTagString(ray.tag.tagName);
+                if (ray.hit && tagName.compare("Enemy") && ray.tag.physicsLayerIndex != 1) // If it hits something
+                    continue;
             }
 
             if (animator.playing && animator.AnimationAttached())

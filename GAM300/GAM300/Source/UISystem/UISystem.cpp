@@ -43,6 +43,7 @@ void UISystem::Update(float dt)
 		{
 
 			sr.onClick = false;
+			sr.onHover = false;
 			//if (sr.onHover == false)
 			//{
 			//	sr.orgScale = currentScene.Get<Transform>(sr).GetLocalScale();
@@ -68,7 +69,6 @@ void UISystem::Update(float dt)
 					//	t.SetLocalScale(targetScale);
 
 					//}
-					return;
 					//SpriteRenderer::onHover = true;
 				}
 				else
@@ -82,7 +82,7 @@ void UISystem::Update(float dt)
 
 					//SceneManager::Instance().LoadScene("Assets/Scene/LevelPlay2.scene");
 				}
-
+				return;
 			}
 			else
 			{

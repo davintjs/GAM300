@@ -268,7 +268,7 @@ void ScriptingSystem::Update(float dt)
 {
 	if (playMode)
 	{
-		mono_field_static_set_value(mTimeVtable, mTimeDtField, &dt);
+		mono_field_static_set_value(mTimeVtable, mTimeDtField, &MyFrameRateController.deltaTime);
 		InvokeAllScripts(DefaultMethodTypes::Update);
 		InvokeAllScripts(DefaultMethodTypes::ExecuteCoroutines);
 		return;

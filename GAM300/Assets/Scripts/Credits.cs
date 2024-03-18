@@ -13,7 +13,14 @@ public class Credits : Script
 
     public float scrollspeed = 5.0f;
 
+    public float yOffset = 10f;
 
+    vec3 startPos;
+
+    float timer = 0f;
+
+    public float scrollDuration = 10f;
+    
     //sounds
     public AudioSource bgm;
 
@@ -23,10 +30,31 @@ public class Credits : Script
         bgm.Play();
         //startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
         //currentRestTimer = restTimer;
-        StartCoroutine(ScrollCredits());
         //goToPlay();
 
 
+        startPos = credits.transform.localPosition;
+    }
+
+    void Update()
+    {
+
+        if (timer < scrollDuration)
+        {
+            credits.transform.localPosition = vec3.Lerp(startPos, startPos + vec3.UnitY * yOffset, timer / scrollDuration);
+            timer += Time.unscaledDeltaTime;
+            if (timer >= scrollDuration)
+            {
+                StartCoroutine(WaitTime());
+            }
+        }
+
+    }
+
+    IEnumerator WaitTime()
+    {
+        yield return new WaitForSeconds(3f);
+        GoToMainMenu();
     }
 
     //void goToPlay()
@@ -36,29 +64,9 @@ public class Credits : Script
     //        SceneManager.LoadScene("MainMenu", true);
     //    }
     //}
-
-    IEnumerator ScrollCredits()
-    {
-        vec3 initialPos = credits.transform.position;
-        //float distanceToMove = credits.GetComponent<SpriteRenderer>().
-        //Transform creditsTransform = credits.GetComponent<Transform>();
-        //vec3 translation = vec3.UnitY * scrollspeed * Time.deltaTime;
-
-        //float distanceToMove = credits.GetComponent<SpriteRenderer>()
-        while (true)
-        {
-            credits.transform.Translate(vec3.UnitY * scrollspeed * Time.deltaTime);
-
-            yield return null;
-        }
-
-        //GoToMainMenu();
-
-
-    }
     void GoToMainMenu()
     {
-        SceneManager.LoadScene("MainMenu", true);
+        SceneManager.LoadScene("VictoryScreenMenu", true);
     }
 
     //void Update()

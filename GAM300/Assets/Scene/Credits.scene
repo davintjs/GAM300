@@ -63,8 +63,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 4418236984561621579}
-    - {fileID: 15628350562473262138}
+    - {fileID: 7816141683958995786}
 ---
 ID: 2748547964756519209
 Canvas:
@@ -76,9 +75,11 @@ Script:
   m_GameObject: {fileID: 11651427043620866289}
   m_IsEnabled: true
   Script: {guid: 07590604a451c92074c181837a233670}
+  scrollDuration: 10
   scrollspeed: 0.100000001
+  yOffset: 2
   bgm: {fileID: 12773935355036224696}  # Component
-  credits: {fileID: 15628350562473262138}  # GameObject
+  credits: {fileID: 7816141683958995786}  # GameObject
 ---
 ID: 4418236984561621579
 GameObject:
@@ -94,9 +95,9 @@ ID: 16773861268096498698
 Transform:
   m_GameObject: {fileID: 4418236984561621579}
   Translation: [0.0155261923, 0, -0.874936759]
-  Rotation: [0, 0, 0]
+  Rotation: [0, -0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 11651427043620866289}
+  Father: {fileID: 7816141683958995786}
   m_Children:
     []
 ---
@@ -124,9 +125,9 @@ ID: 445726148051528729
 Transform:
   m_GameObject: {fileID: 15628350562473262138}
   Translation: [0, -0.893340647, 0.297466874]
-  Rotation: [-3.14159226, 0, 0]
+  Rotation: [-3.14159226, -0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 11651427043620866289}
+  Father: {fileID: 7816141683958995786}
   m_Children:
     []
 ---
@@ -231,3 +232,23 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
+---
+ID: 7816141683958995786
+GameObject:
+  m_IsActive: true
+  m_Name: CreditsPanel
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5246372874881440655}  # Transform
+---
+ID: 5246372874881440655
+Transform:
+  m_GameObject: {fileID: 7816141683958995786}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    - {fileID: 4418236984561621579}
+    - {fileID: 15628350562473262138}
