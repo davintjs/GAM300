@@ -19,6 +19,14 @@ public class Settings : Script
 
     public GameObject sfxVolumeButton;
 
+    public GameObject testSlider;
+    public GameObject filltestSlider;
+    vec3 initialtestSlider;
+    public Transform testSliderbar;
+    public float MinValue;
+    public float MaxValue = 100f;
+    public float Value; 
+
 
     public bool isStartActive = true;
     public float flickerTimer = 0f;
@@ -61,6 +69,9 @@ public class Settings : Script
             bgmVolumeButtonRenderer = bgmVolumeButton.GetComponent<SpriteRenderer>();
         if (sfxVolumeButton.HasComponent<SpriteRenderer>())
             sfxVolumeButtonRenderer = sfxVolumeButton.GetComponent<SpriteRenderer>();
+
+        testSlider.SetActive(true);
+
     }
 
     void Update()
@@ -126,8 +137,9 @@ public class Settings : Script
 
             }
         }
-   
 
+
+        fillSlider();
 
         // Check if button state is clicked
 
@@ -138,8 +150,21 @@ public class Settings : Script
         //selfFlicker();
        // movement();
     }
+    public void fillSlider()
+    {
+        //testSlider.SetActive(true);
+        filltestSlider.GetComponent<Transform>().localPosition = initialtestSlider;
+        UpdatefillSlider();
+    }
 
-   
+    public void UpdatefillSlider()
+    {
+        vec3 sliderScale = testSliderbar.localScale;
+        sliderScale.x = currentSlider / maxSlider;
+        testSliderbar.localScale = sliderScale;
+    }
+
+
 
 
 }

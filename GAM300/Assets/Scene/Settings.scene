@@ -63,6 +63,9 @@ Transform:
   Scale: [1.60844898, 0.972704649, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 13067152016376394435}
+    - {fileID: 13832416887864285901}
+    - {fileID: 3501737523948874866}
     - {fileID: 9386478579826465449}
     - {fileID: 15358237258630853129}
 ---
@@ -77,18 +80,23 @@ Script:
   m_IsEnabled: true
   Script: {guid: 2ea11ccf97287329911603c97e51758b}
   back: false
+  currentSlider: 0
   duration: 2
   flickerTimer: 0
   isStartActive: true
+  maxSlider: 100
   sizeMultiplier: 1.5
   test: false
   timer: 0
   backButton: {fileID: 13236326914152460117}  # GameObject
   bgm: {fileID: 18230885468184141171}  # Component
   bgmVolumeButton: {fileID: 5206565024310472992}  # GameObject
+  filltestSlider: {fileID: 13832416887864285901}  # GameObject
   mainMenuBGImage: {fileID: 9386478579826465449}  # GameObject
   masterVolumeButton: {fileID: 6712040991204226818}  # GameObject
   sfxVolumeButton: {fileID: 6495318900117040996}  # GameObject
+  testSlider: {fileID: 3501737523948874866}  # GameObject
+  testSliderbar: {fileID: 13067152016376394435}  # Component
 ---
 ID: 9386478579826465449
 GameObject:
@@ -414,3 +422,93 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 107db88cb9c0671beea293272f176173}
+---
+ID: 3501737523948874866
+GameObject:
+  m_IsActive: true
+  m_Name: testSlider
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7428821796231590312}  # Transform
+    - component: {fileID: 9628928646385654731}  # SpriteRenderer
+---
+ID: 7428821796231590312
+Transform:
+  m_GameObject: {fileID: 3501737523948874866}
+  Translation: [0.0600506477, -0.680104196, 0.0178733207]
+  Rotation: [0, 0, 0]
+  Scale: [2.28286028, 0.917397797, 0.999930799]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 9628928646385654731
+SpriteRenderer:
+  m_GameObject: {fileID: 3501737523948874866}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 13832416887864285901
+GameObject:
+  m_IsActive: true
+  m_Name: fillTestBar
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4612391060768230338}  # Transform
+    - component: {fileID: 12846119253903657593}  # SpriteRenderer
+---
+ID: 4612391060768230338
+Transform:
+  m_GameObject: {fileID: 13832416887864285901}
+  Translation: [-0.308752179, -0.680022538, 0.0363112316]
+  Rotation: [0, 0, 0]
+  Scale: [0.621717751, 1.02806234, 0.99994272]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 12846119253903657593
+SpriteRenderer:
+  m_GameObject: {fileID: 13832416887864285901}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 7108dee2a28a8eb101c2cfa6acd8536f}
+---
+ID: 13067152016376394435
+GameObject:
+  m_IsActive: true
+  m_Name: testSliderBar
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2401636980383934360}  # Transform
+    - component: {fileID: 3927689875299920849}  # SpriteRenderer
+---
+ID: 2401636980383934360
+Transform:
+  m_GameObject: {fileID: 13067152016376394435}
+  Translation: [-0.166343376, -0.672127962, 0.0480248742]
+  Rotation: [0, 0, 0]
+  Scale: [0.920697868, 1.02806246, 0.99995172]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 3927689875299920849
+SpriteRenderer:
+  m_GameObject: {fileID: 13067152016376394435}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f62a10c6eebe5cecb5fc9c075222d6a3}
