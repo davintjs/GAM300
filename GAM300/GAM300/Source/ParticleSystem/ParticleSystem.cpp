@@ -136,26 +136,28 @@ void ParticleManager::Update(float dt)
                 continue;
             }
 
-            const size_t trailCount = trails.count;
+            if (!particleComponent.is2D) {
+                const size_t trailCount = trails.count;
 
-            if (1 >= trailCount) {
-                ++trails.count;
-                trails.pos.emplace_back(particlePos);
-                continue;
-            }
-            const glm::vec3& endPoint = trails.pos[trailCount - 1];
-            const glm::vec3& startPoint = trails.pos[trailCount - 2];
+                if (1 >= trailCount) {
+                    ++trails.count;
+                    trails.pos.emplace_back(particlePos);
+                    continue;
+                }
+                const glm::vec3& endPoint = trails.pos[trailCount - 1];
+                const glm::vec3& startPoint = trails.pos[trailCount - 2];
 
-            if (isParallel(endPoint - startPoint, particlePos - startPoint)) {
-                trails.pos[trailCount - 1] = particlePos;
-            }
-            else {
-                trails.pos.emplace_back(particlePos);
-                trails.count++;
-            }
-            if (particleComponent.trailSize > 0 && trailCount > static_cast<size_t>(particleComponent.trailSize)) {
-                trails.count--;
-                trails.pos.pop_front();
+                if (isParallel(endPoint - startPoint, particlePos - startPoint)) {
+                    trails.pos[trailCount - 1] = particlePos;
+                }
+                else {
+                    trails.pos.emplace_back(particlePos);
+                    trails.count++;
+                }
+                if (particleComponent.trailSize > 0 && trailCount > static_cast<size_t>(particleComponent.trailSize)) {
+                    trails.count--;
+                    trails.pos.pop_front();
+                }
             }
         }
 

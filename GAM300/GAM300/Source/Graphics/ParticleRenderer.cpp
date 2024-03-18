@@ -74,35 +74,36 @@ void ParticleRenderer::Update(float dt) {
             float thicc = particleComponent.trailThiccness / 10.f;
 
             // update trail
-            for (unsigned int j = 1; j < particleComponent.particles_[i].trails.count; ++j) {
-                glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j-1u];
-                float trailScale = glm::length(trailVector);
-                glm::mat4 trailScaleMatrix = glm::mat4( 
-                    glm::vec4(thicc, 0, 0, 0),
-                    //glm::vec4(0, 1, 0, 0),
-                    glm::vec4(0, trailScale, 0, 0),
-                    glm::vec4(0, 0, thicc, 0),
-                    glm::vec4(0, 0, 0, 1));
-                trailVector = glm::normalize(trailVector);
-                glm::vec3 newX = glm::cross(trailVector, glm::vec3(0.0f, 1.0f, 0.0f));
-                if (glm::length(newX) == 0) {
-                    newX = vec3(.5f, 0.f, 0.f);
+            if (!particleComponent.is2D) {
+                for (unsigned int j = 1; j < particleComponent.particles_[i].trails.count; ++j) {
+                    glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j - 1u];
+                    float trailScale = glm::length(trailVector);
+                    glm::mat4 trailScaleMatrix = glm::mat4(
+                        glm::vec4(thicc, 0, 0, 0),
+                        //glm::vec4(0, 1, 0, 0),
+                        glm::vec4(0, trailScale, 0, 0),
+                        glm::vec4(0, 0, thicc, 0),
+                        glm::vec4(0, 0, 0, 1));
+                    trailVector = glm::normalize(trailVector);
+                    glm::vec3 newX = glm::cross(trailVector, glm::vec3(0.0f, 1.0f, 0.0f));
+                    if (glm::length(newX) == 0) {
+                        newX = vec3(.5f, 0.f, 0.f);
+                    }
+                    glm::vec3 newZ = glm::cross(newX, trailVector);
+                    glm::mat4 trailRotationMatrix = glm::mat4(
+                        glm::vec4(newX, 0),
+                        glm::vec4(trailVector, 0),
+                        glm::vec4(newZ, 0),
+                        glm::vec4(0, 0, 0, 1));
+                    glm::mat4 trailTranslateMatrix = glm::mat4(
+                        glm::vec4(1, 0, 0, 0),
+                        glm::vec4(0, 1, 0, 0),
+                        glm::vec4(0, 0, 1, 0),
+                        glm::vec4(particleComponent.particles_[i].trails.pos[j - 1], 1));
+                    //trailSRT.emplace_back(trailScaleMatrix * trailRotationMatrix * trailTranslateMatrix);
+                    trailSRT.emplace_back(trailTranslateMatrix * trailRotationMatrix * trailScaleMatrix);
                 }
-                glm::vec3 newZ = glm::cross(newX, trailVector);
-                glm::mat4 trailRotationMatrix = glm::mat4(
-                    glm::vec4(newX, 0), 
-                    glm::vec4(trailVector, 0), 
-                    glm::vec4(newZ, 0), 
-                    glm::vec4(0, 0, 0, 1));
-                glm::mat4 trailTranslateMatrix = glm::mat4(
-                    glm::vec4(1, 0, 0, 0),
-                    glm::vec4(0, 1, 0, 0),
-                    glm::vec4(0, 0, 1, 0),
-                    glm::vec4(particleComponent.particles_[i].trails.pos[j - 1], 1));
-                //trailSRT.emplace_back(trailScaleMatrix * trailRotationMatrix * trailTranslateMatrix);
-                trailSRT.emplace_back(trailTranslateMatrix * trailRotationMatrix * trailScaleMatrix);
             }
-
         }
 
         //sort particle
@@ -204,6 +205,8 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         trailshader.Use();
         perspective = glGetUniformLocation(trailshader.GetHandle(), "persp_projection");
         view = glGetUniformLocation(trailshader.GetHandle(), "View");
+        GLuint trailColor = glGetUniformLocation(trailshader.GetHandle(), "trailColor");
+        glUniform3fv(trailColor, 1, glm::value_ptr(glm::vec3(particleComponent.trailColor)));
         glUniformMatrix4fv(perspective, 1, GL_FALSE,
             glm::value_ptr(_camera.GetProjMatrix()));
         glUniformMatrix4fv(view, 1, GL_FALSE,
@@ -380,6 +383,9 @@ void ParticleRenderer::SetupInstancedCylinder() {
     glVertexAttribDivisor(8, 1);
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
+
+
+
 
 }
 
