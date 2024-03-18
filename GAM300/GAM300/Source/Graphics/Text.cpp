@@ -22,7 +22,6 @@ void TextSystem::Init()
 	glVertexAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
 }
 
 void TextSystem::Update(float dt)
@@ -139,6 +138,8 @@ void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
 
 	if (!canvasTransform)
 	{
+		txtshader.UnUse();
+		glDisable(GL_BLEND);
 		return;
 	}
 
@@ -162,9 +163,9 @@ void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
 			1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix()));
 
 		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
-			text.alpha);
+			text.color.w);
 
-		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
+		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(txtVAO);
@@ -176,7 +177,11 @@ void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
 	}
 
 	txtshader.UnUse();
-
+	GLenum code = glGetError();
+	if ((GLint)code != 0)
+	{
+		std::cout << "Error at Screen Space: " << (GLint)code << "\n";
+	}
 }
 
 
@@ -216,9 +221,9 @@ void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
 			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
 		
 		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
-			text.alpha);
+			text.color.w);
 
-		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
+		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindVertexArray(txtVAO);
@@ -232,7 +237,7 @@ void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
 
 
 	txtshader.UnUse();
-
+	glDisable(GL_BLEND);
 }
 
 void TextSystem::RenderTextFromString(TextRenderer const& text)
