@@ -75,6 +75,7 @@ void DebugDraw::Draw()
 		instanceCounter[vao].ResizeContainers();
 	}
 
+	glClear(GL_DEPTH_BUFFER_BIT);
 	Scene& currentScene = MySceneManager.GetCurrentScene();
 	InstanceProperties& iProp = instanceCounter[vao];
 	pProp = &iProp;
@@ -130,6 +131,13 @@ void DebugDraw::Draw()
 				if (distance > 20.f)
 					DrawSegment3D(iProp, pos, tCam.GetGlobalTranslation(), color);
 			}
+		}
+
+		for (auto& camera : currentScene.GetArray<Camera>())
+		{
+			if (!currentScene.IsActive(camera)) continue;
+
+			DrawCameraBounds(camera.EUID());
 		}
 	}	
 	
@@ -387,7 +395,6 @@ void DebugDraw::DrawCanvasOutline()
 	Scene& currentScene = MySceneManager.GetCurrentScene();
 	auto& iProp = *pProp;
 	
-	glClear(GL_DEPTH_BUFFER_BIT);
 	glm::mat4 scaleMat = glm::identity<glm::mat4>(), norMat;
 	glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
 	glm::vec3 p1, p2;

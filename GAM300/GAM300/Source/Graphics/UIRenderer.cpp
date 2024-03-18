@@ -87,8 +87,8 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		Transform& transform = currentScene.Get<Transform>(entity);
 
 		bool been_inserted = false;
-		float dist = glm::distance(transform.GetGlobalTranslation(), _camera.GetCameraPosition());
-		std::pair<SpriteRenderer, float> temp{ Sprite,dist };
+		float dist = transform.GetGlobalTranslation().z;
+		std::pair<SpriteRenderer, float> temp{ Sprite, dist };
 		for (int i = 0; i < Sorted_SR.size(); ++i)
 		{
 			if (dist > Sorted_SR[i].second)
@@ -126,7 +126,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
 			// SRT uniform
 			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix() * scaleMat)
+				1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix() * scaleMat)
 			);
 
 			if (Sprite.SpriteTexture == 0)
@@ -142,7 +142,7 @@ void UIRenderer::UIDraw_2D(BaseCamera& _camera)
 		{
 			// SRT uniform
 			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix())
+				1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix())
 			);
 
 			glUniform1f(uniform1, false);

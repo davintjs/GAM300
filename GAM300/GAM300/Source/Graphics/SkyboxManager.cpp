@@ -33,15 +33,12 @@ void SkyboxManager::CreateSkybox(const fs::path& _name)
 
 void SkyboxManager::Draw(BaseCamera& _camera)
 {
-	GLint OldCullFaceMode;
-	glGetIntegerv(GL_CULL_FACE_MODE, &OldCullFaceMode);
-	glCullFace(GL_FRONT);
 	glDepthFunc(GL_LEQUAL);
 	if (skyboxTex == 0)
 	{
 		skyboxTex = TextureManager.GetTexture("Assets//Textures//SkyBox//skybox_default_top.dds");
 	}
 	skyBoxModel.SkyBoxDraw(skyboxTex, _camera);
+
 	glDepthFunc(GL_LESS);
-	glCullFace(OldCullFaceMode);
 }

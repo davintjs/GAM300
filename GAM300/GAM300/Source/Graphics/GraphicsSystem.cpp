@@ -357,7 +357,9 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 		DEBUGDRAW.Draw();
 	}
 
-	TEXTSYSTEM.Draw(_camera);
+	TEXTSYSTEM.RenderText_WorldSpace(_camera);
+	TEXTSYSTEM.RenderText_ScreenSpace(_camera);
+
 
 	PARTICLERENDER.Draw2D(_camera);
 
@@ -427,10 +429,11 @@ void GraphicsSystem::Draw(BaseCamera& _camera)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
-	glEnable(GL_DEPTH_BUFFER);
+	//glEnable(GL_DEPTH_BUFFER);
 	MYSKYBOX.Draw(_camera);
 
 	RENDERER.Draw(_camera);
+
 	PARTICLERENDER.Draw(_camera);
 }
 
