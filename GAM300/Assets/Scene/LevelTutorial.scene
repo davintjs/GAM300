@@ -357,7 +357,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   Gravity: 9.81000042
-  JumpSpeed: 420
+  JumpSpeed: 7
   MoveSpeed: 340
   RotationSpeed: 5
   _isAttacking: false
@@ -12365,6 +12365,7 @@ ParticleComponent:
   Particle Noise Frequency: 4.42999983
   2D particle: false
   Trailing: true
+  Trail Color: [1, 1, 1]
   Trail Size: 66
   Trail Thickness: 1
   Looping: true
@@ -14901,9 +14902,6 @@ Script:
   m_GameObject: {fileID: 15952054123807579159}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 6034621871942586701}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12642420772951399868
 GameObject:
@@ -18900,6 +18898,7 @@ ParticleComponent:
   Particle Noise Frequency: 20
   2D particle: false
   Trailing: true
+  Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true

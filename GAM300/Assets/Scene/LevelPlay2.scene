@@ -369,7 +369,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   Gravity: 9.81000042
-  JumpSpeed: 420
+  JumpSpeed: 7
   MoveSpeed: 340
   RotationSpeed: 5
   _isAttacking: false
@@ -4277,6 +4277,7 @@ ParticleComponent:
   Particle Noise Frequency: 0
   2D particle: false
   Trailing: false
+  Trail Color: [1, 1, 1]
   Trail Size: 0
   Trail Thickness: 1
   Looping: false
@@ -8107,9 +8108,6 @@ Script:
   m_GameObject: {fileID: 9834818310388416835}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 10712419355432134318}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 1087374814937148363
 GameObject:
@@ -22938,9 +22936,6 @@ Script:
   m_GameObject: {fileID: 18081422161438025274}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 8640499112490309379}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 11234550795519056455
 GameObject:
@@ -23227,9 +23222,6 @@ Script:
   m_GameObject: {fileID: 13563546279246814984}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 505178339176436673}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 15761111545168782062
 GameObject:
@@ -28122,9 +28114,6 @@ Script:
   m_GameObject: {fileID: 17338308076949455477}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 7216264740618189409}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 18270885596103450463
 GameObject:
@@ -30123,9 +30112,6 @@ Script:
   m_GameObject: {fileID: 3772670757970116635}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 15348787981169734539}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 17809111819813166449
 GameObject:
@@ -30507,9 +30493,6 @@ Script:
   m_GameObject: {fileID: 13809173459120721554}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5833702010696908664}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8463150162967450214
 GameObject:
@@ -30687,9 +30670,6 @@ Script:
   m_GameObject: {fileID: 12541851390780583412}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5771907980952992246}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12285627020481652039
 GameObject:
@@ -31348,9 +31328,6 @@ Script:
   m_GameObject: {fileID: 13277852543598371328}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 15686065745655662925}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 9734994648591059991
 GameObject:
@@ -31672,9 +31649,6 @@ Script:
   m_GameObject: {fileID: 10180225711759476473}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 9623545436869127279}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13472456630727989919
 GameObject:
@@ -32010,9 +31984,6 @@ Script:
   m_GameObject: {fileID: 66452306091808345}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5251461676284664659}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 6414466953718529613
 GameObject:
@@ -32292,9 +32263,6 @@ Script:
   m_GameObject: {fileID: 872921694414183727}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 3753889075612646310}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12600217697906426368
 GameObject:
@@ -32574,9 +32542,6 @@ Script:
   m_GameObject: {fileID: 3199891827968596905}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 6979452462420876336}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12589955185071439558
 GameObject:
@@ -32856,9 +32821,6 @@ Script:
   m_GameObject: {fileID: 11732564683335513913}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 8164294602068748032}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 14912430991484494413
 GameObject:
@@ -35035,6 +34997,7 @@ ParticleComponent:
   Particle Noise Frequency: 30
   2D particle: false
   Trailing: true
+  Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
@@ -35196,9 +35159,6 @@ Script:
   m_GameObject: {fileID: 898546543010589386}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 1540245306666661771}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13364204845579319346
 GameObject:
@@ -36854,9 +36814,6 @@ Script:
   m_GameObject: {fileID: 10544989079879360673}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 3478415627049949006}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 535833049734911862
 GameObject:
@@ -38429,9 +38386,6 @@ Script:
   m_GameObject: {fileID: 14331869571018254577}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 1746742841599475727}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8241676089353080915
 GameObject:
@@ -40298,9 +40252,6 @@ Script:
   m_GameObject: {fileID: 6964300282308578913}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 4992037817335595852}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 9734141355227742394
 GameObject:
@@ -40552,9 +40503,6 @@ Script:
   m_GameObject: {fileID: 3197518610534636844}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 6553874688755371952}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10921197515242892380
 GameObject:
@@ -40806,9 +40754,6 @@ Script:
   m_GameObject: {fileID: 8961390157855236339}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 1455824266175485744}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8800856949116907065
 GameObject:
@@ -41060,9 +41005,6 @@ Script:
   m_GameObject: {fileID: 7102901748506770040}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 697406533908281000}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 431496387680242909
 GameObject:
@@ -41314,9 +41256,6 @@ Script:
   m_GameObject: {fileID: 2766190930066491268}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 7071747397128983016}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13506965819634274017
 GameObject:
@@ -41568,9 +41507,6 @@ Script:
   m_GameObject: {fileID: 1595158727373292423}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 7415176299370246757}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 2200863149113569029
 GameObject:
@@ -41822,9 +41758,6 @@ Script:
   m_GameObject: {fileID: 15182354761892658855}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5108313163622967840}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 16544624610319378339
 GameObject:
@@ -42076,9 +42009,6 @@ Script:
   m_GameObject: {fileID: 4872432287772594624}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 17060877197459181967}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 4361182851979646059
 GameObject:
@@ -42630,9 +42560,6 @@ Script:
   m_GameObject: {fileID: 12771960829225364734}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 15613771325304660657}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 7367000450209866809
 GameObject:
