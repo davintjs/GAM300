@@ -369,7 +369,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   Gravity: 9.81000042
-  JumpSpeed: 420
+  JumpSpeed: 7
   MoveSpeed: 340
   RotationSpeed: 5
   _isAttacking: false
@@ -404,7 +404,7 @@ Script:
   dashAttackStamina: 15
   dashAttackTimer: 0.899999976
   dodgeCooldown: 0.5
-  dodgeSpeed: 600
+  dodgeSpeed: 11.5
   dodgeStamina: 10
   dodgeTimer: 0.5
   invulnerableTimer: 0.699999988
@@ -4277,6 +4277,7 @@ ParticleComponent:
   Particle Noise Frequency: 0
   2D particle: false
   Trailing: false
+  Trail Color: [1, 1, 1]
   Trail Size: 0
   Trail Thickness: 1
   Looping: false
@@ -34556,6 +34557,7 @@ ParticleComponent:
   Particle Noise Frequency: 30
   2D particle: false
   Trailing: true
+  Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true

@@ -569,6 +569,7 @@ struct ParticleComponent : Object
 	Engine::GUID<MaterialAsset> materialGUID{ 0 };
 	//Engine::GUID<TextureAsset> ParticleTexture{ 0 };
 	Vector3 direction{ 0.f,0.f,0.f };
+	Vector3 trailColor{ 1.f, 1.f, 1.f };
 
 	int numParticles_{ 1 };
 	int trailSize{ 0 };
@@ -616,6 +617,7 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(noisefrequency).Name("Particle Noise Frequency"),
 	property_var(is2D).Name("2D particle"),
 	property_var(trailEnabled).Name("Trailing"),
+	property_var(trailColor).Name("Trail Color"),
 	property_var(trailSize).Name("Trail Size"),
 	property_var(trailThiccness).Name("Trail Thickness"),
 	property_var(particleLooping).Name("Looping")

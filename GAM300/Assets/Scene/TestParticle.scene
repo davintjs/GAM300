@@ -42,20 +42,21 @@ ParticleComponent:
   Mesh: {guid: 00000000000000000000000000000002}
   Material: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
   Local Space: false
-  Particle Direction: [0, 0, 0]
-  Angle of Direction: 0
-  Number Of Particles: 4
-  Particle Lifetime: 3
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 90
+  Number Of Particles: 3
+  Particle Lifetime: 0.5
   Particle Emission Rate: 1
-  Particle Min Scale: 0.5
-  Particle Max Scale: 0.5
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0.100000001
   Particle Scale Rate: 0
-  Particle Speed: 1
+  Particle Speed: 10
   Particle acceleration: 0
-  Particle Noise Movement Percentage: 0
-  Particle Noise Frequency: 0
-  2D particle: true
-  Trailing: false
+  Particle Noise Movement Percentage: 20
+  Particle Noise Frequency: 5
+  2D particle: false
+  Trailing: true
+  Trail Color: [1, 0, 0.838253021]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
@@ -274,6 +275,7 @@ TextRenderer:
   Font Size: 12
   Textbox Width: 10
   Leading: 1.5
+  Center Alignment: false
   Color R: 0.5
   Color G: 0.800000012
   Color B: 0.200000003
@@ -358,6 +360,7 @@ ParticleComponent:
   Particle Noise Frequency: 0
   2D particle: true
   Trailing: false
+  Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
