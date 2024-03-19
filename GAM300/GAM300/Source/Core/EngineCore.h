@@ -176,7 +176,7 @@ public:
 				starttime = glfwGetTime();
 				//Update performance viewer every 2s
 				//std::cout << typeid(*sys).name() << std::endl;
-				sys->Update(dt * MyFrameRateController.timeScale);
+				sys->Update(dt);
 				if (update) {
 					float timetaken = (float)(glfwGetTime() - starttime);
 					elapsedtime += timetaken;
@@ -229,7 +229,6 @@ public:
 	{
 		(void)pEvent;
 		mode = ENUM_SYSTEM_EDITOR;
-		MyFrameRateController.timeScale = 1.f;
 	}
 
 	std::map<std::string, float>system_times;

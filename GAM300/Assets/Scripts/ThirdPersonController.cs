@@ -569,7 +569,7 @@ public class ThirdPersonController : Script
                 }
             }
             startDodgeCooldown = true;
-            CC.force = PlayerModel.forward * dodgeSpeed * Time.deltaTime;//dash player forward
+            CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
 
@@ -778,7 +778,7 @@ public class ThirdPersonController : Script
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
-                SetState("Dodge", false);
+                SetState("Dodge", false);;
                 SetState("Overdrive", true);
 
             }
@@ -841,7 +841,7 @@ public class ThirdPersonController : Script
                         break;
                 }
                 
-                movement += vec3.UnitY * JumpSpeed * Time.deltaTime;
+                movement += vec3.UnitY * JumpSpeed;
             }
             else if (!IsAttacking)
             {
