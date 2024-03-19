@@ -323,13 +323,18 @@ public:
 
 
 	// Drawing UI onto screenspace
-	void UIDraw_2D(BaseCamera & _camera);
+	void UIDrawScreenSpace(BaseCamera& _camera);
 
 	// Drawing UI onto worldspace
-	void UIDraw_3D(BaseCamera & _camera);
+	void UIDrawWorldSpace(BaseCamera& _camera);
+
 	// Drawing Screenspace UI onto worldspace
-	void UIDraw_2DWorldSpace(BaseCamera & _camera);
+	void UIDrawSceneView(BaseCamera& _camera);
 	
+	void RenderSprite2D(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx, glm::mat4& _scaleMtx);
+
+private:
+	std::vector<std::pair<Entity, float>> sortedUI;
 };
 
 // bloom stuff
@@ -646,11 +651,10 @@ public:
 
 	void RenderTextFromString(TextRenderer const& text);
 
-	void RenderText_ScreenSpace(BaseCamera& _camera);
-	//void RenderText_ScreeninWorldSpace(BaseCamera& _camera);
-	void RenderText_WorldSpace(BaseCamera& _camera);
+	void RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx, glm::mat4& _scaleMtx);
+	void RenderWorldSpace(BaseCamera& _camera);
+	void RenderSceneView(BaseCamera& _camera);
 
-	void Draw(BaseCamera& _camera);
 	void AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid);
 
 	void CallbackFontAssetLoaded(AssetLoadedEvent<FontAsset>* pEvent);

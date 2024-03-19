@@ -302,7 +302,8 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glDrawBuffers(2, attachments);
 
 	Draw(_camera);
-	UIRENDERER.UIDraw_3D(_camera);
+	UIRENDERER.UIDrawWorldSpace(_camera);
+	TEXTSYSTEM.Draw(_camera);
 
 	FRAMEBUFFER.Unbind();
 
@@ -345,21 +346,20 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 	{
-		UIRENDERER.UIDraw_2D(_camera);
+		UIRENDERER.UIDrawScreenSpace(_camera);
 		//TEXTSYSTEM.Draw(_camera);
 	}
 	else
 	{
-		UIRENDERER.UIDraw_2DWorldSpace(_camera);
+		UIRENDERER.UIDrawSceneView(_camera);
 	}
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
 		DEBUGDRAW.Draw();
 	}
 
-	TEXTSYSTEM.RenderText_WorldSpace(_camera);
-	TEXTSYSTEM.RenderText_ScreenSpace(_camera);
-
+	// For non bloomed text
+	TEXTSYSTEM.RenderScreenSpace(_camera);
 
 	PARTICLERENDER.Draw2D(_camera);
 
@@ -429,7 +429,7 @@ void GraphicsSystem::Draw(BaseCamera& _camera)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
-	//glEnable(GL_DEPTH_BUFFER);
+	//glEnable(GL_DEPTH_TEST);
 	MYSKYBOX.Draw(_camera);
 
 	RENDERER.Draw(_camera);

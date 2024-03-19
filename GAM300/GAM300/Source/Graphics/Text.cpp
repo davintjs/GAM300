@@ -100,25 +100,8 @@ void TextSystem::GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, Text
 
 }
 
-void TextSystem::Draw(BaseCamera& _camera)
+void TextSystem::RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx, glm::mat4& _scaleMtx)
 {
-	//GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
-
-	RenderText_WorldSpace(_camera);
-	//RenderText_ScreeninWorldSpace(_camera);
-	RenderText_ScreenSpace(_camera);
-
-}
-
-void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
-{
-	// Initializing Variables
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
 	txtshader.Use();
 
@@ -126,66 +109,30 @@ void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 
-	const Transform* canvasTransform{ nullptr };
+	TextRenderer& text = _scene.Get<TextRenderer>(_euid);
+	Transform& transform = _scene.Get<Transform>(_euid);
 
-	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
-	{
-		if (currCanvas.state == DELETED) continue;
-		Entity& entity = currentScene.Get<Entity>(currCanvas);
-		canvasTransform = &currentScene.Get<Transform>(entity);
-		continue;
-	}
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
+		1, GL_FALSE, glm::value_ptr(_canvasMtx * transform.GetWorldMatrix()));
 
-	if (!canvasTransform)
-	{
-		txtshader.UnUse();
-		glDisable(GL_BLEND);
-		return;
-	}
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
+		text.color.w);
 
-	for (TextRenderer& text : currentScene.GetArray<TextRenderer>())
-	{
-		// Maybe need a worldspace checker?
+	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
-		if (text.guid == 0)
-			continue;
-		
-		Entity& entity = currentScene.Get<Entity>(text);
-		if (!currentScene.IsActive(entity)) continue;
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(txtVAO);
 
-		Transform& transform = currentScene.Get<Transform>(entity);
-		
-		if (!transform.parent || _camera.GetCameraType() == CAMERATYPE::SCENE) continue;
+	RenderTextFromString(text);
 
-		glm::mat4 canvasMatrix = glm::inverse(canvasTransform->GetWorldMatrix());
-
-		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix()));
-
-		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
-			text.color.w);
-
-		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(txtVAO);
-
-		RenderTextFromString(text);
-
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	txtshader.UnUse();
-	GLenum code = glGetError();
-	if ((GLint)code != 0)
-	{
-		std::cout << "Error at Screen Space: " << (GLint)code << "\n";
-	}
 }
 
 
-void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
+void TextSystem::RenderWorldSpace(BaseCamera& _camera)
 {
 	// Initializing Variables
 
@@ -213,9 +160,6 @@ void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
 		if (!currentScene.IsActive(entity)) continue;
 
 		Transform& transform = currentScene.Get<Transform>(entity);
-
-		if (_camera.GetCameraType() != CAMERATYPE::SCENE && transform.parent)
-			continue;
 
 		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
 			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
