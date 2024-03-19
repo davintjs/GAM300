@@ -369,8 +369,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   Gravity: 9.81000042
-  JumpSpeed: 7
-  MoveSpeed: 400
+  JumpSpeed: 420
+  MoveSpeed: 340
   RotationSpeed: 5
   _isAttacking: false
   _isDashAttacking: false
@@ -404,7 +404,7 @@ Script:
   dashAttackStamina: 15
   dashAttackTimer: 0.899999976
   dodgeCooldown: 0.5
-  dodgeSpeed: 11.5
+  dodgeSpeed: 600
   dodgeStamina: 10
   dodgeTimer: 0.5
   invulnerableTimer: 0.699999988
@@ -485,7 +485,6 @@ Transform:
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 17065559468612678914}
     - {fileID: 2866402867161245437}
     - {fileID: 3525555548824268013}
     - {fileID: 6826500622308863951}
@@ -509,6 +508,7 @@ Transform:
     - {fileID: 15996983871537068920}
     - {fileID: 3787274920911425495}
     - {fileID: 5676392047881511918}
+    - {fileID: 17065559468612678914}
 ---
 ID: 13547543225942679706
 Canvas:
