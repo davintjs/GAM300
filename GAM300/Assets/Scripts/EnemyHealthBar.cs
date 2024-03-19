@@ -9,30 +9,19 @@ using GlmSharp;
 public class EnemyHealthBar : Script
 {
     
-    public Transform player;
-    public float RotationSpeed = 2.0f;
-    public Transform parentTransform;
-
-    private vec3 pDir;
+    Transform camera;
 
     void Start()
     {
+        camera = ThirdPersonCamera.instance.transform;
     }
 
     void Update()
     {
-        // Get direction from health bar to player
-        vec3 direction = (player.localPosition - transform.localPosition).Normalized;
+        vec3 dir = (camera.position - transform.position).Normalized;
+        // Get direction from health bar to camera
 
-        pDir = (player.localPosition - parentTransform.localPosition);
-        pDir.y = 0;
-        pDir = pDir.Normalized;
-        UpdateRotation(pDir);
-
-        vec3 rot = transform.localRotation;
-        rot.x = 0.0f;
-        rot.z = 0.0f;
-        transform.localRotation = rot;
+        UpdateRotation(dir);
 
     }
     void UpdateRotation(vec3 dir)
@@ -41,35 +30,8 @@ public class EnemyHealthBar : Script
             return;
 
         float angle = (float)Math.Atan2(-dir.x, -dir.z);
-        float pAngle = parentTransform.localRotation.y;
 
-        angle -= pAngle;
-
-        quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
-        quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
-
-        // Interpolate using spherical linear interpolation (slerp)
-        //quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
-
-        vec3 rot = ((vec3)newQuat.EulerAngles);
-
-
-        if (rot != vec3.NaN)
-        {
-            bool isNan = false;
-            foreach (float val in rot)
-            {
-                if (float.IsNaN(val))
-                {
-                    isNan = true;
-                    break;
-                }
-            }
-            if (!isNan)
-            {
-                transform.localRotation = rot;
-            }
-        }
+        transform.rotation = vec3.UnitY * angle;
     }
 
 }
