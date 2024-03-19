@@ -304,11 +304,15 @@ property_begin_name(Animator, "Animator") {
 
 struct TextRenderer : Object
 {
-	Engine::GUID<FontAsset> guid{ 0 };
-	float x = 0.f, y = 0.f, fontSize = 12.f;
 	Vector4 color{1.f};
-	float width = 10.f, leading = 1.5f;
+	Engine::GUID<FontAsset> guid{ 0 };
+	unsigned int charCount = 0;
+	unsigned int lineCount = 1;
+	float x = 0.f, y = 0.f, fontSize = 4.f;
+	float width = 0.f, height = 0.f;
+
 	bool centerAlign = false;
+	bool wrapping = false;
 	bool worldSpace = false;
 	std::string text = "Default Text";
 	property_vtable();
@@ -322,8 +326,9 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(y).Name("Y-axis Offset"),
 		property_var(fontSize).Name("Font Size"),
 		property_var(width).Name("Textbox Width"),
-		property_var(leading).Name("Leading"),
+		property_var(height).Name("Textbox Height"),
 		property_var(centerAlign).Name("Center Alignment"),
+		property_var(wrapping).Name("Wrap Text"),
 		property_var(worldSpace).Name("WorldSpace"),
 		property_var(color).Name("Color"),
 } property_vend_h(TextRenderer)

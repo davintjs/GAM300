@@ -115,6 +115,7 @@ void DebugDraw::Draw()
 		DrawCapsuleColliders();
 		DrawSphereColliders();
 		DrawButtonOutlines();
+		DrawTextOutlines();
 
 		color = { 1.f, 0.f, 0.f, 1.f };
 		for (const auto& animator : currentScene.GetArray<Animator>())
@@ -238,6 +239,87 @@ void DebugDraw::Draw()
 	glLineWidth(1.f);
 
 	ResetPhysicDebugContainer();
+}
+
+void DebugDraw::DrawTextOutlines()
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	auto& iProp = *pProp;
+	glm::mat4 scaleMat = glm::identity<glm::mat4>();
+	glm::vec4 color = { 0.9f, 0.9f , 0.9f , 1.f };
+	for (auto& text : MySceneManager.GetCurrentScene().GetArray<TextRenderer>())
+	{
+		Transform& t = currentScene.Get<Transform>(text);
+
+		float width = text.width;
+		float height = text.height;
+		float scale = text.fontSize * 0.001f;
+		float offset = 0.f;
+
+		if (text.centerAlign)
+			offset -= text.width * 0.5f;
+
+		glm::vec4 pos0 = { text.x + offset, height - text.y, 0.f, 1.f };
+		glm::vec4 pos1 = { text.x + offset, text.y, 0.f, 1.f };
+		glm::vec4 pos2 = { 1.0f * width - text.x + offset, height - text.y, 0.f, 1.f };
+		glm::vec4 pos3 = { 1.0f * width - text.x + offset, text.y, 0.f, 1.f };
+
+		glm::mat4 temp = t.GetWorldMatrix() * scaleMat;
+
+		glm::vec3 uPos0 = glm::vec3(temp * pos0);	// Top Left
+		glm::vec3 uPos1 = glm::vec3(temp * pos1);	// Bottom Left	
+		glm::vec3 uPos2 = glm::vec3(temp * pos2);	// Top Right
+		glm::vec3 uPos3 = glm::vec3(temp * pos3);	// Bottom Right
+
+		DrawSegment3D(iProp, uPos0, uPos1, color);
+		DrawSegment3D(iProp, uPos0, uPos2, color);
+		DrawSegment3D(iProp, uPos2, uPos3, color);
+		DrawSegment3D(iProp, uPos1, uPos3, color);
+	}
+}
+
+// Text Render Outline Debug Draw
+void DebugDraw::DrawTextBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Transform& t = currentScene.Get<Transform>(_euid);
+	TextRenderer& text = currentScene.Get<TextRenderer>(_euid);
+	glm::mat4 scaleMat = glm::identity<glm::mat4>();
+	glm::vec4 color = { 0.9f,0.9f, 0.9f, 1.f };
+	auto& iProp = *pProp;
+
+	float width = text.width;
+	float height = text.height;
+	float scale = text.fontSize * 0.001f;
+	float offset = 0.f, yOffset = 0.f;
+
+	if (text.centerAlign)
+		offset -= text.width * 0.5f;
+	if (text.wrapping)
+		yOffset = text.height * text.lineCount;
+
+	glm::vec4 pos0 = { text.x + offset, height + text.y, 0.f, 1.f };
+	glm::vec4 pos1 = { text.x + offset, text.y - yOffset, 0.f, 1.f };
+	glm::vec4 pos2 = { 1.0f * width + text.x + offset, height + text.y, 0.f, 1.f };
+	glm::vec4 pos3 = { 1.0f * width + text.x + offset, text.y - yOffset, 0.f, 1.f };
+
+	glm::mat4 temp = t.GetWorldMatrix() * scaleMat;
+
+	glm::vec3 uPos0 = glm::vec3(temp * pos0);	// Top Left
+	glm::vec3 uPos1 = glm::vec3(temp * pos1);	// Bottom Left	
+	glm::vec3 uPos2 = glm::vec3(temp * pos2);	// Top Right
+	glm::vec3 uPos3 = glm::vec3(temp * pos3);	// Bottom Right
+
+	DrawSegment3D(iProp, uPos0, uPos1, color);
+	DrawSegment3D(iProp, uPos0, uPos2, color);
+	DrawSegment3D(iProp, uPos2, uPos3, color);
+	DrawSegment3D(iProp, uPos1, uPos3, color);
 }
 
 // Sprite Render Outline Debug Draw

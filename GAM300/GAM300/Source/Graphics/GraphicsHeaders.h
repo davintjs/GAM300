@@ -317,10 +317,15 @@ private:
 	unsigned int colorPickTex;
 };
 
-SINGLETON(UIRenderer)
+ENGINE_SYSTEM(UIRenderer)
 {
 public:
 
+	void Init();
+
+	void Update(float dt);
+
+	void Exit();
 
 	// Drawing UI onto screenspace
 	void UIDrawScreenSpace(BaseCamera& _camera);
@@ -331,10 +336,17 @@ public:
 	// Drawing Screenspace UI onto worldspace
 	void UIDrawSceneView(BaseCamera& _camera);
 	
-	void RenderSprite2D(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx, glm::mat4& _scaleMtx);
+	void RenderSprite2D(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid);
+
+	void RenderSprite3D(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid);
+
+	void SortUserInterface(std::vector<std::pair<Entity, float>>& _container, Entity& _entity, const float& _distance);
 
 private:
-	std::vector<std::pair<Entity, float>> sortedUI;
+	std::vector<std::pair<Entity, float>> sortedUIScreenSpace;
+	std::vector<std::pair<Entity, float>> sortedUIWorldSpace;
+	glm::mat4 canvasMatrix;
+	glm::mat4 scaleMatrix;
 };
 
 // bloom stuff
@@ -384,7 +396,11 @@ public:
 
 	void DrawButtonOutlines();
 
-	void DrawButtonBounds(const Engine::UUID & _euid);
+	void DrawButtonBounds(const Engine::UUID& _euid);
+
+	void DrawTextOutlines();
+
+	void DrawTextBounds(const Engine::UUID& _euid);
 
 	void DrawIcons();
 
@@ -647,13 +663,13 @@ public:
 
 	//void GenerateTextureAtlas(FontCharacters& characters);
 
-	void RenderText(GLSLShader & s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid);
-
 	void RenderTextFromString(TextRenderer const& text);
 
-	void RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx, glm::mat4& _scaleMtx);
-	void RenderWorldSpace(BaseCamera& _camera);
-	void RenderSceneView(BaseCamera& _camera);
+	void RenderText(TextRenderer& text);
+
+	void RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx);
+	
+	void RenderWorldSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid);
 
 	void AddFont(const std::filesystem::path& inputPath, const Engine::GUID<FontAsset>& _guid);
 

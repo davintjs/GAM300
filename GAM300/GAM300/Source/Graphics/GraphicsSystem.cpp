@@ -40,6 +40,7 @@ TemplatePack
 	Lighting,
 	Renderer,
 	Shadows,
+	UIRenderer,
 	ParticleRenderer,
 	TextSystem
 >;
@@ -302,8 +303,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glDrawBuffers(2, attachments);
 
 	Draw(_camera);
-	UIRENDERER.UIDrawWorldSpace(_camera);
-	TEXTSYSTEM.Draw(_camera);
 
 	FRAMEBUFFER.Unbind();
 
@@ -347,7 +346,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 	{
 		UIRENDERER.UIDrawScreenSpace(_camera);
-		//TEXTSYSTEM.Draw(_camera);
 	}
 	else
 	{
@@ -357,9 +355,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	{
 		DEBUGDRAW.Draw();
 	}
-
-	// For non bloomed text
-	TEXTSYSTEM.RenderScreenSpace(_camera);
 
 	PARTICLERENDER.Draw2D(_camera);
 
@@ -433,6 +428,8 @@ void GraphicsSystem::Draw(BaseCamera& _camera)
 	MYSKYBOX.Draw(_camera);
 
 	RENDERER.Draw(_camera);
+
+	UIRENDERER.UIDrawWorldSpace(_camera);
 
 	PARTICLERENDER.Draw(_camera);
 }

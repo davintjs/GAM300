@@ -578,6 +578,11 @@ void EditorScene::DisplayGizmos()
             DEBUGDRAW.DrawButtonBounds(entity.EUID());
         }
 
+        if (currentScene.Has<TextRenderer>(entity) && isActive)
+        {
+            DEBUGDRAW.DrawTextBounds(entity.EUID());
+        }
+
         glm::mat4 transform_1;
         if (EditorScene::Instance().multiselectEntities.size() > 1)
             transform_1 = GetMultiselectWorldMatrix();

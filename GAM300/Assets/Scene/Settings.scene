@@ -31,7 +31,6 @@ ID: 2199169755166096751
 Camera:
   m_GameObject: {fileID: 7305319039410813174}
   m_IsEnabled: true
-  BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -63,8 +62,6 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 15358237258630853129}
-    - {fileID: 9942736862004611206}
     - {fileID: 6712040991204226818}
     - {fileID: 5631298785341950928}
     - {fileID: 5206565024310472992}
@@ -72,7 +69,10 @@ Transform:
     - {fileID: 6495318900117040996}
     - {fileID: 16683936320791100696}
     - {fileID: 13236326914152460117}
+    - {fileID: 15358237258630853129}
     - {fileID: 273317372645930236}
+    - {fileID: 2829439769885273799}
+    - {fileID: 9942736862004611206}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -411,22 +411,22 @@ GameObject:
 ID: 15856120931259269250
 Transform:
   m_GameObject: {fileID: 273317372645930236}
-  Translation: [-0.272587806, -0.6860075, 2.5]
-  Rotation: [0, -0, 0]
+  Translation: [-1.59197974, -0.299572706, 0.100000001]
+  Rotation: [0, 0, 0]
   Scale: [0.621717036, 0.400943905, 0.999999762]
   Father: {fileID: 17065559468612678914}
   m_Children:
-    - {fileID: 2829439769885273799}
+    []
 ---
 ID: 4410037719966282470
 SpriteRenderer:
   m_GameObject: {fileID: 273317372645930236}
   m_IsEnabled: true
-  World Space: true
+  World Space: false
   Colour Picker Mode: true
   Include Alpha (ColourPicking): true
   Alpha Scalar: 1
-  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+  SpriteTexture: {guid: 144318b4babb0ecaa7db0af7eb3276f7}
 ---
 ID: 2829439769885273799
 GameObject:
@@ -441,10 +441,10 @@ GameObject:
 ID: 1624615926929699670
 Transform:
   m_GameObject: {fileID: 2829439769885273799}
-  Translation: [0.00768104196, -0.0745699406, 0]
+  Translation: [-1.71461749, -0.715905845, 0.100000001]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 273317372645930236}
+  Scale: [1, 1, 0.999999762]
+  Father: {fileID: 17065559468612678914}
   m_Children:
     []
 ---
@@ -453,17 +453,16 @@ TextRenderer:
   m_GameObject: {fileID: 2829439769885273799}
   m_IsEnabled: true
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: Gamma
-  X-axis Offset: -0.5
-  Y-axis Offset: 0.300000012
-  Font Size: 1
-  Textbox Width: 10
-  Leading: 1.5
+  Text: We then check if a customer was found and output their details, or we indicate that no customer with an incomplete order was found
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.600000024
+  Textbox Width: 4.37760162
+  Textbox Height: 0.0378000028
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 9942736862004611206
 GameObject:
@@ -639,12 +638,11 @@ TextRenderer:
   Y-axis Offset: 0.0700000003
   Font Size: 0.800000012
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 12529991841817320176
 GameObject:
