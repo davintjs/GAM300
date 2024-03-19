@@ -43943,6 +43943,8 @@ Script:
   floatingY: 0.5
   inRange: false
   moveSpeed: 2
+  offOnce: true
+  onOnce: true
   playOnce: true
   shootDistance: 3
   state: 0
@@ -43950,6 +43952,9 @@ Script:
   modelOffset: {fileID: 11736288369183917097}  # Component
   player: {fileID: 3977294589520766028}  # Component
   rangeEnemyPos: {fileID: 11736288369183917097}  # Component
+  secCamBeep: {fileID: 10410881872814136367}  # Component
+  secCamOff: {fileID: 16229795789692127735}  # Component
+  secCamOn: {fileID: 8973165543363211306}  # Component
 ---
 ID: 16863964401583955534
 GameObject:
@@ -94471,8 +94476,8 @@ AudioSource:
   m_GameObject: {fileID: 14847680709617030226}
   m_IsEnabled: true
   AudioChannel: 1
-  Loop: false
-  Volume: 5
+  Loop: true
+  Volume: 4
   min hearing Distance: 1
   max hearing Distance: 500
   SFX min Pitch: 1

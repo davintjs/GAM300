@@ -29,8 +29,13 @@ public class SecurityCamera : Script
     public bool playOnce = true;
 
     //sounds
+    public AudioSource secCamOn;
+    public AudioSource secCamOff;
+    public AudioSource secCamBeep;
+
 
     public bool onOnce = true;
+    public bool offOnce = true;
 
     void Start()
     {
@@ -60,8 +65,10 @@ public class SecurityCamera : Script
 
                     if(onOnce)
                     {
+                        offOnce = true;
                         onOnce = false;
-                        
+                        secCamOn.Play();
+                        secCamBeep.Play();
                     }    
                 }
                 break;
@@ -72,6 +79,14 @@ public class SecurityCamera : Script
                 {
                     //return back to its previous position state
                     state = 0;
+
+                    if (offOnce)
+                    {
+                        onOnce = true;
+                        offOnce = false;
+                        secCamBeep.Pause();
+                        secCamOff.Play();
+                    }
                 }
                 LookAt(direction);
                 break;
