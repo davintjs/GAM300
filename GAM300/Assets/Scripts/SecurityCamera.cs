@@ -28,6 +28,10 @@ public class SecurityCamera : Script
     //audio
     public bool playOnce = true;
 
+    //sounds
+
+    public bool onOnce = true;
+
     void Start()
     {
         playOnce = true;
@@ -53,6 +57,12 @@ public class SecurityCamera : Script
                 {
                     //change to chase state
                     state = 1;
+
+                    if(onOnce)
+                    {
+                        onOnce = false;
+                        
+                    }    
                 }
                 break;
             //chase state
