@@ -257,15 +257,17 @@ void DebugDraw::DrawTextOutlines()
 		float width = text.width;
 		float height = text.height;
 		float scale = text.fontSize * 0.001f;
-		float offset = 0.f;
+		float offset = 0.f, yOffset = 0.f;
 
 		if (text.centerAlign)
 			offset -= text.width * 0.5f;
+		if (text.wrapping)
+			yOffset = text.height * text.lineCount;
 
-		glm::vec4 pos0 = { text.x + offset, height - text.y, 0.f, 1.f };
-		glm::vec4 pos1 = { text.x + offset, text.y, 0.f, 1.f };
-		glm::vec4 pos2 = { 1.0f * width - text.x + offset, height - text.y, 0.f, 1.f };
-		glm::vec4 pos3 = { 1.0f * width - text.x + offset, text.y, 0.f, 1.f };
+		glm::vec4 pos0 = { text.x + offset, height + text.y, 0.f, 1.f };
+		glm::vec4 pos1 = { text.x + offset, text.y - yOffset, 0.f, 1.f };
+		glm::vec4 pos2 = { 1.0f * width + text.x + offset, height + text.y, 0.f, 1.f };
+		glm::vec4 pos3 = { 1.0f * width + text.x + offset, text.y - yOffset, 0.f, 1.f };
 
 		glm::mat4 temp = t.GetWorldMatrix() * scaleMat;
 

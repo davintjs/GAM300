@@ -31,7 +31,6 @@ ID: 6290748605718139895
 Camera:
   m_GameObject: {fileID: 5255847082789301257}
   m_IsEnabled: true
-  BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -46,13 +45,12 @@ Camera:
 ---
 ID: 11651427043620866289
 GameObject:
-  m_IsActive: true
-  m_Name: MainMenuCanvas
+  m_IsActive: false
+  m_Name: MainMenu
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15419434749458504632}  # Transform
-    - component: {fileID: 2748547964756519209}  # Canvas
     - component: {fileID: 12476976089546016649}  # Script
 ---
 ID: 15419434749458504632
@@ -65,11 +63,6 @@ Transform:
   m_Children:
     - {fileID: 4418236984561621579}
     - {fileID: 15122834859859923062}
----
-ID: 2748547964756519209
-Canvas:
-  m_GameObject: {fileID: 11651427043620866289}
-  m_IsEnabled: true
 ---
 ID: 12476976089546016649
 Script:
@@ -94,7 +87,7 @@ Script:
 ID: 4418236984561621579
 GameObject:
   m_IsActive: true
-  m_Name: MainMenuImage
+  m_Name: MainMenu_Image
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -124,7 +117,7 @@ SpriteRenderer:
 ID: 15122834859859923062
 GameObject:
   m_IsActive: true
-  m_Name: TheGRID_Text
+  m_Name: Title
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -412,7 +405,7 @@ AudioSource:
 ID: 18227274232965132690
 GameObject:
   m_IsActive: true
-  m_Name: New GameObject(16)
+  m_Name: Copyright
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -442,7 +435,7 @@ SpriteRenderer:
 ID: 1790461780820641168
 GameObject:
   m_IsActive: true
-  m_Name: TheGRID_Text - Copy
+  m_Name: TheGRID_Text
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -526,3 +519,148 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: a3a5008eddc5deff41fd807ad3c839f2}
   Play: false
+---
+ID: 9609625091801729047
+GameObject:
+  m_IsActive: true
+  m_Name: Level
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12906926134575307827}  # Transform
+---
+ID: 12906926134575307827
+Transform:
+  m_GameObject: {fileID: 9609625091801729047}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 2865390648587142704}
+---
+ID: 2865390648587142704
+GameObject:
+  m_IsActive: true
+  m_Name: Floors
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 459523161628873292}  # Transform
+---
+ID: 459523161628873292
+Transform:
+  m_GameObject: {fileID: 2865390648587142704}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9609625091801729047}
+  m_Children:
+    []
+---
+ID: 4128779384314733766
+GameObject:
+  m_IsActive: true
+  m_Name: DirectionalLight
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17797987932934589404}  # Transform
+    - component: {fileID: 15037345727246744401}  # LightSource
+---
+ID: 17797987932934589404
+Transform:
+  m_GameObject: {fileID: 4128779384314733766}
+  Translation: [0, 10, 0]
+  Rotation: [0.397935063, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 15037345727246744401
+LightSource:
+  m_GameObject: {fileID: 4128779384314733766}
+  m_IsEnabled: true
+  EnableShadow: true
+  lightType: 1
+  lightpos: [0, 0, 0]
+  Intensity: 100
+  Direction: [0, 0, 0]
+  Inner Cutoff: 50
+  Outer Cutoff: 70
+  Color: [1, 1, 1]
+---
+ID: 8192945449979941999
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1Merged
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17721307777826495151}  # Transform
+---
+ID: 17721307777826495151
+Transform:
+  m_GameObject: {fileID: 8192945449979941999}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 10513567028593966990}
+    - {fileID: 9733543092490138430}
+---
+ID: 10513567028593966990
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1Merged_0
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3270919622216387989}  # Transform
+    - component: {fileID: 15107333560313243754}  # MeshRenderer
+---
+ID: 3270919622216387989
+Transform:
+  m_GameObject: {fileID: 10513567028593966990}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 8192945449979941999}
+  m_Children:
+    []
+---
+ID: 15107333560313243754
+MeshRenderer:
+  m_GameObject: {fileID: 10513567028593966990}
+  m_IsEnabled: true
+  Mesh: {guid: 0c7b4bec316ca0ee0a90f32e666d6594}
+  Material_ID: {guid: 3317ca259ad46e5cd6684cba9975bd8b}
+---
+ID: 9733543092490138430
+GameObject:
+  m_IsActive: true
+  m_Name: FloorV2_1x1Merged_1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11251572505614534464}  # Transform
+    - component: {fileID: 10412446030260640090}  # MeshRenderer
+---
+ID: 11251572505614534464
+Transform:
+  m_GameObject: {fileID: 9733543092490138430}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 8192945449979941999}
+  m_Children:
+    []
+---
+ID: 10412446030260640090
+MeshRenderer:
+  m_GameObject: {fileID: 9733543092490138430}
+  m_IsEnabled: true
+  Mesh: {guid: e214dd11388cd9523838aef018205bc6}
+  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
