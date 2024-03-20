@@ -204,7 +204,7 @@ public class ThirdPersonController : Script
 
     int comboCount = 1;
 
-    PlayerAudioManager playerSounds;
+    public PlayerAudioManager playerSounds;
     private bool noInterpolate = true;
 
     bool _wasMoving = false;
