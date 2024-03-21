@@ -4,6 +4,8 @@
 #include "Scene/SceneManager.h"
 #include FT_FREETYPE_H
 
+#define AR 1.777778f
+
 void TextSystem::Init()
 {
 	//LoadFontAtlas("Assets/Fonts/Xolonium-Bold.font"); // decompile
@@ -22,7 +24,6 @@ void TextSystem::Init()
 	glVertexAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
 }
 
 void TextSystem::Update(float dt)
@@ -32,9 +33,7 @@ void TextSystem::Update(float dt)
 
 void TextSystem::Exit()
 {
-	// Empty by design
 
-	//glDeleteTextures(1, &texture);
 }
 
 void TextSystem::GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, TextSystem::FontCharacters& characters) {
@@ -101,93 +100,41 @@ void TextSystem::GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, Text
 
 }
 
-void TextSystem::Draw(BaseCamera& _camera)
+void TextSystem::RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx)
 {
-	//GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
-
-	RenderText_WorldSpace(_camera);
-	//RenderText_ScreeninWorldSpace(_camera);
-	RenderText_ScreenSpace(_camera);
-
-}
-
-void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
-{
-	// Initializing Variables
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
 	txtshader.Use();
 
-	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(-1.f * AR, 1.f * AR, -1.f, 1.f, -10.f, 10.f);
 	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 
-	const Transform* canvasTransform{ nullptr };
+	TextRenderer& text = _scene.Get<TextRenderer>(_euid);
+	Transform& transform = _scene.Get<Transform>(_euid);
 
-	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
-	{
-		if (currCanvas.state == DELETED) continue;
-		Entity& entity = currentScene.Get<Entity>(currCanvas);
-		canvasTransform = &currentScene.Get<Transform>(entity);
-		continue;
-	}
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
+		1, GL_FALSE, glm::value_ptr(_canvasMtx * transform.GetWorldMatrix()));
 
-	if (!canvasTransform)
-	{
-		return;
-	}
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
+		text.color.w);
 
-	for (TextRenderer& text : currentScene.GetArray<TextRenderer>())
-	{
-		// Maybe need a worldspace checker?
+	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
-		if (text.guid == 0)
-			continue;
-		
-		Entity& entity = currentScene.Get<Entity>(text);
-		if (!currentScene.IsActive(entity)) continue;
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(txtVAO);
 
-		Transform& transform = currentScene.Get<Transform>(entity);
-		
-		if (!transform.parent || _camera.GetCameraType() == CAMERATYPE::SCENE) continue;
+	//RenderTextFromString(text);
+	RenderText(text);
 
-		glm::mat4 canvasMatrix = glm::inverse(canvasTransform->GetWorldMatrix());
-
-		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix()));
-
-		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
-			text.alpha);
-
-		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(txtVAO);
-
-		RenderTextFromString(text);
-
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	txtshader.UnUse();
-
 }
 
 
-void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
+void TextSystem::RenderWorldSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid)
 {
-	// Initializing Variables
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT_WORLD);
 	txtshader.Use();
 
@@ -197,42 +144,149 @@ void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
-	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) 
-	{
-		// Maybe need a worldspace checker?
+	TextRenderer& text = _scene.Get<TextRenderer>(_euid);
+	Transform& transform = _scene.Get<Transform>(_euid);
 
-		if (text.guid == 0)
-			continue;
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
+		1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
 
-		Entity& entity = currentScene.Get<Entity>(text);
-		if (!currentScene.IsActive(entity)) continue;
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
+		text.color.w);
 
-		Transform& transform = currentScene.Get<Transform>(entity);
+	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
-		if (_camera.GetCameraType() != CAMERATYPE::SCENE && transform.parent)
-			continue;
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(txtVAO);
 
-		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
-		
-		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
-			text.alpha);
+	//RenderTextFromString(text);
+	RenderText(text);
 
-		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(txtVAO);
-
-		RenderTextFromString(text);
-
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 
 	txtshader.UnUse();
+}
 
+void TextSystem::RenderText(TextRenderer& text)
+{
+	allVertices.clear();
+
+	unsigned int currentLine = 1;
+	float x = text.x, width, currentWidth, newLineWidth;
+	width = currentWidth = newLineWidth = 0.f;
+	float y = text.y;
+	float scale = text.fontSize * 0.001f;
+	float baseHeight = mFontContainer.at(text.guid).at('A').Size.y * scale;
+
+	if (text.text.size() != text.charCount)
+	{
+		float tempWidth = 0.f;
+		text.charCount = text.text.size();
+		std::string::const_iterator c;
+		for (c = text.text.begin(); c != text.text.end(); c++)
+		{
+			Character& ch = mFontContainer.at(text.guid).at(*c);
+			tempWidth += (ch.Advance >> 6) * scale;
+		}
+
+		if (!text.wrapping)
+		{
+			text.width = tempWidth;
+			text.height = baseHeight;
+		}
+		else
+			text.height = baseHeight * text.lineCount;
+	}
+
+	// iterate through all characters
+	std::string::const_iterator c, nextc;
+	for (c = text.text.begin(); c != text.text.end(); c++)
+	{
+		Character& ch = mFontContainer.at(text.guid).at(*c);
+
+		float xpos = x + ch.Bearing.x * scale;
+
+		float ypos = y - (ch.Bearing.y * 2.f) * scale;
+		if(*c == 'p')
+			ypos = y - (ch.Bearing.y) * scale;
+
+		float nextChWidth = 0.f;
+		bool updateNewLine = false;
+
+		nextc = c;
+		nextc++;
+		currentWidth += (ch.Advance >> 6) * scale;
+		if (nextc != text.text.end())
+		{
+			Character& nextCh = mFontContainer.at(text.guid).at(*nextc);
+			nextChWidth = (nextCh.Advance >> 6) * scale;
+
+			if (currentWidth + nextChWidth > text.width)
+			{
+				updateNewLine = true;
+				newLineWidth = 0.f;
+				std::string::const_iterator cit;
+				for (cit = c; cit != text.text.end(); cit++)
+				{
+					Character& ch = mFontContainer.at(text.guid).at(*cit);
+					newLineWidth += (ch.Advance >> 6) * scale;
+				}
+			}
+		}
+
+		if (text.centerAlign && text.wrapping)
+		{
+			xpos -= text.width * 0.5f;
+			ypos -= baseHeight * currentLine;
+
+			if (text.lineCount == currentLine)
+			{
+				xpos = x + ch.Bearing.x * scale - newLineWidth * 0.5f;
+			}
+		}
+		else if (text.centerAlign)
+		{
+			xpos -= text.width * 0.5f;
+		}
+		else if (text.wrapping)
+		{
+			ypos -= baseHeight * currentLine;
+		}
+
+		if (updateNewLine)
+		{
+			x = text.x - (ch.Advance >> 6) * scale;
+			currentWidth = 0.f;
+			currentLine++;
+		}
+
+		float w = ch.Size.x * scale;
+		float h = ch.Size.y * scale;
+		// update VBO for each character
+		float vertices[6][4] = {
+			{ xpos,     ypos,       ch.AtlasCoordsMin.x, ch.AtlasCoordsMax.y },
+			{ xpos,     ypos,       ch.AtlasCoordsMin.x, ch.AtlasCoordsMax.y },
+			{ xpos,     ypos + h,   ch.AtlasCoordsMin.x, ch.AtlasCoordsMin.y },
+			{ xpos + w, ypos,       ch.AtlasCoordsMax.x, ch.AtlasCoordsMax.y },
+			{ xpos + w, ypos + h,   ch.AtlasCoordsMax.x, ch.AtlasCoordsMin.y },
+			{ xpos + w, ypos + h,   ch.AtlasCoordsMax.x, ch.AtlasCoordsMin.y }
+		};
+		for (int i = 0; i < 6; ++i)
+			allVertices.insert(allVertices.end(), vertices[i], vertices[i] + 4);
+
+		x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+	}
+
+	text.lineCount = currentLine;
+
+	// Update content of VBO memory with the new vertices and texture coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
+	glBufferData(GL_ARRAY_BUFFER, allVertices.size() * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, mFontAtlasContainer.at(text.guid));
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, text.text.size() * 6);
 }
 
 void TextSystem::RenderTextFromString(TextRenderer const& text)
@@ -283,7 +337,7 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 
 		if (iter == newlineIter)
 		{
-			yoffset -= charHeight * fontSize * 2 * text.leading;
+			yoffset -= charHeight * fontSize * 2;
 			//xoffset = text.x;
 			//xpos = xoffset + ch.Bearing.x * fontSize;
 
@@ -333,7 +387,7 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 					{
 						// new xpos/offset
 						currlineWidth += wordWidth;
-						newlinefound = true;
+						newlinefound = true; 
 						break;
 					}
 

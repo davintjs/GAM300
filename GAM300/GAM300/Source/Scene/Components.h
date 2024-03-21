@@ -304,12 +304,16 @@ property_begin_name(Animator, "Animator") {
 
 struct TextRenderer : Object
 {
+	Vector4 color{1.f};
 	Engine::GUID<FontAsset> guid{ 0 };
-	float x = 0.f, y = 0.f, fontSize = 12.f;
-	float r = 0.5, g = 0.8f, b = 0.2f;
-	float alpha = 1.f;
-	float width = 10.f, leading = 1.5f;
+	unsigned int charCount = 0;
+	unsigned int lineCount = 1;
+	float x = 0.f, y = 0.f, fontSize = 4.f;
+	float width = 0.f, height = 0.f;
+
 	bool centerAlign = false;
+	bool wrapping = false;
+	bool worldSpace = false;
 	std::string text = "Default Text";
 	property_vtable();
 };
@@ -322,24 +326,21 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(y).Name("Y-axis Offset"),
 		property_var(fontSize).Name("Font Size"),
 		property_var(width).Name("Textbox Width"),
-		property_var(leading).Name("Leading"),
+		property_var(height).Name("Textbox Height"),
 		property_var(centerAlign).Name("Center Alignment"),
-		property_var(r).Name("Color R"),
-		property_var(g).Name("Color G"),
-		property_var(b).Name("Color B"),
-		property_var(alpha).Name("Opacity")
+		property_var(wrapping).Name("Wrap Text"),
+		property_var(worldSpace).Name("WorldSpace"),
+		property_var(color).Name("Color"),
 } property_vend_h(TextRenderer)
 
 struct Camera : Object, BaseCamera
 {
 	Camera();
-	Vector4 backgroundColor{};
 	property_vtable();
 };
 
 property_begin_name(Camera, "Camera") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(backgroundColor).Name("BackgroundColor"),
 	property_parent(BaseCamera)
 } property_vend_h(Camera)
 
