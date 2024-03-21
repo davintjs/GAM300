@@ -19,7 +19,10 @@ public class Inventory : Script
     public float healthPackHealValue = 5f;
 
     PlayerAudioManager playerSounds;
-    
+
+    public TextRenderer stamCounter;
+    public TextRenderer healthCounter;
+    public TextRenderer maxPackCounter;
 
     void Awake()
     {
@@ -45,6 +48,10 @@ public class Inventory : Script
     {
         thePacks();
         //theCheats();
+
+        stamCounter.text = staminaPackCount.ToString();
+        healthCounter.text = healthPackCount.ToString();
+        maxPackCounter.text = maxStatPackCount.ToString();
     }
 
     //(CHEAT) Adds one of eah pack count.

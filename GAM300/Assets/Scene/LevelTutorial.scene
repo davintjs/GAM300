@@ -454,6 +454,9 @@ Script:
   maxStatPackCount: 0
   staminaPackCount: 0
   staminaPackValue: 50
+  healthCounter: {fileID: 7106348496936394930}  # Component
+  maxPackCounter: {fileID: 18062030643615582512}  # Component
+  stamCounter: {fileID: 3793286798138583367}  # Component
   thirdPersonController: {fileID: 0}
 ---
 ID: 7837859240719427374
@@ -638,6 +641,9 @@ Transform:
     - {fileID: 12115195871797465227}
     - {fileID: 4720521423488205772}
     - {fileID: 11966624967280915999}
+    - {fileID: 8999464013272844116}
+    - {fileID: 8902240131670545970}
+    - {fileID: 2362914623510004527}
     - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
     - {fileID: 13993313988089347944}
@@ -16838,9 +16844,9 @@ GameObject:
 ID: 11180506814816798271
 Transform:
   m_GameObject: {fileID: 11966624967280915999}
-  Translation: [-1.64999998, -0.899999976, 5]
-  Rotation: [3.14158487, 0, 0]
-  Scale: [1, 1, -1]
+  Translation: [-1.64952528, -0.899993896, 5]
+  Rotation: [0, 0, 0]
+  Scale: [1, 0.999999762, 0.999999762]
   Father: {fileID: 4212138099454399691}
   m_Children:
     []
@@ -35142,6 +35148,117 @@ TextRenderer:
   Font Size: 1.63
   Textbox Width: 9.23999977
   Leading: 1.48000002
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 8999464013272844116
+GameObject:
+  m_IsActive: true
+  m_Name: HealthPackCounter_Text
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8720823304217764596}  # Transform
+    - component: {fileID: 7106348496936394930}  # TextRenderer
+---
+ID: 8720823304217764596
+Transform:
+  m_GameObject: {fileID: 8999464013272844116}
+  Translation: [-0.958000541, -0.909805298, 1.28763437]
+  Rotation: [0, 0, 0]
+  Scale: [1, 0.999999762, 0.999999762]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 7106348496936394930
+TextRenderer:
+  m_GameObject: {fileID: 8999464013272844116}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 8902240131670545970
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaPackCounter_Text
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4338872382419012729}  # Transform
+    - component: {fileID: 3793286798138583367}  # TextRenderer
+---
+ID: 4338872382419012729
+Transform:
+  m_GameObject: {fileID: 8902240131670545970}
+  Translation: [-0.873085856, -0.909805298, 1.28763437]
+  Rotation: [0, 0, 0]
+  Scale: [1, 0.999999762, 0.999999762]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 3793286798138583367
+TextRenderer:
+  m_GameObject: {fileID: 8902240131670545970}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 2362914623510004527
+GameObject:
+  m_IsActive: true
+  m_Name: MaxPackCounter_Text
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15449216803697819372}  # Transform
+    - component: {fileID: 18062030643615582512}  # TextRenderer
+---
+ID: 15449216803697819372
+Transform:
+  m_GameObject: {fileID: 2362914623510004527}
+  Translation: [-0.791153371, -0.909805298, 1.28763437]
+  Rotation: [0, 0, 0]
+  Scale: [1, 0.999999762, 0.999999762]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 18062030643615582512
+TextRenderer:
+  m_GameObject: {fileID: 2362914623510004527}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
   Center Alignment: true
   Color R: 1
   Color G: 1
