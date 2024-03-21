@@ -36,7 +36,13 @@ void ParticleManager::Update(float dt)
             for (int i = 0; i < particleComponent.numParticles_; i++) {
 
                 particleComponent.particles_[i].position = origin;
-
+                // This is the random spawning within a area
+                if (particleComponent.spawnFromShape)
+                {
+                    particleComponent.particles_[i].position.x = random.NextFloat1(particleComponent.particles_[i].position.x - particleComponent.fromShapeAxis.x, particleComponent.particles_[i].position.x + particleComponent.fromShapeAxis.x);
+                    particleComponent.particles_[i].position.y = random.NextFloat1(particleComponent.particles_[i].position.y - particleComponent.fromShapeAxis.y, particleComponent.particles_[i].position.y + particleComponent.fromShapeAxis.y);
+                    particleComponent.particles_[i].position.z = random.NextFloat1(particleComponent.particles_[i].position.z - particleComponent.fromShapeAxis.z, particleComponent.particles_[i].position.z + particleComponent.fromShapeAxis.z);
+                }
                 //particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation();
                 particleComponent.particles_[i].direction = random.NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = enableDirection ? vec3(particleComponent.direction) : random.NextVector3(-20.0f, 20.0f);
@@ -50,13 +56,21 @@ void ParticleManager::Update(float dt)
             }
         }
 
-        if (particleComponent.particleEmissionRate_ > 0.0f) {
+        //if (particleComponent.particleEmissionRate_ > 0.0f) {
+            
             for (int i = 0; i < particleComponent.numParticles_; i++) {
+                
+                
                 if (particleComponent.particles_[i].lifetime <= 0.0f) { // when particle dies, reset
                     particleComponent.particles_[i].trails.pos.clear();
                     particleComponent.particles_[i].trails.count = 0;
                     particleComponent.particles_[i].position = origin;
-
+                    if (particleComponent.spawnFromShape)
+                    {
+                        particleComponent.particles_[i].position.x = random.NextFloat1(particleComponent.particles_[i].position.x - particleComponent.fromShapeAxis.x, particleComponent.particles_[i].position.x + particleComponent.fromShapeAxis.x);
+                        particleComponent.particles_[i].position.y = random.NextFloat1(particleComponent.particles_[i].position.y - particleComponent.fromShapeAxis.y, particleComponent.particles_[i].position.y + particleComponent.fromShapeAxis.y);
+                        particleComponent.particles_[i].position.z = random.NextFloat1(particleComponent.particles_[i].position.z - particleComponent.fromShapeAxis.z, particleComponent.particles_[i].position.z + particleComponent.fromShapeAxis.z);
+                    }
                     //particleComponent.particles_[i].position = entityTransform.GetGlobalTranslation(); // to entity's position
                     particleComponent.particles_[i].direction = enableDirection ? vec3(particleComponent.direction) : random.NextVector3(-20.0f, 20.0f);
                     particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
@@ -72,7 +86,7 @@ void ParticleManager::Update(float dt)
                     }
                 }
             }
-        }
+        //}
 
         const float noiseMovementFactor = particleComponent.noiseMovement / 100.f;
 
@@ -131,6 +145,8 @@ void ParticleManager::Update(float dt)
             if (particleComponent.isLocalSpace) {
                 particlePos += entityTransform.GetGlobalTranslation();
             }
+
+           
 
             if (!particleComponent.trailEnabled) {
                 continue;

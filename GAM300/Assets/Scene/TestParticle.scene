@@ -21,7 +21,7 @@ GameObject:
 ID: 1373255009547200345
 Transform:
   m_GameObject: {fileID: 14989680110700367717}
-  Translation: [-0.239672065, 2, -2.32830644e-10]
+  Translation: [-0.239672065, -0.56156075, -2.32830644e-10]
   Rotation: [0, 0, 0]
   Scale: [0.200000003, 0.200000003, 0.200000003]
   Father: {fileID: 0}
@@ -44,8 +44,8 @@ ParticleComponent:
   Local Space: false
   Particle Direction: [0, 1, 0]
   Angle of Direction: 90
-  Number Of Particles: 3
-  Particle Lifetime: 0.5
+  Number Of Particles: 50
+  Particle Lifetime: 2
   Particle Emission Rate: 1
   Particle Min Scale: 0.100000001
   Particle Max Scale: 0.100000001
@@ -55,10 +55,12 @@ ParticleComponent:
   Particle Noise Movement Percentage: 20
   Particle Noise Frequency: 5
   2D particle: false
+  Spawn From Shape: true
+  Shape's Size: [10, 0, 10]
   Trailing: true
-  Trail Color: [1, 0, 0.838253021]
-  Trail Size: 5
-  Trail Thickness: 1
+  Trail Color: [1, 0.999899983, 0.999983788]
+  Trail Size: 10
+  Trail Thickness: 10.3500004
   Looping: true
 ---
 ID: 1589847083358243135
@@ -359,6 +361,8 @@ ParticleComponent:
   Particle Noise Movement Percentage: 0
   Particle Noise Frequency: 0
   2D particle: true
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
   Trailing: false
   Trail Color: [1, 1, 1]
   Trail Size: 5
