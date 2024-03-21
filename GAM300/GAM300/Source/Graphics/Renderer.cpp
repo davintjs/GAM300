@@ -443,12 +443,12 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	for (auto rit = transparentMap.rbegin(); rit != transparentMap.rend(); ++rit) {
 		auto& prop = rit->second;
 
-		glActiveTexture(GL_TEXTURE0); glBindTexture(GL_TEXTURE_2D, prop.textureID);
-		glActiveTexture(GL_TEXTURE1); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
-		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
-		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
-		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.AoID);
-		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
+		glActiveTexture(GL_TEXTURE2); glBindTexture(GL_TEXTURE_2D, prop.textureID);
+		glActiveTexture(GL_TEXTURE3); glBindTexture(GL_TEXTURE_2D, prop.NormalID);
+		glActiveTexture(GL_TEXTURE4); glBindTexture(GL_TEXTURE_2D, prop.RoughnessID);
+		glActiveTexture(GL_TEXTURE5); glBindTexture(GL_TEXTURE_2D, prop.MetallicID);
+		glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, prop.AoID);
+		glActiveTexture(GL_TEXTURE7); glBindTexture(GL_TEXTURE_2D, prop.EmissionID);
 		// You have 6 - 9 Texture Slots
 
 		//glActiveTexture(GL_TEXTURE6); glBindTexture(GL_TEXTURE_2D, LIGHTING.GetDirectionLights()[0].shadow);
