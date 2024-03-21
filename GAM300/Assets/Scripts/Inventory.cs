@@ -19,7 +19,10 @@ public class Inventory : Script
     public float healthPackHealValue = 5f;
 
     PlayerAudioManager playerSounds;
-    
+
+    public TextRenderer stamCounter;
+    public TextRenderer healthCounter;
+    public TextRenderer maxPackCounter;
 
     void Awake()
     {
@@ -45,6 +48,10 @@ public class Inventory : Script
     {
         thePacks();
         //theCheats();
+
+        stamCounter.text = staminaPackCount.ToString();
+        healthCounter.text = healthPackCount.ToString();
+        maxPackCounter.text = maxStatPackCount.ToString();
     }
 
     //(CHEAT) Adds one of eah pack count.
@@ -58,7 +65,7 @@ public class Inventory : Script
     void thePacks()
     {
         //HEALTH PACK - RESTORES HEALTH
-        if (healthPackCount > 0 && Input.GetKey(KeyCode.D1))
+        if (healthPackCount > 0 && Input.GetKeyDown(KeyCode.D1))
         {
             healthPackCount -= 1;
             Console.WriteLine("Use Health Pack");
@@ -68,7 +75,7 @@ public class Inventory : Script
         }
 
         //STAMINA PACK - RESTORE STAMINA
-        if (staminaPackCount > 0 && Input.GetKey(KeyCode.D2))
+        if (staminaPackCount > 0 && Input.GetKeyDown(KeyCode.D2))
         {
             staminaPackCount -= 1;
             Console.WriteLine("Use Stamina Pack");
@@ -78,7 +85,7 @@ public class Inventory : Script
         }
 
         //MAXSTAT PACK - RESTORE HEALTH AND STAMINA
-        if (maxStatPackCount > 0 && Input.GetKey(KeyCode.D3))
+        if (maxStatPackCount > 0 && Input.GetKeyDown(KeyCode.D3))
         {
             maxStatPackCount -= 1;
             Console.WriteLine("Use MaxStat Pack");
@@ -87,6 +94,12 @@ public class Inventory : Script
             thirdPersonController.UpdatehealthBar();
             thirdPersonController.restoreStamina(thirdPersonController.maxStamina);
             thirdPersonController.UpdateStaminaBar();
+        }
+
+        //Sound feedback when not enough items
+        if ((maxStatPackCount <= 0 && Input.GetKeyDown(KeyCode.D3) || staminaPackCount <= 0 && Input.GetKeyDown(KeyCode.D2)) || healthPackCount <= 0 && Input.GetKeyDown(KeyCode.D1))
+        {
+            AudioManager.instance.notEnoughItems.Play();
         }
     }
 
