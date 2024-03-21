@@ -42,6 +42,19 @@ public class Inventory : Script
     void Start()
     {
         playerSounds = PlayerAudioManager.instance;
+
+        if (stamCounter == null)
+        {
+            Console.WriteLine("Missing stamcounter reference in Inventory script");
+        }
+        if (healthCounter == null)
+        {
+            Console.WriteLine("Missing healthCounter reference in Inventory script");
+        }
+        if (maxPackCounter == null)
+        {
+            Console.WriteLine("Missing maxPackCounter reference in Inventory script");
+        }
     }
 
     void Update()
