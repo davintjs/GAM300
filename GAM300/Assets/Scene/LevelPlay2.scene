@@ -143,6 +143,7 @@ Script:
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyDie: {fileID: 14157919317546456730}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  notEnoughItems: {fileID: 1797510401047057825}  # Component
   obj_success: {fileID: 1067351355177411098}  # Component
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
@@ -84100,6 +84101,7 @@ Transform:
     - {fileID: 14997646972903896270}
     - {fileID: 365085607940253986}
     - {fileID: 5245298092074131690}
+    - {fileID: 6227812347651407358}
 ---
 ID: 8160679611370606636
 Script:
@@ -96312,3 +96314,39 @@ TextRenderer:
   Color G: 1
   Color B: 1
   Opacity: 1
+---
+ID: 6227812347651407358
+GameObject:
+  m_IsActive: true
+  m_Name: notEnoughItems
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7195043148081261651}  # Transform
+    - component: {fileID: 1797510401047057825}  # AudioSource
+---
+ID: 7195043148081261651
+Transform:
+  m_GameObject: {fileID: 6227812347651407358}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3086226640464916968}
+  m_Children:
+    []
+---
+ID: 1797510401047057825
+AudioSource:
+  m_GameObject: {fileID: 6227812347651407358}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 63ebb10b2da608e4a1b9d3098cd8ca22}
+  Play: false

@@ -184,6 +184,7 @@ Script:
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyDie: {fileID: 14157919317546456730}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  notEnoughItems: {fileID: 18215977869691679653}  # Component
   obj_success: {fileID: 5618729943619156992}  # Component
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
@@ -641,9 +642,6 @@ Transform:
     - {fileID: 12115195871797465227}
     - {fileID: 4720521423488205772}
     - {fileID: 11966624967280915999}
-    - {fileID: 8999464013272844116}
-    - {fileID: 8902240131670545970}
-    - {fileID: 2362914623510004527}
     - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
     - {fileID: 13993313988089347944}
@@ -657,6 +655,9 @@ Transform:
     - {fileID: 17065559468612678914}
     - {fileID: 13238106671876530389}
     - {fileID: 15384277846337641445}
+    - {fileID: 8999464013272844116}
+    - {fileID: 8902240131670545970}
+    - {fileID: 2362914623510004527}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -33591,6 +33592,7 @@ Transform:
     - {fileID: 6949508839592080895}
     - {fileID: 8511415690990079485}
     - {fileID: 15181613681739195758}
+    - {fileID: 16154765908963183192}
 ---
 ID: 14575671556032243219
 Script:
@@ -35264,3 +35266,39 @@ TextRenderer:
   Color G: 1
   Color B: 1
   Opacity: 1
+---
+ID: 16154765908963183192
+GameObject:
+  m_IsActive: true
+  m_Name: notEnoughItems
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5382319616709305640}  # Transform
+    - component: {fileID: 18215977869691679653}  # AudioSource
+---
+ID: 5382319616709305640
+Transform:
+  m_GameObject: {fileID: 16154765908963183192}
+  Translation: [0, 0, -3.46817615e-08]
+  Rotation: [-3.14159274, 0, -3.14159274]
+  Scale: [1.00000048, 1, 1.00000048]
+  Father: {fileID: 17382752399387768490}
+  m_Children:
+    []
+---
+ID: 18215977869691679653
+AudioSource:
+  m_GameObject: {fileID: 16154765908963183192}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 63ebb10b2da608e4a1b9d3098cd8ca22}
+  Play: false
