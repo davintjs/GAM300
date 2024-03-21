@@ -592,6 +592,8 @@ struct ParticleComponent : Object
 	bool trailEnabled{ false };
 	bool isLocalSpace{ false };
 
+	bool spawnFromShape{ false };
+	Vector3 fromShapeAxis{ 1.f,1.f,1.f };
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -616,6 +618,8 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(noiseMovement).Name("Particle Noise Movement Percentage"),
 	property_var(noisefrequency).Name("Particle Noise Frequency"),
 	property_var(is2D).Name("2D particle"),
+	property_var(spawnFromShape).Name("Spawn From Shape"),
+	property_var(fromShapeAxis).Name("Shape's Size"),
 	property_var(trailEnabled).Name("Trailing"),
 	property_var(trailColor).Name("Trail Color"),
 	property_var(trailSize).Name("Trail Size"),
