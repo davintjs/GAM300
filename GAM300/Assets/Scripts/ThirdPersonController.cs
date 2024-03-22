@@ -137,6 +137,7 @@ public class ThirdPersonController : Script
     public bool isInvulnerable = false;
     public float invulnerableTimer = 1f;
     public float currentInvulnerableTimer;
+    private bool updateInvulnerability = false;
     public bool isDead = false;
 
     float maxAirTime = 2f;
@@ -346,6 +347,8 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("Missing animator reference in ThirdPersonController script");
         }
+
+        StartCoroutine(Invulnerability());
 
         playerSounds = PlayerAudioManager.instance;
         playerWeaponCollider1.SetActive(false);
@@ -659,18 +662,7 @@ public class ThirdPersonController : Script
         }
 
         //invulnerability
-        if (isInvulnerable)
-        {
-            currentInvulnerableTimer -= Time.deltaTime;
-            if (currentInvulnerableTimer <= 0)
-            {
-                isInvulnerable = false;
-                currentInvulnerableTimer = invulnerableTimer;
-                SetState("Stun", false);
-            }
-            return;
-        }
-        else if (CC.isGrounded)
+        if (CC.isGrounded)
         {
             //Console.WriteLine("\nGROUNDED!");
             if (GetState("Falling"))
@@ -723,6 +715,7 @@ public class ThirdPersonController : Script
                 //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
                 isDodging = true;
+                updateInvulnerability = true;
 
                 // No interpolation for dodging
                 noInterpolate = false;
@@ -1065,6 +1058,24 @@ public class ThirdPersonController : Script
         regen = null;
     }
 
+    private IEnumerator Invulnerability()
+    {
+        while (true)
+        {
+            if (updateInvulnerability)
+            {
+                isInvulnerable = true;
+                yield return new WaitForSeconds(invulnerableTimer);
+                isInvulnerable = false;
+                SetState("Stun", false);
+            }
+
+            updateInvulnerability = false;
+
+            yield return null;
+        }
+    }
+
     bool GetState (string stateName)
     {
         return animationManager.GetState(stateName).state;
@@ -1099,8 +1110,7 @@ public class ThirdPersonController : Script
 
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.damagedShakeMag, CombatManager.instance.damagedShakeDur);
             ThirdPersonCamera.instance.SetFOV(CombatManager.instance.damagedShakeMag * 100, CombatManager.instance.damagedShakeDur);
-            isInvulnerable = true;
-            currentInvulnerableTimer = invulnerableTimer;
+            updateInvulnerability = true;
             currentHealth -= amount;
             if (currentHealth <= 3f && playingLowHealthSound == false)
             {
