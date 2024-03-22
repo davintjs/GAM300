@@ -2,7 +2,7 @@
 
 layout (location = 0) in vec2 TexCoords;
 layout (location = 1) in vec3 WorldPos;
-layout (location = 2) in float lifeTimes;
+layout (location = 2) in vec2 lifeTimes;
 
 layout (binding = 0) uniform sampler2D albedoTexture;
 
@@ -35,17 +35,19 @@ void main()
         discard;
     }
 
+     // LERP the colors
     if(fadeToColor)
     {
         
-        float lerp = 1.f - (lifeTimes / maxLifetime);
-        lerp = abs(lerp);
-        // LERP the colors
-        albedo.r = mix(albedo.r,colorToFadeTo.r,lerp);
-
-        albedo.g = mix(albedo.g,colorToFadeTo.g,lerp);
-
-        albedo.b = mix(albedo.b,colorToFadeTo.b,lerp);
+        float lerp = 1.f - (lifeTimes.x / lifeTimes.y);
+//        float lerp = lifeTimes / maxLifetime;
+//            lerp = abs(lerp);
+        albedo = mix(albedo,colorToFadeTo,lerp);
+//        albedo.r = mix(albedo.r,colorToFadeTo.r,lerp);
+//
+//        albedo.g = mix(albedo.g,colorToFadeTo.g,lerp);
+//
+//        albedo.b = mix(albedo.b,colorToFadeTo.b,lerp);
         
 //        albedo.r = mix(colorToFadeTo.r, albedo.r,lerp);
 //
@@ -53,7 +55,7 @@ void main()
 //
 //        albedo.b = mix(colorToFadeTo.b, albedo.b,lerp);
 
-//        albedo = colorToFadeTo;
+//        albedo = vec3(lerp,lerp,lerp);
     }
 
 
@@ -62,6 +64,7 @@ void main()
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
 
     FragColor = vec4(color, alpha);
+    Blooming = FragColor;
 //    FragColor.a *= alpha;
 //    FragColor.rgb = pow(FragColor.rgb, vec3(2.2f));
 

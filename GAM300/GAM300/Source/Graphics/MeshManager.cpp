@@ -584,11 +584,11 @@ unsigned int  MeshManager::InstanceSetup(InstanceProperties& prop) {
     prop.ShininessBuffer;
     glGenBuffers(1, &prop.ShininessBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(float), &(prop.Shininess[0]), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), prop.Shininess.data(), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(14);
-    glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+    glVertexAttribPointer(14, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
     glVertexAttribDivisor(14, 1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -717,11 +717,11 @@ unsigned int  MeshManager::InstanceSetup_PBR(InstanceProperties& prop) {
     prop.ShininessBuffer;
     glGenBuffers(1, &prop.ShininessBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(float), prop.Shininess.data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), prop.Shininess.data(), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(14);
-    glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+    glVertexAttribPointer(14, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
     glVertexAttribDivisor(14, 1);
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

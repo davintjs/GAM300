@@ -37,11 +37,6 @@ void ParticleRenderer::Update(float dt) {
         if (!currentScene.IsActive(entity))
             continue;
 
-        if (particleComponent.fadeToColor)
-        {
-            std::cout << "Yes\n";
-        }
-
         for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             if (i >= particleComponent.particles_.size())
@@ -79,11 +74,11 @@ void ParticleRenderer::Update(float dt) {
             // Color Fading
             if (particleComponent.fadeToColor)
             {
-                particleLifetimes.emplace_back(particleComponent.particles_[i].lifetime);
+                particleLifetimes.emplace_back(particleComponent.particles_[i].lifetime, particleComponent.particles_[i].lifetimeInitial);
             }
             else
             {
-                particleLifetimes.emplace_back(10.f);
+                particleLifetimes.emplace_back(0.f,0.f);
             }
 
             particleSRT.emplace_back(srt);
@@ -152,12 +147,7 @@ bool ParticleRenderer::compareParticles(const glm::mat4& particle1, const glm::m
 void ParticleRenderer::Draw(BaseCamera& _camera) {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     int counter = 0;
-    std::cout << "------------\n";
-    /*for (int i = 0; i < particleLifetimes.size(); ++i)
-    {
-        std::cout << particleLifetimes[i] << "\n";
-    }*/
-    std::cout << "size is " << particleLifetimes.size() << "\n";
+   
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         if (!currentScene.IsActive(particleComponent))
             continue;
@@ -191,9 +181,8 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES);
         shader.Use();
 
-        std::cout << "Counter size is :" << counter << "\n";
         glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(float), particleLifetimes.data() + counter);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::vec2), particleLifetimes.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         GLint fadeToColor =

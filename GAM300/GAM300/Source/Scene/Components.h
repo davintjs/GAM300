@@ -556,6 +556,7 @@ struct Particle : Object
 	vec3 direction{ 0.f , 0.f, 0.f };
 	float acceleration{0.f};
 	float lifetime{ 0.f };
+	float lifetimeInitial{ 0.f };
 	float scale{ 0.f };
 	float speed{0.f};
 	float noiselifetime{ 0.f };

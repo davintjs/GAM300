@@ -173,7 +173,8 @@ struct InstanceProperties
 
 	unsigned int ShininessBuffer;
 	//float Shininess[EnitityInstanceLimit];
-	std::vector<float> Shininess;
+	//std::vector<float> Shininess;
+	std::vector<glm::vec2> Shininess;
 
 	// -------------- PBR --------------------------
 	// USES Albedo Buffer from above too

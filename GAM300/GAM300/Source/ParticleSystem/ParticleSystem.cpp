@@ -50,6 +50,8 @@ void ParticleManager::Update(float dt)
                 particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                 particleComponent.particles_[i].acceleration = particleComponent.acceleration_;
                 particleComponent.particles_[i].lifetime = random.NextFloat1(particleComponent.particleLifetime_Min, particleComponent.particleLifetime_);
+                particleComponent.particles_[i].lifetimeInitial = particleComponent.particles_[i].lifetime;
+
                 particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
                 particleComponent.particles_[i].speed = particleComponent.speed_;
                 particleComponent.particles_[i].trails.pos.emplace_back(particleComponent.particles_[i].position);
@@ -85,6 +87,7 @@ void ParticleManager::Update(float dt)
                     {
                         particleComponent.particles_[i].lifetime = random.NextFloat1(particleComponent.particleLifetime_Min, particleComponent.particleLifetime_);
                     }
+                    particleComponent.particles_[i].lifetimeInitial = particleComponent.particles_[i].lifetime;
                 }
             }
         //}
