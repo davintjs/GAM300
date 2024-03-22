@@ -891,12 +891,16 @@ void Display_Property(T& comp) {
                                     Scene& scene = MySceneManager.GetCurrentScene();
                                     Entity& ent = scene.Get<Entity>(comp);
                                     auto& mr = scene.Get<MeshRenderer>(ent);
+                                    auto& particle = scene.Get<ParticleComponent>(ent);
                                     if (!EditorInspector::Instance().material_inspector) {
                                         EditorInspector::Instance().material_inspector = true;
                                     }
 
                                     ImGui::SetWindowFocus("Material");
-                                    EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                                    if(DisplayName == "Material_ID")
+                                        EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                                    else
+                                        EditorContentBrowser::Instance().selectedAss = particle.materialGUID;
                                 }
                             }                       
                         }
