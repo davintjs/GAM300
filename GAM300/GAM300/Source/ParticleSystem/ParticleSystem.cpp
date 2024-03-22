@@ -29,6 +29,12 @@ void ParticleManager::Update(float dt)
         vec3 origin = particleComponent.isLocalSpace ? vec3{ 0.f,0.f,0.f } : entityTransform.GetGlobalTranslation();
         bool enableDirection = glm::length(vec3(particleComponent.direction)) > 0.1f ? true : false;
 
+
+        if (particleComponent.particleLifetime_Min > particleComponent.particleLifetime_ || particleComponent.particleLifetime_ < particleComponent.particleLifetime_Min)
+        {
+            particleComponent.particleLifetime_Min = particleComponent.particleLifetime_;
+        }
+       
         if (particleComponent.particles_.size() != particleComponent.numParticles_) { // initialize or resize
             particleComponent.particles_.resize(particleComponent.numParticles_);
 
