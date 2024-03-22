@@ -55,6 +55,10 @@ public class Inventory : Script
         {
             Console.WriteLine("Missing maxPackCounter reference in Inventory script");
         }
+        if (thirdPersonController == null)
+        {
+            Console.WriteLine("Missing thirdPersonController reference in Inventory script");
+        }
     }
 
     void Update()
