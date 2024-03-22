@@ -15,6 +15,7 @@ uniform bool hasTexture;
 
 uniform bool fadeToColor;
 uniform vec3 colorToFadeTo;
+uniform float maxLifetime;
 
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 Blooming;
@@ -29,13 +30,30 @@ void main()
         albedo *= pow(texColor.rgb * frag_Albedo.rgb, vec3(2.2));
         alpha *= texColor.a;
     }
+
     if(alpha < 0.05f){
         discard;
     }
 
     if(fadeToColor)
     {
-        FragColor = vec4(colorToFadeTo * lifeTimes, alpha);
+        
+        float lerp = 1.f - (lifeTimes / maxLifetime);
+        lerp = abs(lerp);
+        // LERP the colors
+        albedo.r = mix(albedo.r,colorToFadeTo.r,lerp);
+
+        albedo.g = mix(albedo.g,colorToFadeTo.g,lerp);
+
+        albedo.b = mix(albedo.b,colorToFadeTo.b,lerp);
+        
+//        albedo.r = mix(colorToFadeTo.r, albedo.r,lerp);
+//
+//        albedo.g = mix(colorToFadeTo.g, albedo.g,lerp);
+//
+//        albedo.b = mix(colorToFadeTo.b, albedo.b,lerp);
+
+//        albedo = colorToFadeTo;
     }
 
 
@@ -50,8 +68,8 @@ void main()
     
 
 
-    if(brightness > bloomThreshold)
-        Blooming = vec4(color.rgb, 1.f);
-    else
-        Blooming = vec4(0.0, 0.0, 0.0, 1.f);
+//    if(brightness > bloomThreshold)
+//        Blooming = vec4(color.rgb, 1.f);
+//    else
+//        Blooming = vec4(0.0, 0.0, 0.0, 1.f);
 }

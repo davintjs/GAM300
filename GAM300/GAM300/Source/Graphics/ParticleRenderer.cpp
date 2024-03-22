@@ -201,6 +201,9 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         GLint colorToFadeTo =
             glGetUniformLocation(shader.GetHandle(), "colorToFadeTo");
 
+        GLint maxLifetime =
+            glGetUniformLocation(shader.GetHandle(), "maxLifetime");
+
         GLint perspective =
             glGetUniformLocation(shader.GetHandle(), "persp_projection");
         GLint view =
@@ -219,6 +222,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glUniform3f(colorToFadeTo, particleComponent.colorToFadeTowards.x, 
             particleComponent.colorToFadeTowards.y, particleComponent.colorToFadeTowards.z);
 
+        glUniform1f(maxLifetime, particleComponent.particleLifetime_);
 
         glUniformMatrix4fv(perspective, 1, GL_FALSE,
             glm::value_ptr(_camera.GetProjMatrix()));

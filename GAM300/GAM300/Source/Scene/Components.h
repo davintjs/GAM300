@@ -576,7 +576,10 @@ struct ParticleComponent : Object
 	float trailThiccness{ 1.f };
 
 	float angle{ 30.f }; // for directional particles
+
+	float particleLifetime_Min{ 1.0f };
 	float particleLifetime_{ 3.0f };
+
 	float particleEmissionRate_{ 100.0f };
 	float particleMinScale_{ 0.1f };
 	float particleMaxScale_{ 1.0f };
@@ -612,7 +615,11 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(direction).Name("Particle Direction"),
 	property_var(angle).Name("Angle of Direction"),
 	property_var(numParticles_).Name("Number Of Particles"),
-	property_var(particleLifetime_).Name("Particle Lifetime"),
+
+	property_var(particleLifetime_Min).Name("Min Particle Lifetime"),
+	property_var(particleLifetime_).Name("Max Particle Lifetime"),
+
+
 	property_var(particleEmissionRate_).Name("Particle Emission Rate"),
 	property_var(particleMinScale_).Name("Particle Min Scale"),
 	property_var(particleMaxScale_).Name("Particle Max Scale"),

@@ -7,6 +7,7 @@
 
 bool isParallel(const glm::vec3& v1, const glm::vec3& v2);
 
+
 void ParticleManager::Init()
 {
     
@@ -48,7 +49,7 @@ void ParticleManager::Update(float dt)
                 particleComponent.particles_[i].direction = enableDirection ? vec3(particleComponent.direction) : random.NextVector3(-20.0f, 20.0f);
                 particleComponent.particles_[i].direction = glm::normalize(particleComponent.particles_[i].direction);
                 particleComponent.particles_[i].acceleration = particleComponent.acceleration_;
-                particleComponent.particles_[i].lifetime = random.NextFloat1(0.0f, particleComponent.particleLifetime_);
+                particleComponent.particles_[i].lifetime = random.NextFloat1(particleComponent.particleLifetime_Min, particleComponent.particleLifetime_);
                 particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
                 particleComponent.particles_[i].speed = particleComponent.speed_;
                 particleComponent.particles_[i].trails.pos.emplace_back(particleComponent.particles_[i].position);
@@ -82,7 +83,7 @@ void ParticleManager::Update(float dt)
 
                     if (particleComponent.particleLooping)
                     {
-                        particleComponent.particles_[i].lifetime = random.NextFloat1(0.0f, particleComponent.particleLifetime_);
+                        particleComponent.particles_[i].lifetime = random.NextFloat1(particleComponent.particleLifetime_Min, particleComponent.particleLifetime_);
                     }
                 }
             }
@@ -178,6 +179,7 @@ void ParticleManager::Update(float dt)
         }
 
     }
+
 }
 
 void ParticleManager::Exit()
