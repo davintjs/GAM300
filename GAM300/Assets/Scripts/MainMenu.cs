@@ -21,8 +21,6 @@ public class MainMenu : Script
 
     public GameObject ExitButton; 
 
-
-
     public bool isStartActive = true;
     public float flickerTimer = 0f;
 

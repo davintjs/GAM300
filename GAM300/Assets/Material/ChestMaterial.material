@@ -8,7 +8,7 @@ Material:
   Is Emission: true
   Emission: 5
   AlbedoTexture: {guid: 3265c082f2a00916d7aa5a06470a2c94}
-  NormalMap: {guid: 671e730f74db6557444f9e5070087c28}
+  NormalMap: {guid: 00000000000000000000000000000000}
   MetallicTexture: {guid: 2d77717b246cfd42c057fab9dcc14467}
   RoughnessTexture: {guid: afa90e0934ff5a6757c2d1ae083a756f}
   AoTexture: {guid: d67241f26d81d1cbe17e0041d2bbf7e6}

@@ -305,7 +305,7 @@ property_begin_name(Animator, "Animator") {
 struct TextRenderer : Object
 {
 	Vector4 color{1.f};
-	Engine::GUID<FontAsset> guid{ 0 };
+	Engine::GUID<FontAsset> guid = 0;
 	unsigned int charCount = 0;
 	unsigned int lineCount = 1;
 	float x = 0.f, y = 0.f, fontSize = 4.f;

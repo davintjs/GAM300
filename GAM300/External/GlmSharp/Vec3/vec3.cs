@@ -2049,5 +2049,67 @@ namespace GlmSharp
 
         #endregion
 
+        public enum EasingType
+        {
+            LINEAR,
+            EASEIN,
+            EASEOUT,
+            BEZIER,
+            PARAMETRIC
+        }
+
+        public static vec3 Lerp(vec3 start, vec3 end, float value, float duration, EasingType type)
+        {
+            value /= duration;
+
+            switch (type)
+            {
+                case EasingType.EASEIN:
+                    value = EaseIn(value);
+                    break;
+                case EasingType.EASEOUT:
+                    value = EaseOut(value);
+                    break;
+                case EasingType.BEZIER:
+                    value = BezierBlend(value);
+                    break;
+                case EasingType.PARAMETRIC:
+                    value = ParametricBlend(value);
+                    break;
+                case EasingType.LINEAR:
+                default:
+                    break;
+            }
+
+            vec3 temp = new vec3();
+
+            for (int i = 0; i < 3; ++i)
+            {
+                temp[i] = (1.0f - value) * (start[i]) + value * (end[i]);
+            }
+
+            return temp;
+        }
+
+        private static float EaseIn(float t)
+        {
+            return t * t;
+        }
+
+        private static float EaseOut(float t)
+        {
+            return 1 - (1 - t) * (1 - t);
+        }
+
+        private static float BezierBlend(float t)
+        {
+            return t * t * (3.0f - 2.0f * t);
+        }
+
+        private static float ParametricBlend(float t)
+        {
+            float sqt = t * t;
+            return (sqt / (2.0f * (sqt - t) + 1.0f));
+        }
     }
 }

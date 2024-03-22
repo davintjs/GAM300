@@ -172,6 +172,9 @@ void TextSystem::RenderText(TextRenderer& text)
 {
 	allVertices.clear();
 
+	if (text.guid == 0)
+		return;
+
 	unsigned int currentLine = 1;
 	float x = text.x, width, currentWidth, newLineWidth;
 	width = currentWidth = newLineWidth = 0.f;

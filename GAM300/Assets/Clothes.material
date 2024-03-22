@@ -1,0 +1,15 @@
+Material:
+  Material Name: Clothes
+  Shader: 1
+  Albedo: [9.99774275e-05, 9.99762997e-05, 9.99999975e-05, 1]
+  Metallic: 1
+  Roughness: 0.300000012
+  AmbientOcclusion: 1
+  Is Emission: false
+  Emission: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}

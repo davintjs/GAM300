@@ -1,0 +1,15 @@
+Material:
+  Material Name: LargeIncubatorDefault
+  Shader: 0
+  Albedo: [1, 0.999899983, 0.999899983, 1]
+  Metallic: 1
+  Roughness: 2.6099999
+  AmbientOcclusion: 1
+  Is Emission: true
+  Emission: 10
+  AlbedoTexture: {guid: 65f0dd32706b80e9427e4665c0d605ab}
+  NormalMap: {guid: 000f2236fc0f92b70b61a42e2c7f5bb7}
+  MetallicTexture: {guid: 5e723752402ffa6c5685267147648f36}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: cffbf6cb1de5758348ce3e9c8e42537b}
