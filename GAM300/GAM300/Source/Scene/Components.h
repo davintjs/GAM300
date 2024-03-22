@@ -594,6 +594,10 @@ struct ParticleComponent : Object
 
 	bool spawnFromShape{ false };
 	Vector3 fromShapeAxis{ 1.f,1.f,1.f };
+
+	bool fadeToColor;
+	Vector3 colorToFadeTowards{ 1.f,1.f,1.f };
+
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -624,7 +628,11 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(trailColor).Name("Trail Color"),
 	property_var(trailSize).Name("Trail Size"),
 	property_var(trailThiccness).Name("Trail Thickness"),
-	property_var(particleLooping).Name("Looping")
+	property_var(particleLooping).Name("Looping"),
+
+	property_var(fadeToColor).Name("Fade towards Color"),
+	property_var(colorToFadeTowards).Name("Color to Fade to")
+
 
 } property_vend_h(ParticleComponent)
 //

@@ -402,7 +402,7 @@ void DisplayType(Change& change, const char* name, Vector3& val)
     idName = "##";
     idName += name;
 
-    if (!strcmp(name, "Color") || !strcmp(name, "Trail Color")) {
+    if (!strcmp(name, "Color") || !strcmp(name, "Trail Color") || !strcmp(name, "Color to Fade to")) {
         Vector4 buf = Vector4(val.x, val.y, val.z, 1.f);
         ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
