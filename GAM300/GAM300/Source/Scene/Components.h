@@ -610,7 +610,7 @@ struct ParticleComponent : Object
 property_begin_name(ParticleComponent, "ParticleComponent")
 {
 	property_var(meshID).Name("Mesh"),
-	property_var(materialGUID).Name("Material"),
+	property_var(materialGUID).Name("Particle Material"),
 	//property_var(ParticleTexture).Name("Particle Texture"),
 	property_var(isLocalSpace).Name("Local Space"),
 	property_var(direction).Name("Particle Direction"),

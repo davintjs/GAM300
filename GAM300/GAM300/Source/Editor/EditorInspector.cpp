@@ -884,7 +884,7 @@ void Display_Property(T& comp) {
                     }
                     else {
                         Display<T1>(newchange, DisplayName.c_str(), Value);
-                        if (DisplayName == "Material_ID") {
+                        if (DisplayName == "Material_ID" || DisplayName == "Particle Material") {
                             ImGui::SameLine();
                             if (!EditorScene::Instance().multiselectEntities.size()) {
                                 if (ImGui::Button("Mat")) {
