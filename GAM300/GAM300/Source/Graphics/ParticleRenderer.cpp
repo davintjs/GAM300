@@ -15,6 +15,7 @@ void ParticleRenderer::Init() {
 void ParticleRenderer::Update(float dt) {
     particleSRT.clear(); // @kk not all entity should use the same container
     trailSRT.clear();
+    particleLifetimes.clear();
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     glm::mat4 _2dmtx(1.f);
     glm::vec3 camTranslate(1.f);
@@ -35,6 +36,12 @@ void ParticleRenderer::Update(float dt) {
         Transform& transform = currentScene.Get<Transform>(particleComponent);
         if (!currentScene.IsActive(entity))
             continue;
+
+        if (particleComponent.fadeToColor)
+        {
+            std::cout << "Yes\n";
+        }
+
         for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             if (i >= particleComponent.particles_.size())
@@ -68,6 +75,16 @@ void ParticleRenderer::Update(float dt) {
 
             //particleSRT.emplace_back(scale * rotate * translate);
             glm::mat4 srt = translate * rotate * scale;
+
+            // Color Fading
+            if (particleComponent.fadeToColor)
+            {
+                particleLifetimes.emplace_back(particleComponent.particles_[i].lifetime);
+            }
+            else
+            {
+                particleLifetimes.emplace_back(10.f);
+            }
 
             particleSRT.emplace_back(srt);
 
@@ -115,6 +132,7 @@ void ParticleRenderer::Update(float dt) {
         }
         particleCounter += particleComponent.numParticles_;
     }
+    
 }
 
 // Define a custom comparator function for sorting particles based on distance to camera
@@ -134,6 +152,12 @@ bool ParticleRenderer::compareParticles(const glm::mat4& particle1, const glm::m
 void ParticleRenderer::Draw(BaseCamera& _camera) {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     int counter = 0;
+    std::cout << "------------\n";
+    /*for (int i = 0; i < particleLifetimes.size(); ++i)
+    {
+        std::cout << particleLifetimes[i] << "\n";
+    }*/
+    std::cout << "size is " << particleLifetimes.size() << "\n";
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         if (!currentScene.IsActive(particleComponent))
             continue;
@@ -167,6 +191,16 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES);
         shader.Use();
 
+        std::cout << "Counter size is :" << counter << "\n";
+        glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(float), particleLifetimes.data() + counter);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        GLint fadeToColor =
+            glGetUniformLocation(shader.GetHandle(), "fadeToColor");
+        GLint colorToFadeTo =
+            glGetUniformLocation(shader.GetHandle(), "colorToFadeTo");
+
         GLint perspective =
             glGetUniformLocation(shader.GetHandle(), "persp_projection");
         GLint view =
@@ -179,6 +213,13 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
             glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
         GLint Colour =
             glGetUniformLocation(shader.GetHandle(), "frag_Albedo");
+
+        glUniform1f(fadeToColor, particleComponent.fadeToColor);
+        
+        glUniform3f(colorToFadeTo, particleComponent.colorToFadeTowards.x, 
+            particleComponent.colorToFadeTowards.y, particleComponent.colorToFadeTowards.z);
+
+
         glUniformMatrix4fv(perspective, 1, GL_FALSE,
             glm::value_ptr(_camera.GetProjMatrix()));
         glUniformMatrix4fv(view, 1, GL_FALSE,
@@ -219,6 +260,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         counter += particleComponent.numParticles_;
 
     }
+    
 }
 
 void ParticleRenderer::Draw2D(BaseCamera& _camera) {

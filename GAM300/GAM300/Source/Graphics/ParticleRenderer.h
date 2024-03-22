@@ -19,6 +19,7 @@ public:
 	void SetupInstancedCylinder();
 	void Exit();
 	std::vector<glm::mat4> particleSRT;
+	std::vector<float> particleLifetimes;
 	std::vector<glm::mat4> trailSRT;
 
 	GLuint quadVAO{};

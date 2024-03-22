@@ -595,7 +595,7 @@ struct ParticleComponent : Object
 	bool spawnFromShape{ false };
 	Vector3 fromShapeAxis{ 1.f,1.f,1.f };
 
-	bool fadeToColor;
+	bool fadeToColor{ false };
 	Vector3 colorToFadeTowards{ 1.f,1.f,1.f };
 
 	std::vector<Particle> particles_;

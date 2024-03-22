@@ -40,7 +40,7 @@ ParticleComponent:
   m_GameObject: {fileID: 14989680110700367717}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
+  Material: {guid: 56beda9f6de373b9d5955e84bb2420d2}
   Local Space: false
   Particle Direction: [0, 1, 0]
   Angle of Direction: 90
@@ -57,11 +57,13 @@ ParticleComponent:
   2D particle: false
   Spawn From Shape: true
   Shape's Size: [10, 0, 10]
-  Trailing: true
+  Trailing: false
   Trail Color: [1, 0.999899983, 0.999983788]
   Trail Size: 10
   Trail Thickness: 10.3500004
   Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
 ---
 ID: 1589847083358243135
 GameObject:
@@ -368,3 +370,5 @@ ParticleComponent:
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]

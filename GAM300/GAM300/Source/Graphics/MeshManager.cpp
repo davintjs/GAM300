@@ -580,10 +580,11 @@ unsigned int  MeshManager::InstanceSetup(InstanceProperties& prop) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // Shininess Buffer Setup
+
     prop.ShininessBuffer;
     glGenBuffers(1, &prop.ShininessBuffer);
     glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(float), &(prop.Shininess[0]), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(float), &(prop.Shininess[0]), GL_DYNAMIC_DRAW);
 
     glBindVertexArray(prop.VAO);
     glEnableVertexAttribArray(14);
@@ -713,6 +714,17 @@ unsigned int  MeshManager::InstanceSetup_PBR(InstanceProperties& prop) {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
+    prop.ShininessBuffer;
+    glGenBuffers(1, &prop.ShininessBuffer);
+    glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(float), prop.Shininess.data(), GL_DYNAMIC_DRAW);
+
+    glBindVertexArray(prop.VAO);
+    glEnableVertexAttribArray(14);
+    glVertexAttribPointer(14, 1, GL_FLOAT, GL_FALSE, sizeof(float), (void*)0);
+    glVertexAttribDivisor(14, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     prop.textureIndexBuffer;
     glGenBuffers(1, &prop.textureIndexBuffer);
