@@ -651,6 +651,7 @@ Transform:
     - {fileID: 17065559468612678914}
     - {fileID: 13238106671876530389}
     - {fileID: 15384277846337641445}
+    - {fileID: 13091064029857359106}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -35229,8 +35230,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0168000013
-  Textbox Height: 0.0126000009
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35265,8 +35266,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0378000028
-  Textbox Height: 0.0283500012
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35415,3 +35416,100 @@ TextRenderer:
   Wrap Text: false
   WorldSpace: false
   Color: [1, 1, 1, 1]
+---
+ID: 13091064029857359106
+GameObject:
+  m_IsActive: true
+  m_Name: SkillBorder_Sprint
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10844726746066648490}  # Transform
+    - component: {fileID: 7648414287142509041}  # SpriteRenderer
+---
+ID: 10844726746066648490
+Transform:
+  m_GameObject: {fileID: 13091064029857359106}
+  Translation: [1.27696121, -0.902999878, 0]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [0.100925997, 0.10092596, 0.10092596]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 10152718624619182785}
+    - {fileID: 116756458099848226}
+---
+ID: 7648414287142509041
+SpriteRenderer:
+  m_GameObject: {fileID: 13091064029857359106}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: c56ad377937ec59542a9216d77804efc}
+---
+ID: 116756458099848226
+GameObject:
+  m_IsActive: true
+  m_Name: SHIFT_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 31112738003993514}  # Transform
+    - component: {fileID: 11895883824617072809}  # TextRenderer
+---
+ID: 31112738003993514
+Transform:
+  m_GameObject: {fileID: 116756458099848226}
+  Translation: [0.070898056, 0.846984863, -1.03595085e-07]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [1, 0.999999344, 0.999999344]
+  Father: {fileID: 13091064029857359106}
+  m_Children:
+    []
+---
+ID: 11895883824617072809
+TextRenderer:
+  m_GameObject: {fileID: 116756458099848226}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: SHIFT
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 2.72000003
+  Textbox Width: 1.03632009
+  Textbox Height: 0.171360016
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 10152718624619182785
+GameObject:
+  m_IsActive: true
+  m_Name: SprintIcon
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9371346022336682629}  # Transform
+    - component: {fileID: 9491998807236455091}  # SpriteRenderer
+---
+ID: 9371346022336682629
+Transform:
+  m_GameObject: {fileID: 10152718624619182785}
+  Translation: [-0.0446710587, 0.0308837891, -0.173161596]
+  Rotation: [0, 0, 0]
+  Scale: [1.70446825, 1.70446754, 1.70446754]
+  Father: {fileID: 13091064029857359106}
+  m_Children:
+    []
+---
+ID: 9491998807236455091
+SpriteRenderer:
+  m_GameObject: {fileID: 10152718624619182785}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 29a511ce496f764ee1308dda7d666137}
