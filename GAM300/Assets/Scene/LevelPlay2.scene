@@ -231,6 +231,7 @@ ID: 16773315215798417911
 Camera:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
+  BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -514,8 +515,8 @@ Transform:
     - {fileID: 5676392047881511918}
     - {fileID: 17065559468612678914}
     - {fileID: 14237342508294354300}
-    - {fileID: 15864928862368179987}
-    - {fileID: 15240601354447175115}
+    - {fileID: 9959361981741042079}
+    - {fileID: 16970193758400152787}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -28509,8 +28510,8 @@ ID: 1531187162067078081
 BoxCollider:
   m_GameObject: {fileID: 459776755661247557}
   m_IsEnabled: true
-  Dimensions: [6.4000001, 3.9000001, 4.5999999]
-  Offset: [1.79999995, 1.75, 0.600000024]
+  Dimensions: [1, 1.20000005, 1]
+  Offset: [0, 0.699999988, 0]
 ---
 ID: 8846351083892004206
 Rigidbody:
@@ -28524,7 +28525,7 @@ Rigidbody:
   IsStatic: true
   IsKinematic: false
   UseGravity: false
-  Is_trigger: true
+  Is_trigger: false
 ---
 ID: 3673442395120839745
 Script:
@@ -28575,8 +28576,6 @@ GameObject:
   m_Component:
     - component: {fileID: 785053532411997570}  # Transform
     - component: {fileID: 1966073101464864282}  # MeshRenderer
-    - component: {fileID: 12707789239730532996}  # BoxCollider
-    - component: {fileID: 2084686185351747981}  # Rigidbody
 ---
 ID: 785053532411997570
 Transform:
@@ -28594,27 +28593,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
   Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
----
-ID: 12707789239730532996
-BoxCollider:
-  m_GameObject: {fileID: 11975786696549800457}
-  m_IsEnabled: true
-  Dimensions: [0.682932675, 1.36126828, 0.531217039]
-  Offset: [-5.21540642e-06, 0.679729462, 0.0769838691]
----
-ID: 2084686185351747981
-Rigidbody:
-  m_GameObject: {fileID: 11975786696549800457}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 8599879917880996340
 GameObject:
@@ -28643,8 +28621,8 @@ ID: 2803866998598046731
 BoxCollider:
   m_GameObject: {fileID: 8599879917880996340}
   m_IsEnabled: true
-  Dimensions: [6.4000001, 3.75, 6.0999999]
-  Offset: [0, 1.75, 6.75]
+  Dimensions: [1, 1.20000005, 1]
+  Offset: [0, 0.699999988, 0]
 ---
 ID: 5161906839896204815
 Rigidbody:
@@ -28658,7 +28636,7 @@ Rigidbody:
   IsStatic: true
   IsKinematic: false
   UseGravity: false
-  Is_trigger: true
+  Is_trigger: false
 ---
 ID: 807494450670959282
 Script:
@@ -28709,8 +28687,6 @@ GameObject:
   m_Component:
     - component: {fileID: 16199915162280256425}  # Transform
     - component: {fileID: 15123461980836055582}  # MeshRenderer
-    - component: {fileID: 17622194291517867441}  # BoxCollider
-    - component: {fileID: 2671760398193352869}  # Rigidbody
 ---
 ID: 16199915162280256425
 Transform:
@@ -28728,27 +28704,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
   Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
----
-ID: 17622194291517867441
-BoxCollider:
-  m_GameObject: {fileID: 8252142059041180488}
-  m_IsEnabled: true
-  Dimensions: [0.682932675, 1.36126828, 0.531217039]
-  Offset: [-5.21540642e-06, 0.679729462, 0.0769838691]
----
-ID: 2671760398193352869
-Rigidbody:
-  m_GameObject: {fileID: 8252142059041180488}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 16267666590116155670
 GameObject:
@@ -28778,8 +28733,8 @@ ID: 12070751329832844618
 BoxCollider:
   m_GameObject: {fileID: 16267666590116155670}
   m_IsEnabled: true
-  Dimensions: [5.80000019, 4.19999981, 4.1500001]
-  Offset: [0, 1.75, 1.04999995]
+  Dimensions: [1, 1.20000005, 1]
+  Offset: [0, 0.699999988, 0]
 ---
 ID: 5230444553556745723
 Rigidbody:
@@ -28793,7 +28748,7 @@ Rigidbody:
   IsStatic: true
   IsKinematic: false
   UseGravity: false
-  Is_trigger: true
+  Is_trigger: false
 ---
 ID: 2266543611861935459
 Script:
@@ -28844,8 +28799,6 @@ GameObject:
   m_Component:
     - component: {fileID: 14538001381341533805}  # Transform
     - component: {fileID: 7991432978154223001}  # MeshRenderer
-    - component: {fileID: 9680349729347868029}  # BoxCollider
-    - component: {fileID: 693851167381460300}  # Rigidbody
 ---
 ID: 14538001381341533805
 Transform:
@@ -28863,27 +28816,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
   Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
----
-ID: 9680349729347868029
-BoxCollider:
-  m_GameObject: {fileID: 11822844031916533458}
-  m_IsEnabled: true
-  Dimensions: [0.682932675, 1.36126828, 0.531217039]
-  Offset: [-5.21540642e-06, 0.679729462, 0.0769838691]
----
-ID: 693851167381460300
-Rigidbody:
-  m_GameObject: {fileID: 11822844031916533458}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 15531594244202276862
 GameObject:
@@ -82954,11 +82886,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 0.25
   Textbox Width: 95
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: true
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 17633603467252348022
 GameObject:
@@ -94185,11 +94118,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 10115566628269105248
 GameObject:
@@ -94292,11 +94226,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 4503526139341238809
 GameObject:
@@ -94328,11 +94263,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 16001887047449578172
 GameObject:
@@ -94364,11 +94300,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 4898880304558527863
 GameObject:
@@ -94400,11 +94337,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 2277648093646626505
 GameObject:
@@ -94436,11 +94374,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 2685666816494185203
 GameObject:
@@ -94472,11 +94411,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 5414773631650039043
 GameObject:
@@ -94508,11 +94448,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 7072642108193959153
 GameObject:
@@ -94544,11 +94485,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 9439018310584745255
 GameObject:
@@ -94580,11 +94522,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 14410455004164311229
 GameObject:
@@ -94616,11 +94559,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 10285232837826139804
 GameObject:
@@ -94652,11 +94596,12 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Textbox Height: 0
+  Leading: 1.5
   Center Alignment: false
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 624169214278105939
 GameObject:
@@ -96272,7 +96217,7 @@ GameObject:
 ID: 4279374563004726272
 Transform:
   m_GameObject: {fileID: 14237342508294354300}
-  Translation: [-1.60966301, -0.949615598, 7.02327251]
+  Translation: [-0.958131492, -0.912657857, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 4212138099454399691}
@@ -96287,13 +96232,88 @@ TextRenderer:
   Text: 0
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 0.449999988
-  Textbox Width: 0.057
-  Textbox Height: -0.0370000005
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
   Center Alignment: true
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 9959361981741042079
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaCounter_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18338022926377260667}  # Transform
+    - component: {fileID: 5334853953766887570}  # TextRenderer
+---
+ID: 18338022926377260667
+Transform:
+  m_GameObject: {fileID: 9959361981741042079}
+  Translation: [-0.875477433, -0.912657857, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 5334853953766887570
+TextRenderer:
+  m_GameObject: {fileID: 9959361981741042079}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 16970193758400152787
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatCounter_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1164169733315377895}  # Transform
+    - component: {fileID: 13913542858873206850}  # TextRenderer
+---
+ID: 1164169733315377895
+Transform:
+  m_GameObject: {fileID: 16970193758400152787}
+  Translation: [-0.790008783, -0.912657857, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 13913542858873206850
+TextRenderer:
+  m_GameObject: {fileID: 16970193758400152787}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 6227812347651407358
 GameObject:
@@ -96330,75 +96350,3 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: 63ebb10b2da608e4a1b9d3098cd8ca22}
   Play: false
----
-ID: 15864928862368179987
-GameObject:
-  m_IsActive: true
-  m_Name: StaminaCounter_Text
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 4234881681456471780}  # Transform
-    - component: {fileID: 12175591529865183616}  # TextRenderer
----
-ID: 4234881681456471780
-Transform:
-  m_GameObject: {fileID: 15864928862368179987}
-  Translation: [-1.46916056, -0.949615598, 7.02327251]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4212138099454399691}
-  m_Children:
-    []
----
-ID: 12175591529865183616
-TextRenderer:
-  m_GameObject: {fileID: 15864928862368179987}
-  m_IsEnabled: true
-  Font: {guid: d224692d54c5efe15c780f6a59491c23}
-  Text: 0
-  X-axis Offset: 0
-  Y-axis Offset: 0
-  Font Size: 0.449999988
-  Textbox Width: 0.0391500033
-  Textbox Height: 0.0283500012
-  Center Alignment: true
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
----
-ID: 15240601354447175115
-GameObject:
-  m_IsActive: true
-  m_Name: MaxCounter_Text
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12002470209419450116}  # Transform
-    - component: {fileID: 16953144698687180112}  # TextRenderer
----
-ID: 12002470209419450116
-Transform:
-  m_GameObject: {fileID: 15240601354447175115}
-  Translation: [-1.31967199, -0.949615598, 7.02327251]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4212138099454399691}
-  m_Children:
-    []
----
-ID: 16953144698687180112
-TextRenderer:
-  m_GameObject: {fileID: 15240601354447175115}
-  m_IsEnabled: true
-  Font: {guid: d224692d54c5efe15c780f6a59491c23}
-  Text: 0
-  X-axis Offset: 0
-  Y-axis Offset: 0
-  Font Size: 0.449999988
-  Textbox Width: 0.0391500033
-  Textbox Height: 0.0283500012
-  Center Alignment: true
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
