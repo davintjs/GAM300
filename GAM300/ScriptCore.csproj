@@ -62,6 +62,7 @@
     <Compile Include="Assets\Scripts\Inventory.cs" />
     <Compile Include="Assets\Scripts\KeyDoor.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
+    <Compile Include="Assets\Scripts\MainMenuAnimations.cs" />
     <Compile Include="Assets\Scripts\MaxStatPack.cs" />
     <Compile Include="Assets\Scripts\OverdriveChip.cs" />
     <Compile Include="Assets\Scripts\PlatformScript.cs" />

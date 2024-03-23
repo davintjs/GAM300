@@ -99,6 +99,7 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class TextRenderer
     {
+        public vec4 color;
         public string text
         {
             get 

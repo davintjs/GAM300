@@ -19,13 +19,13 @@ public class MainMenuAnimations : Script
     public float timer = 0f;
     public bool back = false;
 
-    private vec3 initialExitSign;
-    private vec3 finalExitSign;
+    private vec3 initialPos;
+    private vec3 finalPos;
 
     void Start()
     {
-        initialExitSign = initial.transform.position;
-        finalExitSign = final.transform.position;
+        initialPos = initial.transform.position;
+        finalPos = final.transform.position;
     }
 
     void Update()
@@ -37,11 +37,11 @@ public class MainMenuAnimations : Script
     {
         if (!back)
         {
-            gameObj.transform.position = vec3.Lerp(finalExitSign, initialExitSign, timer, duration, (vec3.EasingType)easingType);
+            gameObj.transform.position = vec3.Lerp(finalPos, initialPos, timer, duration, (vec3.EasingType)easingType);
         }
         else
         {
-            gameObj.transform.position = vec3.Lerp(initialExitSign, finalExitSign, timer, duration, (vec3.EasingType)easingType);
+            gameObj.transform.position = vec3.Lerp(initialPos, finalPos, timer, duration, (vec3.EasingType)easingType);
         }
         timer += Time.deltaTime;
         if (timer >= duration)

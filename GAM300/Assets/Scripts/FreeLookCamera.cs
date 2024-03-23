@@ -7,207 +7,95 @@ using System.Threading;
 
 public class FreeLookCamera : Script
 {
-    public static FreeLookCamera instance;
+    public GameObject mainMenuObj;
+    public GameObject htpObj;
+    public GameObject settingsObj;
+    public GameObject exitObj;
+    public GameObject cameraObj;
+
     private Camera camera;
-
-    public float yawRotSpeed = 1f;
-    public float pitchRotSpeed = 1f;
-    public float maxPitchAngle = 170f;
-    public float minPitchAngle = -85f;
-    public bool invertPitch = false;
-
-    private float yawAngle;
-    private float pitchAngle;
-    private const float yawSM = 1800f;
-    private const float pitchSM = 1800f;
-
-    public GameObject target;
-
-    public float zoom = 1f;
-    private float initialZoom = 0f;
-    public float defaultZoom = 4f;
-    public float zoomSpeed = 50f;
-    public float zoomInSpeed = 2f;
-    public float closestZoom = 1f;
-    public float furthestZoom = 10f;
-    private bool isZooming = false;
-    private bool zoomReset = false;
-
     private float timer = 0f;
-    private float duration = 0.5f;
-    private float bufferTimer = 0f;
-    private float bufferDuration = 3.0f;
+    private float duration = 1f;
+
+    private Coroutine mainMenuCoroutine;
+    private Coroutine htpCoroutine;
+    private Coroutine settingCoroutine;
+    private Coroutine exitCoroutine;
 
     void Awake()
     {
-        camera = GetComponent<Camera>();
-        instance = this;
+        camera = cameraObj.GetComponent<Camera>();
+    }
+
+    void Start()
+    {
+
     }
 
     void Update()
     {
-        Zoom();
 
-        MoveTarget();
-
-        FocusOnTarget();
-
-        UpdateCameraRotation();
-
-        AvoidColliders();
     }
 
-    void OnTriggerEnter(PhysicsComponent other)
+    public void GoToMainMenu()
     {
-        if (GetTag(other) != "PlayerCollider")
-        {
-            StartZoom();
-        }
+        StopCoroutine(htpCoroutine);
+        StopCoroutine(settingCoroutine);
+        StopCoroutine(exitCoroutine);
+        mainMenuCoroutine = StartCoroutine(Panning(mainMenuObj.transform));
     }
 
-    void OnTriggerExit(PhysicsComponent other)
+    public void GoToHTP()
     {
-        if (GetTag(other) != "PlayerCollider")
-        {
-            StopZoom();
-        }
+        StopCoroutine(mainMenuCoroutine);
+        StopCoroutine(settingCoroutine);
+        StopCoroutine(exitCoroutine);
+        htpCoroutine = StartCoroutine(Panning(htpObj.transform));
     }
 
-    void StartZoom()
+    public void GoToSettings()
     {
-        isZooming = true;
-        zoomReset = false;
-        timer = bufferTimer = 0f;
+        StopCoroutine(mainMenuCoroutine);
+        StopCoroutine(htpCoroutine);
+        StopCoroutine(exitCoroutine);
+        settingCoroutine = StartCoroutine(Panning(settingsObj.transform));
     }
 
-    void StopZoom()
+    public void GoToExit()
     {
-        isZooming = false;
+        StopCoroutine(mainMenuCoroutine);
+        StopCoroutine(htpCoroutine);
+        StopCoroutine(settingCoroutine);
+        exitCoroutine = StartCoroutine(Panning(exitObj.transform, 180f));
     }
 
-    void AvoidColliders()
+    IEnumerator Panning(Transform finalTransform, float angle = 0f)
     {
-        if (isZooming)
-        {
-            zoom -= Time.deltaTime * zoomInSpeed;
-            if (zoom < closestZoom)
-            {
-                zoom = closestZoom;
-            }
-            else if (zoom > furthestZoom)
-            {
-                zoom = furthestZoom;
-            }
-
-            camera.lookatDistance = zoom;
-            initialZoom = zoom;
-            zoomReset = true;
-        }
-        else if (!isZooming && zoomReset)
-        {
-            // Wait x seconds then attemp to return to initialZoom
-            ResetZoom();
-        }
-    }
-
-    void Zoom()
-    {
-        zoom += Input.GetScroll() * zoomSpeed;
-        if (zoom < closestZoom)
-        {
-            zoom = closestZoom;
-        }
-        else if (zoom > furthestZoom)
-        {
-            zoom = furthestZoom;
-        }
-        camera.lookatDistance = zoom;
-    }
-
-    void ResetZoom()
-    {
-        // Give it a buffer before reseting the camera's zoom
-        bufferTimer += Time.deltaTime;
-
-        if (bufferTimer >= bufferDuration)
-        {
-            timer += Time.deltaTime;
-            zoom = Lerp(initialZoom, defaultZoom, timer, duration);
-
-            if (timer >= duration)
-            {
-                zoomReset = false;
-                timer = bufferTimer = 0f;
-            }
-        }
-    }
-    float Lerp(float start, float end, float value, float duration)
-    {
-        value /= duration;
-        return (1.0f - value) * start + value * end;
-    }
-    vec3 GetDirection()
-    {
-        vec3 dir = vec3.Zero;
-        if (Input.GetKey(KeyCode.W))
-        {
-            dir -= (transform.forward);
-        }
-
-
-        if (Input.GetKey(KeyCode.A))
-        {
-            dir -= (transform.right);
-        }
-
-
-        if (Input.GetKey(KeyCode.S))
-        {
-            dir += transform.forward;
-        }
-
-
-        if (Input.GetKey(KeyCode.D))
-        {
-            dir += (transform.right);
-        }
-
-        return dir.NormalizedSafe;
-    }
-
-    void MoveTarget()
-    {
-        if(target != null)
-        {
-            vec3 dir = GetDirection();
-            vec3 movement = dir * Time.deltaTime;
-            movement.y = 0f;
-            target.transform.localPosition += movement;
-        }
-    }
-
-    void FocusOnTarget()
-    {
-        if(target != null)
-        {
-            camera.LookAt(target);
-            camera.position = target.transform.position - (camera.forward * camera.distance);
-            
-            transform.localPosition = camera.position;
-        }
-    }
-
-    void UpdateCameraRotation()
-    {
-        vec2 mouseDelta = Input.GetMouseDelta();
-        yawAngle -= mouseDelta.x * yawRotSpeed * yawSM * Time.deltaTime * 3.14f / 180f;
+        Transform initialTransform = cameraObj.transform;
         
-        //Pitch Camera Rotation
-        pitchAngle -= mouseDelta.y * (invertPitch ? -1.0f : 1.0f) * pitchRotSpeed * pitchSM * Time.deltaTime * 3.14f / 180f;
-        if (pitchAngle > maxPitchAngle)
-            pitchAngle = maxPitchAngle * 3.14f / 180f;
-        else if (pitchAngle < minPitchAngle)
-            pitchAngle = minPitchAngle * 3.14f / 180f;
-        transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
+        angle = angle * Mathf.Deg2Rad;
+
+        timer = 0f;
+        while(timer < duration)
+        {
+            cameraObj.transform.position = vec3.Lerp(initialTransform.position, finalTransform.position, timer, duration, vec3.EasingType.BEZIER);
+            //cameraObj.transform.rotation = vec3.Lerp(initialTransform.rotation, finalTransform.rotation, timer, duration, vec3.EasingType.BEZIER);
+            float yValue = 0f;
+            if(angle !=  0f)
+            {
+                yValue = Mathf.Lerp(initialTransform.rotation.y, angle, timer, duration, Mathf.EasingType.BEZIER);
+            }
+            else
+            {
+                yValue = Mathf.Lerp(initialTransform.rotation.y, finalTransform.rotation.y, timer, duration, Mathf.EasingType.BEZIER);
+            }
+
+            vec3 rotation = cameraObj.transform.rotation;
+            rotation.y = yValue;
+            cameraObj.transform.rotation = rotation;
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
     }
 }

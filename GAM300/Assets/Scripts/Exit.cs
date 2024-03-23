@@ -9,61 +9,106 @@ using GlmSharp;
 
 public class Exit : Script
 {
-    public GameObject mainMenuBGImage;
-
     public GameObject noButton;
-
     public GameObject yesButton; 
-
-    public bool isStartActive = true;
-    public float flickerTimer = 0f;
-
-    //movement variables
-    public float duration = 2f;
-    public float timer = 0f;
-    public bool back = false;
-
-    public float sizeMultiplier = 1.5f;
-
-    //sounds
-    //public AudioSource bgm;
-    //public AudioSource uibutton;
+    public GameObject yesTextObj; 
+    public GameObject noTextObj;
+    public FreeLookCamera camera;
 
     private SpriteRenderer noButtonRenderer;
     private SpriteRenderer yesButtonRenderer; 
+    private TextRenderer yesText; 
+    private TextRenderer noText;
 
-    //vec3 startGridTextSize;
+    private float yestimer = 0f;
+    private float notimer = 0f;
+    private float duration = 0.3f;
+
+    private vec3 initialColor;
+    private vec3 finalColor;
+
+    void Awake()
+    {
+        yesText = yesTextObj.GetComponent<TextRenderer>();
+        noText = noTextObj.GetComponent<TextRenderer>();
+        noButtonRenderer = noButton.GetComponent<SpriteRenderer>();
+        yesButtonRenderer = yesButton.GetComponent<SpriteRenderer>();
+    }
 
     void Start()
     {
-        //bgm.Play();
-        //startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
-        //currentRestTimer = restTimer;
-
-        if (noButton.HasComponent<SpriteRenderer>())
-            noButtonRenderer = noButton.GetComponent<SpriteRenderer>();
-
-        if (yesButton.HasComponent<SpriteRenderer>())
-            yesButtonRenderer = yesButton.GetComponent<SpriteRenderer>();
-
+        initialColor = yesText.color.xyz;
+        finalColor = yesText.color.xyz * 4f;
     }
 
     void Update()
     {
         // Get refto Button
-        if (noButtonRenderer != null && noButtonRenderer.IsButtonClicked())
+        if (noButtonRenderer != null)
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("MainMenu", true);
+            if(noButtonRenderer.IsButtonClicked())
+            {
+                camera.GoToMainMenu();
+            }
+            
+            if (noButtonRenderer.IsButtonHovered())
+            {
+                if (notimer < duration)
+                {
+                    notimer += Time.unscaledDeltaTime;
+                    if (notimer > duration)
+                    {
+                        notimer = duration;
+                    }
+                    noText.color.xyz = vec3.Lerp(noText.color.xyz, finalColor, notimer / duration);
+                }
+            }
+            else
+            {
+                if (notimer > 0f)
+                {
+                    notimer -= Time.unscaledDeltaTime;
+                    if (duration < 0f)
+                    {
+                        duration = 0f;
+                    }
+                    noText.color.xyz = vec3.Lerp(noText.color.xyz, initialColor, notimer / duration);
+                }
+            }
         }
 
-        if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
+        if (yesButtonRenderer != null)
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            Application.Quit();
+            if (yesButtonRenderer.IsButtonClicked())
+            {
+                // Pan camera to black
+                Application.Quit();
+            }
 
+            if (yesButtonRenderer.IsButtonHovered())
+            {
+                if (yestimer < duration)
+                {
+                    yestimer += Time.unscaledDeltaTime;
+                    if (yestimer > duration)
+                    {
+                        yestimer = duration;
+                    }
+                    yesText.color.xyz = vec3.Lerp(yesText.color.xyz, finalColor, yestimer / duration);
+                }
+            }
+            else
+            {
+                if (yestimer > 0f)
+                {
+                    yestimer -= Time.unscaledDeltaTime;
+                    if (duration < 0f)
+                    {
+                        duration = 0f;
+                    }
+                    yesText.color.xyz = vec3.Lerp(yesText.color.xyz, initialColor, yestimer / duration);
+                }
+            }
         }
     }
 

@@ -1,7 +1,7 @@
 Material:
   Material Name: Clothes
   Shader: 1
-  Albedo: [9.99774275e-05, 9.99762997e-05, 9.99999975e-05, 1]
+  Albedo: [9.99773765e-05, 9.99762997e-05, 9.99999975e-05, 1]
   Metallic: 1
   Roughness: 0.300000012
   AmbientOcclusion: 1

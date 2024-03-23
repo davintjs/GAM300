@@ -11,7 +11,8 @@ class ButtonLogic : Script
     public AudioSource hoverSound;
     public AudioSource clickSound;
 
-    private SpriteRenderer button;
+    public SpriteRenderer button;
+    public bool isText = false;
     private bool hovered = false;
     private bool soundPlayed = false;
 
@@ -23,10 +24,16 @@ class ButtonLogic : Script
     void Start()
     {
         originalScale = transform.localScale;
-        button = GetComponent<SpriteRenderer>();
+        if(!isText)
+            button = GetComponent<SpriteRenderer>();
     }
 
     void Update()
+    {
+        ButtonUpdate();
+    }
+
+    void ButtonUpdate()
     {
         // Hover sound
         if (button.IsButtonHovered())
@@ -53,7 +60,7 @@ class ButtonLogic : Script
                 {
                     hoverTimer = 0f;
                 }
-                transform.localScale = vec3.Lerp(originalScale,originalScale*targetScaleMultiplier,hoverTimer/hoverDuration);
+                transform.localScale = vec3.Lerp(originalScale, originalScale * targetScaleMultiplier, hoverTimer / hoverDuration);
             }
         }
 
