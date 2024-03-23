@@ -17,7 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Debugging/Debugger.h"
 #include "Utilities/Interpolation.h"
 #include <algorithm>
-#include <array>
+#include <array> 
 #include <chrono>
 #include <cmath>
 #include <cstddef>

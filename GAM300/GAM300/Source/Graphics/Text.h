@@ -7,6 +7,8 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#include "Core/SystemInterface.h"
+
 #define TEXTMANAGER TextManager::Instance()
 
 

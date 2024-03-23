@@ -143,6 +143,7 @@ Script:
   meleeEnemyAttack: {fileID: 9604268664669988043}  # Component
   meleeEnemyDie: {fileID: 14157919317546456730}  # Component
   meleeEnemyInjured: {fileID: 9193573896841228309}  # Component
+  notEnoughItems: {fileID: 1797510401047057825}  # Component
   obj_success: {fileID: 1067351355177411098}  # Component
   rangeEnemyDead: {fileID: 2502308778807293875}  # Component
   rangeEnemyFiring: {fileID: 11367208140139232291}  # Component
@@ -369,7 +370,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 47f8df58609a73e48a47639b5258e80a}
   Gravity: 9.81000042
-  JumpSpeed: 420
+  JumpSpeed: 7
   MoveSpeed: 340
   RotationSpeed: 5
   _isAttacking: false
@@ -404,7 +405,7 @@ Script:
   dashAttackStamina: 15
   dashAttackTimer: 0.899999976
   dodgeCooldown: 0.5
-  dodgeSpeed: 600
+  dodgeSpeed: 11.5
   dodgeStamina: 10
   dodgeTimer: 0.5
   invulnerableTimer: 0.699999988
@@ -448,6 +449,7 @@ Script:
   overDriveTransform: {fileID: 3925618525247661714}  # Component
   overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
+  playerSounds: {fileID: 0}
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
@@ -459,12 +461,15 @@ ID: 14362096387145765665
 Script:
   m_GameObject: {fileID: 3977294589520766028}
   m_IsEnabled: true
-  Script: {guid: 3073be0cc8b65f7867eab0eee250b496}
+  Script: {guid: 40db08235bca45a537583d5f5e9d204f}
   healthPackCount: 0
   healthPackHealValue: 5
   maxStatPackCount: 0
   staminaPackCount: 0
   staminaPackValue: 50
+  healthCounter: {fileID: 7260109134346071392}  # Component
+  maxPackCounter: {fileID: 13913542858873206850}  # Component
+  stamCounter: {fileID: 5334853953766887570}  # Component
   thirdPersonController: {fileID: 0}
 ---
 ID: 4212138099454399691
@@ -509,6 +514,9 @@ Transform:
     - {fileID: 3787274920911425495}
     - {fileID: 5676392047881511918}
     - {fileID: 17065559468612678914}
+    - {fileID: 14237342508294354300}
+    - {fileID: 9959361981741042079}
+    - {fileID: 16970193758400152787}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -4277,6 +4285,7 @@ ParticleComponent:
   Particle Noise Frequency: 0
   2D particle: false
   Trailing: false
+  Trail Color: [1, 1, 1]
   Trail Size: 0
   Trail Thickness: 1
   Looping: false
@@ -4486,7 +4495,7 @@ Transform:
   m_GameObject: {fileID: 16905222177648308199}
   Translation: [-1.49011612e-08, 0, -1.45130455]
   Rotation: [0, 0, 0]
-  Scale: [0.600000024, 0.600000024, 0.600000024]
+  Scale: [0.200000003, 0.200000003, 0.200000003]
   Father: {fileID: 0}
   m_Children:
     []
@@ -4496,7 +4505,7 @@ MeshRenderer:
   m_GameObject: {fileID: 16905222177648308199}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material_ID: {guid: 00000000000000000000000000000000}
+  Material_ID: {guid: d7ce797d6abd7b2eff4dce1ec9ef6508}
 ---
 ID: 5453074270413038117
 BoxCollider:
@@ -8107,9 +8116,6 @@ Script:
   m_GameObject: {fileID: 9834818310388416835}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 10712419355432134318}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 1087374814937148363
 GameObject:
@@ -8197,7 +8203,7 @@ ID: 14733284420691171021
 Transform:
   m_GameObject: {fileID: 6929116684091574066}
   Translation: [0, 0.0957104862, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 10712419355432134318}
   m_Children:
@@ -8219,7 +8225,7 @@ ID: 7123958001248823043
 Transform:
   m_GameObject: {fileID: 8898057359526457311}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 6929116684091574066}
   m_Children:
@@ -9394,60 +9400,6 @@ BoxCollider:
   m_IsEnabled: true
   Dimensions: [1, 1, 1]
   Offset: [0, 0, 0]
----
-ID: 7153685686125576488
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 11451292542270535109}  # Transform
-    - component: {fileID: 13087631430816358602}  # MeshRenderer
----
-ID: 11451292542270535109
-Transform:
-  m_GameObject: {fileID: 7153685686125576488}
-  Translation: [141.206451, 44.5946083, -57.0327492]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [1.31810749, 1, 1.31799996]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    - {fileID: 15941195250453621814}
----
-ID: 13087631430816358602
-MeshRenderer:
-  m_GameObject: {fileID: 7153685686125576488}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 15941195250453621814
-GameObject:
-  m_IsActive: true
-  m_Name: Glow
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 14959871288858024175}  # Transform
-    - component: {fileID: 6500519122312542827}  # MeshRenderer
----
-ID: 14959871288858024175
-Transform:
-  m_GameObject: {fileID: 15941195250453621814}
-  Translation: [3.81469727e-06, 0, 7.62939453e-06]
-  Rotation: [0, -0, 0]
-  Scale: [1.00000012, 1, 1]
-  Father: {fileID: 7153685686125576488}
-  m_Children:
-    []
----
-ID: 6500519122312542827
-MeshRenderer:
-  m_GameObject: {fileID: 15941195250453621814}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 3590890209447231269
 GameObject:
@@ -17073,23 +17025,15 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 133046120958174289}
   m_Children:
-    - {fileID: 7153685686125576488}
     - {fileID: 2086795647572139507}
     - {fileID: 7954266567194322631}
     - {fileID: 78238011188050563}
     - {fileID: 901077021979678139}
     - {fileID: 2041108596255277426}
-    - {fileID: 5234222567117862025}
-    - {fileID: 16644998979034649522}
-    - {fileID: 9564419890804023399}
-    - {fileID: 3890286765628700530}
-    - {fileID: 16925636899250471017}
-    - {fileID: 13520848651446787803}
     - {fileID: 8062019015494290335}
     - {fileID: 16831897617425902748}
     - {fileID: 12169902349396236392}
     - {fileID: 9888360715229708791}
-    - {fileID: 3184981452534413305}
     - {fileID: 4647821222003295801}
     - {fileID: 10170948950788224293}
     - {fileID: 14530963517423599258}
@@ -21893,12 +21837,12 @@ GameObject:
 ID: 15591474524443266985
 Transform:
   m_GameObject: {fileID: 2041108596255277426}
-  Translation: [102.824051, 44.5946083, -67.7987823]
-  Rotation: [0, 0.865750611, 0]
-  Scale: [0.999997079, 1, 1.05583179]
+  Translation: [108.187683, 44.5946083, -63.2781296]
+  Rotation: [0, 0.865748525, 0]
+  Scale: [0.999991059, 1, 3.84005308]
   Father: {fileID: 952121716206972440}
   m_Children:
-    - {fileID: 830669260975049355}
+    []
 ---
 ID: 8509214780447039640
 MeshRenderer:
@@ -21906,357 +21850,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 830669260975049355
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3579254141542439171}  # Transform
-    - component: {fileID: 11513448339393728550}  # MeshRenderer
----
-ID: 3579254141542439171
-Transform:
-  m_GameObject: {fileID: 830669260975049355}
-  Translation: [-7.62939453e-06, 0, 3.81469727e-06]
-  Rotation: [0, -1.78813934e-07, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 2041108596255277426}
-  m_Children:
-    []
----
-ID: 11513448339393728550
-MeshRenderer:
-  m_GameObject: {fileID: 830669260975049355}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 5234222567117862025
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 2790292912736233600}  # Transform
-    - component: {fileID: 9607401609466917583}  # MeshRenderer
----
-ID: 2790292912736233600
-Transform:
-  m_GameObject: {fileID: 5234222567117862025}
-  Translation: [106.785431, 44.5946083, -64.4360809]
-  Rotation: [0, 0.865750611, 0]
-  Scale: [0.999997079, 1, 1.05583179]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    - {fileID: 15364144752210266575}
----
-ID: 9607401609466917583
-MeshRenderer:
-  m_GameObject: {fileID: 5234222567117862025}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 15364144752210266575
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 18041599422698908169}  # Transform
-    - component: {fileID: 11126582848758520106}  # MeshRenderer
----
-ID: 18041599422698908169
-Transform:
-  m_GameObject: {fileID: 15364144752210266575}
-  Translation: [-7.62939453e-06, 0, 0]
-  Rotation: [0, -1.78813934e-07, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 5234222567117862025}
-  m_Children:
-    []
----
-ID: 11126582848758520106
-MeshRenderer:
-  m_GameObject: {fileID: 15364144752210266575}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 16644998979034649522
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 18262616751477111400}  # Transform
-    - component: {fileID: 9019254640541167486}  # MeshRenderer
----
-ID: 18262616751477111400
-Transform:
-  m_GameObject: {fileID: 16644998979034649522}
-  Translation: [110.780106, 44.5946083, -61.0330544]
-  Rotation: [0, 0.865750611, 0]
-  Scale: [0.999997079, 1, 1.05583179]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    - {fileID: 17137957748400288338}
----
-ID: 9019254640541167486
-MeshRenderer:
-  m_GameObject: {fileID: 16644998979034649522}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 17137957748400288338
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 17380695975951522276}  # Transform
-    - component: {fileID: 12967541047582570006}  # MeshRenderer
----
-ID: 17380695975951522276
-Transform:
-  m_GameObject: {fileID: 17137957748400288338}
-  Translation: [0, 0, 3.81469727e-06]
-  Rotation: [0, -1.78813934e-07, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 16644998979034649522}
-  m_Children:
-    []
----
-ID: 12967541047582570006
-MeshRenderer:
-  m_GameObject: {fileID: 17137957748400288338}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 9564419890804023399
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 6730578900638501216}  # Transform
-    - component: {fileID: 6946234832408677632}  # MeshRenderer
----
-ID: 6730578900638501216
-Transform:
-  m_GameObject: {fileID: 9564419890804023399}
-  Translation: [114.631195, 44.5946083, -57.7204704]
-  Rotation: [0, 0.865750611, 0]
-  Scale: [0.999997079, 1, 1.05583179]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    - {fileID: 2320197053212747815}
----
-ID: 6946234832408677632
-MeshRenderer:
-  m_GameObject: {fileID: 9564419890804023399}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 2320197053212747815
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 2005293436222552357}  # Transform
-    - component: {fileID: 17231728059058554363}  # MeshRenderer
----
-ID: 2005293436222552357
-Transform:
-  m_GameObject: {fileID: 2320197053212747815}
-  Translation: [0, 0, 3.81469727e-06]
-  Rotation: [0, -1.78813934e-07, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 9564419890804023399}
-  m_Children:
-    []
----
-ID: 17231728059058554363
-MeshRenderer:
-  m_GameObject: {fileID: 2320197053212747815}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 3890286765628700530
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 3192565307292939023}  # Transform
-    - component: {fileID: 13045800860480312047}  # MeshRenderer
----
-ID: 3192565307292939023
-Transform:
-  m_GameObject: {fileID: 3890286765628700530}
-  Translation: [121.532722, 44.5946083, -57.0327492]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [1.31810749, 1, 1.31799996]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    - {fileID: 463855241727736700}
----
-ID: 13045800860480312047
-MeshRenderer:
-  m_GameObject: {fileID: 3890286765628700530}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 463855241727736700
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7299877462604187859}  # Transform
-    - component: {fileID: 17511396298648718983}  # MeshRenderer
----
-ID: 7299877462604187859
-Transform:
-  m_GameObject: {fileID: 463855241727736700}
-  Translation: [7.62939453e-06, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1.00000012, 1, 1]
-  Father: {fileID: 3890286765628700530}
-  m_Children:
-    []
----
-ID: 17511396298648718983
-MeshRenderer:
-  m_GameObject: {fileID: 463855241727736700}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 16925636899250471017
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 13376060967685424648}  # Transform
-    - component: {fileID: 4867662756362693696}  # MeshRenderer
----
-ID: 13376060967685424648
-Transform:
-  m_GameObject: {fileID: 16925636899250471017}
-  Translation: [128.100525, 44.5946083, -57.0327492]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [1.31810749, 1, 1.31799996]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    - {fileID: 9482802678242704670}
----
-ID: 4867662756362693696
-MeshRenderer:
-  m_GameObject: {fileID: 16925636899250471017}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 9482802678242704670
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 12616909648311824965}  # Transform
-    - component: {fileID: 1385883753256106733}  # MeshRenderer
----
-ID: 12616909648311824965
-Transform:
-  m_GameObject: {fileID: 9482802678242704670}
-  Translation: [7.62939453e-06, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1.00000012, 1, 1]
-  Father: {fileID: 16925636899250471017}
-  m_Children:
-    []
----
-ID: 1385883753256106733
-MeshRenderer:
-  m_GameObject: {fileID: 9482802678242704670}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 13520848651446787803
-GameObject:
-  m_IsActive: true
-  m_Name: Ceiling1x1 - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 10899513108572160158}  # Transform
-    - component: {fileID: 10229582644971706689}  # MeshRenderer
----
-ID: 10899513108572160158
-Transform:
-  m_GameObject: {fileID: 13520848651446787803}
-  Translation: [134.634033, 44.5946083, -57.0327492]
-  Rotation: [0, 1.57045102, 0]
-  Scale: [1.31810749, 1, 1.31799996]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    - {fileID: 13390072225646748704}
----
-ID: 10229582644971706689
-MeshRenderer:
-  m_GameObject: {fileID: 13520848651446787803}
-  m_IsEnabled: true
-  Mesh: {guid: 4579ecc1cef63b01e859768cf5b90169}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 13390072225646748704
-GameObject:
-  m_IsActive: true
-  m_Name: Glow - Copy
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7164106539289913570}  # Transform
-    - component: {fileID: 2012827542312598612}  # MeshRenderer
----
-ID: 7164106539289913570
-Transform:
-  m_GameObject: {fileID: 13390072225646748704}
-  Translation: [3.81469727e-06, 0, 0]
-  Rotation: [0, -0, 0]
-  Scale: [1.00000012, 1, 1]
-  Father: {fileID: 13520848651446787803}
-  m_Children:
-    []
----
-ID: 2012827542312598612
-MeshRenderer:
-  m_GameObject: {fileID: 13390072225646748704}
-  m_IsEnabled: true
-  Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
-  Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
 ---
 ID: 8062019015494290335
 GameObject:
@@ -22393,33 +21986,6 @@ MeshRenderer:
   Mesh: {guid: 00000000000000000000000000000001}
   Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
 ---
-ID: 3184981452534413305
-GameObject:
-  m_IsActive: true
-  m_Name: Patchup - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 1676358538992724293}  # Transform
-    - component: {fileID: 11548654490414892725}  # MeshRenderer
----
-ID: 1676358538992724293
-Transform:
-  m_GameObject: {fileID: 3184981452534413305}
-  Translation: [116.610916, 44.5946083, -54.5025749]
-  Rotation: [-3.1280241, 0, 3.14075184]
-  Scale: [3.20581317, 0.999999523, 1.64515877]
-  Father: {fileID: 952121716206972440}
-  m_Children:
-    []
----
-ID: 11548654490414892725
-MeshRenderer:
-  m_GameObject: {fileID: 3184981452534413305}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
 ID: 4647821222003295801
 GameObject:
   m_IsActive: true
@@ -22433,9 +21999,9 @@ GameObject:
 ID: 8581978794005981271
 Transform:
   m_GameObject: {fileID: 4647821222003295801}
-  Translation: [117.316368, 44.5946083, -55.9966278]
-  Rotation: [-3.1280241, 0, 3.14075184]
-  Scale: [2.45414877, 0.999999523, 1.6451087]
+  Translation: [116.228859, 44.5946083, -55.9982834]
+  Rotation: [-3.12802434, 0, 3.14075208]
+  Scale: [4.82307053, 0.999999523, 4.30647755]
   Father: {fileID: 952121716206972440}
   m_Children:
     []
@@ -22568,9 +22134,9 @@ GameObject:
 ID: 6312698487284636352
 Transform:
   m_GameObject: {fileID: 1422300484349407729}
-  Translation: [149.414566, 45.001503, -56.9054718]
+  Translation: [136.483871, 45.001503, -56.9054718]
   Rotation: [0, 0, 0]
-  Scale: [9.4010725, 1.08243537, 6.46645832]
+  Scale: [35.4262161, 1.08243537, 6.46645832]
   Father: {fileID: 952121716206972440}
   m_Children:
     []
@@ -22938,9 +22504,6 @@ Script:
   m_GameObject: {fileID: 18081422161438025274}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 8640499112490309379}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 11234550795519056455
 GameObject:
@@ -23227,9 +22790,6 @@ Script:
   m_GameObject: {fileID: 13563546279246814984}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 505178339176436673}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 15761111545168782062
 GameObject:
@@ -28122,9 +27682,6 @@ Script:
   m_GameObject: {fileID: 17338308076949455477}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 7216264740618189409}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 18270885596103450463
 GameObject:
@@ -28978,6 +28535,7 @@ Script:
   colors: [0, 1, 1]
   index: 2
   interaced: false
+  interactOnce: true
   glowMesh: {fileID: 15514360625503175091}  # Component
   glowObjectReference: {fileID: 13140446175095248756}  # GameObject
   terminalglowMesh: {fileID: 1805869441901542165}  # Component
@@ -29088,6 +28646,7 @@ Script:
   colors: [0, 1, 1]
   index: 3
   interaced: false
+  interactOnce: true
   glowMesh: {fileID: 15514360625503175091}  # Component
   glowObjectReference: {fileID: 13140446175095248756}  # GameObject
   terminalglowMesh: {fileID: 7892068215044629708}  # Component
@@ -29199,6 +28758,7 @@ Script:
   colors: [0, 1, 1]
   index: 4
   interaced: false
+  interactOnce: true
   glowMesh: {fileID: 15514360625503175091}  # Component
   glowObjectReference: {fileID: 13140446175095248756}  # GameObject
   terminalglowMesh: {fileID: 5122867251991288838}  # Component
@@ -30123,9 +29683,6 @@ Script:
   m_GameObject: {fileID: 3772670757970116635}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 15348787981169734539}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 17809111819813166449
 GameObject:
@@ -30507,9 +30064,6 @@ Script:
   m_GameObject: {fileID: 13809173459120721554}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5833702010696908664}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8463150162967450214
 GameObject:
@@ -30687,9 +30241,6 @@ Script:
   m_GameObject: {fileID: 12541851390780583412}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5771907980952992246}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12285627020481652039
 GameObject:
@@ -31348,9 +30899,6 @@ Script:
   m_GameObject: {fileID: 13277852543598371328}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 15686065745655662925}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 9734994648591059991
 GameObject:
@@ -31672,9 +31220,6 @@ Script:
   m_GameObject: {fileID: 10180225711759476473}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 9623545436869127279}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13472456630727989919
 GameObject:
@@ -32010,9 +31555,6 @@ Script:
   m_GameObject: {fileID: 66452306091808345}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5251461676284664659}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 6414466953718529613
 GameObject:
@@ -32292,9 +31834,6 @@ Script:
   m_GameObject: {fileID: 872921694414183727}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 3753889075612646310}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12600217697906426368
 GameObject:
@@ -32574,9 +32113,6 @@ Script:
   m_GameObject: {fileID: 3199891827968596905}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 6979452462420876336}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 12589955185071439558
 GameObject:
@@ -32856,9 +32392,6 @@ Script:
   m_GameObject: {fileID: 11732564683335513913}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 8164294602068748032}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 14912430991484494413
 GameObject:
@@ -35035,6 +34568,7 @@ ParticleComponent:
   Particle Noise Frequency: 30
   2D particle: false
   Trailing: true
+  Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
@@ -35196,9 +34730,6 @@ Script:
   m_GameObject: {fileID: 898546543010589386}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 1540245306666661771}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13364204845579319346
 GameObject:
@@ -36854,9 +36385,6 @@ Script:
   m_GameObject: {fileID: 10544989079879360673}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 3478415627049949006}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 535833049734911862
 GameObject:
@@ -38429,9 +37957,6 @@ Script:
   m_GameObject: {fileID: 14331869571018254577}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 1746742841599475727}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8241676089353080915
 GameObject:
@@ -40298,9 +39823,6 @@ Script:
   m_GameObject: {fileID: 6964300282308578913}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 4992037817335595852}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 9734141355227742394
 GameObject:
@@ -40552,9 +40074,6 @@ Script:
   m_GameObject: {fileID: 3197518610534636844}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 6553874688755371952}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 10921197515242892380
 GameObject:
@@ -40806,9 +40325,6 @@ Script:
   m_GameObject: {fileID: 8961390157855236339}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 1455824266175485744}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 8800856949116907065
 GameObject:
@@ -41060,9 +40576,6 @@ Script:
   m_GameObject: {fileID: 7102901748506770040}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 697406533908281000}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 431496387680242909
 GameObject:
@@ -41314,9 +40827,6 @@ Script:
   m_GameObject: {fileID: 2766190930066491268}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 7071747397128983016}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 13506965819634274017
 GameObject:
@@ -41568,9 +41078,6 @@ Script:
   m_GameObject: {fileID: 1595158727373292423}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 7415176299370246757}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 2200863149113569029
 GameObject:
@@ -41822,9 +41329,6 @@ Script:
   m_GameObject: {fileID: 15182354761892658855}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 5108313163622967840}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 16544624610319378339
 GameObject:
@@ -42076,9 +41580,6 @@ Script:
   m_GameObject: {fileID: 4872432287772594624}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 17060877197459181967}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 4361182851979646059
 GameObject:
@@ -42630,9 +42131,6 @@ Script:
   m_GameObject: {fileID: 12771960829225364734}
   m_IsEnabled: true
   Script: {guid: b10b9edf1f5b4a267aab8722e88e24a0}
-  RotationSpeed: 2
-  parentTransform: {fileID: 15613771325304660657}  # Component
-  player: {fileID: 3977294589520766028}  # Component
 ---
 ID: 7367000450209866809
 GameObject:
@@ -44425,16 +43923,17 @@ GameObject:
   m_Component:
     - component: {fileID: 13263917980705562325}  # Transform
     - component: {fileID: 11186960128065902816}  # MeshRenderer
+    - component: {fileID: 15986666287141831086}  # Script
 ---
 ID: 13263917980705562325
 Transform:
   m_GameObject: {fileID: 11736288369183917097}
-  Translation: [71.5967255, 39.9650116, -72.0450134]
-  Rotation: [0, -1.31352973, 0]
-  Scale: [0.999926627, 0.999974906, 0.999935687]
+  Translation: [71.5967255, 39.9680367, -72.0450134]
+  Rotation: [0, -1.31352949, 0]
+  Scale: [0.999926567, 0.999974906, 0.999935687]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 2016490213985909999}
 ---
 ID: 11186960128065902816
 MeshRenderer:
@@ -44442,6 +43941,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 15986666287141831086
+Script:
+  m_GameObject: {fileID: 11736288369183917097}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 12
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 11736288369183917097}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 11736288369183917097}  # Component
+  secCamBeep: {fileID: 10410881872814136367}  # Component
+  secCamOff: {fileID: 16229795789692127735}  # Component
+  secCamOn: {fileID: 8973165543363211306}  # Component
 ---
 ID: 16863964401583955534
 GameObject:
@@ -47673,12 +47197,13 @@ Transform:
 ID: 8950786642554036017
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy
+  m_Name: SecurityCamera1
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13179854032545413234}  # Transform
     - component: {fileID: 3658795308398420182}  # MeshRenderer
+    - component: {fileID: 15156039232436339965}  # Script
 ---
 ID: 13179854032545413234
 Transform:
@@ -47688,7 +47213,7 @@ Transform:
   Scale: [0.999931633, 1, 0.999932647]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 1513089684725983391}
 ---
 ID: 3658795308398420182
 MeshRenderer:
@@ -47696,6 +47221,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 15156039232436339965
+Script:
+  m_GameObject: {fileID: 8950786642554036017}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 8
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 8950786642554036017}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 8950786642554036017}  # Component
+  secCamBeep: {fileID: 16472968639111563027}  # Component
+  secCamOff: {fileID: 11928553497981220629}  # Component
+  secCamOn: {fileID: 17541017142637409176}  # Component
 ---
 ID: 11639272233376884983
 GameObject:
@@ -48286,22 +47836,23 @@ MeshRenderer:
 ID: 5709922246900216023
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy
+  m_Name: SecurityCamera2
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 13962120400840451977}  # Transform
     - component: {fileID: 3275080353530252857}  # MeshRenderer
+    - component: {fileID: 157155005864324965}  # Script
 ---
 ID: 13962120400840451977
 Transform:
   m_GameObject: {fileID: 5709922246900216023}
   Translation: [142.776138, 40.6476936, -63.370182]
-  Rotation: [-3.14159226, 1.53308558, -3.14159226]
+  Rotation: [-3.14159203, 1.53308558, -3.14159203]
   Scale: [0.999916732, 0.999974906, 0.999925137]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 15856198335667142940}
 ---
 ID: 3275080353530252857
 MeshRenderer:
@@ -48309,6 +47860,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 157155005864324965
+Script:
+  m_GameObject: {fileID: 5709922246900216023}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 20
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 5709922246900216023}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 5709922246900216023}  # Component
+  secCamBeep: {fileID: 1487629254184008}  # Component
+  secCamOff: {fileID: 3340568601821911411}  # Component
+  secCamOn: {fileID: 9020605479676143121}  # Component
 ---
 ID: 9333013163105879839
 GameObject:
@@ -48367,12 +47943,13 @@ MeshRenderer:
 ID: 14499535282109436915
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy
+  m_Name: SecurityCamera3
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 16484498140680649072}  # Transform
     - component: {fileID: 4737998934809976266}  # MeshRenderer
+    - component: {fileID: 12032753631026225344}  # Script
 ---
 ID: 16484498140680649072
 Transform:
@@ -48382,7 +47959,7 @@ Transform:
   Scale: [0.999916732, 0.999974906, 0.999925137]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 9861859848914377637}
 ---
 ID: 4737998934809976266
 MeshRenderer:
@@ -48390,6 +47967,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 12032753631026225344
+Script:
+  m_GameObject: {fileID: 14499535282109436915}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 15
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 14499535282109436915}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 14499535282109436915}  # Component
+  secCamBeep: {fileID: 2952712530371156136}  # Component
+  secCamOff: {fileID: 2389489311740641787}  # Component
+  secCamOn: {fileID: 13031891813013930006}  # Component
 ---
 ID: 181690103956380704
 GameObject:
@@ -48448,12 +48050,13 @@ MeshRenderer:
 ID: 13014817814692177424
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy
+  m_Name: SecurityCamera4
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9063852363179509922}  # Transform
     - component: {fileID: 3988951454607851078}  # MeshRenderer
+    - component: {fileID: 15926738916527307222}  # Script
 ---
 ID: 9063852363179509922
 Transform:
@@ -48463,7 +48066,7 @@ Transform:
   Scale: [0.999894917, 0.999974906, 0.999903083]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 9721183151541679213}
 ---
 ID: 3988951454607851078
 MeshRenderer:
@@ -48471,6 +48074,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 15926738916527307222
+Script:
+  m_GameObject: {fileID: 13014817814692177424}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 15
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 13014817814692177424}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 13014817814692177424}  # Component
+  secCamBeep: {fileID: 7634277770144071736}  # Component
+  secCamOff: {fileID: 16473481976223463836}  # Component
+  secCamOn: {fileID: 15183326108266052409}  # Component
 ---
 ID: 12582860678833366066
 GameObject:
@@ -48529,12 +48157,13 @@ MeshRenderer:
 ID: 1099978957968628360
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy - Copy
+  m_Name: SecurityCamera5
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 7907263489924667104}  # Transform
     - component: {fileID: 11388183601156344226}  # MeshRenderer
+    - component: {fileID: 2970076760064695533}  # Script
 ---
 ID: 7907263489924667104
 Transform:
@@ -48544,7 +48173,7 @@ Transform:
   Scale: [0.999894917, 0.999974906, 0.999903083]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 13616728079481718155}
 ---
 ID: 11388183601156344226
 MeshRenderer:
@@ -48553,15 +48182,41 @@ MeshRenderer:
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
 ---
+ID: 2970076760064695533
+Script:
+  m_GameObject: {fileID: 1099978957968628360}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 12
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 1099978957968628360}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 1099978957968628360}  # Component
+  secCamBeep: {fileID: 12999310214755286703}  # Component
+  secCamOff: {fileID: 12211360596920866066}  # Component
+  secCamOn: {fileID: 4000241869440379180}  # Component
+---
 ID: 9921643221204584766
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy - Copy - Copy
+  m_Name: SecurityCamera6
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 9274762178224725237}  # Transform
     - component: {fileID: 1379159202945735533}  # MeshRenderer
+    - component: {fileID: 16844305324077204293}  # Script
 ---
 ID: 9274762178224725237
 Transform:
@@ -48571,7 +48226,7 @@ Transform:
   Scale: [0.99988097, 0.999974906, 0.999889076]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 17757845616444748317}
 ---
 ID: 1379159202945735533
 MeshRenderer:
@@ -48579,6 +48234,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 16844305324077204293
+Script:
+  m_GameObject: {fileID: 9921643221204584766}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 12
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 9921643221204584766}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 9921643221204584766}  # Component
+  secCamBeep: {fileID: 8604233816330756035}  # Component
+  secCamOff: {fileID: 1089937091844223402}  # Component
+  secCamOn: {fileID: 15251090707592601923}  # Component
 ---
 ID: 9295220860800064196
 GameObject:
@@ -48691,7 +48371,7 @@ MeshRenderer:
 ID: 7525855498974391718
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy - Copy - Copy
+  m_Name: BrokenSecurityCamera7
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -48713,7 +48393,7 @@ MeshRenderer:
   m_GameObject: {fileID: 7525855498974391718}
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
-  Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+  Material_ID: {guid: dea6b1456ca7e52f05b3093e2b3c09bb}
 ---
 ID: 11391345525249986143
 GameObject:
@@ -51530,12 +51210,13 @@ Rigidbody:
 ID: 13162841951116385743
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy
+  m_Name: SecurityCamera8
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 14875247986749844365}  # Transform
     - component: {fileID: 9267040137344795873}  # MeshRenderer
+    - component: {fileID: 12966741510487865354}  # Script
 ---
 ID: 14875247986749844365
 Transform:
@@ -51545,7 +51226,7 @@ Transform:
   Scale: [0.99992317, 0.999974906, 0.999930918]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 16635641445883409383}
 ---
 ID: 9267040137344795873
 MeshRenderer:
@@ -51553,6 +51234,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 12966741510487865354
+Script:
+  m_GameObject: {fileID: 13162841951116385743}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 10
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 13162841951116385743}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 13162841951116385743}  # Component
+  secCamBeep: {fileID: 13632288340175878988}  # Component
+  secCamOff: {fileID: 7235364101551310436}  # Component
+  secCamOn: {fileID: 8548968764340301382}  # Component
 ---
 ID: 783346349410598326
 GameObject:
@@ -51611,12 +51317,13 @@ MeshRenderer:
 ID: 10509890877230161516
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy
+  m_Name: SecurityCamera9
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12068465593991571959}  # Transform
     - component: {fileID: 7772579632775032150}  # MeshRenderer
+    - component: {fileID: 9490406575685690830}  # Script
 ---
 ID: 12068465593991571959
 Transform:
@@ -51626,7 +51333,7 @@ Transform:
   Scale: [0.999917686, 0.999974906, 0.999924183]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 3508569594126034624}
 ---
 ID: 7772579632775032150
 MeshRenderer:
@@ -51634,6 +51341,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 9490406575685690830
+Script:
+  m_GameObject: {fileID: 10509890877230161516}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 10
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 10509890877230161516}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 10509890877230161516}  # Component
+  secCamBeep: {fileID: 436222418409150061}  # Component
+  secCamOff: {fileID: 16755410970440381117}  # Component
+  secCamOn: {fileID: 11025595683249540698}  # Component
 ---
 ID: 16989569788804517597
 GameObject:
@@ -51692,12 +51424,13 @@ MeshRenderer:
 ID: 1605621407029875310
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy - Copy
+  m_Name: SecurityCamera10
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 4137237702223146412}  # Transform
     - component: {fileID: 3235434625120947005}  # MeshRenderer
+    - component: {fileID: 16292530700694464981}  # Script
 ---
 ID: 4137237702223146412
 Transform:
@@ -51707,7 +51440,7 @@ Transform:
   Scale: [0.999900579, 0.999974906, 0.999900758]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 14227756594521671408}
 ---
 ID: 3235434625120947005
 MeshRenderer:
@@ -51715,6 +51448,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 16292530700694464981
+Script:
+  m_GameObject: {fileID: 1605621407029875310}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 10
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 1605621407029875310}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 1605621407029875310}  # Component
+  secCamBeep: {fileID: 17753985582078908605}  # Component
+  secCamOff: {fileID: 5488407388784561811}  # Component
+  secCamOn: {fileID: 1471180141957199633}  # Component
 ---
 ID: 7638358388038049573
 GameObject:
@@ -51881,22 +51639,23 @@ MeshRenderer:
 ID: 5877606723863607966
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy
+  m_Name: SecurityCamera11
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 15703464169934738396}  # Transform
     - component: {fileID: 5121733475648855050}  # MeshRenderer
+    - component: {fileID: 16096246159201833063}  # Script
 ---
 ID: 15703464169934738396
 Transform:
   m_GameObject: {fileID: 5877606723863607966}
   Translation: [131.395569, 40.6695976, -59.3306236]
   Rotation: [0, -1.32972622, 0]
-  Scale: [0.999909937, 0.999974906, 0.999918163]
+  Scale: [0.999908447, 0.999974906, 0.999916613]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 11586571038187508226}
 ---
 ID: 5121733475648855050
 MeshRenderer:
@@ -51904,6 +51663,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 16096246159201833063
+Script:
+  m_GameObject: {fileID: 5877606723863607966}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 15
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 5877606723863607966}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 5877606723863607966}  # Component
+  secCamBeep: {fileID: 7941006416300510291}  # Component
+  secCamOff: {fileID: 6961539539720097627}  # Component
+  secCamOn: {fileID: 10027951082215148722}  # Component
 ---
 ID: 10727427652694340384
 GameObject:
@@ -51962,12 +51746,13 @@ MeshRenderer:
 ID: 15403824339946580370
 GameObject:
   m_IsActive: true
-  m_Name: SecurityCamera - Copy - Copy - Copy
+  m_Name: SecurityCamera12
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 191205845444302490}  # Transform
     - component: {fileID: 7754064423184546405}  # MeshRenderer
+    - component: {fileID: 15535246401597495744}  # Script
 ---
 ID: 191205845444302490
 Transform:
@@ -51977,7 +51762,7 @@ Transform:
   Scale: [0.999852717, 0.999974906, 0.999862373]
   Father: {fileID: 6897544555164281727}
   m_Children:
-    []
+    - {fileID: 9486935303368260560}
 ---
 ID: 7754064423184546405
 MeshRenderer:
@@ -51985,6 +51770,31 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: a0f9d35955f43c45ff42added2d2fc09}
   Material_ID: {guid: bb8f1bb5186420080d2f7d1e2df84d11}
+---
+ID: 15535246401597495744
+Script:
+  m_GameObject: {fileID: 15403824339946580370}
+  m_IsEnabled: true
+  Script: {guid: 8bcf0ac787d3660bf3b048197b5e1fcc}
+  RotationSpeed: 6
+  back: false
+  chaseDistance: 15
+  duration: 2
+  floatingY: 0.5
+  inRange: false
+  moveSpeed: 2
+  offOnce: true
+  onOnce: true
+  playOnce: true
+  shootDistance: 3
+  state: 0
+  timer: 0
+  modelOffset: {fileID: 15403824339946580370}  # Component
+  player: {fileID: 3977294589520766028}  # Component
+  rangeEnemyPos: {fileID: 15403824339946580370}  # Component
+  secCamBeep: {fileID: 8564086054667246911}  # Component
+  secCamOff: {fileID: 5914719183406442587}  # Component
+  secCamOn: {fileID: 9784842132653749251}  # Component
 ---
 ID: 3787274920911425495
 GameObject:
@@ -68631,7 +68441,7 @@ ID: 1477077183132831404
 Transform:
   m_GameObject: {fileID: 2538198307492542336}
   Translation: [0, 0, 0]
-  Rotation: [1.62920671e-07, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 10169941270709570099}
   m_Children:
@@ -84291,6 +84101,7 @@ Transform:
     - {fileID: 14997646972903896270}
     - {fileID: 365085607940253986}
     - {fileID: 5245298092074131690}
+    - {fileID: 6227812347651407358}
 ---
 ID: 8160679611370606636
 Script:
@@ -94844,3 +94655,1698 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+---
+ID: 2016490213985909999
+GameObject:
+  m_IsActive: true
+  m_Name: Audio
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6626643534364000368}  # Transform
+---
+ID: 6626643534364000368
+Transform:
+  m_GameObject: {fileID: 2016490213985909999}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11736288369183917097}
+  m_Children:
+    - {fileID: 5210948284944174509}
+    - {fileID: 7506586117291382137}
+    - {fileID: 14847680709617030226}
+---
+ID: 5210948284944174509
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3068401997915881}  # Transform
+    - component: {fileID: 8973165543363211306}  # AudioSource
+---
+ID: 3068401997915881
+Transform:
+  m_GameObject: {fileID: 5210948284944174509}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2016490213985909999}
+  m_Children:
+    []
+---
+ID: 8973165543363211306
+AudioSource:
+  m_GameObject: {fileID: 5210948284944174509}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 7506586117291382137
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13968952632324258360}  # Transform
+    - component: {fileID: 16229795789692127735}  # AudioSource
+---
+ID: 13968952632324258360
+Transform:
+  m_GameObject: {fileID: 7506586117291382137}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2016490213985909999}
+  m_Children:
+    []
+---
+ID: 16229795789692127735
+AudioSource:
+  m_GameObject: {fileID: 7506586117291382137}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 14847680709617030226
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9818497565066224074}  # Transform
+    - component: {fileID: 10410881872814136367}  # AudioSource
+---
+ID: 9818497565066224074
+Transform:
+  m_GameObject: {fileID: 14847680709617030226}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 2016490213985909999}
+  m_Children:
+    []
+---
+ID: 10410881872814136367
+AudioSource:
+  m_GameObject: {fileID: 14847680709617030226}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 1513089684725983391
+GameObject:
+  m_IsActive: true
+  m_Name: Audio1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13475835007128940914}  # Transform
+---
+ID: 13475835007128940914
+Transform:
+  m_GameObject: {fileID: 1513089684725983391}
+  Translation: [1.14440918e-05, 3.81469727e-06, 0]
+  Rotation: [-3.14159131, -1.22453976, 3.14159179]
+  Scale: [0.999993742, 0.999974787, 1.00000358]
+  Father: {fileID: 8950786642554036017}
+  m_Children:
+    - {fileID: 10078655388587311749}
+    - {fileID: 6591278617461975573}
+    - {fileID: 3149938158771462171}
+---
+ID: 10078655388587311749
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9680091107760110961}  # Transform
+    - component: {fileID: 17541017142637409176}  # AudioSource
+---
+ID: 9680091107760110961
+Transform:
+  m_GameObject: {fileID: 10078655388587311749}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1513089684725983391}
+  m_Children:
+    []
+---
+ID: 17541017142637409176
+AudioSource:
+  m_GameObject: {fileID: 10078655388587311749}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 6591278617461975573
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5579567117080499634}  # Transform
+    - component: {fileID: 11928553497981220629}  # AudioSource
+---
+ID: 5579567117080499634
+Transform:
+  m_GameObject: {fileID: 6591278617461975573}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1513089684725983391}
+  m_Children:
+    []
+---
+ID: 11928553497981220629
+AudioSource:
+  m_GameObject: {fileID: 6591278617461975573}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 3149938158771462171
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep1
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8730760119446487663}  # Transform
+    - component: {fileID: 16472968639111563027}  # AudioSource
+---
+ID: 8730760119446487663
+Transform:
+  m_GameObject: {fileID: 3149938158771462171}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1513089684725983391}
+  m_Children:
+    []
+---
+ID: 16472968639111563027
+AudioSource:
+  m_GameObject: {fileID: 3149938158771462171}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 9486935303368260560
+GameObject:
+  m_IsActive: true
+  m_Name: Audio12
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10517204356654317063}  # Transform
+---
+ID: 10517204356654317063
+Transform:
+  m_GameObject: {fileID: 9486935303368260560}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0.733954072, 0]
+  Scale: [1.00006926, 0.999999881, 1.00007737]
+  Father: {fileID: 15403824339946580370}
+  m_Children:
+    - {fileID: 7425634547483175229}
+    - {fileID: 3818106879644636473}
+    - {fileID: 13281464120639628932}
+---
+ID: 7425634547483175229
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn12
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15403700038305279360}  # Transform
+    - component: {fileID: 9784842132653749251}  # AudioSource
+---
+ID: 15403700038305279360
+Transform:
+  m_GameObject: {fileID: 7425634547483175229}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9486935303368260560}
+  m_Children:
+    []
+---
+ID: 9784842132653749251
+AudioSource:
+  m_GameObject: {fileID: 7425634547483175229}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 3818106879644636473
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff12
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8170167356963415953}  # Transform
+    - component: {fileID: 5914719183406442587}  # AudioSource
+---
+ID: 8170167356963415953
+Transform:
+  m_GameObject: {fileID: 3818106879644636473}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9486935303368260560}
+  m_Children:
+    []
+---
+ID: 5914719183406442587
+AudioSource:
+  m_GameObject: {fileID: 3818106879644636473}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 13281464120639628932
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep12
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7204266747908970104}  # Transform
+    - component: {fileID: 8564086054667246911}  # AudioSource
+---
+ID: 7204266747908970104
+Transform:
+  m_GameObject: {fileID: 13281464120639628932}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9486935303368260560}
+  m_Children:
+    []
+---
+ID: 8564086054667246911
+AudioSource:
+  m_GameObject: {fileID: 13281464120639628932}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 11586571038187508226
+GameObject:
+  m_IsActive: true
+  m_Name: Audio11
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3098080402658534961}  # Transform
+---
+ID: 3098080402658534961
+Transform:
+  m_GameObject: {fileID: 11586571038187508226}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0.0161963999, 0]
+  Scale: [1.00001788, 0.99999994, 1.00001884]
+  Father: {fileID: 5877606723863607966}
+  m_Children:
+    - {fileID: 14383149480917525569}
+    - {fileID: 741513655899222198}
+    - {fileID: 10646787402864352440}
+---
+ID: 14383149480917525569
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep11
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6988115523604582205}  # Transform
+    - component: {fileID: 7941006416300510291}  # AudioSource
+---
+ID: 6988115523604582205
+Transform:
+  m_GameObject: {fileID: 14383149480917525569}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11586571038187508226}
+  m_Children:
+    []
+---
+ID: 7941006416300510291
+AudioSource:
+  m_GameObject: {fileID: 14383149480917525569}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 741513655899222198
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn11
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18120936669851348837}  # Transform
+    - component: {fileID: 10027951082215148722}  # AudioSource
+---
+ID: 18120936669851348837
+Transform:
+  m_GameObject: {fileID: 741513655899222198}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11586571038187508226}
+  m_Children:
+    []
+---
+ID: 10027951082215148722
+AudioSource:
+  m_GameObject: {fileID: 741513655899222198}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 10646787402864352440
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff11
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8242659165086311395}  # Transform
+    - component: {fileID: 6961539539720097627}  # AudioSource
+---
+ID: 8242659165086311395
+Transform:
+  m_GameObject: {fileID: 10646787402864352440}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 11586571038187508226}
+  m_Children:
+    []
+---
+ID: 6961539539720097627
+AudioSource:
+  m_GameObject: {fileID: 10646787402864352440}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 15856198335667142940
+GameObject:
+  m_IsActive: true
+  m_Name: Audio2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18215275136145206689}  # Transform
+---
+ID: 18215275136145206689
+Transform:
+  m_GameObject: {fileID: 15856198335667142940}
+  Translation: [0, 0, 0]
+  Rotation: [-3.14159203, -0.219554871, 3.14159274]
+  Scale: [1.0000087, 0.999999881, 1.00001013]
+  Father: {fileID: 5709922246900216023}
+  m_Children:
+    - {fileID: 4027494536919775735}
+    - {fileID: 609732477418224647}
+    - {fileID: 169155933923883139}
+---
+ID: 4027494536919775735
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1495557741077738281}  # Transform
+    - component: {fileID: 9020605479676143121}  # AudioSource
+---
+ID: 1495557741077738281
+Transform:
+  m_GameObject: {fileID: 4027494536919775735}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15856198335667142940}
+  m_Children:
+    []
+---
+ID: 9020605479676143121
+AudioSource:
+  m_GameObject: {fileID: 4027494536919775735}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 609732477418224647
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5895309239767968324}  # Transform
+    - component: {fileID: 3340568601821911411}  # AudioSource
+---
+ID: 5895309239767968324
+Transform:
+  m_GameObject: {fileID: 609732477418224647}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15856198335667142940}
+  m_Children:
+    []
+---
+ID: 3340568601821911411
+AudioSource:
+  m_GameObject: {fileID: 609732477418224647}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 169155933923883139
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep2
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12952776599128036564}  # Transform
+    - component: {fileID: 1487629254184008}  # AudioSource
+---
+ID: 12952776599128036564
+Transform:
+  m_GameObject: {fileID: 169155933923883139}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 15856198335667142940}
+  m_Children:
+    []
+---
+ID: 1487629254184008
+AudioSource:
+  m_GameObject: {fileID: 169155933923883139}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 9861859848914377637
+GameObject:
+  m_IsActive: true
+  m_Name: Audio3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13902894351642300419}  # Transform
+---
+ID: 13902894351642300419
+Transform:
+  m_GameObject: {fileID: 9861859848914377637}
+  Translation: [0, 0, 0]
+  Rotation: [0, -1.52193046, 0]
+  Scale: [1.00000036, 0.999999881, 1.00001776]
+  Father: {fileID: 14499535282109436915}
+  m_Children:
+    - {fileID: 17563082184642872100}
+    - {fileID: 11417230401877125489}
+    - {fileID: 14161512138240429739}
+---
+ID: 17563082184642872100
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2760344678102023066}  # Transform
+    - component: {fileID: 2952712530371156136}  # AudioSource
+---
+ID: 2760344678102023066
+Transform:
+  m_GameObject: {fileID: 17563082184642872100}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9861859848914377637}
+  m_Children:
+    []
+---
+ID: 2952712530371156136
+AudioSource:
+  m_GameObject: {fileID: 17563082184642872100}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 11417230401877125489
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2615985997714002375}  # Transform
+    - component: {fileID: 13031891813013930006}  # AudioSource
+---
+ID: 2615985997714002375
+Transform:
+  m_GameObject: {fileID: 11417230401877125489}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9861859848914377637}
+  m_Children:
+    []
+---
+ID: 13031891813013930006
+AudioSource:
+  m_GameObject: {fileID: 11417230401877125489}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 14161512138240429739
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17821687266081161745}  # Transform
+    - component: {fileID: 2389489311740641787}  # AudioSource
+---
+ID: 17821687266081161745
+Transform:
+  m_GameObject: {fileID: 14161512138240429739}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9861859848914377637}
+  m_Children:
+    []
+---
+ID: 2389489311740641787
+AudioSource:
+  m_GameObject: {fileID: 14161512138240429739}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 9721183151541679213
+GameObject:
+  m_IsActive: true
+  m_Name: Audio4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8463351375175466324}  # Transform
+---
+ID: 8463351375175466324
+Transform:
+  m_GameObject: {fileID: 9721183151541679213}
+  Translation: [0, 0, 0]
+  Rotation: [-3.14158916, 1.4725188, -3.14158893]
+  Scale: [1.00002241, 0.999999881, 1.00003946]
+  Father: {fileID: 13014817814692177424}
+  m_Children:
+    - {fileID: 15311460536156293935}
+    - {fileID: 13744836690451449111}
+    - {fileID: 16959652096907027273}
+---
+ID: 15311460536156293935
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 538844728345088842}  # Transform
+    - component: {fileID: 7634277770144071736}  # AudioSource
+---
+ID: 538844728345088842
+Transform:
+  m_GameObject: {fileID: 15311460536156293935}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9721183151541679213}
+  m_Children:
+    []
+---
+ID: 7634277770144071736
+AudioSource:
+  m_GameObject: {fileID: 15311460536156293935}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 13744836690451449111
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5261158394667497269}  # Transform
+    - component: {fileID: 15183326108266052409}  # AudioSource
+---
+ID: 5261158394667497269
+Transform:
+  m_GameObject: {fileID: 13744836690451449111}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9721183151541679213}
+  m_Children:
+    []
+---
+ID: 15183326108266052409
+AudioSource:
+  m_GameObject: {fileID: 13744836690451449111}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 16959652096907027273
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5554676690341421435}  # Transform
+    - component: {fileID: 16473481976223463836}  # AudioSource
+---
+ID: 5554676690341421435
+Transform:
+  m_GameObject: {fileID: 16959652096907027273}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9721183151541679213}
+  m_Children:
+    []
+---
+ID: 16473481976223463836
+AudioSource:
+  m_GameObject: {fileID: 16959652096907027273}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 13616728079481718155
+GameObject:
+  m_IsActive: true
+  m_Name: Audio5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9247802152581172801}  # Transform
+---
+ID: 9247802152581172801
+Transform:
+  m_GameObject: {fileID: 13616728079481718155}
+  Translation: [0, 0, 0]
+  Rotation: [-3.1415894, 1.4725188, -3.14158893]
+  Scale: [1.00002217, 0.999999881, 1.00003922]
+  Father: {fileID: 1099978957968628360}
+  m_Children:
+    - {fileID: 8120421939504479036}
+    - {fileID: 5518140796940305876}
+    - {fileID: 15185048126227422761}
+---
+ID: 8120421939504479036
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 202191876928435325}  # Transform
+    - component: {fileID: 4000241869440379180}  # AudioSource
+---
+ID: 202191876928435325
+Transform:
+  m_GameObject: {fileID: 8120421939504479036}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13616728079481718155}
+  m_Children:
+    []
+---
+ID: 4000241869440379180
+AudioSource:
+  m_GameObject: {fileID: 8120421939504479036}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 5518140796940305876
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18230542601346256469}  # Transform
+    - component: {fileID: 12999310214755286703}  # AudioSource
+---
+ID: 18230542601346256469
+Transform:
+  m_GameObject: {fileID: 5518140796940305876}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13616728079481718155}
+  m_Children:
+    []
+---
+ID: 12999310214755286703
+AudioSource:
+  m_GameObject: {fileID: 5518140796940305876}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 15185048126227422761
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff5
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8972290152311100661}  # Transform
+    - component: {fileID: 12211360596920866066}  # AudioSource
+---
+ID: 8972290152311100661
+Transform:
+  m_GameObject: {fileID: 15185048126227422761}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 13616728079481718155}
+  m_Children:
+    []
+---
+ID: 12211360596920866066
+AudioSource:
+  m_GameObject: {fileID: 15185048126227422761}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 17757845616444748317
+GameObject:
+  m_IsActive: true
+  m_Name: Audio6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15014267717720537554}  # Transform
+---
+ID: 15014267717720537554
+Transform:
+  m_GameObject: {fileID: 17757845616444748317}
+  Translation: [0, 0, 0]
+  Rotation: [3.14159274, 0.197720498, -3.14159274]
+  Scale: [1.00004363, 0.99999994, 1.00004518]
+  Father: {fileID: 9921643221204584766}
+  m_Children:
+    - {fileID: 6723896100794585123}
+    - {fileID: 12639448257993431018}
+    - {fileID: 525403947054441176}
+---
+ID: 6723896100794585123
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 740818170213609365}  # Transform
+    - component: {fileID: 1089937091844223402}  # AudioSource
+---
+ID: 740818170213609365
+Transform:
+  m_GameObject: {fileID: 6723896100794585123}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17757845616444748317}
+  m_Children:
+    []
+---
+ID: 1089937091844223402
+AudioSource:
+  m_GameObject: {fileID: 6723896100794585123}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 12639448257993431018
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6014729133697369578}  # Transform
+    - component: {fileID: 15251090707592601923}  # AudioSource
+---
+ID: 6014729133697369578
+Transform:
+  m_GameObject: {fileID: 12639448257993431018}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17757845616444748317}
+  m_Children:
+    []
+---
+ID: 15251090707592601923
+AudioSource:
+  m_GameObject: {fileID: 12639448257993431018}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 525403947054441176
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep6
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11426803464446090136}  # Transform
+    - component: {fileID: 8604233816330756035}  # AudioSource
+---
+ID: 11426803464446090136
+Transform:
+  m_GameObject: {fileID: 525403947054441176}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 17757845616444748317}
+  m_Children:
+    []
+---
+ID: 8604233816330756035
+AudioSource:
+  m_GameObject: {fileID: 525403947054441176}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 16635641445883409383
+GameObject:
+  m_IsActive: true
+  m_Name: Audio8
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8812732847762085917}  # Transform
+---
+ID: 8812732847762085917
+Transform:
+  m_GameObject: {fileID: 16635641445883409383}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0.363160342, 0]
+  Scale: [1.00000012, 0.999999881, 1.00000334]
+  Father: {fileID: 13162841951116385743}
+  m_Children:
+    - {fileID: 7043713509125855521}
+    - {fileID: 12373567955212709706}
+    - {fileID: 1028549445517798572}
+---
+ID: 7043713509125855521
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff8
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6033131444649767576}  # Transform
+    - component: {fileID: 7235364101551310436}  # AudioSource
+---
+ID: 6033131444649767576
+Transform:
+  m_GameObject: {fileID: 7043713509125855521}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 16635641445883409383}
+  m_Children:
+    []
+---
+ID: 7235364101551310436
+AudioSource:
+  m_GameObject: {fileID: 7043713509125855521}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 12373567955212709706
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep8
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3457847204239656306}  # Transform
+    - component: {fileID: 13632288340175878988}  # AudioSource
+---
+ID: 3457847204239656306
+Transform:
+  m_GameObject: {fileID: 12373567955212709706}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 16635641445883409383}
+  m_Children:
+    []
+---
+ID: 13632288340175878988
+AudioSource:
+  m_GameObject: {fileID: 12373567955212709706}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 1028549445517798572
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn8
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17203563945291701323}  # Transform
+    - component: {fileID: 8548968764340301382}  # AudioSource
+---
+ID: 17203563945291701323
+Transform:
+  m_GameObject: {fileID: 1028549445517798572}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 16635641445883409383}
+  m_Children:
+    []
+---
+ID: 8548968764340301382
+AudioSource:
+  m_GameObject: {fileID: 1028549445517798572}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 3508569594126034624
+GameObject:
+  m_IsActive: true
+  m_Name: Audio9
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1108977350751841611}  # Transform
+---
+ID: 1108977350751841611
+Transform:
+  m_GameObject: {fileID: 3508569594126034624}
+  Translation: [0, 0, 0]
+  Rotation: [-3.14155412, -1.55677557, 3.14155531]
+  Scale: [1, 1, 1.0000155]
+  Father: {fileID: 10509890877230161516}
+  m_Children:
+    - {fileID: 13662699523116896445}
+    - {fileID: 9600238443749311392}
+    - {fileID: 7241808600415338838}
+---
+ID: 13662699523116896445
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff9
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12054916878772832618}  # Transform
+    - component: {fileID: 16755410970440381117}  # AudioSource
+---
+ID: 12054916878772832618
+Transform:
+  m_GameObject: {fileID: 13662699523116896445}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3508569594126034624}
+  m_Children:
+    []
+---
+ID: 16755410970440381117
+AudioSource:
+  m_GameObject: {fileID: 13662699523116896445}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 9600238443749311392
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn9
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1509445467530464407}  # Transform
+    - component: {fileID: 11025595683249540698}  # AudioSource
+---
+ID: 1509445467530464407
+Transform:
+  m_GameObject: {fileID: 9600238443749311392}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3508569594126034624}
+  m_Children:
+    []
+---
+ID: 11025595683249540698
+AudioSource:
+  m_GameObject: {fileID: 9600238443749311392}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 7241808600415338838
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep9
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16920064548223274288}  # Transform
+    - component: {fileID: 436222418409150061}  # AudioSource
+---
+ID: 16920064548223274288
+Transform:
+  m_GameObject: {fileID: 7241808600415338838}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3508569594126034624}
+  m_Children:
+    []
+---
+ID: 436222418409150061
+AudioSource:
+  m_GameObject: {fileID: 7241808600415338838}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 14227756594521671408
+GameObject:
+  m_IsActive: true
+  m_Name: Audio10
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4980347436033960692}  # Transform
+---
+ID: 4980347436033960692
+Transform:
+  m_GameObject: {fileID: 14227756594521671408}
+  Translation: [0, 0, 0]
+  Rotation: [-3.14159155, -0.183859736, 3.14159226]
+  Scale: [1.00002384, 1.00000012, 1.00003278]
+  Father: {fileID: 1605621407029875310}
+  m_Children:
+    - {fileID: 3950150117211106153}
+    - {fileID: 8226576829667109840}
+    - {fileID: 11645636679955339042}
+---
+ID: 3950150117211106153
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOff10
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1591101828509705494}  # Transform
+    - component: {fileID: 5488407388784561811}  # AudioSource
+---
+ID: 1591101828509705494
+Transform:
+  m_GameObject: {fileID: 3950150117211106153}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14227756594521671408}
+  m_Children:
+    []
+---
+ID: 5488407388784561811
+AudioSource:
+  m_GameObject: {fileID: 3950150117211106153}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 9ab8d05f9c78fa8e946fcd2d8d8da8b4}
+  Play: false
+---
+ID: 8226576829667109840
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraOn10
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 268435185905475310}  # Transform
+    - component: {fileID: 1471180141957199633}  # AudioSource
+---
+ID: 268435185905475310
+Transform:
+  m_GameObject: {fileID: 8226576829667109840}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14227756594521671408}
+  m_Children:
+    []
+---
+ID: 1471180141957199633
+AudioSource:
+  m_GameObject: {fileID: 8226576829667109840}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 8a8158c340a9a4663becf43e96798ebf}
+  Play: false
+---
+ID: 11645636679955339042
+GameObject:
+  m_IsActive: true
+  m_Name: SecurityCameraBeep10
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6029101771604953966}  # Transform
+    - component: {fileID: 17753985582078908605}  # AudioSource
+---
+ID: 6029101771604953966
+Transform:
+  m_GameObject: {fileID: 11645636679955339042}
+  Translation: [3.81469727e-06, 3.81469727e-06, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 14227756594521671408}
+  m_Children:
+    []
+---
+ID: 17753985582078908605
+AudioSource:
+  m_GameObject: {fileID: 11645636679955339042}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: true
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 500
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: be98353a444e4d5e8b9998c8295a65db}
+  Play: false
+---
+ID: 14237342508294354300
+GameObject:
+  m_IsActive: true
+  m_Name: HealthCounter_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4279374563004726272}  # Transform
+    - component: {fileID: 7260109134346071392}  # TextRenderer
+---
+ID: 4279374563004726272
+Transform:
+  m_GameObject: {fileID: 14237342508294354300}
+  Translation: [-0.958131492, -0.912657857, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 7260109134346071392
+TextRenderer:
+  m_GameObject: {fileID: 14237342508294354300}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 9959361981741042079
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaCounter_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18338022926377260667}  # Transform
+    - component: {fileID: 5334853953766887570}  # TextRenderer
+---
+ID: 18338022926377260667
+Transform:
+  m_GameObject: {fileID: 9959361981741042079}
+  Translation: [-0.875477433, -0.912657857, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 5334853953766887570
+TextRenderer:
+  m_GameObject: {fileID: 9959361981741042079}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 16970193758400152787
+GameObject:
+  m_IsActive: true
+  m_Name: MaxStatCounter_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1164169733315377895}  # Transform
+    - component: {fileID: 13913542858873206850}  # TextRenderer
+---
+ID: 1164169733315377895
+Transform:
+  m_GameObject: {fileID: 16970193758400152787}
+  Translation: [-0.790008783, -0.912657857, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 13913542858873206850
+TextRenderer:
+  m_GameObject: {fileID: 16970193758400152787}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: 0
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.200000003
+  Textbox Width: 10
+  Leading: 1.5
+  Center Alignment: true
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
+---
+ID: 6227812347651407358
+GameObject:
+  m_IsActive: true
+  m_Name: notEnoughItems
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7195043148081261651}  # Transform
+    - component: {fileID: 1797510401047057825}  # AudioSource
+---
+ID: 7195043148081261651
+Transform:
+  m_GameObject: {fileID: 6227812347651407358}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3086226640464916968}
+  m_Children:
+    []
+---
+ID: 1797510401047057825
+AudioSource:
+  m_GameObject: {fileID: 6227812347651407358}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 63ebb10b2da608e4a1b9d3098cd8ca22}
+  Play: false
