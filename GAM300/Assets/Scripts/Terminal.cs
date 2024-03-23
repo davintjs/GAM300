@@ -38,14 +38,14 @@ public class Terminal : Script
         CheckCheckpoint();
     }
 
-    void OnCollisionEnter(PhysicsComponent rb)
+    void OnTriggerEnter(PhysicsComponent rb)
     {
         //detect the player
         if (GetTag(rb) == "Player")
         {
             Console.WriteLine("AtCheckpoint");
             ThirdPersonController.instance.checkpointIndex = index;
-            ThirdPersonController.instance.spawnPoint = transform.localPosition + transform.forward * 2f + vec3.UnitY * 2f;
+            ThirdPersonController.instance.spawnPoint = transform.localPosition + transform.forward * 2f + vec3.UnitY * 0.50f;
             //CheckCheckpoint();
 
             ThirdPersonController.instance.isAtCheckpoint = true;
