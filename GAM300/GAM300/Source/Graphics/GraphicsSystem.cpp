@@ -302,6 +302,8 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glDrawBuffers(2, attachments);
 
 	Draw(_camera);
+	PARTICLERENDER.Draw2D(_camera);
+
 	UIRENDERER.UIDraw_3D(_camera);
 
 	FRAMEBUFFER.Unbind();
@@ -309,7 +311,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	if (RENDERER.enableBloom())
 	{
 		BLOOMER.RenderBloomTexture(0.005, _camera, cameraQuadVAO, cameraQuadVBO);
-		
 		
 		//bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
 		
@@ -367,7 +368,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	TEXTSYSTEM.Draw(_camera);
 
-	PARTICLERENDER.Draw2D(_camera);
 
 	FRAMEBUFFER.Unbind();
 

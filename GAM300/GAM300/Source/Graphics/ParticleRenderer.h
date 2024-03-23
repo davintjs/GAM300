@@ -24,7 +24,7 @@ public:
 
 	GLuint quadVAO{};
 	GLuint quadSRTBuffer{};
-
+	GLuint lifetimeFor2D{};
 	GLuint cylVAO{};
 	GLuint cylSRTBuffer{};
 	GLuint cylsize{};

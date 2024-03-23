@@ -287,12 +287,28 @@ void ParticleRenderer::Draw2D(BaseCamera& _camera) {
 
         glBindBuffer(GL_ARRAY_BUFFER, quadSRTBuffer);
         
-
         glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, lifetimeFor2D);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::vec2), particleLifetimes.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES2D);
         shader.Use();
+
+        GLint fadeToColor =
+            glGetUniformLocation(shader.GetHandle(), "fadeToColor");
+        GLint colorToFadeTo =
+            glGetUniformLocation(shader.GetHandle(), "colorToFadeTo");
+
+        GLint maxLifetime =
+            glGetUniformLocation(shader.GetHandle(), "maxLifetime");
+
+        GLint AoConstant =
+            glGetUniformLocation(shader.GetHandle(), "AoConstant");
+        GLint EmissionConstant =
+            glGetUniformLocation(shader.GetHandle(), "EmissionConstant");
 
         GLint perspective =
             glGetUniformLocation(shader.GetHandle(), "persp_projection");
@@ -300,12 +316,26 @@ void ParticleRenderer::Draw2D(BaseCamera& _camera) {
             glGetUniformLocation(shader.GetHandle(), "View");
         GLint Colour =
             glGetUniformLocation(shader.GetHandle(), "frag_Albedo");
+
+
+        glUniform1f(fadeToColor, particleComponent.fadeToColor);
+
+        glUniform3f(colorToFadeTo, particleComponent.colorToFadeTowards.x,
+            particleComponent.colorToFadeTowards.y, particleComponent.colorToFadeTowards.z);
+
+        glUniform1f(maxLifetime, particleComponent.particleLifetime_);
+
+        glUniform1f(AoConstant, currMatInstance.aoConstant);
+        glUniform1f(EmissionConstant, currMatInstance.emissionConstant);
+
         glUniformMatrix4fv(perspective, 1, GL_FALSE,
             glm::value_ptr(_camera.GetProjMatrix()));
         glUniformMatrix4fv(view, 1, GL_FALSE,
             glm::value_ptr(_camera.GetViewMatrix()));
         glUniform4fv(Colour, 1, glm::value_ptr(glm::vec4(currMatInstance.albedoColour)));
         GLint boolean1 = glGetUniformLocation(shader.GetHandle(), "hasTexture");
+        glUniform1f(glGetUniformLocation(shader.GetHandle(), "ambience_multiplier"), RENDERER.getAmbient());
+        glUniform1f(glGetUniformLocation(shader.GetHandle(), "bloomThreshold"), RENDERER.GetBloomThreshold());
         glUniform1i(boolean1, hasTexture);
 
         glBindVertexArray(quadVAO);
@@ -480,6 +510,18 @@ void ParticleRenderer::SetupInstancedQuad() {
     glVertexAttribDivisor(8, 1);
     glVertexAttribDivisor(9, 1);
     glBindVertexArray(0);
+
+    
+    glGenBuffers(1, &lifetimeFor2D);
+    glBindBuffer(GL_ARRAY_BUFFER, lifetimeFor2D);
+    glBufferData(GL_ARRAY_BUFFER, EntityRenderLimit * sizeof(glm::vec2), particleLifetimes.data(), GL_DYNAMIC_DRAW);
+
+    glBindVertexArray(quadVAO);
+    glEnableVertexAttribArray(14);
+    glVertexAttribPointer(14, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), (void*)0);
+    glVertexAttribDivisor(14, 1);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 void ParticleRenderer::Exit() {
