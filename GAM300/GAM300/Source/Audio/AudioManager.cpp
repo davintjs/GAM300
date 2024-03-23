@@ -423,8 +423,8 @@ void AudioManager::SetSFXVolume(float volume) {
 }
 
 void AudioManager::SetMusicVolume(float volume) {
-	//groups[CATEGORY_MUSIC]->setVolume(1.f);
-	//groups[CATEGORY_MUSIC2]->setVolume(1.f);
+	groups[CATEGORY_MUSIC]->setVolume(volume);
+	groups[CATEGORY_MUSIC2]->setVolume(volume);
 	//musics[currentMusicIdx].currentMusic->setVolume(volume);
 	musicVolume = volume;
 }
