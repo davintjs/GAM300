@@ -364,6 +364,7 @@ Script:
   _isAttacking: false
   _isDashAttacking: false
   _isOverdrive: false
+  _isSprinting: false
   animCancelPercentage: 0.600000024
   attack1duration: 0.5
   attack2duration: 0.600000024
@@ -455,8 +456,11 @@ Script:
   maxStatPackCount: 0
   staminaPackCount: 0
   staminaPackValue: 50
+  dashIcon: {fileID: 14855078077787617845}  # Component
+  dodgeIcon: {fileID: 5434327487198052390}  # Component
   healthCounter: {fileID: 7106348496936394930}  # Component
   maxPackCounter: {fileID: 18062030643615582512}  # Component
+  sprintIcon: {fileID: 9491998807236455091}  # Component
   stamCounter: {fileID: 3793286798138583367}  # Component
   thirdPersonController: {fileID: 0}
 ---
@@ -35072,7 +35076,7 @@ SpriteRenderer:
 ID: 3901125534421942576
 GameObject:
   m_IsActive: true
-  m_Name: DodgeRoll
+  m_Name: DodgeRoll_Icon
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -35102,7 +35106,7 @@ SpriteRenderer:
 ID: 16160416220025300441
 GameObject:
   m_IsActive: true
-  m_Name: DashAttack
+  m_Name: DashAttack_Icon
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -35435,8 +35439,8 @@ Transform:
   Scale: [0.100925997, 0.10092596, 0.10092596]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    - {fileID: 10152718624619182785}
     - {fileID: 116756458099848226}
+    - {fileID: 10152718624619182785}
 ---
 ID: 7648414287142509041
 SpriteRenderer:

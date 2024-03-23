@@ -84,6 +84,7 @@ public class ThirdPersonController : Script
     //public MeshRenderer doorTestMesh;
 
     public bool cutscene = false;
+    public bool _isSprinting = false;
 
     void Awake()
     {
@@ -852,6 +853,7 @@ public class ThirdPersonController : Script
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina >= sprintStamina)
                 {
+                    _isSprinting = true;
                     UseStamina(sprintStamina);
                     walkSoundTime = runStepsInterval;
                     SetState("Sprint", true);
@@ -860,6 +862,7 @@ public class ThirdPersonController : Script
                 }
                 else
                 {
+                    _isSprinting = false;
                     walkSoundTime = walkStepsInterval;
                     SetState("Sprint", false);
                 }
