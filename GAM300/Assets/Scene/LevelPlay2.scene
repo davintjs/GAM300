@@ -231,7 +231,6 @@ ID: 16773315215798417911
 Camera:
   m_GameObject: {fileID: 15334681090738628473}
   m_IsEnabled: true
-  BackgroundColor: [1.35939599e-19, 4.20157907e+30, 2.87392797e+23, 1.14326575e-32]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -28835,7 +28834,7 @@ Transform:
   m_GameObject: {fileID: 15531594244202276862}
   Translation: [17.8229942, 40.1600113, -119.582588]
   Rotation: [-3.14159203, -1.54942429, -3.14159107]
-  Scale: [6.69803047, 7.10283947, 0.999601781]
+  Scale: [6.6980238, 7.10283947, 0.999600947]
   Father: {fileID: 0}
   m_Children:
     []
@@ -28884,7 +28883,7 @@ Script:
 ---
 ID: 17800889428983329805
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: PuzzleKeyToBossLevel
   m_TagString: ""
   m_Layer: 0
@@ -43846,6 +43845,9 @@ GameObject:
   m_Component:
     - component: {fileID: 11284501402211864668}  # Transform
     - component: {fileID: 13962959782719857445}  # MeshRenderer
+    - component: {fileID: 7280575386359166758}  # BoxCollider
+    - component: {fileID: 17516596417108818571}  # Rigidbody
+    - component: {fileID: 7683227536718383652}  # Script
 ---
 ID: 11284501402211864668
 Transform:
@@ -43855,7 +43857,7 @@ Transform:
   Scale: [0.999959469, 1, 0.99995327]
   Father: {fileID: 2501033563124642148}
   m_Children:
-    []
+    - {fileID: 8108389175939038789}
 ---
 ID: 13962959782719857445
 MeshRenderer:
@@ -43863,6 +43865,40 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 09bf7d75d7c6b193176054f172f691ba}
   Material_ID: {guid: 2bcadcbaf541e4686d2e8612ad8d39f9}
+---
+ID: 7280575386359166758
+BoxCollider:
+  m_GameObject: {fileID: 9364165241051347360}
+  m_IsEnabled: true
+  Dimensions: [5.99990845, 2.60157275, 3.04993486]
+  Offset: [-0.106812716, 1.20078647, -0.0297715068]
+---
+ID: 17516596417108818571
+Rigidbody:
+  m_GameObject: {fileID: 9364165241051347360}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: false
+---
+ID: 7683227536718383652
+Script:
+  m_GameObject: {fileID: 9364165241051347360}
+  m_IsEnabled: true
+  Script: {guid: f68e17add344d4021d2de2a58e2e7967}
+  dialogue_state: 10
+  ObjectReference: {fileID: 17835439861496099335}  # GameObject
+  burntMesh: {fileID: 7004788017645728507}  # Component
+  explosionEffect: {fileID: 17595281446523183228}  # GameObject
+  forceField: {fileID: 15531594244202276862}  # GameObject
+  generatorExplodeSound: {fileID: 3615268751664594178}  # Component
+  generatorMesh: {fileID: 13962959782719857445}  # Component
 ---
 ID: 9132359687142672998
 GameObject:
@@ -82886,12 +82922,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 0.25
   Textbox Width: 95
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 17633603467252348022
 GameObject:
@@ -83359,7 +83394,7 @@ Script:
 ---
 ID: 14279794397136616112
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: Trigger9
   m_TagString: ""
   m_Layer: 0
@@ -94118,12 +94153,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 10115566628269105248
 GameObject:
@@ -94226,12 +94260,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 4503526139341238809
 GameObject:
@@ -94263,12 +94296,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 16001887047449578172
 GameObject:
@@ -94300,12 +94332,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 4898880304558527863
 GameObject:
@@ -94337,12 +94368,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 2277648093646626505
 GameObject:
@@ -94374,12 +94404,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 2685666816494185203
 GameObject:
@@ -94411,12 +94440,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 5414773631650039043
 GameObject:
@@ -94448,12 +94476,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 7072642108193959153
 GameObject:
@@ -94485,12 +94512,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 9439018310584745255
 GameObject:
@@ -94522,12 +94548,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 14410455004164311229
 GameObject:
@@ -94559,12 +94584,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 10285232837826139804
 GameObject:
@@ -94596,12 +94620,11 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 3.55999994
   Textbox Width: 10
-  Leading: 1.5
+  Textbox Height: 0
   Center Alignment: false
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 624169214278105939
 GameObject:
@@ -96233,13 +96256,12 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.200000003
-  Textbox Width: 10
-  Leading: 1.5
+  Textbox Width: 0.0174000002
+  Textbox Height: 0.0126000009
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 9959361981741042079
 GameObject:
@@ -96270,13 +96292,12 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.200000003
-  Textbox Width: 10
-  Leading: 1.5
+  Textbox Width: 0.0174000002
+  Textbox Height: 0.0126000009
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 16970193758400152787
 GameObject:
@@ -96307,13 +96328,12 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.200000003
-  Textbox Width: 10
-  Leading: 1.5
+  Textbox Width: 0.0174000002
+  Textbox Height: 0.0126000009
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
 ---
 ID: 6227812347651407358
 GameObject:
@@ -96349,4 +96369,121 @@ AudioSource:
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 63ebb10b2da608e4a1b9d3098cd8ca22}
+  Play: false
+---
+ID: 17835439861496099335
+GameObject:
+  m_IsActive: true
+  m_Name: BurnedDownGeneratorMatReference
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7604049390850748019}  # Transform
+    - component: {fileID: 7004788017645728507}  # MeshRenderer
+---
+ID: 7604049390850748019
+Transform:
+  m_GameObject: {fileID: 17835439861496099335}
+  Translation: [0, 0, -2.30194306]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 7004788017645728507
+MeshRenderer:
+  m_GameObject: {fileID: 17835439861496099335}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 17595281446523183228
+GameObject:
+  m_IsActive: false
+  m_Name: ExplosionEffect
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4005314250094043051}  # Transform
+    - component: {fileID: 14375322685105289623}  # MeshRenderer
+    - component: {fileID: 4257519331806755281}  # ParticleComponent
+---
+ID: 4005314250094043051
+Transform:
+  m_GameObject: {fileID: 17595281446523183228}
+  Translation: [-13.8839588, 35.9337692, -117.081535]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14375322685105289623
+MeshRenderer:
+  m_GameObject: {fileID: 17595281446523183228}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material_ID: {guid: 244acdadaec78a3a5e31ec94de7392c7}
+---
+ID: 4257519331806755281
+ParticleComponent:
+  m_GameObject: {fileID: 17595281446523183228}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Material: {guid: 86a0c5b256888901f84595d211b97767}
+  Local Space: true
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 30
+  Number Of Particles: 15
+  Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0.100000001
+  Particle Scale Rate: 0.100000001
+  Particle Speed: 30
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 30
+  Particle Noise Frequency: 30
+  2D particle: false
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 10
+  Trail Thickness: 1
+  Looping: true
+---
+ID: 8108389175939038789
+GameObject:
+  m_IsActive: true
+  m_Name: GeneratorDestroySound
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11302063342133103900}  # Transform
+    - component: {fileID: 3615268751664594178}  # AudioSource
+---
+ID: 11302063342133103900
+Transform:
+  m_GameObject: {fileID: 8108389175939038789}
+  Translation: [0, 0, 0]
+  Rotation: [3.14159274, -1.55431342, 3.14159274]
+  Scale: [1.00004685, 1, 1.00004065]
+  Father: {fileID: 9364165241051347360}
+  m_Children:
+    []
+---
+ID: 3615268751664594178
+AudioSource:
+  m_GameObject: {fileID: 8108389175939038789}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 4
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 0
+  Fade Out Time (s): 0
+  Sound File: {guid: 89ccec2f5a581ed3816118dc4b1f2b20}
   Play: false
