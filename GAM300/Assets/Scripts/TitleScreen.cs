@@ -25,7 +25,6 @@ public class TitleScreen : Script
     private float timer = 0f;
     private float duration = 1f;
     private bool lockFadeOut = false;
-    private bool completeTitleScreen = false; // Bean: Change to once start just save data that title screen has already been loaded
 
     private Coroutine fadeIn;
 
@@ -41,13 +40,20 @@ public class TitleScreen : Script
         gameLogoObj.SetActive(false);
         copyrightGameObj.SetActive(false);
         pressGameObj.SetActive(false);
+
+        float data = InstanceData.GetData("TitleScreen");
+        Console.WriteLine("Data: " + data);
         fadeIn = StartCoroutine(FadeIn());
+        if(data == 0)
+        {
+        }
     }
 
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space) && !lockFadeOut)
         {
+            InstanceData.SaveData("TitleScreen", 1f); // Save data that title screen has already been loaded
             StopCoroutine(fadeIn);
             spaceButton.Play();
             StartCoroutine(FadeOut());

@@ -283,6 +283,12 @@ namespace BeanFactory
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SaveData(string key, float value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetData(string key);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetFullscreenMode(bool fullscreenMode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]

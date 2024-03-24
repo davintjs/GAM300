@@ -439,6 +439,24 @@ static bool IsButtonHovered(ScriptObject<SpriteRenderer> spriteRenderer)
 
 #pragma endregion
 
+#pragma region PERSISTENCEDATA
+static void SaveData(MonoString* mString, float value)
+{
+	std::string key = mono_string_to_utf8(mString);
+	SCRIPTING.persistenceData[key] = value;
+}
+
+static float GetData(MonoString* mString)
+{
+	std::string key = mono_string_to_utf8(mString);
+	auto it = SCRIPTING.persistenceData.find(key);
+	if (it != SCRIPTING.persistenceData.end())
+		return it->second;
+
+	return 0.f;
+}
+#pragma endregion
+
 static void QuitGame()
 {
 #ifdef _BUILD
@@ -803,6 +821,9 @@ static void RegisterScriptWrappers()
 	Register(IsButtonClicked);
 	Register(IsButtonHovered);
 
+	// Persistence Data
+	Register(SaveData);
+	Register(GetData);
 
 	// Graphics
 	Register(GetGamma);
