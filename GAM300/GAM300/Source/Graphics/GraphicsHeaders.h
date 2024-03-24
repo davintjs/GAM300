@@ -639,6 +639,7 @@ public:
 	};
 
 	unsigned int txtVAO, txtVBO;
+	float fontSize = 0.f;
 
 	using FontCharacters = std::map<char, Character>;
 	std::unordered_map<Engine::GUID<FontAsset>, FontCharacters> mFontContainer;

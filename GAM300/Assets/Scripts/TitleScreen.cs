@@ -41,19 +41,19 @@ public class TitleScreen : Script
         copyrightGameObj.SetActive(false);
         pressGameObj.SetActive(false);
 
-        float data = InstanceData.GetData("TitleScreen");
-        Console.WriteLine("Data: " + data);
+        //float data = InstanceData.GetData("TitleScreen");
+        //Console.WriteLine("Data: " + data);
         fadeIn = StartCoroutine(FadeIn());
-        if(data == 0)
-        {
-        }
+        //if(data == 0)
+        //{
+        //}
     }
 
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.Space) && !lockFadeOut)
         {
-            InstanceData.SaveData("TitleScreen", 1f); // Save data that title screen has already been loaded
+            //InstanceData.SaveData("TitleScreen", 1f); // Save data that title screen has already been loaded
             StopCoroutine(fadeIn);
             spaceButton.Play();
             StartCoroutine(FadeOut());

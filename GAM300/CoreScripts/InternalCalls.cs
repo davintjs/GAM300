@@ -158,7 +158,22 @@ namespace BeanFactory
         public static extern void EnableSFX(bool toggle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetMasterVolume(bool toggle);
+        public static extern void SetMasterVolume(float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetMasterVolume();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetSFXVolume(float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetSFXVolume();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMusicVolume(float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetMusicVolume();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(ulong ID);
@@ -280,6 +295,24 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetGamma(float gammaValue);
 
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetBloom();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetBloom(bool bloomValue);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetShadow();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetShadow(bool shadowValue);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetFullScreen();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetFullscreenMode(bool fullscreenMode);
+
         #endregion
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -287,9 +320,6 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern float GetData(string key);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetFullscreenMode(bool fullscreenMode);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void LoadNext();

@@ -111,6 +111,16 @@ namespace BeanFactory
                 InternalCalls.SetTextString(this, value); 
             }
         }
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -383,6 +393,16 @@ namespace BeanFactory
         {
             return InternalCalls.IsButtonHovered(this);
         }
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -397,6 +417,16 @@ namespace BeanFactory
             InternalCalls.ResetPather(this);
         }
         float mAgentSpeed;
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -524,6 +554,16 @@ namespace BeanFactory
                 return mat;
             }
         }
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -538,6 +578,16 @@ namespace BeanFactory
         public float intensity;
         public bool enableShadow;
         public bool toRender; // Dirtybit 
+
+        public GameObject gameObject
+        {
+            get
+            {
+                GameObject result;
+                InternalCalls.Get(this, out result);
+                return result;
+            }
+        }
     }
 
 

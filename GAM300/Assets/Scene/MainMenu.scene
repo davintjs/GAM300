@@ -359,7 +359,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 0.800000012
   min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: -1
@@ -428,8 +428,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1.79999995
-  Textbox Width: 2.43180037
-  Textbox Height: 0.113400005
+  Textbox Width: 2.16060019
+  Textbox Height: 0.101400003
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -461,7 +461,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 0.800000012
   min hearing Distance: 999
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -7919,8 +7919,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 8.60999966
-  Textbox Width: 2.40218997
-  Textbox Height: 0.542429984
+  Textbox Width: 2.12954021
+  Textbox Height: 0.485030025
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
@@ -7981,6 +7981,8 @@ Transform:
     - {fileID: 2358150160259130968}
     - {fileID: 7760561616026044080}
     - {fileID: 10774034251643388746}
+    - {fileID: 18157450569273043859}
+    - {fileID: 17079312210124156360}
 ---
 ID: 10110825994908871609
 Script:
@@ -7989,8 +7991,10 @@ Script:
   Script: {guid: 3ef33e12f2af7ace50eb1751ead9f9d7}
   cameraObj: {fileID: 5255847082789301257}  # GameObject
   exitObj: {fileID: 10774034251643388746}  # GameObject
+  finalExitObj: {fileID: 17079312210124156360}  # GameObject
   htpObj: {fileID: 2358150160259130968}  # GameObject
   mainMenuObj: {fileID: 4801693369902593552}  # GameObject
+  playObj: {fileID: 18157450569273043859}  # GameObject
   settingsObj: {fileID: 7760561616026044080}  # GameObject
 ---
 ID: 17331458830854570187
@@ -8188,9 +8192,9 @@ Transform:
     - {fileID: 6752217455587753583}
     - {fileID: 11807028811020752031}
     - {fileID: 5972497116800961600}
-    - {fileID: 8830289429346299081}
     - {fileID: 16789995656188959844}
     - {fileID: 4856351502259171584}
+    - {fileID: 14993186529203053056}
 ---
 ID: 697612254495885825
 GameObject:
@@ -9053,6 +9057,7 @@ Script:
   HTPButton: {fileID: 15413680003274128894}  # GameObject
   bgm: {fileID: 15874991202848918549}  # Component
   camera: {fileID: 10110825994908871609}  # Component
+  fader: {fileID: 3273061677841725499}  # Component
   incubatorObj: {fileID: 3927099464123553639}  # GameObject
   mainMenuObj: {fileID: 5972497116800961600}  # GameObject
   settingsButton: {fileID: 11997381317790178123}  # GameObject
@@ -9551,10 +9556,10 @@ GameObject:
 ID: 15786392711675892143
 Transform:
   m_GameObject: {fileID: 8830289429346299081}
-  Translation: [6.45214939, 3.3079865, 1.30542064]
-  Rotation: [0, 1.39626431, 0]
-  Scale: [2, 2.5999999, 1.0000025]
-  Father: {fileID: 10842162362203223496}
+  Translation: [0, 0, -1.43051147e-06]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [2.1000011, 2.39999914, 0.999999881]
+  Father: {fileID: 14993186529203053056}
   m_Children:
     []
 ---
@@ -9565,7 +9570,7 @@ SpriteRenderer:
   World Space: true
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
-  Alpha Scalar: 0.899999976
+  Alpha Scalar: 0.949999988
   SpriteTexture: {guid: c0ada3d99493fce39006fe2433f79a77}
 ---
 ID: 8381288947985492097
@@ -9624,9 +9629,9 @@ GameObject:
 ID: 12307318965105597116
 Transform:
   m_GameObject: {fileID: 1175150129288605873}
-  Translation: [8.97408962, 0.348309666, 1.76583087]
-  Rotation: [0, -1.74532926, 0]
-  Scale: [4.22549009, 1.031551, 3.21491575]
+  Translation: [7.90935564, 0.348309338, 1.57808888]
+  Rotation: [-3.14159226, -1.39626324, -3.14159226]
+  Scale: [4.22548199, 1.031551, 3.21491504]
   Father: {fileID: 10689375522431196648}
   m_Children:
     - {fileID: 17496031450859146524}
@@ -9716,8 +9721,8 @@ GameObject:
 ID: 17702260603843811838
 Transform:
   m_GameObject: {fileID: 2751496195133281108}
-  Translation: [8.89185524, 1.7774421, 1.48356986]
-  Rotation: [0, -0, 0]
+  Translation: [7.84608269, 1.77749646, 1.28922796]
+  Rotation: [0, 0, 0]
   Scale: [0.0199999996, 0.0199999996, 0.0199999996]
   Father: {fileID: 10689375522431196648}
   m_Children:
@@ -10433,7 +10438,7 @@ Transform:
 ---
 ID: 8930446521165026425
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: MeleeEnemy2
   m_TagString: ""
   m_Layer: 0
@@ -10536,6 +10541,7 @@ GameObject:
   m_Component:
     - component: {fileID: 13619036905985844286}  # Transform
     - component: {fileID: 8958614053029686803}  # SpriteRenderer
+    - component: {fileID: 3273061677841725499}  # Script
 ---
 ID: 13619036905985844286
 Transform:
@@ -10556,6 +10562,20 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+---
+ID: 3273061677841725499
+Script:
+  m_GameObject: {fileID: 3938540783280617309}
+  m_IsEnabled: true
+  Script: {guid: d75689aa359715e72826ba5750f6faf3}
+  finished: false
+  inDuration: 1
+  isFading: false
+  looping: false
+  outDuration: 1
+  targetVal: 1
+  waitDelay: 0
+  fader: {fileID: 3938540783280617309}  # GameObject
 ---
 ID: 5589271132425103465
 GameObject:
@@ -10870,6 +10890,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 4cf27c0d93a1496bb047824f4b69d79a}
   camera: {fileID: 10110825994908871609}  # Component
+  fader: {fileID: 3273061677841725499}  # Component
   noButton: {fileID: 1882959560974552602}  # GameObject
   noTextObj: {fileID: 3235762405232986627}  # GameObject
   yesButton: {fileID: 4337488391208742540}  # GameObject
@@ -10935,8 +10956,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 8
-  Textbox Width: 2.02400017
-  Textbox Height: 0.504000008
+  Textbox Width: 1.78933346
+  Textbox Height: 0.450666696
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
@@ -10967,7 +10988,7 @@ GameObject:
 ID: 10515097411082213261
 Transform:
   m_GameObject: {fileID: 1882959560974552602}
-  Translation: [-3.5999999, 0, -2.70000005]
+  Translation: [-3.5999999, 0, -2.69999981]
   Rotation: [0, 0, 0]
   Scale: [0.5, 0.5, 1]
   Father: {fileID: 16789995656188959844}
@@ -11014,8 +11035,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 8
-  Textbox Width: 1.37600005
-  Textbox Height: 0.504000008
+  Textbox Width: 1.21600008
+  Textbox Height: 0.450666696
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
@@ -11062,8 +11083,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.20000005
-  Textbox Width: 1.55980015
-  Textbox Height: 0.138600007
+  Textbox Width: 1.38600016
+  Textbox Height: 0.123933345
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
@@ -11098,8 +11119,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.372000009
-  Textbox Height: 0.063000001
+  Textbox Width: 0.330333382
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11134,8 +11155,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.536000013
-  Textbox Height: 0.063000001
+  Textbox Width: 0.475666732
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11170,8 +11191,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.351000011
-  Textbox Height: 0.063000001
+  Textbox Width: 0.311000019
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11206,8 +11227,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.369000018
-  Textbox Height: 0.063000001
+  Textbox Width: 0.328333348
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11242,8 +11263,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.52700001
-  Textbox Height: 0.063000001
+  Textbox Width: 0.46600005
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11278,8 +11299,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.583999991
-  Textbox Height: 0.063000001
+  Textbox Width: 0.516333401
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11314,8 +11335,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.248000011
-  Textbox Height: 0.063000001
+  Textbox Width: 0.219333351
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11350,8 +11371,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.600000024
-  Textbox Height: 0.063000001
+  Textbox Width: 0.532000065
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11386,8 +11407,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.0860000029
-  Textbox Height: 0.063000001
+  Textbox Width: 0.076000005
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11422,8 +11443,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.0840000063
-  Textbox Height: 0.063000001
+  Textbox Width: 0.0743333399
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11458,8 +11479,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.0840000063
-  Textbox Height: 0.063000001
+  Textbox Width: 0.0743333399
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11494,8 +11515,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.0840000063
-  Textbox Height: 0.063000001
+  Textbox Width: 0.0743333399
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11562,9 +11583,9 @@ GameObject:
 ID: 11237156434400751748
 Transform:
   m_GameObject: {fileID: 15869362262719794040}
-  Translation: [0, 0.524999976, 0.100000001]
+  Translation: [-1.22189522e-06, 0.467472076, 0.100175858]
   Rotation: [0, 0, 0]
-  Scale: [0.999999702, 1, 0.99999994]
+  Scale: [0.999999642, 1.00000024, 0.99999994]
   Father: {fileID: 6752217455587753583}
   m_Children:
     []
@@ -11574,12 +11595,12 @@ TextRenderer:
   m_GameObject: {fileID: 15869362262719794040}
   m_IsEnabled: true
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: "|||||||||||||||||||||| "
+  Text: "||||||||||||||||||||||| "
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
   Textbox Width: 0.0480000004
-  Textbox Height: 0.063000001
+  Textbox Height: 0.056333337
   Center Alignment: true
   Wrap Text: true
   WorldSpace: true
@@ -11638,8 +11659,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.56400007
-  Textbox Height: 0.063000001
+  Textbox Width: 0.502000034
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11674,8 +11695,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.333000034
-  Textbox Height: 0.063000001
+  Textbox Width: 0.295333356
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11710,8 +11731,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.306000024
-  Textbox Height: 0.063000001
+  Textbox Width: 0.272000015
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11746,8 +11767,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.750000119
-  Textbox Height: 0.063000001
+  Textbox Width: 0.667333364
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11782,8 +11803,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.731000066
-  Textbox Height: 0.063000001
+  Textbox Width: 0.648666739
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11818,8 +11839,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.691000044
-  Textbox Height: 0.063000001
+  Textbox Width: 0.613000035
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11878,8 +11899,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.769000053
-  Textbox Height: 0.063000001
+  Textbox Width: 0.681666732
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11914,8 +11935,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.354000032
-  Textbox Height: 0.063000001
+  Textbox Width: 0.314666688
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11950,8 +11971,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.826000154
-  Textbox Height: 0.063000001
+  Textbox Width: 0.734666824
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -11986,8 +12007,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.931000113
-  Textbox Height: 0.063000001
+  Textbox Width: 0.825333416
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -12022,8 +12043,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 0.96600008
-  Textbox Height: 0.063000001
+  Textbox Width: 0.857000113
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -12058,8 +12079,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Textbox Width: 1.08700025
-  Textbox Height: 0.063000001
+  Textbox Width: 0.964333415
+  Textbox Height: 0.056333337
   Center Alignment: false
   Wrap Text: false
   WorldSpace: true
@@ -12104,6 +12125,7 @@ GameObject:
   m_Component:
     - component: {fileID: 11184493617666577457}  # Transform
     - component: {fileID: 13800461777262149167}  # TextRenderer
+    - component: {fileID: 18409104677918505049}  # Script
 ---
 ID: 11184493617666577457
 Transform:
@@ -12124,12 +12146,24 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0900000036
   Font Size: 2
-  Textbox Width: 0.622000039
-  Textbox Height: 0.126000002
+  Textbox Width: 0.55400008
+  Textbox Height: 0.112666674
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
   Color: [1, 1, 1, 1]
+---
+ID: 18409104677918505049
+Script:
+  m_GameObject: {fileID: 9469576243875755751}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  hoverDuration: 0.300000012
+  isText: true
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
+  button: {fileID: 552439272193595627}  # Component
+  clickSound: {fileID: 10922656780418682009}  # Component
+  hoverSound: {fileID: 7823455904144311016}  # Component
 ---
 ID: 4856351502259171584
 GameObject:
@@ -12139,6 +12173,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 3846292335840223702}  # Transform
+    - component: {fileID: 6990068379828025358}  # Script
 ---
 ID: 3846292335840223702
 Transform:
@@ -12148,11 +12183,24 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 10842162362203223496}
   m_Children:
-    - {fileID: 8366324237223629228}
     - {fileID: 5163005194076066165}
     - {fileID: 7836365489524616503}
+    - {fileID: 8366324237223629228}
     - {fileID: 14223700499105752798}
     - {fileID: 17270895963181484804}
+---
+ID: 6990068379828025358
+Script:
+  m_GameObject: {fileID: 4856351502259171584}
+  m_IsEnabled: true
+  Script: {guid: 2ea11ccf97287329911603c97e51758b}
+  currentMenu: 0
+  audioButtonObj: {fileID: 7836365489524616503}  # GameObject
+  audioCanvas: {fileID: 9285233082005299583}  # GameObject
+  gammaButtonObj: {fileID: 17270895963181484804}  # GameObject
+  gammaCanvas: {fileID: 6713450706993220945}  # GameObject
+  graphicsButtonObj: {fileID: 14223700499105752798}  # GameObject
+  graphicsCanvas: {fileID: 18334411025587276265}  # GameObject
 ---
 ID: 8366324237223629228
 GameObject:
@@ -12183,8 +12231,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.5
-  Textbox Width: 1.16750002
-  Textbox Height: 0.157500014
+  Textbox Width: 1.03666675
+  Textbox Height: 0.140833348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
@@ -12229,6 +12277,7 @@ GameObject:
   m_Component:
     - component: {fileID: 9388954644118395093}  # Transform
     - component: {fileID: 5301484491679889026}  # TextRenderer
+    - component: {fileID: 9169647767532992218}  # Script
 ---
 ID: 9388954644118395093
 Transform:
@@ -12249,12 +12298,24 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0900000036
   Font Size: 2
-  Textbox Width: 0.974000096
-  Textbox Height: 0.126000002
+  Textbox Width: 0.863333404
+  Textbox Height: 0.112666674
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
   Color: [1, 1, 1, 1]
+---
+ID: 9169647767532992218
+Script:
+  m_GameObject: {fileID: 7057519498925813314}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  hoverDuration: 0.300000012
+  isText: true
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
+  button: {fileID: 2849094443624766174}  # Component
+  clickSound: {fileID: 10922656780418682009}  # Component
+  hoverSound: {fileID: 7823455904144311016}  # Component
 ---
 ID: 17270895963181484804
 GameObject:
@@ -12295,6 +12356,7 @@ GameObject:
   m_Component:
     - component: {fileID: 4982142125598046859}  # Transform
     - component: {fileID: 3266219782032484034}  # TextRenderer
+    - component: {fileID: 2747054674676990038}  # Script
 ---
 ID: 4982142125598046859
 Transform:
@@ -12315,9 +12377,1175 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0900000036
   Font Size: 2
-  Textbox Width: 0.784000039
-  Textbox Height: 0.126000002
+  Textbox Width: 0.697333395
+  Textbox Height: 0.112666674
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
   Color: [1, 1, 1, 1]
+---
+ID: 2747054674676990038
+Script:
+  m_GameObject: {fileID: 12185786680001939979}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  hoverDuration: 0.300000012
+  isText: true
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
+  button: {fileID: 17316244872123020523}  # Component
+  clickSound: {fileID: 10922656780418682009}  # Component
+  hoverSound: {fileID: 7823455904144311016}  # Component
+---
+ID: 9285233082005299583
+GameObject:
+  m_IsActive: false
+  m_Name: AudioPortion
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4118874190012338971}  # Transform
+---
+ID: 4118874190012338971
+Transform:
+  m_GameObject: {fileID: 9285233082005299583}
+  Translation: [0, 0, 4.76837158e-07]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1.00000012]
+  Father: {fileID: 14993186529203053056}
+  m_Children:
+    - {fileID: 7454816294857865540}
+    - {fileID: 576908856793577072}
+    - {fileID: 75584478447439798}
+    - {fileID: 1627053996443823265}
+    - {fileID: 11914878260069720244}
+    - {fileID: 7444458813515797325}
+---
+ID: 18334411025587276265
+GameObject:
+  m_IsActive: false
+  m_Name: GraphicsPortion
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11993905356904279659}  # Transform
+---
+ID: 11993905356904279659
+Transform:
+  m_GameObject: {fileID: 18334411025587276265}
+  Translation: [0, 0, 4.76837158e-07]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1.00000012]
+  Father: {fileID: 14993186529203053056}
+  m_Children:
+    - {fileID: 13163446674957658502}
+    - {fileID: 8171669505607398613}
+    - {fileID: 978460794240005235}
+    - {fileID: 2519941485498017912}
+    - {fileID: 318213849565645502}
+    - {fileID: 1902160388759350289}
+---
+ID: 6713450706993220945
+GameObject:
+  m_IsActive: false
+  m_Name: GammaPortion
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5448195135451866000}  # Transform
+---
+ID: 5448195135451866000
+Transform:
+  m_GameObject: {fileID: 6713450706993220945}
+  Translation: [0, 0, 4.76837158e-07]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1.00000012]
+  Father: {fileID: 14993186529203053056}
+  m_Children:
+    - {fileID: 1637091187370770742}
+    - {fileID: 10677297243043094520}
+    - {fileID: 12404103474469597826}
+    - {fileID: 5025454116081322359}
+---
+ID: 1637091187370770742
+GameObject:
+  m_IsActive: true
+  m_Name: GammaIcon
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16289256142245016331}  # Transform
+    - component: {fileID: 4017824508580147541}  # SpriteRenderer
+---
+ID: 16289256142245016331
+Transform:
+  m_GameObject: {fileID: 1637091187370770742}
+  Translation: [0, 0.449999988, -0.0500001907]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [3.20000005, 3.20000005, 1]
+  Father: {fileID: 6713450706993220945}
+  m_Children:
+    []
+---
+ID: 4017824508580147541
+SpriteRenderer:
+  m_GameObject: {fileID: 1637091187370770742}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 9beadd93f12e61a9d85004da6ff366cd}
+---
+ID: 14993186529203053056
+GameObject:
+  m_IsActive: true
+  m_Name: MainSettings
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2144487088655919681}  # Transform
+    - component: {fileID: 5549783749061503608}  # Script
+    - component: {fileID: 8322360515191054112}  # Script
+    - component: {fileID: 10458039413483263078}  # Script
+---
+ID: 2144487088655919681
+Transform:
+  m_GameObject: {fileID: 14993186529203053056}
+  Translation: [5.8706851, 3.3079865, 1.20289373]
+  Rotation: [0, 1.39626527, 0]
+  Scale: [0.99996382, 1, 0.999966145]
+  Father: {fileID: 10842162362203223496}
+  m_Children:
+    - {fileID: 8830289429346299081}
+    - {fileID: 9285233082005299583}
+    - {fileID: 18334411025587276265}
+    - {fileID: 6713450706993220945}
+---
+ID: 5549783749061503608
+Script:
+  m_GameObject: {fileID: 14993186529203053056}
+  m_IsEnabled: true
+  Script: {guid: fb9164ff81f560e926219329262a8b87}
+  bgmObj: {fileID: 7444458813515797325}  # GameObject
+  masterObj: {fileID: 1627053996443823265}  # GameObject
+  sfxObj: {fileID: 11914878260069720244}  # GameObject
+---
+ID: 8322360515191054112
+Script:
+  m_GameObject: {fileID: 14993186529203053056}
+  m_IsEnabled: true
+  Script: {guid: 66541ef9fb1a29bc1b9b574dc60b258a}
+  gammaObj: {fileID: 5025454116081322359}  # GameObject
+---
+ID: 10458039413483263078
+Script:
+  m_GameObject: {fileID: 14993186529203053056}
+  m_IsEnabled: true
+  Script: {guid: 282c844e4e2f02d791d76cc182c9e69f}
+  bloomObj: {fileID: 1902160388759350289}  # GameObject
+  fullscreenObj: {fileID: 8171669505607398613}  # GameObject
+  shadowObj: {fileID: 318213849565645502}  # GameObject
+---
+ID: 10677297243043094520
+GameObject:
+  m_IsActive: true
+  m_Name: GammaInfotext
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6675572811039714272}  # Transform
+    - component: {fileID: 4954182885279228533}  # TextRenderer
+---
+ID: 6675572811039714272
+Transform:
+  m_GameObject: {fileID: 10677297243043094520}
+  Translation: [5.96046448e-07, -0.699999988, -0.0500822067]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [0.999998212, 1, 0.999998212]
+  Father: {fileID: 6713450706993220945}
+  m_Children:
+    []
+---
+ID: 4954182885279228533
+TextRenderer:
+  m_GameObject: {fileID: 10677297243043094520}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: Adjust the brightness settings until the icon above is visible
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 1.5
+  Textbox Width: 4.4034996
+  Textbox Height: 0.0845000073
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: true
+  Color: [0.999899983, 0.999994099, 1, 1]
+---
+ID: 12404103474469597826
+GameObject:
+  m_IsActive: true
+  m_Name: GammaText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9499633523204847477}  # Transform
+    - component: {fileID: 10408230258619296093}  # TextRenderer
+---
+ID: 9499633523204847477
+Transform:
+  m_GameObject: {fileID: 12404103474469597826}
+  Translation: [1.32796478, -1, -0.0500000007]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [0.999998033, 1, 0.999997973]
+  Father: {fileID: 6713450706993220945}
+  m_Children:
+    []
+---
+ID: 10408230258619296093
+TextRenderer:
+  m_GameObject: {fileID: 12404103474469597826}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: Gamma
+  X-axis Offset: 0
+  Y-axis Offset: -0.0500000007
+  Font Size: 1.25
+  Textbox Width: 0.435833365
+  Textbox Height: 0.070416674
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: true
+  Color: [0.999899983, 0.999994159, 1, 1]
+---
+ID: 9712636449910607818
+GameObject:
+  m_IsActive: true
+  m_Name: GammaButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13951534768199800006}  # Transform
+    - component: {fileID: 15811365418337601799}  # SpriteRenderer
+---
+ID: 13951534768199800006
+Transform:
+  m_GameObject: {fileID: 9712636449910607818}
+  Translation: [0, 0, -0.0399465561]
+  Rotation: [0, 0, 0]
+  Scale: [0.299999535, 0.300000012, 0.999994099]
+  Father: {fileID: 5025454116081322359}
+  m_Children:
+    []
+---
+ID: 15811365418337601799
+SpriteRenderer:
+  m_GameObject: {fileID: 9712636449910607818}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
+---
+ID: 6857993424936574129
+GameObject:
+  m_IsActive: true
+  m_Name: GammaFillBackground
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3461592784316572956}  # Transform
+    - component: {fileID: 5682313734017315209}  # SpriteRenderer
+---
+ID: 3461592784316572956
+Transform:
+  m_GameObject: {fileID: 6857993424936574129}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.300000012, 0.300000012, 0.999997973]
+  Father: {fileID: 5025454116081322359}
+  m_Children:
+    []
+---
+ID: 5682313734017315209
+SpriteRenderer:
+  m_GameObject: {fileID: 6857993424936574129}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 1719ff7d2329f798155c60fb66d2a61c}
+---
+ID: 1308670381251737083
+GameObject:
+  m_IsActive: true
+  m_Name: GammaFillText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15745920804325003841}  # Transform
+    - component: {fileID: 16409008662870833256}  # TextRenderer
+---
+ID: 15745920804325003841
+Transform:
+  m_GameObject: {fileID: 1308670381251737083}
+  Translation: [0, 0, -0.0500000007]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 0.999999583]
+  Father: {fileID: 5025454116081322359}
+  m_Children:
+    []
+---
+ID: 16409008662870833256
+TextRenderer:
+  m_GameObject: {fileID: 1308670381251737083}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 1.0
+  X-axis Offset: 0
+  Y-axis Offset: -0.0299999993
+  Font Size: 1
+  Textbox Width: 0.17400001
+  Textbox Height: 0.056333337
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: true
+  Color: [2, 2, 2, 1]
+---
+ID: 5025454116081322359
+GameObject:
+  m_IsActive: true
+  m_Name: GammaSlider
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2710512181228744512}  # Transform
+---
+ID: 2710512181228744512
+Transform:
+  m_GameObject: {fileID: 5025454116081322359}
+  Translation: [-0.779999971, -1, -0.0499658585]
+  Rotation: [0, 0, 0]
+  Scale: [0.999998331, 1, 0.999998033]
+  Father: {fileID: 6713450706993220945}
+  m_Children:
+    - {fileID: 9712636449910607818}
+    - {fileID: 6857993424936574129}
+    - {fileID: 1308670381251737083}
+---
+ID: 7454816294857865540
+GameObject:
+  m_IsActive: true
+  m_Name: MasterText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 3537139284147876473}  # Transform
+    - component: {fileID: 2834230576358430583}  # TextRenderer
+---
+ID: 3537139284147876473
+Transform:
+  m_GameObject: {fileID: 7454816294857865540}
+  Translation: [2.4000001, 0.800000012, -0.0099697113]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [0.999998331, 1, 0.999998271]
+  Father: {fileID: 9285233082005299583}
+  m_Children:
+    []
+---
+ID: 2834230576358430583
+TextRenderer:
+  m_GameObject: {fileID: 7454816294857865540}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: Master Volume
+  X-axis Offset: 0
+  Y-axis Offset: -0.0599999987
+  Font Size: 2.25
+  Textbox Width: 1.65225017
+  Textbox Height: 0.126750007
+  Center Alignment: false
+  Wrap Text: false
+  WorldSpace: true
+  Color: [1, 1, 1, 1]
+---
+ID: 576908856793577072
+GameObject:
+  m_IsActive: true
+  m_Name: SFXText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 13993680685667248698}  # Transform
+    - component: {fileID: 16251604657848403954}  # TextRenderer
+---
+ID: 13993680685667248698
+Transform:
+  m_GameObject: {fileID: 576908856793577072}
+  Translation: [2.4000001, 0, -0.0099697113]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [0.999998331, 1, 0.999998271]
+  Father: {fileID: 9285233082005299583}
+  m_Children:
+    []
+---
+ID: 16251604657848403954
+TextRenderer:
+  m_GameObject: {fileID: 576908856793577072}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: SFX Volume
+  X-axis Offset: 0
+  Y-axis Offset: -0.0599999987
+  Font Size: 2.25
+  Textbox Width: 1.36950016
+  Textbox Height: 0.126750007
+  Center Alignment: false
+  Wrap Text: false
+  WorldSpace: true
+  Color: [1, 1, 1, 1]
+---
+ID: 75584478447439798
+GameObject:
+  m_IsActive: true
+  m_Name: BGMText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7610800536160118195}  # Transform
+    - component: {fileID: 14612971326853430427}  # TextRenderer
+---
+ID: 7610800536160118195
+Transform:
+  m_GameObject: {fileID: 75584478447439798}
+  Translation: [2.4000001, -0.800000012, -0.0099697113]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [0.999998331, 1, 0.999998271]
+  Father: {fileID: 9285233082005299583}
+  m_Children:
+    []
+---
+ID: 14612971326853430427
+TextRenderer:
+  m_GameObject: {fileID: 75584478447439798}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: BGM Volume
+  X-axis Offset: 0
+  Y-axis Offset: -0.0599999987
+  Font Size: 2.25
+  Textbox Width: 1.41600013
+  Textbox Height: 0.126750007
+  Center Alignment: false
+  Wrap Text: false
+  WorldSpace: true
+  Color: [1, 1, 1, 1]
+---
+ID: 1627053996443823265
+GameObject:
+  m_IsActive: true
+  m_Name: MasterSlider(22)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5895489260971516135}  # Transform
+---
+ID: 5895489260971516135
+Transform:
+  m_GameObject: {fileID: 1627053996443823265}
+  Translation: [-1.20000005, 0.799999952, -0.0499687195]
+  Rotation: [0, 0, 0]
+  Scale: [0.999998331, 1, 0.999998033]
+  Father: {fileID: 9285233082005299583}
+  m_Children:
+    - {fileID: 8994722542415437916}
+    - {fileID: 15876110498353326432}
+    - {fileID: 10870457192150947301}
+---
+ID: 8994722542415437916
+GameObject:
+  m_IsActive: true
+  m_Name: Button(124)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8866894116382838827}  # Transform
+    - component: {fileID: 2339688945396114670}  # SpriteRenderer
+---
+ID: 8866894116382838827
+Transform:
+  m_GameObject: {fileID: 8994722542415437916}
+  Translation: [0, 0, -0.0399465561]
+  Rotation: [0, 0, 0]
+  Scale: [0.299999535, 0.300000012, 0.999994099]
+  Father: {fileID: 1627053996443823265}
+  m_Children:
+    []
+---
+ID: 2339688945396114670
+SpriteRenderer:
+  m_GameObject: {fileID: 8994722542415437916}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
+---
+ID: 15876110498353326432
+GameObject:
+  m_IsActive: true
+  m_Name: FillBackground(220)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10262351215625398002}  # Transform
+    - component: {fileID: 15789276600952055549}  # SpriteRenderer
+---
+ID: 10262351215625398002
+Transform:
+  m_GameObject: {fileID: 15876110498353326432}
+  Translation: [1.19209304e-07, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.299999893, 0.300000042, 0.999998033]
+  Father: {fileID: 1627053996443823265}
+  m_Children:
+    []
+---
+ID: 15789276600952055549
+SpriteRenderer:
+  m_GameObject: {fileID: 15876110498353326432}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e2cbe5428e0131c3bd0335ac45f90ec5}
+---
+ID: 10870457192150947301
+GameObject:
+  m_IsActive: true
+  m_Name: FillText(150)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15712523922174515301}  # Transform
+    - component: {fileID: 10639403909689187618}  # TextRenderer
+---
+ID: 15712523922174515301
+Transform:
+  m_GameObject: {fileID: 10870457192150947301}
+  Translation: [0, 0, -0.0500000007]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 0.999999583]
+  Father: {fileID: 1627053996443823265}
+  m_Children:
+    []
+---
+ID: 10639403909689187618
+TextRenderer:
+  m_GameObject: {fileID: 10870457192150947301}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 1.0
+  X-axis Offset: 0
+  Y-axis Offset: -0.0299999993
+  Font Size: 1
+  Textbox Width: 0.17400001
+  Textbox Height: 0.056333337
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: true
+  Color: [2, 2, 2, 1]
+---
+ID: 11914878260069720244
+GameObject:
+  m_IsActive: true
+  m_Name: SFXSlider(165)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17229512290291313057}  # Transform
+---
+ID: 17229512290291313057
+Transform:
+  m_GameObject: {fileID: 11914878260069720244}
+  Translation: [-1.20000005, 0, -0.0499696732]
+  Rotation: [0, 0, 0]
+  Scale: [0.999998331, 1, 0.999998033]
+  Father: {fileID: 9285233082005299583}
+  m_Children:
+    - {fileID: 7091100355578800126}
+    - {fileID: 4946564986145734044}
+    - {fileID: 6479069291501227691}
+---
+ID: 7091100355578800126
+GameObject:
+  m_IsActive: true
+  m_Name: Button(98)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10884270041984632258}  # Transform
+    - component: {fileID: 7857676954596749676}  # SpriteRenderer
+---
+ID: 10884270041984632258
+Transform:
+  m_GameObject: {fileID: 7091100355578800126}
+  Translation: [0, 0, -0.0399465561]
+  Rotation: [0, 0, 0]
+  Scale: [0.299999535, 0.300000012, 0.999994099]
+  Father: {fileID: 11914878260069720244}
+  m_Children:
+    []
+---
+ID: 7857676954596749676
+SpriteRenderer:
+  m_GameObject: {fileID: 7091100355578800126}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
+---
+ID: 4946564986145734044
+GameObject:
+  m_IsActive: true
+  m_Name: FillBackground(68)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5555121505186895247}  # Transform
+    - component: {fileID: 18026510276064798341}  # SpriteRenderer
+---
+ID: 5555121505186895247
+Transform:
+  m_GameObject: {fileID: 4946564986145734044}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.300000012, 0.300000012, 0.999997973]
+  Father: {fileID: 11914878260069720244}
+  m_Children:
+    []
+---
+ID: 18026510276064798341
+SpriteRenderer:
+  m_GameObject: {fileID: 4946564986145734044}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e2cbe5428e0131c3bd0335ac45f90ec5}
+---
+ID: 6479069291501227691
+GameObject:
+  m_IsActive: true
+  m_Name: FillText(89)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6239207930457706261}  # Transform
+    - component: {fileID: 15355127318330184291}  # TextRenderer
+---
+ID: 6239207930457706261
+Transform:
+  m_GameObject: {fileID: 6479069291501227691}
+  Translation: [0, 0, -0.0500000007]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 0.999999583]
+  Father: {fileID: 11914878260069720244}
+  m_Children:
+    []
+---
+ID: 15355127318330184291
+TextRenderer:
+  m_GameObject: {fileID: 6479069291501227691}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 1.0
+  X-axis Offset: 0
+  Y-axis Offset: -0.0299999993
+  Font Size: 1
+  Textbox Width: 0.17400001
+  Textbox Height: 0.056333337
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: true
+  Color: [2, 2, 2, 1]
+---
+ID: 7444458813515797325
+GameObject:
+  m_IsActive: true
+  m_Name: BGMSlider(103)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5019446190592291743}  # Transform
+---
+ID: 5019446190592291743
+Transform:
+  m_GameObject: {fileID: 7444458813515797325}
+  Translation: [-1.20000005, -0.800000012, -0.0499997139]
+  Rotation: [0, 0, 0]
+  Scale: [0.999998331, 1, 0.999998033]
+  Father: {fileID: 9285233082005299583}
+  m_Children:
+    - {fileID: 14571891404093188607}
+    - {fileID: 12322814354824925024}
+    - {fileID: 4090370652779046302}
+---
+ID: 14571891404093188607
+GameObject:
+  m_IsActive: true
+  m_Name: Button(202)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2455976159272673881}  # Transform
+    - component: {fileID: 13958006787572892171}  # SpriteRenderer
+---
+ID: 2455976159272673881
+Transform:
+  m_GameObject: {fileID: 14571891404093188607}
+  Translation: [0, 0, -0.0399465561]
+  Rotation: [0, 0, 0]
+  Scale: [0.299999535, 0.300000012, 0.999994099]
+  Father: {fileID: 7444458813515797325}
+  m_Children:
+    []
+---
+ID: 13958006787572892171
+SpriteRenderer:
+  m_GameObject: {fileID: 14571891404093188607}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
+---
+ID: 12322814354824925024
+GameObject:
+  m_IsActive: true
+  m_Name: FillBackground(171)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6240552189425234656}  # Transform
+    - component: {fileID: 7167279333467255542}  # SpriteRenderer
+---
+ID: 6240552189425234656
+Transform:
+  m_GameObject: {fileID: 12322814354824925024}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [0.300000012, 0.300000012, 0.999997973]
+  Father: {fileID: 7444458813515797325}
+  m_Children:
+    []
+---
+ID: 7167279333467255542
+SpriteRenderer:
+  m_GameObject: {fileID: 12322814354824925024}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e2cbe5428e0131c3bd0335ac45f90ec5}
+---
+ID: 4090370652779046302
+GameObject:
+  m_IsActive: true
+  m_Name: FillText(56)
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10364360718156869800}  # Transform
+    - component: {fileID: 9007230541532260534}  # TextRenderer
+---
+ID: 10364360718156869800
+Transform:
+  m_GameObject: {fileID: 4090370652779046302}
+  Translation: [0, 0, -0.0500000007]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 0.999999583]
+  Father: {fileID: 7444458813515797325}
+  m_Children:
+    []
+---
+ID: 9007230541532260534
+TextRenderer:
+  m_GameObject: {fileID: 4090370652779046302}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 1.0
+  X-axis Offset: 0
+  Y-axis Offset: -0.0299999993
+  Font Size: 1
+  Textbox Width: 0.17400001
+  Textbox Height: 0.056333337
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: true
+  Color: [2, 2, 2, 1]
+---
+ID: 13163446674957658502
+GameObject:
+  m_IsActive: true
+  m_Name: FullScreenText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16654776554623227751}  # Transform
+    - component: {fileID: 612475008514651447}  # TextRenderer
+---
+ID: 16654776554623227751
+Transform:
+  m_GameObject: {fileID: 13163446674957658502}
+  Translation: [2.4000001, 0.800000012, -0.00999999978]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18334411025587276265}
+  m_Children:
+    []
+---
+ID: 612475008514651447
+TextRenderer:
+  m_GameObject: {fileID: 13163446674957658502}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: FullScreen
+  X-axis Offset: 0
+  Y-axis Offset: -0.0500000007
+  Font Size: 2.25
+  Textbox Width: 1.17825007
+  Textbox Height: 0.126750007
+  Center Alignment: false
+  Wrap Text: false
+  WorldSpace: true
+  Color: [1, 1, 1, 1]
+---
+ID: 8171669505607398613
+GameObject:
+  m_IsActive: true
+  m_Name: FullscreenButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9618268830459070809}  # Transform
+    - component: {fileID: 17485244432564860775}  # SpriteRenderer
+    - component: {fileID: 14105389840668273064}  # Script
+---
+ID: 9618268830459070809
+Transform:
+  m_GameObject: {fileID: 8171669505607398613}
+  Translation: [-1.64999998, 0.800000012, -0.0100049973]
+  Rotation: [0, 0, 0]
+  Scale: [0.99999994, 1, 1]
+  Father: {fileID: 18334411025587276265}
+  m_Children:
+    - {fileID: 10438411241145574471}
+---
+ID: 17485244432564860775
+SpriteRenderer:
+  m_GameObject: {fileID: 8171669505607398613}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 14105389840668273064
+Script:
+  m_GameObject: {fileID: 8171669505607398613}
+  m_IsEnabled: true
+  Script: {guid: db415c16f6a8b981452ff4014419578d}
+  button: {fileID: 0}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  selectedObj: {fileID: 10438411241145574471}  # GameObject
+---
+ID: 978460794240005235
+GameObject:
+  m_IsActive: true
+  m_Name: ShadowText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12102631989352964812}  # Transform
+    - component: {fileID: 9848264797208768925}  # TextRenderer
+---
+ID: 12102631989352964812
+Transform:
+  m_GameObject: {fileID: 978460794240005235}
+  Translation: [2.4000001, 0, -0.00999999978]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18334411025587276265}
+  m_Children:
+    []
+---
+ID: 9848264797208768925
+TextRenderer:
+  m_GameObject: {fileID: 978460794240005235}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: Shadows
+  X-axis Offset: 0
+  Y-axis Offset: -0.0500000007
+  Font Size: 2.25
+  Textbox Width: 1.01100004
+  Textbox Height: 0.126750007
+  Center Alignment: false
+  Wrap Text: false
+  WorldSpace: true
+  Color: [1, 1, 1, 1]
+---
+ID: 2519941485498017912
+GameObject:
+  m_IsActive: true
+  m_Name: BloomText
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16260469302449869832}  # Transform
+    - component: {fileID: 4406658036626751669}  # TextRenderer
+---
+ID: 16260469302449869832
+Transform:
+  m_GameObject: {fileID: 2519941485498017912}
+  Translation: [2.4000001, -0.800000012, -0.00999999978]
+  Rotation: [0, 3.14159274, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 18334411025587276265}
+  m_Children:
+    []
+---
+ID: 4406658036626751669
+TextRenderer:
+  m_GameObject: {fileID: 2519941485498017912}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: Bloom
+  X-axis Offset: 0
+  Y-axis Offset: -0.0500000007
+  Font Size: 2.25
+  Textbox Width: 0.661500096
+  Textbox Height: 0.126750007
+  Center Alignment: false
+  Wrap Text: false
+  WorldSpace: true
+  Color: [1, 1, 1, 1]
+---
+ID: 318213849565645502
+GameObject:
+  m_IsActive: true
+  m_Name: ShadowButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8382804009150326721}  # Transform
+    - component: {fileID: 6993830794039578367}  # SpriteRenderer
+    - component: {fileID: 8985266152960531251}  # Script
+---
+ID: 8382804009150326721
+Transform:
+  m_GameObject: {fileID: 318213849565645502}
+  Translation: [-1.64999998, 0, -0.0100049973]
+  Rotation: [0, 0, 0]
+  Scale: [0.99999994, 1, 1]
+  Father: {fileID: 18334411025587276265}
+  m_Children:
+    - {fileID: 13085084162986674197}
+---
+ID: 6993830794039578367
+SpriteRenderer:
+  m_GameObject: {fileID: 318213849565645502}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 8985266152960531251
+Script:
+  m_GameObject: {fileID: 318213849565645502}
+  m_IsEnabled: true
+  Script: {guid: db415c16f6a8b981452ff4014419578d}
+  button: {fileID: 0}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  selectedObj: {fileID: 13085084162986674197}  # GameObject
+---
+ID: 1902160388759350289
+GameObject:
+  m_IsActive: true
+  m_Name: BloomButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6305931563162218014}  # Transform
+    - component: {fileID: 16068755591349592881}  # SpriteRenderer
+    - component: {fileID: 6857527891814187796}  # Script
+---
+ID: 6305931563162218014
+Transform:
+  m_GameObject: {fileID: 1902160388759350289}
+  Translation: [-1.64999998, -0.800000012, -0.0100049973]
+  Rotation: [0, 0, 0]
+  Scale: [0.99999994, 1, 1]
+  Father: {fileID: 18334411025587276265}
+  m_Children:
+    - {fileID: 10135071892117571997}
+---
+ID: 16068755591349592881
+SpriteRenderer:
+  m_GameObject: {fileID: 1902160388759350289}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+---
+ID: 6857527891814187796
+Script:
+  m_GameObject: {fileID: 1902160388759350289}
+  m_IsEnabled: true
+  Script: {guid: db415c16f6a8b981452ff4014419578d}
+  button: {fileID: 0}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  selectedObj: {fileID: 10135071892117571997}  # GameObject
+---
+ID: 10438411241145574471
+GameObject:
+  m_IsActive: true
+  m_Name: FullscreenSelected
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 320318128800560791}  # Transform
+    - component: {fileID: 1869721066664250789}  # SpriteRenderer
+---
+ID: 320318128800560791
+Transform:
+  m_GameObject: {fileID: 10438411241145574471}
+  Translation: [-5.96046448e-08, -4.76837158e-07, -0.00999999978]
+  Rotation: [0, 0, 0]
+  Scale: [0.150000006, 0.150000006, 1]
+  Father: {fileID: 8171669505607398613}
+  m_Children:
+    []
+---
+ID: 1869721066664250789
+SpriteRenderer:
+  m_GameObject: {fileID: 10438411241145574471}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
+---
+ID: 13085084162986674197
+GameObject:
+  m_IsActive: true
+  m_Name: ShadowSelected
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5806588967459623845}  # Transform
+    - component: {fileID: 10823212211423980325}  # SpriteRenderer
+---
+ID: 5806588967459623845
+Transform:
+  m_GameObject: {fileID: 13085084162986674197}
+  Translation: [-5.96046448e-08, 0, -0.0100002289]
+  Rotation: [0, 0, 0]
+  Scale: [0.150000006, 0.150000006, 1]
+  Father: {fileID: 318213849565645502}
+  m_Children:
+    []
+---
+ID: 10823212211423980325
+SpriteRenderer:
+  m_GameObject: {fileID: 13085084162986674197}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
+---
+ID: 10135071892117571997
+GameObject:
+  m_IsActive: true
+  m_Name: BloomSelected
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8968950776510688491}  # Transform
+    - component: {fileID: 7822598207239081265}  # SpriteRenderer
+---
+ID: 8968950776510688491
+Transform:
+  m_GameObject: {fileID: 10135071892117571997}
+  Translation: [-1.1920929e-07, 0, -0.0100007057]
+  Rotation: [0, 0, 0]
+  Scale: [0.150000006, 0.150000006, 1]
+  Father: {fileID: 1902160388759350289}
+  m_Children:
+    []
+---
+ID: 7822598207239081265
+SpriteRenderer:
+  m_GameObject: {fileID: 10135071892117571997}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
+---
+ID: 18157450569273043859
+GameObject:
+  m_IsActive: true
+  m_Name: CameraPlayPosition
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12995797057969336867}  # Transform
+---
+ID: 12995797057969336867
+Transform:
+  m_GameObject: {fileID: 18157450569273043859}
+  Translation: [0, 3, -9]
+  Rotation: [0, 0, 0]
+  Scale: [0.999983728, 1, 0.999998748]
+  Father: {fileID: 15789012492597134895}
+  m_Children:
+    []
+---
+ID: 17079312210124156360
+GameObject:
+  m_IsActive: true
+  m_Name: CameraFinalExitPosition
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2969387430692517291}  # Transform
+---
+ID: 2969387430692517291
+Transform:
+  m_GameObject: {fileID: 17079312210124156360}
+  Translation: [0, 3.30800009, 23]
+  Rotation: [-3.14159226, 0, -3.14159226]
+  Scale: [0.999982774, 1, 0.999997795]
+  Father: {fileID: 15789012492597134895}
+  m_Children:
+    []

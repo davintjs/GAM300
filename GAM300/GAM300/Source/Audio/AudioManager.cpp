@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <Precompiled.h>
 #include "AudioManager.h"
 #include "Core/EventsManager.h"
+#include "AppEntry/Application.h"
 
 void AudioManager::InitAudioManager() {
 	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetLoaded);
@@ -58,6 +59,14 @@ void AudioManager::DestroyAudioManager() {
 
 void AudioManager::Update(float dt) {
 	//const float fadeTime = 2.f; // in seconds
+	static float masterVolume = 0.f;
+	if (!Application::Instance().IsWindowFocused())
+	{
+		masterVolume = (GetMasterVolume() != 0.01f) ? GetMasterVolume() : masterVolume;
+		master->setVolume(0.01f);
+	}
+	else
+		master->setVolume(masterVolume);
 
 	for (MusicBuffer& musicBuffer : musics) {
 		if (musicBuffer.currentMusic != 0 && musicBuffer.fade == FADE_IN) {

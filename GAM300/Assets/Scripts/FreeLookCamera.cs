@@ -12,6 +12,8 @@ public class FreeLookCamera : Script
     public GameObject settingsObj;
     public GameObject exitObj;
     public GameObject cameraObj;
+    public GameObject playObj;
+    public GameObject finalExitObj;
 
     private Camera camera;
     private float timer = 0f;
@@ -36,37 +38,50 @@ public class FreeLookCamera : Script
     {
 
     }
+    public void GoToPlay()
+    {
+        StopAllCoroutine();
+        duration = 30f;
+        StartCoroutine(Panning(playObj.transform));
+    }
 
     public void GoToMainMenu()
     {
-        StopCoroutine(htpCoroutine);
-        StopCoroutine(settingCoroutine);
-        StopCoroutine(exitCoroutine);
+        StopAllCoroutine();
         mainMenuCoroutine = StartCoroutine(Panning(mainMenuObj.transform));
     }
 
     public void GoToHTP()
     {
-        StopCoroutine(mainMenuCoroutine);
-        StopCoroutine(settingCoroutine);
-        StopCoroutine(exitCoroutine);
+        StopAllCoroutine();
         htpCoroutine = StartCoroutine(Panning(htpObj.transform));
     }
 
     public void GoToSettings()
     {
-        StopCoroutine(mainMenuCoroutine);
-        StopCoroutine(htpCoroutine);
-        StopCoroutine(exitCoroutine);
+        StopAllCoroutine();
         settingCoroutine = StartCoroutine(Panning(settingsObj.transform));
     }
 
     public void GoToExit()
     {
+        StopAllCoroutine();
+        exitCoroutine = StartCoroutine(Panning(exitObj.transform, 180f));
+    }
+
+    public void GoToFinalExit()
+    {
+        StopAllCoroutine();
+        duration = 40f;
+        StartCoroutine(Panning(finalExitObj.transform, 180f));
+    }
+
+    void StopAllCoroutine()
+    {
         StopCoroutine(mainMenuCoroutine);
         StopCoroutine(htpCoroutine);
         StopCoroutine(settingCoroutine);
-        exitCoroutine = StartCoroutine(Panning(exitObj.transform, 180f));
+        StopCoroutine(exitCoroutine);
     }
 
     IEnumerator Panning(Transform finalTransform, float angle = 0f)

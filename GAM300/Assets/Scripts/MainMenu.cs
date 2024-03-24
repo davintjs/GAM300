@@ -17,6 +17,7 @@ public class MainMenu : Script
 
     public GameObject spotLightObj;
     public GameObject incubatorObj;
+    public FadeEffect fader;
 
     public FreeLookCamera camera;
 
@@ -33,6 +34,7 @@ public class MainMenu : Script
     private float timer = 0f;
     private float duration = 2f;
     private float alpha = 0.11f;
+    private bool waitingPlay = false;
 
     void Awake()
     {
@@ -60,37 +62,20 @@ public class MainMenu : Script
         ExitButton.SetActive(false);
 
         bgm.Play();
-        //currentRestTimer = restTimer;
-
-        //Play Button
-        //if (startButton.HasComponent<SpriteRenderer>())
-        //{
-        //startButtonRenderer = startButton.GetComponent<SpriteRenderer>();
-
-        //}
-        ////Settings Button
-        //if (settingsButton.HasComponent<SpriteRenderer>())
-        //{
-        //    settingsButtonRenderer = settingsButton.GetComponent<SpriteRenderer>();
-        //}
-        ////HTP Button
-        //if (HTPButton.HasComponent<SpriteRenderer>())
-        //{
-        //    HTPButtonRenderer = HTPButton.GetComponent<SpriteRenderer>();
-        //}
-        ////Exit Button
-        //if (ExitButton.HasComponent<SpriteRenderer>())
-        //{
-        //    ExitButtonRenderer = ExitButton.GetComponent<SpriteRenderer>();
-        //}
-
-        
     }
 
     void Update()
     {
         // Get refto Button
         if (startButton.activeSelf && startButtonRenderer.IsButtonClicked())
+        {
+            camera.GoToPlay();
+
+            fader.StartFadeIn(2f, true, 0f, 1f);
+            waitingPlay = true;
+        }
+
+        if(waitingPlay && fader.finished)
         {
             Action loadScene = () => SceneManager.LoadScene("StartingScene", true);
             StartCoroutine(QueueAction(loadScene));
@@ -145,9 +130,9 @@ public class MainMenu : Script
         }
 
         StartCoroutine(FadeIn(startButtonRenderer, startButton, 0f));
-        StartCoroutine(FadeIn(HTPButtonRenderer, HTPButton, 0.2f));
-        StartCoroutine(FadeIn(settingsButtonRenderer, settingsButton, 0.4f));
-        StartCoroutine(FadeIn(ExitButtonRenderer, ExitButton, 0.6f));
+        StartCoroutine(FadeIn(HTPButtonRenderer, HTPButton, 0.1f));
+        StartCoroutine(FadeIn(settingsButtonRenderer, settingsButton, 0.2f));
+        StartCoroutine(FadeIn(ExitButtonRenderer, ExitButton, 0.3f));
     }
 
     IEnumerator FadeIn(SpriteRenderer renderer, GameObject spriteObj, float wait)

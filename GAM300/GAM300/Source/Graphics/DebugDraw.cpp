@@ -256,7 +256,7 @@ void DebugDraw::DrawTextOutlines()
 
 		float width = text.width;
 		float height = text.height;
-		float scale = text.fontSize * 0.001f;
+		float scale = text.fontSize * 0.001f / 3.0f;
 		float offset = 0.f, yOffset = 0.f;
 
 		if (text.centerAlign)
@@ -298,7 +298,7 @@ void DebugDraw::DrawTextBounds(const Engine::UUID& _euid)
 
 	float width = text.width;
 	float height = text.height;
-	float scale = text.fontSize * 0.001f;
+	float scale = text.fontSize * 0.001f / 3.0f;
 	float offset = 0.f, yOffset = 0.f;
 
 	if (text.centerAlign)
