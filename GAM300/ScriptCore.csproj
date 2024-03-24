@@ -38,9 +38,12 @@
     <Compile Include="Assets\Player.cs" />
     <Compile Include="Assets\Scripts\AnimationStateMachine.cs" />
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
+    <Compile Include="Assets\Scripts\AudioFader.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
+    <Compile Include="Assets\Scripts\AudioSettings.cs" />
     <Compile Include="Assets\Scripts\BossBehaviour.cs" />
     <Compile Include="Assets\Scripts\ButtonLogic.cs" />
+    <Compile Include="Assets\Scripts\CheckBox.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\CompanionMovement.cs" />
     <Compile Include="Assets\Scripts\CutsceneCamera.cs" />
@@ -54,9 +57,12 @@
     <Compile Include="Assets\Scripts\EnemyBullet.cs" />
     <Compile Include="Assets\Scripts\EnemyHealthBar.cs" />
     <Compile Include="Assets\Scripts\Exit.cs" />
+    <Compile Include="Assets\Scripts\FadeEffect.cs" />
     <Compile Include="Assets\Scripts\FlashMaterial.cs" />
     <Compile Include="Assets\Scripts\FreeLookCamera.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\GammaSettings.cs" />
+    <Compile Include="Assets\Scripts\GraphicsSettings.cs" />
     <Compile Include="Assets\Scripts\HealthPack.cs" />
     <Compile Include="Assets\Scripts\InstantDeath.cs" />
     <Compile Include="Assets\Scripts\Inventory.cs" />
@@ -82,6 +88,7 @@
     <Compile Include="Assets\Scripts\TutorialEnemyKeyDrop.cs" />
     <Compile Include="Assets\Scripts\VictoryMenu.cs" />
     <Compile Include="CoreScripts\Application.cs" />
+    <Compile Include="CoreScripts\Audio.cs" />
     <Compile Include="CoreScripts\Collision.cs" />
     <Compile Include="CoreScripts\Components.cs" />
     <Compile Include="CoreScripts\Debug.cs" />
