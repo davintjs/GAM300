@@ -219,16 +219,12 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
 {
     std::string FilenameStr(Filename);
 
-    std::string left = FilenameStr + "_left.dds";
-    std::string back = FilenameStr + "_back.dds";
-    std::string front = FilenameStr + "_front.dds";
-    std::string right = FilenameStr + "_right.dds";
-    std::string top = FilenameStr + "_top.dds";
-    std::string bottom = FilenameStr + "_bottom.dds";
+    std::string left = FilenameStr + "_top.dds";
+    std::string top = FilenameStr + "_bottom.dds";
 
     std::vector<std::string> faces
     {
-        right,left,top,bottom,front,back
+        left,left,top,top,left,left
     };
 
     GLuint Skybox_Tex = 0;
@@ -241,16 +237,21 @@ GLuint Texture_Manager::CreateSkyboxTexture(char const* Filename)
     for (size_t i = 0; i < faces.size(); i++)
     {
         gli::texture Texture = gli::load(faces[i]);
+        gli::gl GL(gli::gl::PROFILE_GL33);
+        gli::gl::format Format = GL.translate(Texture.format(), Texture.swizzles());
+        auto& form = Format.Internal;
 
         glCompressedTexImage2D(
             (GLenum)(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i),
             0,
-            GL_COMPRESSED_SRGB_S3TC_DXT1_EXT,
+            GL_COMPRESSED_RGBA_S3TC_DXT5_EXT ,
             Texture.extent().x,
             Texture.extent().y,
             0,
             GLsizei(Texture.size()),
             Texture.data());
+
+        GLenum code = glGetError();
     }
     //GL_COMPRESSED_SRGB_S3TC_DXT1_EXT
 

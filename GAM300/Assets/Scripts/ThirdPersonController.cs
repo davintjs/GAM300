@@ -84,6 +84,7 @@ public class ThirdPersonController : Script
     //public MeshRenderer doorTestMesh;
 
     public bool cutscene = false;
+    public bool _isSprinting = false;
 
     void Awake()
     {
@@ -137,6 +138,7 @@ public class ThirdPersonController : Script
     public bool isInvulnerable = false;
     public float invulnerableTimer = 1f;
     public float currentInvulnerableTimer;
+    private bool updateInvulnerability = false;
     public bool isDead = false;
 
     float maxAirTime = 2f;
@@ -204,7 +206,7 @@ public class ThirdPersonController : Script
 
     int comboCount = 1;
 
-    PlayerAudioManager playerSounds;
+    public PlayerAudioManager playerSounds;
     private bool noInterpolate = true;
 
     bool _wasMoving = false;
@@ -346,6 +348,8 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("Missing animator reference in ThirdPersonController script");
         }
+
+        StartCoroutine(Invulnerability());
 
         playerSounds = PlayerAudioManager.instance;
         playerWeaponCollider1.SetActive(false);
@@ -569,7 +573,7 @@ public class ThirdPersonController : Script
                 }
             }
             startDodgeCooldown = true;
-            CC.force = PlayerModel.forward * dodgeSpeed * Time.deltaTime;//dash player forward
+            CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
 
@@ -659,18 +663,7 @@ public class ThirdPersonController : Script
         }
 
         //invulnerability
-        if (isInvulnerable)
-        {
-            currentInvulnerableTimer -= Time.deltaTime;
-            if (currentInvulnerableTimer <= 0)
-            {
-                isInvulnerable = false;
-                currentInvulnerableTimer = invulnerableTimer;
-                SetState("Stun", false);
-            }
-            return;
-        }
-        else if (CC.isGrounded)
+        if (CC.isGrounded)
         {
             //Console.WriteLine("\nGROUNDED!");
             if (GetState("Falling"))
@@ -723,6 +716,7 @@ public class ThirdPersonController : Script
                 //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
                 isDodging = true;
+                updateInvulnerability = true;
 
                 // No interpolation for dodging
                 noInterpolate = false;
@@ -841,7 +835,7 @@ public class ThirdPersonController : Script
                         break;
                 }
                 
-                movement += vec3.UnitY * JumpSpeed * Time.deltaTime;
+                movement += vec3.UnitY * JumpSpeed;
             }
             else if (!IsAttacking)
             {
@@ -859,6 +853,7 @@ public class ThirdPersonController : Script
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina >= sprintStamina)
                 {
+                    _isSprinting = true;
                     UseStamina(sprintStamina);
                     walkSoundTime = runStepsInterval;
                     SetState("Sprint", true);
@@ -867,6 +862,7 @@ public class ThirdPersonController : Script
                 }
                 else
                 {
+                    _isSprinting = false;
                     walkSoundTime = walkStepsInterval;
                     SetState("Sprint", false);
                 }
@@ -1065,6 +1061,24 @@ public class ThirdPersonController : Script
         regen = null;
     }
 
+    private IEnumerator Invulnerability()
+    {
+        while (true)
+        {
+            if (updateInvulnerability)
+            {
+                isInvulnerable = true;
+                yield return new WaitForSeconds(invulnerableTimer);
+                isInvulnerable = false;
+                SetState("Stun", false);
+            }
+
+            updateInvulnerability = false;
+
+            yield return null;
+        }
+    }
+
     bool GetState (string stateName)
     {
         return animationManager.GetState(stateName).state;
@@ -1099,8 +1113,7 @@ public class ThirdPersonController : Script
 
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.damagedShakeMag, CombatManager.instance.damagedShakeDur);
             ThirdPersonCamera.instance.SetFOV(CombatManager.instance.damagedShakeMag * 100, CombatManager.instance.damagedShakeDur);
-            isInvulnerable = true;
-            currentInvulnerableTimer = invulnerableTimer;
+            updateInvulnerability = true;
             currentHealth -= amount;
             if (currentHealth <= 3f && playingLowHealthSound == false)
             {

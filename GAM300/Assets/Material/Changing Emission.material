@@ -1,0 +1,15 @@
+Material:
+  Material Name: Changing Emission
+  Shader: 0
+  Albedo: [0, 1, 0.23301506, 1]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 100
+  Is Emission: true
+  Emission: 100
+  AlbedoTexture: {guid: 0fef916929e4101425747d067356f4b7}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 029b86a1111403fac30b92c174ad6582}
+  RoughnessTexture: {guid: 95404de06d54e3310750d6feb3baceb9}
+  AoTexture: {guid: 2348791a503e4130fa6f6d611f419e0d}
+  EmissionTexture: {guid: 00000000000000000000000000000000}

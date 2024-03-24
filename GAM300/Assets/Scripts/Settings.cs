@@ -9,8 +9,6 @@ using GlmSharp;
 
 public class Settings : Script
 {
-    public GameObject mainMenuBGImage;
-
     public GameObject backButton;
 
     public GameObject masterVolumeButton;
@@ -18,6 +16,18 @@ public class Settings : Script
     public GameObject bgmVolumeButton;
 
     public GameObject sfxVolumeButton;
+
+    public GameObject gammaBtn;
+
+    public GameObject gammaSettings;
+
+    public GameObject gammaValue;
+
+    public GameObject plus;
+
+    public GameObject minus;
+
+    public GameObject gammaBackButton;
 
 
     public bool isStartActive = true;
@@ -39,6 +49,11 @@ public class Settings : Script
     private SpriteRenderer masterVolumeButtonRenderer;
     private SpriteRenderer bgmVolumeButtonRenderer;
     private SpriteRenderer sfxVolumeButtonRenderer;
+    private SpriteRenderer gammaButtonRenderer;
+    private SpriteRenderer plusButtonRenderer;
+    private SpriteRenderer minusButtonRenderer;
+    private SpriteRenderer gammaBackButtonRenderer;
+    private TextRenderer gammaText;
 
 
     //vec3 startGridTextSize;
@@ -61,17 +76,45 @@ public class Settings : Script
             bgmVolumeButtonRenderer = bgmVolumeButton.GetComponent<SpriteRenderer>();
         if (sfxVolumeButton.HasComponent<SpriteRenderer>())
             sfxVolumeButtonRenderer = sfxVolumeButton.GetComponent<SpriteRenderer>();
+        if (gammaBtn.HasComponent<SpriteRenderer>())
+            gammaButtonRenderer = gammaBtn.GetComponent<SpriteRenderer>();
+        if (plus.HasComponent<SpriteRenderer>())
+            plusButtonRenderer = plus.GetComponent<SpriteRenderer>();
+        if (minus.HasComponent<SpriteRenderer>())
+            minusButtonRenderer = minus.GetComponent<SpriteRenderer>();
+        if (gammaBackButton.HasComponent<SpriteRenderer>())
+            gammaBackButtonRenderer = gammaBackButton.GetComponent<SpriteRenderer>();
+        if (gammaValue.HasComponent<TextRenderer>())
+            gammaText = gammaValue.GetComponent<TextRenderer>();
     }
 
     void Update()
     {
-        // Get refto Button
-        if (backButtonRenderer != null && backButtonRenderer.IsButtonClicked())
+        if(gammaButtonRenderer != null && gammaButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("MainMenu", true);
+            gammaSettings.SetActive(true);
+            gammaBtn.SetActive(false);
         }
+
+        if (gammaBackButtonRenderer != null && gammaBackButtonRenderer.IsButtonClicked())
+        {
+            gammaSettings.SetActive(false);
+            gammaBtn.SetActive(true);
+        }
+
+        if (plusButtonRenderer != null && gammaButtonRenderer.IsButtonClicked())
+        {
+            Graphics.gamma += 0.1f;
+            gammaText.text = Graphics.gamma.ToString();
+        }
+
+        // Get refto Button
+        if (minusButtonRenderer != null && backButtonRenderer.IsButtonClicked())
+        {
+            Graphics.gamma -= 0.1f;
+            gammaText.text = Graphics.gamma.ToString();
+        }
+
         if (masterVolumeButtonRenderer != null && masterVolumeButtonRenderer.IsButtonClicked())
         {
             //LoadScene(1.0f);

@@ -51,7 +51,18 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 			storage[GetType::E<T>()][component] = *object;
 			if constexpr (std::is_same<T, Tag>())
 			{
-				object->name += " - Copy";
+				size_t startPos = object->name.find('('); // Find the opening parenthesis
+				size_t endPos = object->name.find(')'); // Find the closing parenthesis
+
+				// Check if both opening and closing parentheses exist and are in the correct order
+				if (startPos != std::string::npos && endPos != std::string::npos && startPos < endPos) 
+					object->name.replace(startPos + 1, endPos - startPos - 1, std::to_string(object->euid >> (sizeof(size_t) * 7)));
+				else
+				{
+					object->name += "(";
+					object->name += std::to_string(object->euid >> (sizeof(size_t) * 7));
+					object->name += ")";
+				}
 			}
 		}
 		else

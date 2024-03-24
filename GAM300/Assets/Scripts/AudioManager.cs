@@ -25,6 +25,7 @@ public class AudioManager : Script
     public AudioSource enemyAlerted1, enemyAlerted2, enemyAlerted3;
     public AudioSource obj_success;
     public AudioSource swoosh;
+    public AudioSource notEnoughItems;
 
     void Awake()
     {
@@ -36,6 +37,12 @@ public class AudioManager : Script
         {
             instance = this;
         }
+
+        if (notEnoughItems == null)
+        {
+            Console.WriteLine("NtEnoughItems Sound missing reference");
+        }
+
         if (itemCollected == null)
         {
             Console.WriteLine("ItemCollected Sound missing reference");

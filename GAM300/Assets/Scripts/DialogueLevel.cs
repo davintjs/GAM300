@@ -10,6 +10,7 @@ class DialogueLevel : Script
     public int dialogue_state = 1;
     bool done = false;
 
+
     public void OnTriggerEnter(PhysicsComponent component)
     {
         if (done) return;

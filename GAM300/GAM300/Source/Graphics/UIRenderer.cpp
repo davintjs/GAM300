@@ -26,323 +26,292 @@ unsigned int Renderer_quadVBO_WM = 0;
 
 #define AR 1.777778f
 
+void UIRenderer::Init()
+{
 
-void UIRenderer::UIDraw_2D(BaseCamera& _camera)
+}
+
+void UIRenderer::Update(float dt)
+{
+	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	const Transform* canvasTransform{ nullptr };
+
+	sortedUIScreenSpace.clear();
+	sortedUIWorldSpace.clear();
+
+	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	{
+		if (currCanvas.state == DELETED) continue;
+		
+		Entity& entity = currentScene.Get<Entity>(currCanvas);
+		canvasTransform = &currentScene.Get<Transform>(entity);
+	}
+
+	canvasMatrix = scaleMatrix = glm::identity<glm::mat4>();
+	if (canvasTransform)
+	{
+		canvasMatrix = glm::inverse(canvasTransform->GetWorldMatrix());
+	}
+
+	Camera* pCamera = nullptr;
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+		if (!currentScene.IsActive(camera) || camera.state == DELETED)
+			continue;
+
+		pCamera = &camera;
+		break;
+	}
+
+	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+	{
+		if (!currentScene.IsActive(Sprite) || Sprite.state == DELETED)
+			continue;
+
+		// Declarations for the things we need - SRT
+		Entity& entity = currentScene.Get<Entity>(Sprite);
+		if (!currentScene.IsActive(entity)) continue;
+
+		Transform& t = currentScene.Get<Transform>(entity);
+
+		const float d = (pCamera) ? glm::distance(t.GetGlobalTranslation(), pCamera->GetCameraPosition()) : t.GetGlobalTranslation().z;
+		if(Sprite.WorldSpace)
+			SortUserInterface(sortedUIWorldSpace, entity, d);
+		else
+			SortUserInterface(sortedUIScreenSpace, entity, d);
+	}
+
+	for (TextRenderer& text : currentScene.GetArray<TextRenderer>())
+	{
+		if (!currentScene.IsActive(text) || text.state == DELETED)
+			continue;
+
+		// Declarations for the things we need - SRT
+		Entity& entity = currentScene.Get<Entity>(text);
+		if (!currentScene.IsActive(entity)) continue;
+
+		Transform& t = currentScene.Get<Transform>(entity);
+
+		const float d = (pCamera) ? glm::distance(t.GetGlobalTranslation(), pCamera->GetCameraPosition()) : t.GetGlobalTranslation().z;
+
+		if (text.worldSpace)
+			SortUserInterface(sortedUIWorldSpace, entity, d);
+		else
+			SortUserInterface(sortedUIScreenSpace, entity, d);
+	}
+}
+
+void UIRenderer::Exit()
+{
+
+}
+
+void UIRenderer::UIDrawScreenSpace(BaseCamera& _camera)
 {
 	// Setups required for all UI
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glClear(GL_DEPTH_BUFFER_BIT);
-	//glm::mat4 OrthoProjection = glm::ortho(-800.f, 800.f, -450.f, 450.f, 0.001f, 10.f);
-	//glm::mat4 OrthoProjection = glm::ortho(0.f, 16.f, 0.f, 9.f, -10.f, 10.f);
-	//glm::mat4 OrthoProjection = glm::ortho(-8.f, 8.f, -4.5f, 4.5f, -10.f, 10.f);
-	glm::mat4 OrthoProjection = glm::ortho(-1.f * AR, 1.f * AR, -1.f, 1.f, -10.f, 10.f);
 
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_SCREEN);
-	shader.Use();
-
-	// Setting the projection here since all of them use the same projection
-
-	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
-		1, GL_FALSE, glm::value_ptr(OrthoProjection));
-
-	const Transform* canvasTransform{ nullptr };
-
-	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	for (int i = 0; i < sortedUIScreenSpace.size(); ++i)
 	{
-		if (currCanvas.state == DELETED) continue;
-		Entity& entity = currentScene.Get<Entity>(currCanvas);
-		canvasTransform = &currentScene.Get<Transform>(entity);
-		continue;
-	}
-
-	if (!canvasTransform)
-	{
-		return;
-	}
-
-	glm::mat4 canvasMatrix = glm::inverse(canvasTransform->GetWorldMatrix());
-
-	//canvasMatrix = glm::inverse()
-
-	glm::mat4 scaleMat = glm::identity<glm::mat4>();
-
-	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
-	{
-		if (!currentScene.IsActive(Sprite))
-			continue;
-		if (Sprite.state == DELETED) continue;
-
-		// This means it's 3D space
-		if (Sprite.WorldSpace)
+		Entity& entity = sortedUIScreenSpace[i].first;
+		if (entity.HasComponent<SpriteRenderer>())
 		{
-			continue;
+			RenderSprite2D(currentScene, _camera, entity.EUID());
 		}
-
-		// Declarations for the things we need - SRT
-		Entity& entity = currentScene.Get<Entity>(Sprite);
-		if (!currentScene.IsActive(entity)) continue;
-
-		Transform& transform = currentScene.Get<Transform>(entity);
-
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
-			Sprite.AlphaMultiplier);
-		// Setting bool to see if there is a sprite to render
-		GLint uniform1 =
-			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-
-		BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
-		GLuint spriteTextureID = 0;
-
-		if (pTexture)
+		if (entity.HasComponent<TextRenderer>())
 		{
-			spriteTextureID = pTexture->textureID;
-			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
-			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					canvasMatrix * transform.GetWorldMatrix() * scaleMat)
-			);
-
-			if (Sprite.SpriteTexture == 0)
-			{
-				glUniform1f(uniform1, false);
-			}
-			else
-			{
-				glUniform1f(uniform1, true);
-			}
+			TEXTSYSTEM.RenderScreenSpace(currentScene, _camera, entity.EUID(), canvasMatrix);
 		}
-		else
-		{
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					canvasMatrix * transform.GetWorldMatrix())
-			);
-
-			glUniform1f(uniform1, false);
-		}
-
-		// Binding Texture - might be empty , above uniform will sort it
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
-		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
 	}
-
-	shader.UnUse();
+	
 	glDisable(GL_BLEND);
 }
 
 // Drawing UI onto worldspace
-void UIRenderer::UIDraw_3D(BaseCamera& _camera)
+void UIRenderer::UIDrawWorldSpace(BaseCamera& _camera)
 {
 	// Setups required for all UI
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_WORLD);
-	shader.Use();
-
-	// Setting the projection here since all of them use the same projection
-
-	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
-		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
-
-	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
-		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
-	std::vector<std::pair<SpriteRenderer,float>> Sorted_SR;
-
-	glm::mat4 scaleMat = glm::identity<glm::mat4>();
-	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
+	for (int i = 0; i < sortedUIWorldSpace.size(); ++i)
 	{
-		if (Sprite.state == DELETED) continue;
-		// This means it's 2D space
-		if (!Sprite.WorldSpace)
+		Entity& entity = sortedUIWorldSpace[i].first;
+		if (entity.HasComponent<SpriteRenderer>())
 		{
-			continue;
+			RenderSprite3D(currentScene, _camera, entity.EUID());
 		}
-		// Declarations for the things we need - SRT
-		Entity& entity = currentScene.Get<Entity>(Sprite);
-		if (!currentScene.IsActive(entity)) continue;
-		Transform& transform = currentScene.Get<Transform>(entity);
-
-		bool been_inserted = false;
-		float dist = glm::distance(transform.GetGlobalTranslation(), _camera.GetCameraPosition());
-		std::pair<SpriteRenderer, float> temp{ Sprite,dist };
-		for (int i = 0; i < Sorted_SR.size(); ++i)
+		if (entity.HasComponent<TextRenderer>())
 		{
-			if (dist > Sorted_SR[i].second)
-			{
-				Sorted_SR.insert(Sorted_SR.begin() + i, temp);
-				been_inserted = true;
-				break;
-			}
-		}
-		if (!been_inserted)
-		{
-			Sorted_SR.push_back(temp);
+			TEXTSYSTEM.RenderWorldSpace(currentScene, _camera, entity.EUID());
 		}
 	}
 
-	for (int i = 0; i < Sorted_SR.size(); ++i)
-	{
-		SpriteRenderer Sprite = Sorted_SR[i].first;
-		Transform& transform = currentScene.Get<Transform>(Sprite);
-
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
-			Sprite.AlphaMultiplier);
-
-		// Setting bool to see if there is a sprite to render
-		GLint uniform1 =
-			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-		
-		BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
-		GLuint spriteTextureID = 0;
-
-		if (pTexture)
-		{
-			spriteTextureID = pTexture->textureID;
-			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
-			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix() * scaleMat)
-			);
-
-			if (Sprite.SpriteTexture == 0)
-			{
-				glUniform1f(uniform1, false);
-			}
-			else
-			{
-				glUniform1f(uniform1, true);
-			}
-		}
-		else
-		{
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix())
-			);
-
-			glUniform1f(uniform1, false);
-		}
-
-		// Binding Texture - might be empty , above uniform will sort it
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
-		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
-	}
-	
-	shader.UnUse();
 	glDisable(GL_BLEND);
 }
 
 // Drawing Screenspace UI onto worldspace
-void UIRenderer::UIDraw_2DWorldSpace(BaseCamera& _camera)
+void UIRenderer::UIDrawSceneView(BaseCamera& _camera)
 {
 	// Setups required for all UI
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glClear(GL_DEPTH_BUFFER_BIT);
+
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
+	scaleMatrix[0][0] = AR;
+
+	for (int i = 0; i < sortedUIScreenSpace.size(); ++i)
+	{
+		Entity& entity = sortedUIScreenSpace[i].first;
+		Transform& t = currentScene.Get<Transform>(entity);
+		
+		if (entity.HasComponent<SpriteRenderer>())
+		{
+			RenderSprite3D(currentScene, _camera, entity.EUID());
+		}
+		if (entity.HasComponent<TextRenderer>())
+		{
+			TEXTSYSTEM.RenderWorldSpace(currentScene, _camera, entity.EUID());
+		}
+	}
+
+	glDisable(GL_BLEND);
+}
+
+void UIRenderer::RenderSprite2D(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid)
+{
+	glm::mat4 OrthoProjection = glm::ortho(-1.f * AR, 1.f * AR, -1.f, 1.f, -10.f, 10.f);
+
+	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_SCREEN);
+	shader.Use();
+
+	// Setting the projection here since all of them use the same projection
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
+		1, GL_FALSE, glm::value_ptr(OrthoProjection));
+
+	SpriteRenderer& Sprite = _scene.Get<SpriteRenderer>(_euid);
+	Transform& transform = _scene.Get<Transform>(_euid);
+
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
+		Sprite.AlphaMultiplier);
+	
+	// Setting bool to see if there is a sprite to render
+	GLint uniform1 =
+		glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+
+	BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
+	GLuint spriteTextureID = 0;
+
+	if (pTexture)
+	{
+		spriteTextureID = pTexture->textureID;
+		scaleMatrix[0][0] = pTexture->pixelDimension.x / 1000.f;
+		scaleMatrix[1][1] = pTexture->pixelDimension.y / 1000.f;
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix() * scaleMatrix)
+		);
+
+		if (Sprite.SpriteTexture == 0)
+		{
+			glUniform1f(uniform1, false);
+		}
+		else
+		{
+			glUniform1f(uniform1, true);
+		}
+	}
+	else
+	{
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix())
+		);
+
+		glUniform1f(uniform1, false);
+	}
+
+	// Binding Texture - might be empty , above uniform will sort it
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, spriteTextureID);
+	renderQuad(Renderer_quadVAO, Renderer_quadVBO);
+
+	shader.UnUse();
+}
+
+void UIRenderer::RenderSprite3D(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid)
+{
 	GLSLShader& shader = SHADER.GetShader(SHADERTYPE::UI_WORLD);
 	shader.Use();
 
 	// Setting the projection here since all of them use the same projection
-
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetProjMatrix()));
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
+	SpriteRenderer& Sprite = _scene.Get<SpriteRenderer>(_euid);
+	Transform& transform = _scene.Get<Transform>(_euid);
 
-	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderSprite"), false);
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "RenderIcon"), false);
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"), Sprite.AlphaMultiplier);
 
-	glm::mat4 scaleMat = glm::identity<glm::mat4>();
-	scaleMat[0][0] = AR;
-	/*for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
+	// Setting bool to see if there is a sprite to render
+	GLint uniform1 = glGetUniformLocation(shader.GetHandle(), "RenderSprite");
+	glUniform1f(uniform1, false);
+
+	BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
+	GLuint spriteTextureID = 0;
+
+	if (pTexture)
 	{
-		if (currCanvas.state == DELETED) continue;
-		Entity& entity = currentScene.Get<Entity>(currCanvas);
-		Transform& transform = currentScene.Get<Transform>(entity);
-
+		spriteTextureID = pTexture->textureID;
+		scaleMatrix[0][0] = pTexture->pixelDimension.x / 1000.f;
+		scaleMatrix[1][1] = pTexture->pixelDimension.y / 1000.f;
+		// SRT uniform
 		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix() * scaleMat));
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix() * scaleMatrix)
+		);
 
-		glLineWidth(20.f);
-		renderQuadWireMesh(Renderer_quadVAO_WM, Renderer_quadVBO_WM);
-	}*/
-	glLineWidth(1.f);
-
-
-	// Setting the projection here since all of them use the same projection
-	for (SpriteRenderer& Sprite : currentScene.GetArray<SpriteRenderer>())
-	{
-		// This means it's 2D space
-		if (Sprite.WorldSpace)
-		{
-			continue;
-		}
-
-		// Declarations for the things we need - SRT
-		Entity& entity = currentScene.Get<Entity>(Sprite);
-		if (!currentScene.IsActive(entity)) continue;
-
-		Transform& transform = currentScene.Get<Transform>(entity);
-
-		// Setting bool to see if there is a sprite to render
-		GLint uniform1 =
-			glGetUniformLocation(shader.GetHandle(), "RenderSprite");
-
-		glUniform1f(glGetUniformLocation(shader.GetHandle(), "AlphaScaler"),
-			Sprite.AlphaMultiplier);
-
-		BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
-		GLuint spriteTextureID = 0;
-
-		if (pTexture)
-		{
-			spriteTextureID = pTexture->textureID;
-			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
-			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
-
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					transform.GetWorldMatrix() * scaleMat)
-			);
-
-			if (Sprite.SpriteTexture == 0)
-			{
-				glUniform1f(uniform1, false);
-			}
-			else
-			{
-				glUniform1f(uniform1, true);
-			}
-		}
-		else
-		{
-			// SRT uniform
-			glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
-				1, GL_FALSE, glm::value_ptr(
-					transform.GetWorldMatrix())
-			);
-
-			glUniform1f(uniform1, false);
-		}
-
-		// Binding Texture - might be empty , above uniform will sort it
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, spriteTextureID);
-
-		renderQuad(Renderer_quadVAO, Renderer_quadVBO);
+		if (Sprite.SpriteTexture != 0)
+			glUniform1f(uniform1, true);
 	}
+	else
+	{
+		// SRT uniform
+		glUniformMatrix4fv(glGetUniformLocation(shader.GetHandle(), "SRT"),
+			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix())
+		);
+	}
+
+	// Binding Texture - might be empty , above uniform will sort it
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, spriteTextureID);
+	renderQuad(Renderer_quadVAO, Renderer_quadVBO);
+
 	shader.UnUse();
-	glDisable(GL_BLEND);
+}
+
+void UIRenderer::SortUserInterface(std::vector<std::pair<Entity, float>>& _container, Entity& _entity, const float& _distance)
+{
+	bool been_inserted = false;
+	std::pair<Entity, float> temp{ _entity, _distance };
+	for (int i = 0; i < _container.size(); ++i)
+	{
+		if (_distance > _container[i].second)
+		{
+			_container.insert(_container.begin() + i, temp);
+			been_inserted = true;
+			break;
+		}
+	}
+	if (!been_inserted)
+	{
+		_container.push_back(temp);
+	}
 }
