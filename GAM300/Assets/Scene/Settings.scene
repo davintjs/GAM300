@@ -63,11 +63,10 @@ Transform:
   Scale: [1.60844898, 0.972704649, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 13067152016376394435}
-    - {fileID: 13832416887864285901}
-    - {fileID: 3501737523948874866}
     - {fileID: 9386478579826465449}
     - {fileID: 15358237258630853129}
+    - {fileID: 13832416887864285901}
+    - {fileID: 13067152016376394435}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -79,24 +78,24 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 2ea11ccf97287329911603c97e51758b}
+  MaxValue: 100
+  MinValue: 0
   back: false
-  currentSlider: 0
   duration: 2
   flickerTimer: 0
   isStartActive: true
-  maxSlider: 100
   sizeMultiplier: 1.5
   test: false
   timer: 0
+  value: 0.5
   backButton: {fileID: 13236326914152460117}  # GameObject
   bgm: {fileID: 18230885468184141171}  # Component
   bgmVolumeButton: {fileID: 5206565024310472992}  # GameObject
-  filltestSlider: {fileID: 13832416887864285901}  # GameObject
   mainMenuBGImage: {fileID: 9386478579826465449}  # GameObject
   masterVolumeButton: {fileID: 6712040991204226818}  # GameObject
   sfxVolumeButton: {fileID: 6495318900117040996}  # GameObject
-  testSlider: {fileID: 3501737523948874866}  # GameObject
-  testSliderbar: {fileID: 13067152016376394435}  # Component
+  sliderButton: {fileID: 3501737523948874866}  # GameObject
+  sliderFill: {fileID: 13832416887864285901}  # Component
 ---
 ID: 9386478579826465449
 GameObject:
@@ -127,6 +126,47 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
+---
+ID: 3501737523948874866
+GameObject:
+  m_IsActive: true
+  m_Name: sliderButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7428821796231590312}  # Transform
+    - component: {fileID: 9628928646385654731}  # SpriteRenderer
+    - component: {fileID: 10206238096616301334}  # Script
+---
+ID: 7428821796231590312
+Transform:
+  m_GameObject: {fileID: 3501737523948874866}
+  Translation: [-0.233684525, -0.661541045, 0.0696216151]
+  Rotation: [0, 0, 0]
+  Scale: [1.38662457, 1.27267754, 0.999876976]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 9628928646385654731
+SpriteRenderer:
+  m_GameObject: {fileID: 3501737523948874866}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): true
+  Alpha Scalar: 1
+  SpriteTexture: {guid: f62a10c6eebe5cecb5fc9c075222d6a3}
+---
+ID: 10206238096616301334
+Script:
+  m_GameObject: {fileID: 3501737523948874866}
+  m_IsEnabled: true
+  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
+  hoverDuration: 1
+  targetScaleMultiplier: [1, 1, 1]
+  clickSound: {fileID: 4439635201888755812}  # Component
+  hoverSound: {fileID: 0}
 ---
 ID: 6712040991204226818
 GameObject:
@@ -355,7 +395,9 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
+    - {fileID: 17706165171459776271}
     - {fileID: 16470510239641695939}
+    - {fileID: 1434873873897131432}
 ---
 ID: 16470510239641695939
 GameObject:
@@ -423,36 +465,6 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: 107db88cb9c0671beea293272f176173}
 ---
-ID: 3501737523948874866
-GameObject:
-  m_IsActive: true
-  m_Name: testSlider
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7428821796231590312}  # Transform
-    - component: {fileID: 9628928646385654731}  # SpriteRenderer
----
-ID: 7428821796231590312
-Transform:
-  m_GameObject: {fileID: 3501737523948874866}
-  Translation: [0.0600506477, -0.680104196, 0.0178733207]
-  Rotation: [0, 0, 0]
-  Scale: [2.28286028, 0.917397797, 0.999930799]
-  Father: {fileID: 17065559468612678914}
-  m_Children:
-    []
----
-ID: 9628928646385654731
-SpriteRenderer:
-  m_GameObject: {fileID: 3501737523948874866}
-  m_IsEnabled: true
-  World Space: false
-  Colour Picker Mode: false
-  Include Alpha (ColourPicking): false
-  Alpha Scalar: 1
-  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
----
 ID: 13832416887864285901
 GameObject:
   m_IsActive: true
@@ -466,9 +478,9 @@ GameObject:
 ID: 4612391060768230338
 Transform:
   m_GameObject: {fileID: 13832416887864285901}
-  Translation: [-0.308752179, -0.680022538, 0.0363112316]
+  Translation: [-0.381771684, -0.673265457, 0.0363104343]
   Rotation: [0, 0, 0]
-  Scale: [0.621717751, 1.02806234, 0.99994272]
+  Scale: [0.621717989, 1.02806258, 0.999929965]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -496,9 +508,9 @@ GameObject:
 ID: 2401636980383934360
 Transform:
   m_GameObject: {fileID: 13067152016376394435}
-  Translation: [-0.166343376, -0.672127962, 0.0480248742]
+  Translation: [-0.0896467119, -0.672128499, 0.012009386]
   Rotation: [0, 0, 0]
-  Scale: [0.920697868, 1.02806246, 0.99995172]
+  Scale: [2.00000024, 0.972706735, 0.99985081]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -511,4 +523,76 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: f62a10c6eebe5cecb5fc9c075222d6a3}
+  SpriteTexture: {guid: a2481563ecfeac2cd828dc4edc4b9c48}
+---
+ID: 1434873873897131432
+GameObject:
+  m_IsActive: true
+  m_Name: ButtonClick
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12484419778914212043}  # Transform
+    - component: {fileID: 4439635201888755812}  # AudioSource
+---
+ID: 12484419778914212043
+Transform:
+  m_GameObject: {fileID: 1434873873897131432}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4592072074559840146}
+  m_Children:
+    []
+---
+ID: 4439635201888755812
+AudioSource:
+  m_GameObject: {fileID: 1434873873897131432}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: a3a5008eddc5deff41fd807ad3c839f2}
+  Play: false
+---
+ID: 17706165171459776271
+GameObject:
+  m_IsActive: true
+  m_Name: UI Button
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17683003479076164584}  # Transform
+    - component: {fileID: 12629001260182743623}  # AudioSource
+---
+ID: 17683003479076164584
+Transform:
+  m_GameObject: {fileID: 17706165171459776271}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4592072074559840146}
+  m_Children:
+    []
+---
+ID: 12629001260182743623
+AudioSource:
+  m_GameObject: {fileID: 17706165171459776271}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 999
+  max hearing Distance: 1000
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
+  Play: false

@@ -66,6 +66,8 @@ namespace BeanFactory
 
         public static bool GetMouseDown(int mouseCode) { return InternalCalls.GetMouseDown(mouseCode); }
 
+        public static bool GetMouseHolding(int mouseCode) { return InternalCalls.GetMouseHolding(mouseCode); }
+
         public static float GetScroll() { return -InternalCalls.GetScrollState() * Time.deltaTime; }
 
         public static vec2 GetMousePosition() 
