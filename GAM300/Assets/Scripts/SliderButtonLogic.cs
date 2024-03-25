@@ -100,6 +100,7 @@ class SliderButtonLogic : Script
 
             //Update the slider value 
             UpdateSliderValue();
+            Console.WriteLine(MinValue + " " + MaxValue);
 
             //Update the slider's visual representation
             UpdateSliderVisual();
