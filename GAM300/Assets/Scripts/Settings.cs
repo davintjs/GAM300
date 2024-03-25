@@ -19,14 +19,15 @@ public class Settings : Script
 
     public GameObject sfxVolumeButton;
 
-    public GameObject sliderButton;
+    //public GameObject sliderButton;
 
-    public Transform sliderFill;
-    public float MinValue = 0f;
-    public float MaxValue = 1f;
-    public float value = 50f;
-    private float sliderWidth;
-    private bool onClick = false;
+    //public Transform sliderFill;
+    //public float MinValue = 0f;
+    //public float MaxValue = 1f;
+    //public float value = 50f;
+    //private float sliderWidth;
+    //private bool onClick = false;
+    //float mouse;
 
 
 
@@ -38,7 +39,6 @@ public class Settings : Script
     public float timer = 0f;
     public bool back = false;
     public bool test = false;
-    float mouse;
 
     public float sizeMultiplier = 1.5f;
 
@@ -51,7 +51,7 @@ public class Settings : Script
     private SpriteRenderer bgmVolumeButtonRenderer;
     private SpriteRenderer sfxVolumeButtonRenderer;
 
-    private SpriteRenderer sliderButtonRenderer; 
+    //private SpriteRenderer sliderButtonRenderer; 
 
 
     //vec3 startGridTextSize;
@@ -75,15 +75,13 @@ public class Settings : Script
         if (sfxVolumeButton.HasComponent<SpriteRenderer>())
             sfxVolumeButtonRenderer = sfxVolumeButton.GetComponent<SpriteRenderer>();
 
-        if (sliderButton.HasComponent<SpriteRenderer>())
-            sliderButtonRenderer = sliderButton.GetComponent<SpriteRenderer>();
+        //if (sliderButton.HasComponent<SpriteRenderer>())
+        //    sliderButtonRenderer = sliderButton.GetComponent<SpriteRenderer>();
 
-        sliderButton.SetActive(true);
+        //sliderButton.SetActive(true);
 
 
-        sliderWidth = sliderFill.localScale.x;
-        Console.WriteLine("Slider Width: " + sliderWidth);
-
+        //sliderWidth = sliderFill.localScale.x;
 
     }
 
@@ -151,105 +149,51 @@ public class Settings : Script
             }
         }
 
-        if(sliderButtonRenderer.IsButtonClicked())
-        {
-            onClick = true;
-        }
-
-        // Get refto Button
-        if (Input.GetMouseHolding(0) && onClick)
-        {
-            
-            //Update the slider value 
-            UpdateSliderValue();
-            Console.WriteLine("Slider Width: " + sliderWidth);
-
-            //Update the slider's visual representation
-            UpdateSliderVisual();
-            Console.WriteLine(Input.GetMouseDelta());
-        }
-        else if(Input.GetMouseHolding(0) != true)
-        {
-            onClick = false;
-        }
-
-        //if(Input.GetMouseDown(0))
+        //if(sliderButtonRenderer.IsButtonClicked())
         //{
-        //    if(IsMouseOverSlider())
-        //    {
-        //        isDragging = true;
-        //        previousMousePosition = Input.GetMousePosition().x;
-        //    }
+        //    onClick = true;
         //}
 
-        //if(isDragging && Input.GetMouseDown(0))
-        //{
-
-        //}
-
-        //if(!Input.GetMouseDown(0))
-        //{
-        //    isDragging=false;
-        //}
-
-        //if(Input.GetMouseDown(0))
-        //{
-
-        //}
-
-        ////Update the slider value 
-        //UpdateSliderValue();
-        //Console.WriteLine("Slider Width: " + sliderWidth);
-
-        ////Update the slider's visual representation
-        //UpdateSliderVisual();
-        //Console.WriteLine(Input.GetMouseDelta());
-
-
-    }
-    void UpdateSliderValue()
-    {
-  
-        //Calculating the new value based on the mouse position
-        mouse = Input.GetMouseDelta().x;
-        vec3 slider = sliderButton.transform.localPosition;
-        //float normalisedX = (mouse - slider.x) / sliderWidth;
-        slider.x += mouse * 16;
-        sliderButton.transform.localPosition = slider;
-        Console.WriteLine("Update");
-
-
-        //if (normalisedX < 0)
-        //{
-        //    normalisedX = 0;
-        //}
-        //else if (normalisedX > 1)
-        //{
-        //    normalisedX = 1;
-        //}
-
-        //value = MinValue + normalisedX * (MaxValue - MinValue);
         
+        //if (Input.GetMouseHolding(0) && onClick)
+        //{
+            
+        //    //Update the slider value 
+        //    UpdateSliderValue();
+        //    Console.WriteLine("Slider Width: " + sliderWidth);
+
+        //    //Update the slider's visual representation
+        //    UpdateSliderVisual();
+        //    Console.WriteLine(Input.GetMouseDelta());
+        //}
+        //else if(Input.GetMouseHolding(0) != true)
+        //{
+        //    onClick = false;
+        //}
+
+
     }
-
-    void UpdateSliderVisual()
-    {
-        vec3 newScale = sliderFill.localScale;
-        newScale.x = (value - MinValue) / (MaxValue - MinValue) * sliderWidth;
-        sliderFill.localScale = newScale;
-        Console.WriteLine("Slider Width: " + sliderWidth);
-
-    }
-
-    //private bool IsMouseOverSlider()
+    //void UpdateSliderValue()
     //{
-    //    vec3 sliderButtonPos = sliderButton.transform.position;
-    //    vec2 mousePos = Input.GetMouseDelta();
-    //    float distance = vec3.Distance(sliderButtonPos, mousePos);
-    //    float radius = 
+  
+    //    //Calculating the new value based on the mouse position
+    //    mouse = Input.GetMouseDelta().x;
+    //    vec3 slider = sliderButton.transform.localPosition;
+    //    //float normalisedX = (mouse - slider.x) / sliderWidth;
+    //    slider.x += mouse * 16;
+    //    sliderButton.transform.localPosition = slider;
+    //    Console.WriteLine("Update");
+        
     //}
 
+    //void UpdateSliderVisual()
+    //{
+    //    vec3 newScale = sliderFill.localScale;
+    //    newScale.x = (value - MinValue) / (MaxValue - MinValue) * sliderWidth;
+    //    sliderFill.localScale = newScale;
+    //    Console.WriteLine("Slider Width: " + sliderWidth);
 
+    //}
 
 
 }
