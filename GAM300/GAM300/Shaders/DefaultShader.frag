@@ -450,7 +450,10 @@ void main()
         if( Albedo.a < 1.f)
         {
             color = vec3(ambience_multiplier) * albedo * ao + emission ;
-            
+            if(isEmission)
+            {
+                toBloom = true;
+            }   
         }
         else
         {

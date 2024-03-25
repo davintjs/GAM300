@@ -24,6 +24,10 @@ public class Inventory : Script
     public TextRenderer healthCounter;
     public TextRenderer maxPackCounter;
 
+    public SpriteRenderer dashIcon;
+    public SpriteRenderer dodgeIcon;
+    public SpriteRenderer sprintIcon;
+
     void Awake()
     {
         //to fix issue where this reference is missing in the scene
@@ -42,6 +46,19 @@ public class Inventory : Script
     void Start()
     {
         playerSounds = PlayerAudioManager.instance;
+
+        if (sprintIcon == null)
+        {
+            Console.WriteLine("Missing sprintIcon reference in Inventory script");
+        }
+        if (dodgeIcon == null)
+        {
+            Console.WriteLine("Missing dodgeIcon reference in Inventory script");
+        }
+        if (dashIcon == null)
+        {
+            Console.WriteLine("Missing dashIcon reference in Inventory script");
+        }
 
         if (stamCounter == null)
         {
@@ -64,6 +81,7 @@ public class Inventory : Script
     void Update()
     {
         thePacks();
+        changeAlphaIcon();
         //theCheats();
 
         stamCounter.text = staminaPackCount.ToString();
@@ -77,6 +95,40 @@ public class Inventory : Script
         healthPackCount++;
         staminaPackCount++;
         maxStatPackCount++;
+    }
+
+    //this enables to change alpha values of ability icons
+    void changeAlphaIcon()
+    {
+        //this changes the alpha of dodgeIcon
+        if (thirdPersonController.startDodgeCooldown == true)
+        {
+            dodgeIcon.alpha = 0.5f;
+        }
+        else
+        {
+            dodgeIcon.alpha = 1f;
+        }
+
+        //this changes the alpha of dashIcon
+        if (thirdPersonController.startDashCooldown == true)
+        {
+            dashIcon.alpha = 0.5f;
+        }
+        else
+        {
+            dashIcon.alpha = 1f;
+        }
+
+        //this changes the alpha of dashIcon
+        if (thirdPersonController._isSprinting == true)
+        {
+            sprintIcon.alpha = 0.5f;
+        }
+        else
+        {
+            sprintIcon.alpha = 1f;
+        }
     }
 
     void thePacks()
