@@ -1,4 +1,4 @@
-[2024-03-22 11:33:29.194] [Error] [critical] 
+[2024-03-25 23:47:59.205] [Error] [critical] 
 Caused By:	mClass
 Info:		MONO CLASS NOT LOADED
 Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 300)
