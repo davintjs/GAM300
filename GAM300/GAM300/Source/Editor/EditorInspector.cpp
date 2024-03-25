@@ -117,7 +117,7 @@ void DisplayType(Change& change, const char* name, std::string& val)
     idName += name;
     static char buffer[TEXT_BUFFER_SIZE];
     strcpy(buffer, val.c_str());
-    if(ImGui::InputText(idName.c_str(), buffer, ImGuiInputTextFlags_EnterReturnsTrue))
+    if(ImGui::InputText(idName.c_str(), buffer, 1024, ImGuiInputTextFlags_EnterReturnsTrue))
     {
         std::string newString = buffer;
         EDITOR.History.SetPropertyValue(change, val, newString);
@@ -402,7 +402,7 @@ void DisplayType(Change& change, const char* name, Vector3& val)
     idName = "##";
     idName += name;
 
-    if (!strcmp(name, "Color")) {
+    if (!strcmp(name, "Color") || !strcmp(name, "Trail Color")) {
         Vector4 buf = Vector4(val.x, val.y, val.z, 1.f);
         ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 

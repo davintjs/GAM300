@@ -4,86 +4,39 @@
 #include "Scene/SceneManager.h"
 #include FT_FREETYPE_H
 
+#define AR 1.777778f
+
 void TextSystem::Init()
 {
 	//LoadFontAtlas("Assets/Fonts/Xolonium-Bold.font"); // decompile
 	EVENTS.Subscribe(this, &TextSystem::CallbackFontAssetLoaded);
-	
-	/*for (auto& font : mFontContainer) {
-		GenerateTextureAtlas(font.second);
-	}*/
+
 	glGenVertexArrays(1, &txtVAO);
 	glGenBuffers(1, &txtVBO);
 
 	glBindVertexArray(txtVAO);
 	glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * 4, NULL, GL_DYNAMIC_DRAW);
+	//glBufferData(GL_ARRAY_BUFFER, sizeof(vertices) * sizeof(float), vertices, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 4 * 6, NULL, GL_DYNAMIC_DRAW);
+
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+	glVertexAttribDivisor(0, 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);/**/
-
-
+	glBindVertexArray(0);
 }
 
 void TextSystem::Update(float dt)
 {
-	// Empty by design
+	
 }
 
 void TextSystem::Exit()
 {
-	// Empty by design
 
-	//glDeleteTextures(1, &texture);
 }
 
 void TextSystem::GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, TextSystem::FontCharacters& characters) {
-	//const int atlasSize = 128*8152; // Adjust this as needed
-
-	//// Create a blank texture atlas
-	//unsigned int textureAtlas;
-	//glGenTextures(1, &textureAtlas);
-	//glBindTexture(GL_TEXTURE_2D, textureAtlas);
-	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, atlasSize, atlasSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-
-	//int xOffset = 0;
-	//int yOffset = 0;
-
-	//// Populate the texture atlas with individual character textures
-	//for (auto& pair : characters) {
-	//	TextSystem::Character& character = pair.second;
-
-	//	// Copy the character's texture to the atlas
-
-	//	//characters[pair.first];
-
-	//	// Update the character's texture coordinates
-	//	
-	//	character.Texture = textureAtlas;
-	//	character.Bearing.x = xOffset;
-	//	character.Bearing.y = yOffset;
-
-	//	// Move the offset for the next character
-	//	xOffset += character.Size.x;
-	//	glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, character.Size.x, character.Size.y, GL_RGBA, GL_UNSIGNED_BYTE, character.TextureData.data());
-	//	//glTexSubImage2D(GL_TEXTURE_2D, 0, xOffset, yOffset, character.Size.x, character.Size.y, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-	//	std::cout << pair.first << " - it is working\n";
-	//	// Check if we need to move to the next row
-	//	if (xOffset + character.Size.x > atlasSize) {
-	//		xOffset = 0;
-	//		yOffset += character.Size.y;
-	//	}
-
-	//}
-
-	//// Set texture parameters
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	//glBindTexture(GL_TEXTURE_2D, 0);
 
 	// Define some constants for padding between characters
 	const int padding = 2;
@@ -137,17 +90,9 @@ void TextSystem::GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, Text
 		ch.AtlasCoordsMax = { (float)(xOffset - padding) / (float)(totalWidth*4), (float)ch.Size.y / (maxHeight*4) };
 
 	}
-
-
 	// Update the texture atlas with the new data
 	glBindTexture(GL_TEXTURE_2D, atlasTextureID);
 	glTexSubImage2D(GL_TEXTURE_2D, 0, 0, 0, totalWidth, maxHeight, GL_RGBA, GL_UNSIGNED_BYTE, atlasData.data());
-
-	// Update character advance for rendering
-	//for (auto& pair : characters) {
-	//	TextSystem::Character& ch = pair.second;
-	//	//ch.Advance = ch.Size.x + padding;
-	//}
 
 	// Cleanup
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -155,159 +100,41 @@ void TextSystem::GenerateTextureAtlas(const Engine::GUID<FontAsset>& _guid, Text
 
 }
 
-
-//void TextSystem::RenderText(GLSLShader& s, std::string text, float x, float y, float scale, glm::vec3 color, BaseCamera& _camera, const Engine::GUID<FontAsset>& _guid)
-//{
-//	scale *= 0.001f; // hack bc it too big
-//
-//	glEnable(GL_BLEND);
-//	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-//	// activate corresponding render state	
-//	s.Use();
-//	//s.SetUniform(,)
-//	glUniform3f(glGetUniformLocation(s.GetHandle(), "textColor"), color.x, color.y, color.z);
-//	glActiveTexture(GL_TEXTURE0);
-//	glBindVertexArray(txtVAO);
-//
-//	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
-//	//s.SetUniform("projection", proj);
-//	glUniformMatrix4fv(glGetUniformLocation(s.GetHandle(), "projection"),
-//		1, GL_FALSE, glm::value_ptr(OrthoProjection));
-//
-//	for (const char& c : text) {
-//		Character ch = mFontContainer.at(_guid).at(c);  // Use .at() to ensure the character exists in the map
-//
-//		float xpos = x + ch.Bearing.x * scale;
-//		float ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-//
-//		float w = ch.Size.x * scale;
-//		float h = ch.Size.y * scale * 2.f;
-//		
-//		// Generate OpenGL texture from the loaded texture data ->> can optimise so it doesnt get texture every frame
-//		GLuint texture;
-//		glGenTextures(1, &texture);
-//		glBindTexture(GL_TEXTURE_2D, texture);
-//		glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
-//		glGenerateMipmap(GL_TEXTURE_2D);
-//
-//
-//		// Update content of VBO memory with the new vertices
-//		float vertices[4][4] = {
-//			{ xpos,     ypos,       0.0f, 1.0f },
-//			{ xpos,     ypos + h,   0.0f, 0.0f },
-//			{ xpos + w, ypos,       1.0f, 1.0f },
-//			{ xpos + w, ypos + h,   1.0f, 0.0f }
-//		};
-//
-//		glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
-//		glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices);
-//		glBindBuffer(GL_ARRAY_BUFFER, 0);
-//
-//		// Use the new texture for rendering
-//		glBindTexture(GL_TEXTURE_2D, texture);
-//
-//		// Render quad
-//		glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-//
-//		// Delete the generated texture when it's no longer needed
-//		glDeleteTextures(1, &texture);
-//
-//		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-//		x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
-//
-//	}
-//	glBindVertexArray(0);
-//	glBindTexture(GL_TEXTURE_2D, 0);
-//	s.UnUse();
-//}
-
-void TextSystem::Draw(BaseCamera& _camera)
+void TextSystem::RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid, const glm::mat4& _canvasMtx)
 {
-	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
-
-	RenderText_WorldSpace(_camera);
-	//RenderText_ScreeninWorldSpace(_camera);
-	//RenderText_ScreenSpace(_camera);
-
-}
-
-void TextSystem::RenderText_ScreenSpace(BaseCamera& _camera)
-{
-	// Initializing Variables
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glClear(GL_DEPTH_BUFFER_BIT);
-
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT);
 	txtshader.Use();
 
-	glm::mat4 OrthoProjection = glm::ortho(-1.f, 1.f, -1.f, 1.f, -10.f, 10.f);
+	glm::mat4 OrthoProjection = glm::ortho(-1.f * AR, 1.f * AR, -1.f, 1.f, -10.f, 10.f);
 	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "projection"),
 		1, GL_FALSE, glm::value_ptr(OrthoProjection));
 
-	const Transform* canvasTransform{ nullptr };
+	TextRenderer& text = _scene.Get<TextRenderer>(_euid);
+	Transform& transform = _scene.Get<Transform>(_euid);
 
-	for (Canvas& currCanvas : currentScene.GetArray<Canvas>())
-	{
-		if (currCanvas.state == DELETED) continue;
-		Entity& entity = currentScene.Get<Entity>(currCanvas);
-		canvasTransform = &currentScene.Get<Transform>(entity);
-		continue;
-	}
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
+		1, GL_FALSE, glm::value_ptr(_canvasMtx * transform.GetWorldMatrix()));
 
-	if (!canvasTransform)
-	{
-		return;
-	}
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
+		text.color.w);
 
-	for (TextRenderer& text : currentScene.GetArray<TextRenderer>())
-	{
-		// Maybe need a worldspace checker?
+	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
-		if (text.guid == 0)
-			continue;
-		
-		Entity& entity = currentScene.Get<Entity>(text);
-		if (!currentScene.IsActive(entity)) continue;
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(txtVAO);
 
-		Transform& transform = currentScene.Get<Transform>(entity);
-		
-		if (!transform.parent || _camera.GetCameraType() == CAMERATYPE::SCENE) continue;
+	//RenderTextFromString(text);
+	RenderText(text);
 
-		glm::mat4 canvasMatrix = glm::inverse(canvasTransform->GetWorldMatrix());
-
-		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(canvasMatrix * transform.GetWorldMatrix()));
-
-		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
-			text.alpha);
-
-		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(txtVAO);
-
-		RenderTextFromString(text);
-
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	txtshader.UnUse();
-
 }
 
 
-void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
+void TextSystem::RenderWorldSpace(Scene& _scene, BaseCamera& _camera, const Engine::UUID& _euid)
 {
-	// Initializing Variables
-
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
 	GLSLShader& txtshader = SHADER.GetShader(SHADERTYPE::TEXT_WORLD);
 	txtshader.Use();
 
@@ -317,42 +144,149 @@ void TextSystem::RenderText_WorldSpace(BaseCamera& _camera)
 	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "view"),
 		1, GL_FALSE, glm::value_ptr(_camera.GetViewMatrix()));
 
-	for (TextRenderer& text : currentScene.GetArray<TextRenderer>()) 
-	{
-		// Maybe need a worldspace checker?
+	TextRenderer& text = _scene.Get<TextRenderer>(_euid);
+	Transform& transform = _scene.Get<Transform>(_euid);
 
-		if (text.guid == 0)
-			continue;
+	glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
+		1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
 
-		Entity& entity = currentScene.Get<Entity>(text);
-		if (!currentScene.IsActive(entity)) continue;
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
+		text.color.w);
 
-		Transform& transform = currentScene.Get<Transform>(entity);
+	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
-		if (_camera.GetCameraType() != CAMERATYPE::SCENE && transform.parent)
-			continue;
+	glActiveTexture(GL_TEXTURE0);
+	glBindVertexArray(txtVAO);
 
-		glUniformMatrix4fv(glGetUniformLocation(txtshader.GetHandle(), "SRT"),
-			1, GL_FALSE, glm::value_ptr(transform.GetWorldMatrix()));
-		
-		glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "AlphaScaler"),
-			text.alpha);
+	//RenderTextFromString(text);
+	RenderText(text);
 
-		glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.r, text.g, text.b);
-
-		glActiveTexture(GL_TEXTURE0);
-		glBindVertexArray(txtVAO);
-
-		RenderTextFromString(text);
-
-		glBindVertexArray(0);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-	}
+	glBindVertexArray(0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 
 	txtshader.UnUse();
+}
 
+void TextSystem::RenderText(TextRenderer& text)
+{
+	allVertices.clear();
+
+	unsigned int currentLine = 1;
+	float x = text.x, width, currentWidth, newLineWidth;
+	width = currentWidth = newLineWidth = 0.f;
+	float y = text.y;
+	float scale = text.fontSize * 0.001f;
+	float baseHeight = mFontContainer.at(text.guid).at('A').Size.y * scale;
+
+	if (text.text.size() != text.charCount)
+	{
+		float tempWidth = 0.f;
+		text.charCount = text.text.size();
+		std::string::const_iterator c;
+		for (c = text.text.begin(); c != text.text.end(); c++)
+		{
+			Character& ch = mFontContainer.at(text.guid).at(*c);
+			tempWidth += (ch.Advance >> 6) * scale;
+		}
+
+		if (!text.wrapping)
+		{
+			text.width = tempWidth;
+			text.height = baseHeight;
+		}
+		else
+			text.height = baseHeight * text.lineCount;
+	}
+
+	// iterate through all characters
+	std::string::const_iterator c, nextc;
+	for (c = text.text.begin(); c != text.text.end(); c++)
+	{
+		Character& ch = mFontContainer.at(text.guid).at(*c);
+
+		float xpos = x + ch.Bearing.x * scale;
+
+		float ypos = y - (ch.Bearing.y * 2.f) * scale;
+		if(*c == 'p')
+			ypos = y - (ch.Bearing.y) * scale;
+
+		float nextChWidth = 0.f;
+		bool updateNewLine = false;
+
+		nextc = c;
+		nextc++;
+		currentWidth += (ch.Advance >> 6) * scale;
+		if (nextc != text.text.end())
+		{
+			Character& nextCh = mFontContainer.at(text.guid).at(*nextc);
+			nextChWidth = (nextCh.Advance >> 6) * scale;
+
+			if (currentWidth + nextChWidth > text.width)
+			{
+				updateNewLine = true;
+				newLineWidth = 0.f;
+				std::string::const_iterator cit;
+				for (cit = c; cit != text.text.end(); cit++)
+				{
+					Character& ch = mFontContainer.at(text.guid).at(*cit);
+					newLineWidth += (ch.Advance >> 6) * scale;
+				}
+			}
+		}
+
+		if (text.centerAlign && text.wrapping)
+		{
+			xpos -= text.width * 0.5f;
+			ypos -= baseHeight * currentLine;
+
+			if (text.lineCount == currentLine)
+			{
+				xpos = x + ch.Bearing.x * scale - newLineWidth * 0.5f;
+			}
+		}
+		else if (text.centerAlign)
+		{
+			xpos -= text.width * 0.5f;
+		}
+		else if (text.wrapping)
+		{
+			ypos -= baseHeight * currentLine;
+		}
+
+		if (updateNewLine)
+		{
+			x = text.x - (ch.Advance >> 6) * scale;
+			currentWidth = 0.f;
+			currentLine++;
+		}
+
+		float w = ch.Size.x * scale;
+		float h = ch.Size.y * scale;
+		// update VBO for each character
+		float vertices[6][4] = {
+			{ xpos,     ypos,       ch.AtlasCoordsMin.x, ch.AtlasCoordsMax.y },
+			{ xpos,     ypos,       ch.AtlasCoordsMin.x, ch.AtlasCoordsMax.y },
+			{ xpos,     ypos + h,   ch.AtlasCoordsMin.x, ch.AtlasCoordsMin.y },
+			{ xpos + w, ypos,       ch.AtlasCoordsMax.x, ch.AtlasCoordsMax.y },
+			{ xpos + w, ypos + h,   ch.AtlasCoordsMax.x, ch.AtlasCoordsMin.y },
+			{ xpos + w, ypos + h,   ch.AtlasCoordsMax.x, ch.AtlasCoordsMin.y }
+		};
+		for (int i = 0; i < 6; ++i)
+			allVertices.insert(allVertices.end(), vertices[i], vertices[i] + 4);
+
+		x += (ch.Advance >> 6) * scale; // bitshift by 6 to get value in pixels (2^6 = 64)
+	}
+
+	text.lineCount = currentLine;
+
+	// Update content of VBO memory with the new vertices and texture coordinates
+	glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
+	glBufferData(GL_ARRAY_BUFFER, allVertices.size() * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, mFontAtlasContainer.at(text.guid));
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, text.text.size() * 6);
 }
 
 void TextSystem::RenderTextFromString(TextRenderer const& text)
@@ -361,68 +295,168 @@ void TextSystem::RenderTextFromString(TextRenderer const& text)
 	allVertices.clear();
 	//allTextures.clear();
 
-	float xoffset = text.x;
+	float xoffset{ text.x }, yoffset { text.y };
+	float fontSize { 0.001f * text.fontSize };
+	float maxWidth { 0.01f * text.width };
+	int iter{ 0 }, newlineIter{ 0 };
+	float charHeight = mFontContainer.at(text.guid).at('A').Size.y;
+	bool newlinefound{ false };
+
 	for (const char& c : text.text) {
 		Character ch = mFontContainer.at(text.guid).at(c);  // Use .at() to ensure the character exists in the map
 
-		float xpos = xoffset + ch.Bearing.x * (text.fontSize * 0.001f);
-		float ypos = text.y - (ch.Bearing.y * 2.f) * (text.fontSize * 0.001f);
+		float xpos, ypos;
+		xpos = xoffset + ch.Bearing.x * fontSize;
 
-		float w = ch.Size.x * (text.fontSize * 0.001f);
-		float h = ch.Size.y * (text.fontSize * 0.001f) * 2.f;
-
-		//if (!ch.Texture)
+		//if (c == ' ')
 		//{
-		//	glGenTextures(1, &ch.Texture);
-		//	glBindTexture(GL_TEXTURE_2D, ch.Texture);
-		//	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, ch.Size.x, ch.Size.y, 0, GL_RED, GL_UNSIGNED_BYTE, ch.TextureData.data());
-		//	glGenerateMipmap(GL_TEXTURE_2D);
+		//	int internalIter{ iter };
+		//	char tempChar = text.text[iter + 1];
+		//	float wordWidth{ xpos };
+		//	while (tempChar != ' ')
+		//	{
+		//		wordWidth += mFontContainer.at(text.guid).at(tempChar).Size.x * fontSize;
 
+		//		if (wordWidth > maxWidth + text.x)
+		//		{
+		//			yoffset -= charHeight * fontSize * 2 * text.leading;
+		//			xoffset = text.x;
+		//			xpos = xoffset + ch.Bearing.x * fontSize;
+		//			break;
+		//		}
+
+		//		++internalIter;
+
+		//		if (internalIter >= text.text.size())
+		//			break;
+
+		//		tempChar = text.text[internalIter]; // move on
+		//	}
 		//}
 
-		//// Update content of VBO memory with the new vertices
-		//float vertices[4][4] = {
-		//	{ xpos,     ypos,       0.0f, 1.0f },
-		//	{ xpos,     ypos + h,   0.0f, 0.0f },
-		//	{ xpos + w, ypos,       1.0f, 1.0f },
-		//	{ xpos + w, ypos + h,   1.0f, 0.0f }
-		//};
+
+		if (iter == newlineIter)
+		{
+			yoffset -= charHeight * fontSize * 2;
+			//xoffset = text.x;
+			//xpos = xoffset + ch.Bearing.x * fontSize;
+
+			if (!text.centerAlign)
+			{
+				xoffset = text.x;
+				xpos = xoffset + ch.Bearing.x * fontSize;
+			}
+
+			newlinefound = false;
+
+			char internalC = text.text[iter];
+			if (internalC == ' ')
+			{
+				++iter;
+				continue;
+			}
+		}
+
+
+		if (!newlinefound)
+		{
+			int internalIter{ iter };
+			float currlineWidth{ 0.f };
+			while (internalIter < text.text.size())
+			{
+
+				int wordIter{ internalIter };
+				char tempChar = text.text[internalIter];
+				float wordWidth{ 0.f };
+				while (tempChar != ' ')
+				{
+					wordWidth += mFontContainer.at(text.guid).at(tempChar).Size.x * fontSize;
+
+					if (wordWidth + currlineWidth >= maxWidth)
+					{
+						// new xpos/offset
+						newlinefound = true;
+						newlineIter = internalIter;
+						currlineWidth -= mFontContainer.at(text.guid).at(' ').Size.x * fontSize;
+						break;
+					}
+
+					++wordIter;
+
+					if (wordIter >= text.text.size()) // if next letter out of bounds
+					{
+						// new xpos/offset
+						currlineWidth += wordWidth;
+						newlinefound = true; 
+						break;
+					}
+
+					tempChar = text.text[wordIter]; // move on
+				}
+				//}
+				if (newlinefound)
+				{
+					if (text.centerAlign)
+					{
+						xoffset = text.x + (maxWidth - currlineWidth) * 0.5f;
+						xpos = xoffset + ch.Bearing.x * fontSize;
+					}
+					break;
+				}
+
+				char internalC = text.text[internalIter];
+				////currlineWidth += mFontContainer.at(text.guid).at(internalC).Size.x * fontSize;
+				if (internalC == ' ')
+				{
+					currlineWidth += mFontContainer.at(text.guid).at(' ').Size.x * fontSize;
+				}
+
+				currlineWidth += wordWidth;
+				internalIter = wordIter;
+
+				++internalIter;
+			}
+
+		}
+
+		ypos = yoffset - (ch.Bearing.y * 2.f) * fontSize;
+			
+		float w = ch.Size.x * fontSize;
+		float h = ch.Size.y * fontSize * 2.f;
 		
 		// Update content of VBO memory with the new vertices
-		float vertices[4][4] = {
+		float vertices[6][4] = {
+			{ xpos,     ypos,       ch.AtlasCoordsMin.x, ch.AtlasCoordsMax.y },
 			{ xpos,     ypos,       ch.AtlasCoordsMin.x, ch.AtlasCoordsMax.y },
 			{ xpos,     ypos + h,   ch.AtlasCoordsMin.x, ch.AtlasCoordsMin.y },
 			{ xpos + w, ypos,       ch.AtlasCoordsMax.x, ch.AtlasCoordsMax.y },
+			{ xpos + w, ypos + h,   ch.AtlasCoordsMax.x, ch.AtlasCoordsMin.y },
 			{ xpos + w, ypos + h,   ch.AtlasCoordsMax.x, ch.AtlasCoordsMin.y }
 		};
+		for (int i = 0; i < 6; ++i) {
 
-		for (int i = 0; i < 4; ++i) {
 			allVertices.insert(allVertices.end(), vertices[i], vertices[i] + 4);
+
 		}
-		//allTextures.push_back(ch.Texture);
+		xoffset += (ch.Advance >> 6) * fontSize; // bitshift by 6 to get value in pixels (2^6 = 64)
 
-		// now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		xoffset += (ch.Advance >> 6) * (text.fontSize * 0.001f); // bitshift by 6 to get value in pixels (2^6 = 64)
-
+		++iter;
 	}
 
 	// Update content of VBO memory with the new vertices and texture coordinates
 	glBindBuffer(GL_ARRAY_BUFFER, txtVBO);
 	glBufferData(GL_ARRAY_BUFFER, allVertices.size() * sizeof(float), allVertices.data(), GL_STATIC_DRAW);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);/**/
 
-	//// Use the new texture for rendering
-	//for (size_t i = 0; i < allTextures.size(); ++i) {
-	//	glBindTexture(GL_TEXTURE_2D, allTextures[i]);
-	//	glDrawArrays(GL_TRIANGLE_STRIP, i * 4, 4);
-	//}
-	// Use the new texture for rendering
 
 	glBindTexture(GL_TEXTURE_2D, mFontAtlasContainer.at(text.guid));
-	for (size_t i = 0; i < text.text.size(); ++i) {
+	/*for (size_t i = 0; i < text.text.size(); ++i) {
 		glDrawArrays(GL_TRIANGLE_STRIP, i * 4, 4);
-	}
+	}*/
+	unsigned int sz = text.text.size();
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, text.text.size() * 6);
 
+	//glDrawArraysInstanced(GL_TRIANGLE_STRIP, 0, text.text.size()*6, text.text.size());
 }
 
 

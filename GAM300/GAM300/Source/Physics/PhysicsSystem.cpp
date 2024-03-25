@@ -253,7 +253,8 @@ void PhysicsSystem::UpdateJoltTransforms()
 
 
 void PhysicsSystem::Update(float dt) {
-
+	if (dt == 0)
+		return;
 	if (!physicsSystem)
 		return;
 
@@ -269,6 +270,10 @@ void PhysicsSystem::Update(float dt) {
 			physicsSystem->Update(fixedDt, 1, tempAllocator, jobSystem);
 			step++;
 		}
+		/*PrePhysicsUpdate(dt);
+
+		physicsSystem->Update(dt, 1, tempAllocator, jobSystem);*/
+
 	}
 
 	PostPhysicsUpdate();
@@ -365,8 +370,8 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				found = true;
 		}
 		auto& ccArray = scene.GetArray<CharacterController>();
-		for (auto it = ccArray.begin(); it != ccArray.end() && !found; ++it) {
-
+		for (auto it = ccArray.begin(); it != ccArray.end() && !found; ++it)
+		{
 			CharacterController& cc = *it;
 			if (cc.bid == e.bid1) {
 				pc1 = &cc;
@@ -435,14 +440,12 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				tre.pc1 = pc1;
 				tre.pc2 = pc2;
 				EVENTS.Publish(&tre);
-				PRINT("Sending Trigger Remove Event\n");
 			}
 			else {
 				ContactRemovedEvent cre;
 				cre.pc1 = pc1;
 				cre.pc2 = pc2;
 				EVENTS.Publish(&cre);
-				//PRINT("Sending Collision Remove Event\n");
 			}
 		}
 		else if (e.op == EngineCollisionData::collisionOperation::persisted) {
@@ -688,6 +691,70 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			motionType = JPH::EMotionType::Kinematic;
 		}
 
+		/*
+		// Create rigidbody's collider shape
+		if (scene.Has<BoxCollider>(entity)) {
+
+			BoxCollider& boxCollider = scene.Get<BoxCollider>(entity);
+			Vector3 tScale = t.GetGlobalScale();
+			Vector3 tPos = t.GetGlobalTranslation();
+			Vector3 colliderScale(boxCollider.dimensions.x * tScale.x/2.f, boxCollider.dimensions.y * tScale.y/2.f, boxCollider.dimensions.z * tScale.z/2.f);
+			GlmVec3ToJoltVec3(colliderScale, scale);
+
+			Vector3 finalPos(tPos.operator glm::vec3() + boxCollider.offset.operator glm::vec3());
+			GlmVec3ToJoltVec3(finalPos, pos);
+
+			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
+
+
+		}
+		else if (scene.Has<SphereCollider>(entity)) {
+
+			Vector3 tScale = t.GetGlobalScale();
+			SphereCollider& sc = scene.Get<SphereCollider>(entity);
+			Vector3 finalPos(tpos.operator glm::vec3() + sc.offset.operator glm::vec3());
+			GlmVec3ToJoltVec3(finalPos, pos);
+
+			float radius = (tScale.x < tScale.z ? tScale.z : tScale.x) * sc.radius;
+
+			if (rb.is_trigger)
+			{
+				motionType = JPH::EMotionType::Kinematic;
+			}
+
+			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+			SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+
+		}
+		else if (scene.Has<CapsuleCollider>(entity)) {
+
+
+			CapsuleCollider& cc = scene.Get<CapsuleCollider>(entity);
+			Vector3 tScale = t.GetGlobalScale();
+			GlmVec3ToJoltVec3(tpos, pos);
+
+
+			float radius = (tScale.x < tScale.z ? tScale.z : tScale.x) * cc.radius;
+			float offset = 0.5f * (tScale.y * cc.height) - radius;
+
+			if (offset <= 0.f) {
+				JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+
+				SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+
+			}
+			else {
+				JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
+				SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
+
+			}
+
+		}
+		else {
+			continue;
+		}*/
+
 		// Create rigidbody's collider shape
 		if (scene.Has<BoxCollider>(entity)) {
 
@@ -771,6 +838,9 @@ void PhysicsSystem::UpdateGameObjects() {
 		Rigidbody& rb = *it;
 		Entity& entity = scene.Get<Entity>(rb);
 		if (!scene.IsActive(entity))
+			continue;
+
+		if (rb.isStatic) // Ignore Static object
 			continue;
 
 		Transform& t = scene.Get<Transform>(entity);
@@ -1120,13 +1190,13 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	//std::cout << "add\n";
 }
 
-EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3& direction, const float& distance) {
+EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& distance) {
 	
 	Vector3 tmp;
 	JoltVec3ToGlmVec3(origin, tmp);
 
 	if (!physicsSystem)
-		return EngineRayCastResult(nullptr, Vector3(0,0,0), false);
+		return EngineRayCastResult(Tag(), tmp, false);
 
 	// TODO:
 	/*
@@ -1135,40 +1205,77 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::RVec3&
 	*/
 
 
-	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> allcollector;
-	JPH::ClosestHitCollisionCollector <JPH::RayCastBodyCollector> collector;
+	JPH::AllHitCollisionCollector<JPH::RayCastBodyCollector> collector;
+
 	const JPH::BroadPhaseQuery& bpq = physicsSystem->GetBroadPhaseQuery();
 	JPH::RayCastSettings rcs;
 	rcs.mBackFaceMode = JPH::EBackFaceMode::CollideWithBackFaces;
 	JPH::RayCast ray(origin, direction * distance);
 	bpq.CastRay(ray, collector);
 	if(!collector.HadHit())
-		return EngineRayCastResult(nullptr, Vector3(0, 0, 0), false);
-	//size_t numHits = (int)collector.mHits.size();
-	//std::cout << "Number of hits on raycast: " << numHits << std::endl;	
-	
+		return EngineRayCastResult(Tag(), tmp, false);
+	size_t numHits = (int)collector.mHits.size();
 
-	JPH::BroadPhaseCastResult results = collector.mHit;
-	
-	//size_t idx{ 0 };
-	//if (numHits != 1) {
-	//	idx = numHits - 1;
-	//}
+	collector.Sort();
+	JPH::BroadPhaseCastResult* results = collector.mHits.data();
 
-	UINT32 bid = results.mBodyID.GetIndexAndSequenceNumber();
-	Vector3 hitPt;
-	JPH::RVec3 v = ray.GetPointOnRay(results.mFraction);
-	JoltVec3ToGlmVec3(v, hitPt);
+	UINT32 bid;
+	Tag tag;
+	Vector3 hitPt = { 0.f, 0.f, 0.f };
 	Scene& scene = MySceneManager.GetCurrentScene();
 	auto& rbArray = scene.GetArray<Rigidbody>();
-	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
-		Rigidbody& rb = *it;
-		if (rb.bid == bid) {
-			return EngineRayCastResult(&scene.Get<Entity>(rb), hitPt, true);
+	bool selected = false;
+	for (size_t i = 0; i < numHits; i++)
+	{
+		selected = false;
+		bid = results[i].mBodyID.GetIndexAndSequenceNumber();
+		JPH::RVec3 v = ray.GetPointOnRay(results[i].mFraction);
+		
+		for (auto it = rbArray.begin(); it != rbArray.end(); ++it) 
+		{
+			Rigidbody& rb = *it;
+			if (rb.bid == bid && !rb.is_trigger) 
+			{
+				JoltVec3ToGlmVec3(v, hitPt);
+				tag = scene.Get<Tag>(rb);
+				selected = true;
+				break;
+			}
 		}
+
+		if (selected)
+			break;
 	}
 
-	return EngineRayCastResult(nullptr, Vector3(0, 0, 0), false);
+
+	
+
+	//collector.Sort();
+	/*
+	for (int i{ 0 }; i < numHits; ++i) {
+		
+		JPH::Vec3 pt = ray.GetPointOnRay(results[i].mFraction);
+		
+		std::cout << "Contact pt: " << pt.GetX() << '|' << pt.GetY() << '|' << pt.GetZ() << std::endl;
+
+		// Find 1st contact pt outside of max distance
+		float distance = (pt - ray.mOrigin).Length();
+		if (distance >= maxDistance && i >= 1) {
+
+			closestPointToEnd = ray.GetPointOnRay(results[i-1].mFraction);
+			break;
+			
+		}
+
+		if (i == numHits - 1) {
+			closestPointToEnd = ray.GetPointOnRay(results[i].mFraction);
+			break;
+		}
+	}*/
+	/*std::cout << "Closest pt " << tag.name << ": " << hitPt.x << '|'
+									<< hitPt.y << '|' 
+									<< hitPt.z << std::endl;*/
+	return EngineRayCastResult(tag, hitPt, selected);
 	
 }
 

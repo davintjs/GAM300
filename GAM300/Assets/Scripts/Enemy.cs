@@ -69,9 +69,18 @@ public class Enemy : Script
     public bool playOnce = true;
     public bool alertedOnce = true;
     int alertedRotation = 0;
+    PlayerAudioManager playerSounds;
+    public EnemyAudioManager enemySounds;
 
     void Start()
     {
+        if (enemySounds == null)
+        {
+            Console.WriteLine("Missing Enemy audio manager in enemy");
+            return;
+        }
+        playerSounds = PlayerAudioManager.instance;
+        //enemySounds = EnemyAudioManager.instance;
         playOnce = true;
         currentHealth = maxHealth;
         state = 0;//start with idle state
@@ -219,13 +228,13 @@ public class Enemy : Script
                         switch (alertedRotation)
                         {
                             case 0:
-                                AudioManager.instance.enemyAlerted1.Play();
+                                enemySounds.EnemyAlerted1.Play();
                                 break;
                             case 1:
-                                AudioManager.instance.enemyAlerted2.Play();
+                                enemySounds.EnemyAlerted2.Play();
                                 break;
                             case 2:
-                                AudioManager.instance.enemyAlerted3.Play();
+                                enemySounds.EnemyAlerted3.Play();
                                 break;
 
                         }
@@ -267,7 +276,7 @@ public class Enemy : Script
                     if (playOnce)
                     {
                         playOnce = false;
-                        AudioManager.instance.meleeEnemyAttack.Play();
+                        enemySounds.MeleeEnemyAttack.Play();
                     }
 
                     LookAt(direction);
@@ -390,8 +399,8 @@ public class Enemy : Script
         {
             ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
             ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
-            AudioManager.instance.enemyHit.Play();
-            AudioManager.instance.meleeEnemyInjured.Play();
+            enemySounds.EnemyHit.Play();
+            enemySounds.MeleeEnemyInjured.Play();
             currentHealth -= amount;
             vec3 hpScale = hpBar.localScale;
             hpScale.x = currentHealth / maxHealth;
@@ -413,7 +422,7 @@ public class Enemy : Script
             SetState("Death", true);
             animationManager.UpdateState();
             startDeathAnimationCountdown = true;
-            AudioManager.instance.meleeEnemyDie.Play();
+            enemySounds.MeleeEnemyDie.Play();
 
             //if (spawnObject != null)
             //    spawnObject.SetActive(true);
@@ -445,7 +454,42 @@ public class Enemy : Script
                 StopCoroutine(damagedCoroutine);
             }
             damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
-            TakeDamage(1);
+
+            if (ThirdPersonController.instance.currentlyOverdriven == true)
+            {
+                TakeDamage(2);
+            }
+            else
+            {
+                TakeDamage(1);
+
+                if (ThirdPersonController.instance.isOverdriveEnabled == true)
+                {
+                    //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
+                    if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                    {
+                        ThirdPersonController.instance.currentOverdriveCharge = ThirdPersonController.instance.maxOverdriveCharge;
+                        ThirdPersonController.instance.UpdateOverdriveBar();
+
+                        if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true)
+                        {
+                            ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                            playerSounds.PowerUp.Play();
+                        }
+                    }
+                    else
+                    {
+                        ThirdPersonController.instance.currentOverdriveCharge++;
+                        ThirdPersonController.instance.UpdateOverdriveBar();
+
+                        if (ThirdPersonController.instance.playOverdrivePowerUpOnce == true && ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
+                        {
+                            ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
+                            playerSounds.PowerUp.Play();
+                        }
+                    }
+                }
+            }
         }
     }
 

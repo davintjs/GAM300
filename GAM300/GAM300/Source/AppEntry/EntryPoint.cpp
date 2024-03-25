@@ -51,6 +51,7 @@ int main(int, char**) {
 		MyEngineCore.Update(dt);
 		app->Update(dt);
 		dt = MyFrameRateController.End();
+		MyFrameRateController.deltaTime = dt;
 	}
 
 	MyEngineCore.Exit();

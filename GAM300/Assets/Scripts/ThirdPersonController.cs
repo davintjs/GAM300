@@ -30,6 +30,9 @@ public class ThirdPersonController : Script
     public float currentDashAttackCooldown;
     public bool startDashCooldown = false;
 
+    public bool stopJump = false;
+    private bool jumpLandSound = false;
+
 
     public float dodgeTimer = 1f;
     public float currentDodgeTimer;
@@ -59,7 +62,7 @@ public class ThirdPersonController : Script
 
     List<vec3> pos = new List<vec3>();
 
-    public float RotationSpeed = 1;
+    public float RotationSpeed = 15;
 
     public AudioSource audioSource;
     int jumpAudioRotation = 0;
@@ -118,9 +121,9 @@ public class ThirdPersonController : Script
             {
                 selectedWeaponCollider.transform.rotation = new vec3(PlayerModel.rotation);
                 SetState("Attack" + comboCount, true);
-                AudioManager.instance.playerSlashAttack.Play();
-                AudioManager.instance.spark.Play();
-                AudioManager.instance.playerAttack.Play();
+                playerSounds.PlayerSlashAttack.Play();
+                playerSounds.Spark.Play();
+                playerSounds.PlayerAttack.Play();
                 ++comboCount;
                 if (comboCount > 3) { comboCount = 1; }
             }
@@ -149,6 +152,8 @@ public class ThirdPersonController : Script
     vec3 initialHealthBarPos;
     float initialHealthBarXpos;
     float initialHealthBarXScale;
+    bool lowHealthSound = false;
+    bool playingLowHealthSound = false;
 
     //stamina bar
     public float maxStamina = 100f;
@@ -173,8 +178,18 @@ public class ThirdPersonController : Script
     //overdrive bar
     //public float maxOverdrive = 10f;
     //public float currentOverdrive = 0;
-    //public GameObject overDriveBar;
+    public GameObject overDriveBar;
+    public Transform overDriveTransform;
     public GameObject overDriveVFX;
+    //for overdrive chip purposes
+    public bool isOverdriveEnabled = false;
+    //used to check if in overdrive for dmg boost, regen and stamina reset
+    public bool currentlyOverdriven = false;
+    public bool playOverdrivePowerUpOnce = true;
+    public float maxOverdriveCharge = 15f;
+    public float currentOverdriveCharge = 0f;
+    public float currentOverdriveHealthTimer = 0f;
+    public float chargeOverdriveTimer = 0f;
 
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
@@ -189,6 +204,9 @@ public class ThirdPersonController : Script
 
     int comboCount = 1;
 
+    public PlayerAudioManager playerSounds;
+    private bool noInterpolate = true;
+
     bool _wasMoving = false;
     bool wasMoving
     {
@@ -198,7 +216,7 @@ public class ThirdPersonController : Script
             if (value == false && _wasMoving)
             {
                 walkSoundTimer = 0f;
-                AudioManager.instance.playerFootstep.Play();
+                playerSounds.PlayerFootstep.Play();
             }
 
             _wasMoving = value;
@@ -208,7 +226,7 @@ public class ThirdPersonController : Script
             }
             if (walkSoundTimer > walkSoundTime)
             {
-                AudioManager.instance.playerFootstep.Play();
+                playerSounds.PlayerFootstep.Play();
                 walkSoundTimer = 0;
             }
         }
@@ -228,11 +246,12 @@ public class ThirdPersonController : Script
         AnimationState attack1 = animationManager.GetState("Attack1");
         AnimationState attack2 = animationManager.GetState("Attack2");
         AnimationState attack3 = animationManager.GetState("Attack3");
+        AnimationState dashAttack = animationManager.GetState("DashAttack");
         AnimationState sprint = animationManager.GetState("Sprint");
         AnimationState run = animationManager.GetState("Run");
-        AnimationState dashAttack = animationManager.GetState("DashAttack");
         AnimationState dodge = animationManager.GetState("Dodge");
         AnimationState overdrive = animationManager.GetState("Overdrive");
+        AnimationState idle = animationManager.GetState("Idle");
         //Lowest Precedence
 
         stun.SetConditionals(false, death);
@@ -252,6 +271,7 @@ public class ThirdPersonController : Script
         dodge.SetConditionals(false, dashAttack, jump, death, stun, attack1, attack2, attack3, dashAttack);
         dodge.speed = 2.5f;
         overdrive.SetConditionals(false, dashAttack, dodge, attack1, attack2, attack3, jump, death, stun);
+        SetState("Idle", true);
     }
 
 
@@ -260,65 +280,63 @@ public class ThirdPersonController : Script
         //Material mat = doorTestMesh.material;
         //mat.color = vec4.Ones;
         //reference check
+        if (overDriveTransform == null)
+        {
+            Console.WriteLine("Missing OverdriveBarTransform reference in ThirdPersonController script");
+        }
+
+        if (overDriveBar == null)
+        {
+            Console.WriteLine("Missing Overdrive Bar reference in ThirdPersonController script");
+        }
+
         if (PlayerCamera == null)
         {
             Console.WriteLine("Missing Player camere reference in ThirdPersonController script");
-            return;
         }
         if(PlayerModel == null)
         {
             Console.WriteLine("Missing PlayerModel reference in ThirdPersonController script");
-            return;
         }
         if(player == null)
         {
             Console.WriteLine("Missing player reference in ThirdPersonController script");
-            return;
         }
         if(attackLight == null)
         {
             Console.WriteLine("Missing attack light reference in ThirdPersonController script");
-            return;
         }
         if(overDriveCollider == null)
         {
             Console.WriteLine("Missing overDriveCollider reference in ThirdPersonController script");
-            return;
         }
         if(playerWeaponCollider1 == null)
         {
             Console.WriteLine("Missing playerWeaponCollider1 reference in ThirdPersonController script");
-            return;
         }
         if(playerWeaponCollider2 == null)
         {
             Console.WriteLine("Missing playerWeaponCollider2 reference in ThirdPersonController script");
-            return;
         }
         if(playerWeaponCollider3 == null)
         {
             Console.WriteLine("Missing playerWeaponCollider3 reference in ThirdPersonController script");
-            return;
         }
         if(audioSource == null)
         {
             Console.WriteLine("Missing audioSource reference in ThirdPersonController script");
-            return;
         }
         if(healthBarFill == null)
         {
             Console.WriteLine("Missing healthBarFill reference in ThirdPersonController script");
-            return;
         }
         if(healthStaminaCanvas == null)
         {
             Console.WriteLine("Missing healthStaminaCanvas reference in ThirdPersonController script");
-            return;
         }
         if(staminaBarFill == null)
         {
             Console.WriteLine("Missing staminaBarFill reference in ThirdPersonController script");
-            return;
         }
         if(staminaBarPos == null)
         {
@@ -329,8 +347,7 @@ public class ThirdPersonController : Script
             Console.WriteLine("Missing animator reference in ThirdPersonController script");
         }
 
-
-        audioSource.Play();
+        playerSounds = PlayerAudioManager.instance;
         playerWeaponCollider1.SetActive(false);
         playerWeaponCollider2.SetActive(false);
         playerWeaponCollider3.SetActive(false);
@@ -354,12 +371,23 @@ public class ThirdPersonController : Script
         walkSoundTime = walkStepsInterval;
         InitAnimStates();
         spawnPoint = transform.position;
+
+        //Overdrive start
+        if (isOverdriveEnabled == true)
+        {
+            overDriveBar.SetActive(true);
+            UpdateOverdriveBar();
+        }
+        else
+        {
+            overDriveBar.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (ThirdPersonCamera.instance.cutscene)
+        if (ThirdPersonCamera.instance.cutscene || GameManager.instance.paused)
             return;
 
 
@@ -404,6 +432,25 @@ public class ThirdPersonController : Script
         {
             HealHealth(1);
         }
+
+        if (lowHealthSound)
+        {
+            playerSounds.LowHealthSound.Play();
+            playerSounds.LowHealthHeartbeatSound.Play();
+            playingLowHealthSound = true;
+        }
+        else
+        {
+            playerSounds.LowHealthSound.Pause();
+            playerSounds.LowHealthHeartbeatSound.Pause();
+            playingLowHealthSound = false;
+        }
+
+        if (currentStamina >= 20f)
+        {
+            playerSounds.LowStaminaSound.Pause();
+        }
+
         vec3 dir = GetDirection();
         vec3 movement = dir * MoveSpeed * Time.deltaTime;
 
@@ -514,10 +561,10 @@ public class ThirdPersonController : Script
                 switch (dodgeRollAudioRotation)
                 {
                     case 0:
-                        AudioManager.instance.dodgeRoll1.Play();
+                        playerSounds.DodgeRoll1.Play();
                         break;
                     case 1:
-                        AudioManager.instance.dodgeRoll2.Play();
+                        playerSounds.DodgeRoll2.Play();
                         break;
                 }
             }
@@ -557,6 +604,7 @@ public class ThirdPersonController : Script
             overDriveVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y -2, transform.localPosition.z);
             overDriveVFX.SetActive(true);
 
+            //this stops the animation only
             if (currentOverdriveTimer <= 0)
             {
                 SetState("Overdrive", false);
@@ -569,14 +617,44 @@ public class ThirdPersonController : Script
                 currentOverdriveTimer = overdriveTimer;
             }
         }
+
+        //cooldown changed to OverdriveDuration
         if(startOverdriveCooldown)
         {
+            //change cooldown to duration
             currentOverdriveCooldown -= Time.deltaTime;
+
+            //timer to reduce charge here
+            chargeOverdriveTimer += Time.deltaTime;
+
+            if (chargeOverdriveTimer >= 0.95f)
+            {
+                chargeOverdriveTimer = 0f;
+                currentOverdriveCharge -= 1.5f;
+                if (currentOverdriveCharge <= 0f)
+                {
+                    currentOverdriveCharge = 0f;
+                }
+                UpdateOverdriveBar();
+            }
+
+            //health regen code
+            currentOverdriveHealthTimer += Time.deltaTime;
+            if(currentOverdriveHealthTimer >= 1.8f)
+            {
+                currentOverdriveHealthTimer = 0f;
+                HealtHealthOverTime();
+            }
+
             if(currentOverdriveCooldown <= 0)
             {
                 //SetState("Overdrive", false);
                 startOverdriveCooldown = false;
                 currentOverdriveCooldown = overDriveCooldown;
+                UpdateOverdriveBar();
+
+                //remove regen, stamina reset and double dmg here
+                currentlyOverdriven = false;
             }
         }
 
@@ -594,46 +672,113 @@ public class ThirdPersonController : Script
         }
         else if (CC.isGrounded)
         {
+            //Console.WriteLine("\nGROUNDED!");
             if (GetState("Falling"))
             {
                 SetState("Falling", false);
-                AudioManager.instance.playerFootstep.Play();
+                playerSounds.PlayerFootstep.Play();
             }
             //DASH ATTACK
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
-            if (Input.GetKeyDown(KeyCode.LeftAlt) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
+            if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
             {
                 //Console.WriteLine("DashAttack");
+                IsAttacking = false;
                 UseStamina(dashAttackStamina);
-                AudioManager.instance.dashAttack.Play();
-                AudioManager.instance.playerAttack.Play();
+                playerSounds.DashAttack.Play();
+                playerSounds.PlayerAttack.Play();
                 _isDashAttacking = true;
+
+                // No interpolation for dash attack
+                noInterpolate = false;
+
+                // Snap the direction to wasd keys
+                if (Input.GetKey(KeyCode.W))
+                {
+                    dir = (PlayerCamera.back);
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    dir = (PlayerCamera.left);
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    dir = (PlayerCamera.forward);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    dir = (PlayerCamera.right);
+                }
+
                 SetState("Run", false);
                 SetState("Sprint", false);
+                SetState("Attack1", false);
+                SetState("Attack2", false);
+                SetState("Attack3", false);
                 SetState("DashAttack", true);
             }
             //DODGE
-            if(Input.GetKey(KeyCode.C) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
+            if(Input.GetKey(KeyCode.LeftControl) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
             {
                 //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
                 isDodging = true;
+
+                // No interpolation for dodging
+                noInterpolate = false;
+
+                // Snap the direction to wasd keys
+                if (Input.GetKey(KeyCode.W))
+                {
+                    dir = (PlayerCamera.back);
+                }
+                else if (Input.GetKey(KeyCode.A))
+                {
+                    dir = (PlayerCamera.left);
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    dir = (PlayerCamera.forward);
+                }
+                else if (Input.GetKey(KeyCode.D))
+                {
+                    dir = (PlayerCamera.right);
+                }
+
                 SetState("Run", false);
                 SetState("Sprint", false);
+                SetState("Attack1", false);
+                SetState("Attack2", false);
+                SetState("Attack3", false);
                 SetState("Dodge", true);
             }
             //OVERDRIVE
-            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && !startOverdriveCooldown)
+            if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && currentOverdriveCharge == maxOverdriveCharge && isOverdriveEnabled == true && currentlyOverdriven == false)
             {
-                AudioManager.instance.playerOverdrive.Play();
-                AudioManager.instance.overdriveVFXSound.Play();
+                playerSounds.PlayerOverdrive.Play();
+                playerSounds.OverdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use
                 //UseStamina(overDriveStamina);
-                Console.WriteLine("Overdrive");
+                //Console.WriteLine("Overdrive");
+
+                //set the charge to 0, so it can't be used again immediately
+                //currentOverdriveCharge = 0;
+
+                //reset powerupPlayOnce
+                playOverdrivePowerUpOnce = true;
+
+                //reset health regen timer so it doesn't stack in the next overdrive mode use.
+                currentOverdriveHealthTimer = 0f;
+
+                //reset stamina
+                currentStamina = maxStamina;
+                UpdateStaminaBar();
+
+                currentlyOverdriven = true;
                 _isOverdrive = true;
                 SetState("Run", false);
                 SetState("Sprint", false);
-                SetState("Dodge", false);;
+                SetState("Dodge", false);
                 SetState("Overdrive", true);
 
             }
@@ -671,7 +816,11 @@ public class ThirdPersonController : Script
             //JUMP
             else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
             {
+                //Console.WriteLine("JUMP KEY PRESSED!");
+                StartCoroutine(StopJump());
                 SetState("Jump", true);
+                playerSounds.JumpOffGroundSound.Play();
+                jumpLandSound = true;
 
                 //Jump will not require stamina
                 //UseStamina(jumpStamina);
@@ -682,13 +831,13 @@ public class ThirdPersonController : Script
                 switch (jumpAudioRotation)
                 {
                     case 0:
-                        AudioManager.instance.jumpVoice.Play();
+                        playerSounds.JumpVoice.Play();
                         break;
                     case 1:
-                        AudioManager.instance.jumpVoice2.Play();
+                        playerSounds.JumpVoice2.Play();
                         break;
                     case 2:
-                        AudioManager.instance.jumpVoice3.Play();
+                        playerSounds.JumpVoice3.Play();
                         break;
                 }
                 
@@ -696,7 +845,17 @@ public class ThirdPersonController : Script
             }
             else if (!IsAttacking)
             {
-                SetState("Jump", false);
+                //Console.WriteLine("Stopped Jumping");
+                if (stopJump)
+                {
+                    SetState("Jump", false);
+                    if (jumpLandSound == true)
+                    {
+                        playerSounds.HitGroundSound.Play();
+                        jumpLandSound = false;
+                    }
+                }
+                    
                 //SPRINT
                 if (Input.GetKey(KeyCode.LeftShift) && isMoving && currentStamina >= sprintStamina)
                 {
@@ -720,6 +879,7 @@ public class ThirdPersonController : Script
         }
         else
         {
+            //Console.WriteLine("NOT GROUNDED!");
             if (animationManager.GetState("Jump").state)
             {
                 if (currentAirTime >= maxAirTime)
@@ -736,15 +896,31 @@ public class ThirdPersonController : Script
             movement += vec3.UnitY * -Gravity;
         }
         wasMoving = moved;
-        UpdateRotation(dir);
-
-
+        if (noInterpolate) // Update rotation of the player as normal
+        {
+            UpdateRotation(dir);
+        }
+        else
+        {
+            UpdateRotationNoInterpolate(dir);
+            noInterpolate = true;
+        }
+        noInterpolate = true;
         CC.Move(movement);
 
 
         //attacking
+    }
 
+    void LateUpdate()
+    {
         animationManager.UpdateState();
+    }
+
+    public void enableOverdrive()
+    {
+        overDriveBar.SetActive(true);
+        isOverdriveEnabled = true;
     }
 
     public void Respawn()
@@ -775,9 +951,15 @@ public class ThirdPersonController : Script
         UpdateStaminaBar();
     }
 
+    public void UpdateOverdriveBar()
+    {
+        vec3 overDriveScale = overDriveTransform.localScale;
+        overDriveScale.x = currentOverdriveCharge / maxOverdriveCharge;
+        overDriveTransform.localScale = overDriveScale;
+    }
+
     public void UpdatehealthBar()
     {
-
         vec3 hpScale = healthBar.localScale;
         hpScale.x = currentHealth / maxHealth;
         healthBar.localScale = hpScale;
@@ -795,13 +977,11 @@ public class ThirdPersonController : Script
 
     public void UpdateStaminaBar()
     {
-
-
-
         vec3 staminaScale = staminaBar.localScale;
         staminaScale.x = currentStamina / maxStamina;
         staminaBar.localScale = staminaScale;
     }
+
 
     public float UseStamina(float amount)
     {
@@ -810,6 +990,7 @@ public class ThirdPersonController : Script
         {
             currentStamina -= amount;
             UpdateStaminaBar();
+
             //staminaBar.value = currentStamina;
             //lerp timer reset the lerp effect
             //lerpTimer = 0f;
@@ -822,16 +1003,17 @@ public class ThirdPersonController : Script
             }
             if (currentStamina - amount <= 0)
             {
+                playerSounds.LowStaminaSound.Play();
                 //Debug.Log("Not enough stamina");
                 //Console.WriteLine("Not enough stamina");
                 UpdateStaminaBar();
             }
 
-
             regen = StartCoroutine(RegenStamina());
         }
         else
         {
+            playerSounds.LowStaminaSound.Play();
             //Debug.Log("Not enough stamina");
             //Console.WriteLine("Not enough stamina");
             UpdateStaminaBar();
@@ -890,14 +1072,17 @@ public class ThirdPersonController : Script
     void SetState(string stateName, bool value)
     {
         animationManager.GetState(stateName).state = value;
+        animationManager.UpdateState(); 
     }
+
+
     public void TakeDamage(float amount)
     {
         if (!isInvulnerable)
         {
             IsAttacking = false;
             //dmg noise
-            AudioManager.instance.playerInjured.Play();
+            playerSounds.PlayerInjured.Play();
 
             Random rd = new Random();
             damageAudioRotation = rd.Next(0, 1);
@@ -905,10 +1090,10 @@ public class ThirdPersonController : Script
             switch (damageAudioRotation)
             {
                 case 0:
-                    AudioManager.instance.thumpCollision1.Play();
+                    playerSounds.Thump1.Play();
                     break;
                 case 1:
-                    AudioManager.instance.thumpCollision2.Play();
+                    playerSounds.Thump2.Play();
                     break;
             }
 
@@ -917,21 +1102,25 @@ public class ThirdPersonController : Script
             isInvulnerable = true;
             currentInvulnerableTimer = invulnerableTimer;
             currentHealth -= amount;
+            if (currentHealth <= 3f && playingLowHealthSound == false)
+            {
+                lowHealthSound = true;
+            }
             UpdatehealthBar();
         }
         
         if (currentHealth <= 0)
         {
+            playerSounds.LowHealthSound.Pause();
+            playerSounds.LowHealthHeartbeatSound.Pause();
             //Console.WriteLine("YouDied");
             isDead = true;
             SetState("Death", true);
-            animationManager.UpdateState();
         }
         else
         {
             SetState("Stun", true);
             animator.Stop();
-            animationManager.UpdateState();
             animator.Play();
         }
     }
@@ -941,6 +1130,14 @@ public class ThirdPersonController : Script
         currentHealth += amount;
         UpdatehealthBar();
 
+        if (currentHealth > 3f)
+        {
+            //playerSounds.LowHealthHeartbeatSound.Pause();
+            //playerSounds.LowHealthSound.Pause();
+            lowHealthSound = false;
+            playingLowHealthSound = false;
+        }
+
         if(currentHealth > maxHealth)
         {
             currentHealth = maxHealth;
@@ -949,6 +1146,13 @@ public class ThirdPersonController : Script
         {
             //Console.WriteLine("Health is Full");
         }
+    }
+
+    public void HealtHealthOverTime()
+    {
+        HealHealth(1);
+        //play audio here
+        playerSounds.UseItem.Play();
     }
 
 
@@ -991,6 +1195,7 @@ public class ThirdPersonController : Script
     {
         if (dir == vec3.Zero)
             return;
+
         float angle = (float)Math.Atan2(-dir.x, -dir.z);
         quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
         quat oldQuat = glm.FromEulerToQuat(PlayerModel.localRotation).Normalized;
@@ -999,6 +1204,64 @@ public class ThirdPersonController : Script
         quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * RotationSpeed);
 
         vec3 rot = ((vec3)midQuat.EulerAngles);
+
+        if (rot != vec3.NaN)
+        {
+            bool isNan = false;
+            foreach (float val in rot)
+            {
+                if (float.IsNaN(val))
+                {
+                    isNan = true;
+                    break;
+                }
+            }
+            if (!isNan)
+            {
+                PlayerModel.localRotation = rot;
+            }
+        }
+    }
+
+    public void UpdateRotationNoInterpolate(vec3 dir)
+    {
+        if (dir == vec3.Zero)
+        {
+            return;
+        }
+
+        float angle = (float)Math.Atan2(-dir.x, -dir.z);
+        quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
+
+        vec3 rot = (vec3)newQuat.EulerAngles;
+
+        if (rot != vec3.NaN)
+        {
+            bool isNan = false;
+            foreach (float val in rot)
+            {
+                if (float.IsNaN(val))
+                {
+                    isNan = true;
+                    break;
+                }
+            }
+            if (!isNan)
+            {
+                PlayerModel.localRotation = rot;
+            }
+        }
+    }
+
+    public void SetRotation(vec3 dir)
+    {
+        if (dir == vec3.Zero)
+            return;
+
+        float angle = (float)Math.Atan2(-dir.x, -dir.z);
+        quat newQuat = glm.FromEulerToQuat(new vec3(0, angle, 0)).Normalized;
+
+        vec3 rot = ((vec3)newQuat.EulerAngles);
 
         if (rot != vec3.NaN)
         {
@@ -1036,6 +1299,14 @@ public class ThirdPersonController : Script
         //    Console.WriteLine("Collected");
         //    AudioManager.instance.itemCollected.Play();//play audio sound
         //}
+    }
+
+    IEnumerator StopJump()
+    {
+        stopJump = false;
+        yield return null;
+        yield return null;
+        stopJump = true;
     }
 
     void OnCollisionEnter(PhysicsComponent rb)

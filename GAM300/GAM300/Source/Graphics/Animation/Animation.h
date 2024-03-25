@@ -17,6 +17,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 #ifndef ANIMATION_H
 #define ANIMATION_H
 
+#include <unordered_map>
 #include <glm/gtx/quaternion.hpp>
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -150,7 +151,7 @@ public:
     inline float& GetDuration() { return m_Duration; }
     inline int& GetTicksPerSecond() { return m_TicksPerSecond; }
     inline std::vector<AnimationState>& GetAnimationStates() { return m_AnimationStates; }
-    inline std::vector<Bone>& GetBones() { return m_Bones; }
+    inline std::unordered_map<std::string, Bone>& GetBones() { return m_Bones; }
     inline AssimpNodeData& GetRootNode() { return m_RootNode; }
     inline std::map<std::string, BoneInfo>& GetBoneInfoMap() { return m_BoneInfoMap; }
     inline int& GetBoneCount() { return m_BoneCounter; }
@@ -159,7 +160,7 @@ protected:
     float m_Duration;
     int m_TicksPerSecond;
     std::vector<AnimationState> m_AnimationStates;  // Maps the name of the animation with the range using vec2 where x rep start, y rep end
-    std::vector<Bone> m_Bones; // Bean: We need to copy this for animator 
+    std::unordered_map<std::string, Bone> m_Bones; // Bean: We need to copy this for animator 
     AssimpNodeData m_RootNode;
     std::map<std::string, BoneInfo> m_BoneInfoMap; // Bean: We need to copy this for animator
     int m_BoneCounter = 0;

@@ -49,42 +49,42 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #define UPDATE_TIME 1.f;
 
 #if defined(_BUILD)
-	using AllSystemsPack =
-	TemplatePack
-	<
-		AssetManager,
-		InputSystem,
-		ScriptingSystem,
-		ParticleManager,
-		DemoSystem,//RUN AFTER EDITOR
-		AudioSystem,
-		PhysicsSystem, //AFTER SCRIPTING
-		LateScriptingSystem,
-		SceneManager,
-		GraphicsSystem,
-		Blackboard,
-		NavMeshBuilder,
-		UISystem
-	>;
+using AllSystemsPack =
+TemplatePack
+<
+	AssetManager,
+	InputSystem,
+	ScriptingSystem,
+	ParticleManager,
+	DemoSystem,//RUN AFTER EDITOR
+	AudioSystem,
+	PhysicsSystem, //AFTER SCRIPTING
+	LateScriptingSystem,
+	SceneManager,
+	GraphicsSystem,
+	Blackboard,
+	NavMeshBuilder,
+	UISystem
+>;
 #else
-	using AllSystemsPack =
-	TemplatePack
-	<
-		AssetManager,
-		InputSystem,
-		EditorSystem,
-		ScriptingSystem,
-		ParticleManager,
-		DemoSystem,//RUN AFTER EDITOR
-		AudioSystem,
-		PhysicsSystem, //AFTER SCRIPTING
-		LateScriptingSystem, 
-		SceneManager,
-		GraphicsSystem,
-		Blackboard,
-		NavMeshBuilder,
-		UISystem
-	>;
+using AllSystemsPack =
+TemplatePack
+<
+	AssetManager,
+	InputSystem,
+	EditorSystem,
+	ScriptingSystem,
+	ParticleManager,
+	DemoSystem,//RUN AFTER EDITOR
+	AudioSystem,
+	PhysicsSystem, //AFTER SCRIPTING
+	LateScriptingSystem,
+	SceneManager,
+	GraphicsSystem,
+	Blackboard,
+	NavMeshBuilder,
+	UISystem
+>;
 #endif
 
 using AllSystems = decltype(SystemsGroup(AllSystemsPack()));
@@ -115,6 +115,8 @@ public:
 		IDENTIFIERS.GetTags()["EnemyAttack"] = Engine::CreateUUID();
 		IDENTIFIERS.GetTags()["Platform"] = Engine::CreateUUID();
 		IDENTIFIERS.GetTags()["Checkpoint"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["Dialogue1"] = Engine::CreateUUID();
+		IDENTIFIERS.GetTags()["Camera"] = Engine::CreateUUID();
 		THREADS.Init();
 		RegisterComponents(AllObjectTypes());
 		//#ifndef _BUILD
@@ -126,10 +128,10 @@ public:
 
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStart);
 		EVENTS.Subscribe(this, &EngineCore::CallbackSceneStop);
-		#if defined(_BUILD)
-			MySceneManager.StartScene();
-			mode = ENUM_SYSTEM_RUNTIME;
-		#endif
+#if defined(_BUILD)
+		MySceneManager.StartScene();
+		mode = ENUM_SYSTEM_RUNTIME;
+#endif
 		update_timer = 0.f;
 		app_time = 0.f;
 	}
@@ -144,57 +146,59 @@ public:
 	void Update(float dt)
 	{
 		//Start ImGui Frames
-		#if defined(_BUILD)
-			AllSystems::Update(dt);
-		#else
-			ImGui_ImplOpenGL3_NewFrame();
-			ImGui_ImplGlfw_NewFrame();
-			ImGui::NewFrame();
-			ImGuizmo::BeginFrame();
-				
-			double starttime = 0;
-			float elapsedtime = 0;
-			bool update = false;
+#if defined(_BUILD)
+		AllSystems::Update(dt * MyFrameRateController.timeScale);
+#else
+		ImGui_ImplOpenGL3_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
+		ImGui::NewFrame();
+		ImGuizmo::BeginFrame();
 
-			//performance viewer update timer (1s)
-			if (update_timer > 0.f) {
-				update_timer -= dt;
-			}
-			else {
-				update_timer = UPDATE_TIME;
-				update = true;
-			}
+		double starttime = 0;
+		float elapsedtime = 0;
+		bool update = false;
 
-			auto func =
+
+		//performance viewer update timer (1s)
+		if (update_timer > 0.f) {
+			update_timer -= dt;
+		}
+		else {
+			update_timer = UPDATE_TIME;
+			update = true;
+		}
+
+		auto func =
 			[&](ISystem* sys)
+		{
+			if (sys->GetMode() & mode)
 			{
-				if (sys->GetMode() & mode)
-				{
-					starttime = glfwGetTime();
-					//Update performance viewer every 2s
-					//std::cout << typeid(*sys).name() << std::endl;
-					sys->Update(dt);
-					if (update) {
-						float timetaken = (float)(glfwGetTime() - starttime);
-						elapsedtime += timetaken;
-						system_times[typeid(*sys).name() + strlen("Class ")] = timetaken;
-					}	
+				starttime = glfwGetTime();
+				//Update performance viewer every 2s
+				//std::cout << typeid(*sys).name() << std::endl;
+				sys->Update(dt * MyFrameRateController.timeScale);
+				if (update) {
+					float timetaken = (float)(glfwGetTime() - starttime);
+					elapsedtime += timetaken;
+					system_times[typeid(*sys).name() + strlen("Class ")] = timetaken;
 				}
-			};
-
-			AllSystems::Update(dt, func);
-
-			if (update) {
-				systemtotaltime = elapsedtime;
-				update = false;
 			}
-				
+		};
 
-			ImGui::EndFrame();
-			ImGui::Render();
-			ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-			app_time += dt;
-		#endif
+		AllSystems::Update(dt * MyFrameRateController.timeScale, func);
+
+		if (update) {
+			systemtotaltime = elapsedtime;
+			update = false;
+		}
+
+
+
+		ImGui::EndFrame();
+		ImGui::Render();
+		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		app_time += dt;
+#endif
 
 		//End ImGui Frames
 	}
@@ -215,15 +219,17 @@ public:
 		//#endif
 	}
 
-	void CallbackSceneStart(SceneStartEvent* pEvent)
+	void CallbackSceneStart(SceneStartEvent * pEvent)
 	{
 		(void)pEvent;
 		mode = ENUM_SYSTEM_RUNTIME;
+		MyFrameRateController.timeScale = 1.f;
 	}
-	void CallbackSceneStop(SceneStopEvent* pEvent) 
+	void CallbackSceneStop(SceneStopEvent * pEvent)
 	{
 		(void)pEvent;
 		mode = ENUM_SYSTEM_EDITOR;
+		MyFrameRateController.timeScale = 1.f;
 	}
 
 	std::map<std::string, float>system_times;

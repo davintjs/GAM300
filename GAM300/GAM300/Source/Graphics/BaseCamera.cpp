@@ -213,6 +213,60 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 	UpdateProjection();
 }
 
+
+bool BaseCamera::WithinFrustrumAnimation(Transform& _transform, const glm::vec3& _min, const glm::vec3& _max)
+{
+	if (!useFrustumCulling)
+		return true;
+
+	//Get global parameters
+	const glm::mat4 worldMatrix = _transform.GetWorldMatrix();
+	const glm::vec3 globalCenter = worldMatrix * glm::vec4(((_min + _max) * 0.5f), 1.f);
+
+	// Distance Check
+	if (distanceCheck >= glm::distance(globalCenter, cameraPosition))
+		return true;
+
+	const glm::vec3 right = worldMatrix[0] * _max.x;
+	const glm::vec3 up = worldMatrix[1] * _max.y;
+	const glm::vec3 forward = -worldMatrix[2] * _max.z;
+
+	const float newIi = std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, right)) +
+		std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, up)) +
+		std::abs(glm::dot(glm::vec3{ 1.f, 0.f, 0.f }, forward));
+
+	const float newIj = std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, right)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, up)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 1.f, 0.f }, forward));
+
+	const float newIk = std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, right)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, up)) +
+		std::abs(glm::dot(glm::vec3{ 0.f, 0.f, 1.f }, forward));
+
+	const glm::vec3 globalExtents = glm::vec3(newIi, newIj, newIk);
+	farClip /= 2.f;
+	const float radians = tanf(glm::radians(fieldOfView) * 0.5f);
+	const float farHeight = farClip * radians;
+	const float farWidth = farHeight * aspect;
+	const glm::vec3& frontMultFar = farClip * GetForwardVec();
+	Frustum test;
+	test.nearFace = { cameraPosition + nearClip * GetForwardVec(), GetForwardVec() };
+	test.farFace = { cameraPosition + frontMultFar, -GetForwardVec() };
+	test.leftFace = { cameraPosition, glm::cross(glm::normalize(frontMultFar - GetRightVec() * farWidth), GetUpVec()) };
+	test.rightFace = { cameraPosition, glm::cross(GetUpVec(),glm::normalize(frontMultFar + GetRightVec() * farWidth)) };
+	test.bottomFace = { cameraPosition, glm::cross(GetRightVec(), glm::normalize(frontMultFar - GetUpVec() * farHeight)) };
+	test.topFace = { cameraPosition, glm::cross(glm::normalize(frontMultFar + GetUpVec() * farHeight), GetRightVec()) };
+
+
+	return (test.topFace.IsOnOrForwardPlane(globalCenter, globalExtents) &&
+		test.bottomFace.IsOnOrForwardPlane(globalCenter, globalExtents) &&
+		test.rightFace.IsOnOrForwardPlane(globalCenter, globalExtents) &&
+		test.leftFace.IsOnOrForwardPlane(globalCenter, globalExtents) &&
+		test.farFace.IsOnOrForwardPlane(globalCenter, globalExtents) &&
+		test.nearFace.IsOnOrForwardPlane(globalCenter, globalExtents));
+
+}
+
 bool BaseCamera::WithinFrustum(Transform& _transform, const glm::vec3& _min, const glm::vec3& _max)
 {
 	if (!useFrustumCulling)

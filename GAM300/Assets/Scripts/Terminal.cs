@@ -15,6 +15,7 @@ public class Terminal : Script
     public MeshRenderer glowMesh;
     public Material glowMat;
     public bool interaced = false;
+    public bool interactOnce = true;
 
     void Start()
     {
@@ -44,6 +45,7 @@ public class Terminal : Script
         {
             Console.WriteLine("AtCheckpoint");
             ThirdPersonController.instance.checkpointIndex = index;
+            ThirdPersonController.instance.spawnPoint = transform.localPosition + transform.forward * 2f + vec3.UnitY * 2f;
             //CheckCheckpoint();
 
             ThirdPersonController.instance.isAtCheckpoint = true;
@@ -56,8 +58,9 @@ public class Terminal : Script
         if(index == ThirdPersonController.instance.checkpointIndex)
         {
             //save checkpoint
-            if (Input.GetKeyDown(KeyCode.E) && ThirdPersonController.instance.isAtCheckpoint == true)
+            if (interactOnce && ThirdPersonController.instance.isAtCheckpoint == true)
             {
+                interactOnce = false;
                 Console.WriteLine("Save Checkpoint");
                 //change glow of terminal
                 Material mat = terminalglowMesh.material;
@@ -67,7 +70,11 @@ public class Terminal : Script
                 //mat.metallic = metallic;
 
                 //shift the spawn point to where the current termainal position where the player save
-                AudioManager.instance.uiSound.Play();
+                AudioManager.instance.obj_success.Play();
+
+                ThirdPersonController.instance.currentHealth = ThirdPersonController.instance.maxHealth;
+                ThirdPersonController.instance.UpdatehealthBar();
+                PlayerAudioManager.instance.UseItem.Play();
 
             }
         }

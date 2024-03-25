@@ -20,7 +20,6 @@ All content ? 2023 DigiPen Institute of Technology Singapore. All rights reserve
 //-------------------------
 
 layout (location = 0) in vec4 vertex; // <vec2 pos, vec2 tex>
-
 //-------------------------
 //          GOING OUT
 //-------------------------

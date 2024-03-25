@@ -605,8 +605,7 @@ void ModelCompiler::ReadMissingBones(const aiAnimation* _tempAnimation, Animatio
 			boneInfoMap[boneName].id = boneCount;
 			boneCount++;
 		}
-		_animation.GetBones().push_back(Bone(channel->mNodeName.data,
-			boneInfoMap[channel->mNodeName.data].id, channel));
+		_animation.GetBones()[boneName] = Bone(channel->mNodeName.data, boneInfoMap[channel->mNodeName.data].id, channel);
 	}
 }
 
@@ -719,7 +718,7 @@ void ModelCompiler::SerializeBinaryAnimations(std::ofstream& _serializeFile)
 	size_t boneSize = animation.GetBones().size();
 	_serializeFile.write(reinterpret_cast<char*>(&boneSize), sizeof(boneSize));
 
-	for (auto& bone : animation.GetBones())
+	for (auto& [name, bone] : animation.GetBones())
 	{
 		// Position
 		_serializeFile.write(reinterpret_cast<char*>(&bone.m_NumPositions), sizeof(bone.m_NumPositions));

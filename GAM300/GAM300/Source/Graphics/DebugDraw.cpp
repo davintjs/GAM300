@@ -75,6 +75,7 @@ void DebugDraw::Draw()
 		instanceCounter[vao].ResizeContainers();
 	}
 
+	glClear(GL_DEPTH_BUFFER_BIT);
 	Scene& currentScene = MySceneManager.GetCurrentScene();
 	InstanceProperties& iProp = instanceCounter[vao];
 	pProp = &iProp;
@@ -96,7 +97,7 @@ void DebugDraw::Draw()
 			DrawSegment3D(iProp, tri[0], tri[2], color);
 		}
 
-		for (const auto& mAgent : MySceneManager.GetCurrentScene().GetArray<NavMeshAgent>())
+		for (const auto& mAgent : currentScene.GetArray<NavMeshAgent>())
 		{
 			if (mAgent.mPoints.empty())
 			{
@@ -110,7 +111,36 @@ void DebugDraw::Draw()
 	}
 
 	if (showAllColliders)
+	{
 		DrawCapsuleColliders();
+		DrawSphereColliders();
+		DrawButtonOutlines();
+		DrawTextOutlines();
+
+		color = { 1.f, 0.f, 0.f, 1.f };
+		for (const auto& animator : currentScene.GetArray<Animator>())
+		{
+			Transform& t = currentScene.Get<Transform>(animator);
+
+			for (const auto& camera : currentScene.GetArray<Camera>())
+			{
+				Transform& tCam = currentScene.Get<Transform>(camera);
+
+				glm::vec3 direction = t.GetParent()->GetGlobalTranslation() - tCam.GetGlobalTranslation();
+				glm::vec3 pos = tCam.GetGlobalTranslation() + 0.95f * direction;
+				float distance = glm::distance(pos, tCam.GetGlobalTranslation());
+				if (distance > 20.f)
+					DrawSegment3D(iProp, pos, tCam.GetGlobalTranslation(), color);
+			}
+		}
+
+		for (auto& camera : currentScene.GetArray<Camera>())
+		{
+			if (!currentScene.IsActive(camera)) continue;
+
+			DrawCameraBounds(camera.EUID());
+		}
+	}	
 	
 	glLineWidth(1.5f);
 	// Actual Debug Drawing
@@ -211,6 +241,169 @@ void DebugDraw::Draw()
 	ResetPhysicDebugContainer();
 }
 
+void DebugDraw::DrawTextOutlines()
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	auto& iProp = *pProp;
+	glm::mat4 scaleMat = glm::identity<glm::mat4>();
+	glm::vec4 color = { 0.9f, 0.9f , 0.9f , 1.f };
+	for (auto& text : MySceneManager.GetCurrentScene().GetArray<TextRenderer>())
+	{
+		Transform& t = currentScene.Get<Transform>(text);
+
+		float width = text.width;
+		float height = text.height;
+		float scale = text.fontSize * 0.001f;
+		float offset = 0.f, yOffset = 0.f;
+
+		if (text.centerAlign)
+			offset -= text.width * 0.5f;
+		if (text.wrapping)
+			yOffset = text.height * text.lineCount;
+
+		glm::vec4 pos0 = { text.x + offset, height + text.y, 0.f, 1.f };
+		glm::vec4 pos1 = { text.x + offset, text.y - yOffset, 0.f, 1.f };
+		glm::vec4 pos2 = { 1.0f * width + text.x + offset, height + text.y, 0.f, 1.f };
+		glm::vec4 pos3 = { 1.0f * width + text.x + offset, text.y - yOffset, 0.f, 1.f };
+
+		glm::mat4 temp = t.GetWorldMatrix() * scaleMat;
+
+		glm::vec3 uPos0 = glm::vec3(temp * pos0);	// Top Left
+		glm::vec3 uPos1 = glm::vec3(temp * pos1);	// Bottom Left	
+		glm::vec3 uPos2 = glm::vec3(temp * pos2);	// Top Right
+		glm::vec3 uPos3 = glm::vec3(temp * pos3);	// Bottom Right
+
+		DrawSegment3D(iProp, uPos0, uPos1, color);
+		DrawSegment3D(iProp, uPos0, uPos2, color);
+		DrawSegment3D(iProp, uPos2, uPos3, color);
+		DrawSegment3D(iProp, uPos1, uPos3, color);
+	}
+}
+
+// Text Render Outline Debug Draw
+void DebugDraw::DrawTextBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Transform& t = currentScene.Get<Transform>(_euid);
+	TextRenderer& text = currentScene.Get<TextRenderer>(_euid);
+	glm::mat4 scaleMat = glm::identity<glm::mat4>();
+	glm::vec4 color = { 0.9f,0.9f, 0.9f, 1.f };
+	auto& iProp = *pProp;
+
+	float width = text.width;
+	float height = text.height;
+	float scale = text.fontSize * 0.001f;
+	float offset = 0.f, yOffset = 0.f;
+
+	if (text.centerAlign)
+		offset -= text.width * 0.5f;
+	if (text.wrapping)
+		yOffset = text.height * text.lineCount;
+
+	glm::vec4 pos0 = { text.x + offset, height + text.y, 0.f, 1.f };
+	glm::vec4 pos1 = { text.x + offset, text.y - yOffset, 0.f, 1.f };
+	glm::vec4 pos2 = { 1.0f * width + text.x + offset, height + text.y, 0.f, 1.f };
+	glm::vec4 pos3 = { 1.0f * width + text.x + offset, text.y - yOffset, 0.f, 1.f };
+
+	glm::mat4 temp = t.GetWorldMatrix() * scaleMat;
+
+	glm::vec3 uPos0 = glm::vec3(temp * pos0);	// Top Left
+	glm::vec3 uPos1 = glm::vec3(temp * pos1);	// Bottom Left	
+	glm::vec3 uPos2 = glm::vec3(temp * pos2);	// Top Right
+	glm::vec3 uPos3 = glm::vec3(temp * pos3);	// Bottom Right
+
+	DrawSegment3D(iProp, uPos0, uPos1, color);
+	DrawSegment3D(iProp, uPos0, uPos2, color);
+	DrawSegment3D(iProp, uPos2, uPos3, color);
+	DrawSegment3D(iProp, uPos1, uPos3, color);
+}
+
+// Sprite Render Outline Debug Draw
+void DebugDraw::DrawButtonOutlines()
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	auto& iProp = *pProp;
+	glm::mat4 scaleMat = glm::identity<glm::mat4>();
+	glm::vec4 color = { 0.9f, 0.9f , 0.9f , 1.f };
+	for (auto& sprite : MySceneManager.GetCurrentScene().GetArray<SpriteRenderer>())
+	{
+		if (sprite.ColourPicked)
+		{
+			glm::vec4 pos0 = { -1.0f, 1.0f, 0.f, 1.f };
+			glm::vec4 pos1 = { -1.0f, -1.0f, 0.f, 1.f };
+			glm::vec4 pos2 = { 1.0f, 1.0f, 0.f, 1.f };
+			glm::vec4 pos3 = { 1.0f, -1.0f, 0.f, 1.f };
+
+			BaseTexture* pTexture = TextureManager.GetBaseTexture(sprite.SpriteTexture);
+			if (pTexture)
+			{
+				scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
+				scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
+				Transform& t = currentScene.Get<Transform>(sprite);
+				glm::mat4 temp = t.GetWorldMatrix() * scaleMat;
+
+				glm::vec3 uPos0 = glm::vec3(temp * pos0);
+				glm::vec3 uPos1 = glm::vec3(temp * pos1);
+				glm::vec3 uPos2 = glm::vec3(temp * pos2);
+				glm::vec3 uPos3 = glm::vec3(temp * pos3);
+
+				DrawSegment3D(iProp, uPos0, uPos1, color);
+				DrawSegment3D(iProp, uPos0, uPos2, color);
+				DrawSegment3D(iProp, uPos2, uPos3, color);
+				DrawSegment3D(iProp, uPos1, uPos3, color);
+			}
+		}
+	}
+
+}
+
+void DebugDraw::DrawButtonBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Transform& t = currentScene.Get<Transform>(_euid);
+	SpriteRenderer& sprite = currentScene.Get<SpriteRenderer>(_euid);
+	glm::mat4 scaleMat = glm::identity<glm::mat4>();
+	glm::vec4 color = { 0.9f,0.9f, 0.9f, 1.f };
+	auto& iProp = *pProp;
+	if (sprite.ColourPicked)
+	{
+		glm::vec4 pos0 = { -1.0f, 1.0f, 0.f, 1.f };
+		glm::vec4 pos1 = { -1.0f, -1.0f, 0.f, 1.f };
+		glm::vec4 pos2 = { 1.0f, 1.0f, 0.f, 1.f };
+		glm::vec4 pos3 = { 1.0f, -1.0f, 0.f, 1.f };
+
+		BaseTexture* pTexture = TextureManager.GetBaseTexture(sprite.SpriteTexture);
+		if (pTexture)
+		{
+			scaleMat[0][0] = pTexture->pixelDimension.x / 1000.f;
+			scaleMat[1][1] = pTexture->pixelDimension.y / 1000.f;
+			glm::mat4 temp = t.GetWorldMatrix() * scaleMat;
+
+			glm::vec3 uPos0 = glm::vec3(temp * pos0);
+			glm::vec3 uPos1 = glm::vec3(temp * pos1);
+			glm::vec3 uPos2 = glm::vec3(temp * pos2);
+			glm::vec3 uPos3 = glm::vec3(temp * pos3);
+
+			DrawSegment3D(iProp, uPos0, uPos1, color);
+			DrawSegment3D(iProp, uPos0, uPos2, color);
+			DrawSegment3D(iProp, uPos2, uPos3, color);
+			DrawSegment3D(iProp, uPos1, uPos3, color);
+		}
+	}
+}
+
 // Gizmos/icons for components
 void DebugDraw::DrawIcons()
 {
@@ -286,7 +479,6 @@ void DebugDraw::DrawCanvasOutline()
 	Scene& currentScene = MySceneManager.GetCurrentScene();
 	auto& iProp = *pProp;
 	
-	glClear(GL_DEPTH_BUFFER_BIT);
 	glm::mat4 scaleMat = glm::identity<glm::mat4>(), norMat;
 	glm::vec4 color = { 1.f, 0.f, 0.f, 1.f };
 	glm::vec3 p1, p2;
@@ -380,6 +572,32 @@ void DebugDraw::DrawCapsuleColliders()
 	}
 }
 
+void DebugDraw::DrawSphereColliders()
+{
+	if (!pProp)
+		return;
+
+	Scene& scene = MySceneManager.GetCurrentScene();
+	auto& iProp = *pProp;
+	const float pi = glm::pi<float>();
+	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
+
+	for (SphereCollider& sphereCollider : scene.GetArray<SphereCollider>())
+	{
+		if (sphereCollider.state == DELETED) continue;
+		if (!scene.IsActive(sphereCollider)) continue;
+
+		Entity& entity = scene.Get<Entity>(sphereCollider);
+
+		if (!scene.IsActive(entity)) continue;
+
+		Transform& t = scene.Get<Transform>(sphereCollider);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, 0.f), color, sphereCollider.radius);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(pi * 0.5f, 0.f, 0.f), color, sphereCollider.radius);
+		DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, pi * 0.5f), color, sphereCollider.radius);
+	}
+}
+
 void DebugDraw::DrawCapsuleBounds(const Engine::UUID& _euid)
 {
 	if (!pProp)
@@ -394,6 +612,24 @@ void DebugDraw::DrawCapsuleBounds(const Engine::UUID& _euid)
 
 	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
 	DrawCapsuleCollider(iProp, t.GetGlobalTranslation(), t.GetGlobalRotation(), color, capsuleCollider.radius, capsuleCollider.height);
+}
+
+void DebugDraw::DrawSphereBounds(const Engine::UUID& _euid)
+{
+	if (!pProp)
+		return;
+
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	Transform& t = currentScene.Get<Transform>(_euid);
+	Entity& entity = currentScene.Get<Entity>(_euid);
+	SphereCollider& sphereCollider = currentScene.Get<SphereCollider>(_euid);
+	const float pi = glm::pi<float>();
+	auto& iProp = *pProp;
+
+	glm::vec4 color = { 0.f, 1.f, 0.f, 1.f };
+	DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, 0.f), color, sphereCollider.radius);
+	DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(pi * 0.5f, 0.f, 0.f), color, sphereCollider.radius);
+	DrawCircle2D(iProp, t.GetGlobalTranslation(), glm::vec3(0.f, 0.f, pi * 0.5f), color, sphereCollider.radius);
 }
 
 void DebugDraw::DrawCameraBounds(const Engine::UUID& _euid)

@@ -129,7 +129,7 @@ void Shadows::DrawDepthSpot()
 			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 			if (prop.isAnimatable)
 			{
-				std::vector<glm::mat4> transforms = *RENDERER.GetFinalBoneContainer()[prop.boneidx];
+				const std::vector<glm::mat4>& transforms = *RENDERER.GetFinalBoneContainer()[prop.boneidx];
 				GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 				glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 			}
@@ -228,7 +228,7 @@ void Shadows::DrawDepthDirectional()
 			glUniform1i(uniform4, prop.isAnimatable);
 			if (prop.isAnimatable)
 			{
-				std::vector<glm::mat4> transforms = *RENDERER.GetFinalBoneContainer()[prop.boneidx];
+				const std::vector<glm::mat4>& transforms = *RENDERER.GetFinalBoneContainer()[prop.boneidx];
 				glUniformMatrix4fv(uniform5, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 			}
 
@@ -328,7 +328,7 @@ void Shadows::DrawDepthPoint()
 			glUniform1i(glGetUniformLocation(shader.GetHandle(), "isAnim"), prop.isAnimatable);
 			if (prop.isAnimatable)
 			{
-				std::vector<glm::mat4> transforms = *RENDERER.GetFinalBoneContainer()[prop.boneidx];
+				const std::vector<glm::mat4>& transforms = *RENDERER.GetFinalBoneContainer()[prop.boneidx];
 				GLint uniform4 = glGetUniformLocation(shader.GetHandle(), "finalBonesMatrices");
 				glUniformMatrix4fv(uniform4, (GLsizei)transforms.size(), GL_FALSE, glm::value_ptr(transforms[0]));
 			}

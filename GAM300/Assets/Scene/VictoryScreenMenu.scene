@@ -30,10 +30,10 @@ Transform:
 ID: 6290748605718139895
 Camera:
   m_GameObject: {fileID: 5255847082789301257}
+  m_IsEnabled: true
   BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x01"
   CullingMask: "\x00"
-  FocalLength: 10
   NearClip: 0.100000001
   FarClip: 10000
   FieldOfView: 45
@@ -42,6 +42,7 @@ Camera:
   HDR: true
   OcclusionCulling: false
   FrustumCulling: true
+  DistanceCulling: 5
 ---
 ID: 11651427043620866289
 GameObject:
@@ -69,21 +70,23 @@ Transform:
 ID: 2748547964756519209
 Canvas:
   m_GameObject: {fileID: 11651427043620866289}
+  m_IsEnabled: true
 ---
 ID: 2124126422752448800
 Script:
   m_GameObject: {fileID: 11651427043620866289}
+  m_IsEnabled: true
   Script: {guid: 951d2373956a6a3883805d764974ea3b}
+  back: true
   duration: 0.649999976
+  flickerTimer: 7.41286888e-43
+  isStartActive: true
+  sizeMultiplier: 1.10000002
+  timer: 7.41286888e-43
+  bgm: {fileID: 12773935355036224696}  # Component
   mainMenuBGImage: {fileID: 0}
   mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
   pressStartText: {fileID: 15628350562473262138}  # GameObject
-  isStartActive: true
-  flickerTimer: 7.41286888e-43
-  timer: 7.41286888e-43
-  back: true
-  sizeMultiplier: 1.10000002
-  bgm: {fileID: 12773935355036224696}  # Component
   uibutton: {fileID: 1586736388842185412}  # Component
 ---
 ID: 4418236984561621579
@@ -109,8 +112,11 @@ Transform:
 ID: 13350653658282748155
 SpriteRenderer:
   m_GameObject: {fileID: 4418236984561621579}
+  m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
 ---
 ID: 15122834859859923062
@@ -121,24 +127,33 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 5205254661984323289}  # Transform
-    - component: {fileID: 8183777527831800993}  # SpriteRenderer
+    - component: {fileID: 1278430713987826152}  # TextRenderer
 ---
 ID: 5205254661984323289
 Transform:
   m_GameObject: {fileID: 15122834859859923062}
-  Translation: [0, 0.0143430941, 0.282837987]
-  Rotation: [-3.14159203, 0, 0]
+  Translation: [-0.144334912, 0.0143430941, 0.282837987]
+  Rotation: [0, 0, 0]
   Scale: [0.555157483, 0.387330055, 0.555157483]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
 ---
-ID: 8183777527831800993
-SpriteRenderer:
+ID: 1278430713987826152
+TextRenderer:
   m_GameObject: {fileID: 15122834859859923062}
-  World Space: false
-  Colour Picker Mode: false
-  SpriteTexture: {guid: 1cb081d6f3e89fdd3d70bddd557315a1}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: You are now the new Seer...
+  X-axis Offset: -0.720000029
+  Y-axis Offset: 0
+  Font Size: 1.21000004
+  Textbox Width: 200
+  Leading: 1.25
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1
 ---
 ID: 15628350562473262138
 GameObject:
@@ -155,7 +170,7 @@ Transform:
   m_GameObject: {fileID: 15628350562473262138}
   Translation: [0, -0.404258549, 0.297466874]
   Rotation: [-3.14159203, 0, 0]
-  Scale: [0.466178864, 0.0815102011, 0.116827995]
+  Scale: [0.466178864, 0.532000005, -1.08299994]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
@@ -163,8 +178,11 @@ Transform:
 ID: 5030680011077784730
 SpriteRenderer:
   m_GameObject: {fileID: 15628350562473262138}
+  m_IsEnabled: true
   World Space: false
   Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
   SpriteTexture: {guid: 55f0d68efca4f8e2fc037fc4e9b0b830}
 ---
 ID: 4826080389101304482
@@ -210,9 +228,14 @@ Transform:
 ID: 12773935355036224696
 AudioSource:
   m_GameObject: {fileID: 18376747485499058925}
+  m_IsEnabled: true
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
   Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
   Play: false
 ---
@@ -239,8 +262,13 @@ Transform:
 ID: 1586736388842185412
 AudioSource:
   m_GameObject: {fileID: 14533969767781839941}
+  m_IsEnabled: true
   AudioChannel: 1
   Loop: false
   Volume: 1
+  SFX min Pitch: -1
+  SFX max Pitch: 3
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false

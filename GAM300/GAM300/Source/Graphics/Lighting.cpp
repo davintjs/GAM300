@@ -55,90 +55,100 @@ void Lighting::Update(float)
 	directionalLightCount = 0;
 	spotLightCount = 0;
 	Scene& currentScene = SceneManager::Instance().GetCurrentScene();
-
-	// Temporary Light stuff
 	bool haveLight = false;
-	for (LightSource& lightSource : currentScene.GetArray<LightSource>())
+
+	for (Camera& currCam : currentScene.GetArray<Camera>())
 	{
-		if (lightSource.state == DELETED)
-			continue;
+	
+	// Temporary Light stuff
+		for (LightSource& lightSource : currentScene.GetArray<LightSource>())
+		{
+			if (lightSource.state == DELETED)
+				continue;
 
 		
-		Entity& entity{ currentScene.Get<Entity>(lightSource) };
+			Entity& entity{ currentScene.Get<Entity>(lightSource) };
 
-		if (!currentScene.IsActive(entity))
-			continue;
+			if (!currentScene.IsActive(entity))
+				continue;
 
-		haveLight = true;
-		Transform& transform = currentScene.Get<Transform>(entity);
-
-
-		if (lightSource.lightType == POINT_LIGHT)// Point Light
-		{
-			// Cull
-			pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
-			pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
-			pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
-			pointLightSources[pointLightCount].intensity = lightSource.intensity;
-
-			// Replace the first light if the count is more than the engines max available lights
-			pointLightCount = (pointLightCount >= MAX_POINT_LIGHT - 1) ? 0 : pointLightCount + 1;
-		}
+			haveLight = true;
+			Transform& transform = currentScene.Get<Transform>(entity);
 
 
-		else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
-		{
-			// Cull
-			directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
-			directionLightSources[directionalLightCount].lightpos = transform.GetGlobalTranslation();
-			directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
-			directionLightSources[directionalLightCount].intensity = lightSource.intensity;
+			if (lightSource.lightType == POINT_LIGHT)// Point Light
+			{
+				float distance = glm::distance(currCam.GetCameraPosition(), (glm::vec3)lightSource.lightpos);
+				if (distance > lightSource.intensity * 10.f)
+					continue;
+				// Cull
+				pointLightSources[pointLightCount].enableShadow = lightSource.enableShadow;
+				pointLightSources[pointLightCount].lightpos = transform.GetGlobalTranslation();
+				pointLightSources[pointLightCount].lightColor = lightSource.lightingColor;
+				pointLightSources[pointLightCount].intensity = lightSource.intensity;
 
-			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
-			glm::vec3 rotation = transform.GetGlobalRotation();
-			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
-
-			rot *= glm::translate(glm::mat4(1.f), direction);
-
-			directionLightSources[directionalLightCount].direction = glm::normalize(rot[3]);
-
-			// Replace the first light if the count is more than the engines max available lights
-			directionalLightCount = (directionalLightCount >= MAX_DIRECTION_LIGHT - 1) ? 0 : directionalLightCount + 1;
-
-		}
-
-		else if (lightSource.lightType == SPOT_LIGHT)
-		{
-			// Cull
-			spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
-			spotLightSources[spotLightCount].lightpos = transform.GetGlobalTranslation();
-			spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
-			spotLightSources[spotLightCount].intensity = lightSource.intensity;
+				// Replace the first light if the count is more than the engines max available lights
+				pointLightCount = (pointLightCount >= MAX_POINT_LIGHT - 1) ? 0 : pointLightCount + 1;
+			}
 
 
-			glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
-			glm::vec3 rotation = transform.GetGlobalRotation();
-			glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
+			else if (lightSource.lightType == DIRECTIONAL_LIGHT)// Directional Light - WIP
+			{
+				// Cull
+				directionLightSources[directionalLightCount].enableShadow = lightSource.enableShadow;
+				directionLightSources[directionalLightCount].lightpos = transform.GetGlobalTranslation();
+				directionLightSources[directionalLightCount].lightColor = lightSource.lightingColor;
+				directionLightSources[directionalLightCount].intensity = lightSource.intensity;
 
-			rot *= glm::translate(glm::mat4(1.f),direction);
+				glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
+				glm::vec3 rotation = transform.GetGlobalRotation();
+				glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
 
-			spotLightSources[spotLightCount].direction = glm::normalize(rot[3]);
+				rot *= glm::translate(glm::mat4(1.f), direction);
 
-			spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
-			spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));
+				directionLightSources[directionalLightCount].direction = glm::normalize(rot[3]);
 
-			// Replace the first light if the count is more than the engines max available lights
-			spotLightCount = (spotLightCount >= MAX_SPOT_LIGHT - 1) ? 0 : spotLightCount + 1;
-		}
-		//std::cout << spotLightCount << "\n";
+				// Replace the first light if the count is more than the engines max available lights
+				directionalLightCount = (directionalLightCount >= MAX_DIRECTION_LIGHT - 1) ? 0 : directionalLightCount + 1;
 
-		if (currentScene.Has<MeshRenderer>(entity))
-		{
-			MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
-			if (mesh_component.state == DELETED) continue;
+			}
+
+			else if (lightSource.lightType == SPOT_LIGHT)
+			{
+				float distance = glm::distance(currCam.GetCameraPosition(), (glm::vec3)lightSource.lightpos);
+				if (distance > lightSource.intensity * 10.f)
+					continue;
+
+				// Cull
+				spotLightSources[spotLightCount].enableShadow = lightSource.enableShadow;
+				spotLightSources[spotLightCount].lightpos = transform.GetGlobalTranslation();
+				spotLightSources[spotLightCount].lightColor = lightSource.lightingColor;
+				spotLightSources[spotLightCount].intensity = lightSource.intensity;
+
+
+				glm::vec3 direction = glm::vec3(0.f, -1.f, 0.f);
+				glm::vec3 rotation = transform.GetGlobalRotation();
+				glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
+
+				rot *= glm::translate(glm::mat4(1.f),direction);
+
+				spotLightSources[spotLightCount].direction = glm::normalize(rot[3]);
+
+				spotLightSources[spotLightCount].inner_CutOff = glm::cos(glm::radians(lightSource.inner_CutOff));
+				spotLightSources[spotLightCount].outer_CutOff = glm::cos(glm::radians(lightSource.outer_CutOff));
+
+				// Replace the first light if the count is more than the engines max available lights
+				spotLightCount = (spotLightCount >= MAX_SPOT_LIGHT - 1) ? 0 : spotLightCount + 1;
+			}
+			//std::cout << spotLightCount << "\n";
+
+			if (currentScene.Has<MeshRenderer>(entity))
+			{
+				MeshRenderer& mesh_component = currentScene.Get<MeshRenderer>(entity);
+				if (mesh_component.state == DELETED) continue;
+			}
 		}
 	}
-
 
 	if (!haveLight)
 	{

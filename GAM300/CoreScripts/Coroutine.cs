@@ -52,6 +52,25 @@ namespace BeanFactory
         float seconds;
     }
 
+    public class WaitForUnscaledSeconds : YieldInstruction
+    {
+        public WaitForUnscaledSeconds(float _seconds) { seconds = _seconds; }
+
+        public override bool MoveNext()
+        {
+            timer += Time.unscaledDeltaTime;
+            return timer < seconds;
+        }
+
+        public override void Reset()
+        {
+            timer = 0f;
+        }
+
+        float timer = 0f;
+        float seconds;
+    }
+
     public abstract class YieldInstruction : IEnumerator
     {
         public YieldInstruction() { }

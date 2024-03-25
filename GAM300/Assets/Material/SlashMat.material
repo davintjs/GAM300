@@ -1,0 +1,15 @@
+Material:
+  Material Name: SlashMat
+  Shader: 1
+  Albedo: [1, 1, 1, 0.0784313753]
+  Metallic: 1
+  Roughness: 1
+  AmbientOcclusion: 1
+  Is Emission: true
+  Emission: 20
+  AlbedoTexture: {guid: c6106017c1df6eb7418aba04cd8595ea}
+  NormalMap: {guid: 1aa713905abe9ae5b444bf579753f715}
+  MetallicTexture: {guid: 6d0bdc9943ee7b00d9e64063f6ca337e}
+  RoughnessTexture: {guid: a4e4b1d339e60e6f56fd7f55e64b8804}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 0d8978473831d1bb6b40661c7dee1782}

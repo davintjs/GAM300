@@ -62,6 +62,8 @@ void main()
     TexCoords = aVertexTexCoord;
 
     vec4 totalPosition = vec4(0.0f);
+    mat4 boneTransform = mat4(0.0f);
+    bool breakOut = false;
     if (isAnim)
     {    
         for(int i = 0 ; i < MAX_BONE_INFLUENCE ; i++)
@@ -71,28 +73,41 @@ void main()
             if(boneIds[i] >=MAX_BONES) 
             {
                 totalPosition = vec4(aVertexPosition, 1.0f);
+                breakOut = true;
                 break;
             }
-            vec4 localPosition = finalBonesMatrices[boneIds[i]] * vec4(aVertexPosition,1.0f);
-            totalPosition += localPosition * weights[i];
         }
 
-        //totalPosition.w = 1.0f;
-	    WorldPos = vec3(SRT * totalPosition);
+        if(!breakOut)
+        {
+            boneTransform = finalBonesMatrices[boneIds[0]] * weights[0];
+            boneTransform += finalBonesMatrices[boneIds[1]] * weights[1];
+            boneTransform += finalBonesMatrices[boneIds[2]] * weights[2];
+            boneTransform += finalBonesMatrices[boneIds[3]] * weights[3];
+            totalPosition = boneTransform * vec4(aVertexPosition, 1.0f);
+        }
+
+	    WorldPos = vec3(SRT * (totalPosition / totalPosition.w));
     }
     else
     {
 	    WorldPos = vec3(SRT * vec4(aVertexPosition, 1.0f));
         totalPosition = vec4(aVertexPosition, 1.0f);
+        breakOut = true;
     }
         
+    Normal = mat3(transpose(inverse(SRT))) * aVertexNormal;
+    if(!breakOut)
+    {
+        vec4 NormalL = boneTransform * vec4(aVertexNormal, 0.0);
+//        Normal = mat3(transpose(inverse(SRT))) * vec3(NormalL);
+        Normal = (SRT * NormalL).xyz;
+    }
+
 	gl_Position = persp_projection * View * SRT * totalPosition;
 
 //    frag_pos_lightspace_D = lightSpaceMatrix_Directional * vec4(WorldPos, 1.0);
 //
 //    frag_pos_lightspace_S = lightSpaceMatrix_Spot * vec4(WorldPos, 1.0);
 //
-
-    Normal = mat3(transpose(inverse(SRT))) * aVertexNormal;
-
 }

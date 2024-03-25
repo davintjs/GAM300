@@ -17,33 +17,28 @@ layout (location = 1) out vec4 Blooming;
 
 void main()
 {
-	//FragColor = vec4(uColor, 1.f);
-//	if(!hasTexture){
-//		FragColor = vec4(1.f);
-//		return;
-//	}
-//
-//	FragColor = texture(albedoTexture, TexCoords);
-//
-//	if(FragColor.z < 0.1){
-//		discard;
-//	}
     vec3 albedo = vec3(frag_Albedo);
+    float alpha = frag_Albedo.a;
 
-    float ao = AoConstant;
+    if(hasTexture){
+        vec4 texColor = texture(albedoTexture, TexCoords);
+        albedo *= pow(texColor.rgb * frag_Albedo.rgb, vec3(2.2));
+        alpha *= texColor.a;
+    }
+    if(alpha < 0.05f){
+        discard;
+    }
 
-	if(hasTexture){
-		albedo = vec3(frag_Albedo) * pow(texture(albedoTexture, TexCoords).rgb, vec3(2.2));
-	}
-	
-    vec3 color = vec3(ambience_multiplier) * albedo * ao + EmissionConstant;
-    color = color / (color + vec3(1.0));
+    vec3 color = vec3(ambience_multiplier) * albedo * AoConstant + EmissionConstant;
+    //color /= (color + vec3(1.0));
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
 
-    FragColor = vec4(color, frag_Albedo.a);
+    FragColor = vec4(color, alpha);
+//    FragColor.a *= alpha;
+//    FragColor.rgb = pow(FragColor.rgb, vec3(2.2f));
 
     if(brightness > bloomThreshold)
-        Blooming = vec4(color.rgb, 1.0);
+        Blooming = vec4(color.rgb, 1.f);
     else
-        Blooming = vec4(0.0, 0.0, 0.0, 1.0);
+        Blooming = vec4(0.0, 0.0, 0.0, 1.f);
 }

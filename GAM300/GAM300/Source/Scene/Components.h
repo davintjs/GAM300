@@ -106,6 +106,8 @@ struct Transform : Object
 
 	Transform* GetParent();
 
+	void UpdateEnabledFlags();
+
 	static glm::mat4 CreateTransformationMtx(vec3 translation, vec3 rotation, vec3 scale)
 	{
 		glm::mat4 rot = glm::toMat4(glm::quat(vec3(rotation)));
@@ -218,7 +220,8 @@ struct AudioSource : Object
 	float maxPitch{3.f};
 	float fadeInTime{1.f};
 	float fadeOutTime{1.f};
-	float maxDistance{100.f};
+	float minDistance{1.f};
+	float maxDistance{1000.f};
 	Engine::GUID<AudioAsset> currentSound;
 	FMOD::Channel* channel;
 	property_vtable();
@@ -229,6 +232,8 @@ property_begin_name(AudioSource, "Audio Source") {
 		property_var(current_channel).Name("AudioChannel"),
 		property_var(loop).Name("Loop"),
 		property_var(volume).Name("Volume"),
+		property_var(minDistance).Name("min hearing Distance"),
+		property_var(maxDistance).Name("max hearing Distance"),
 		property_var(minPitch).Name("SFX min Pitch"),
 		property_var(maxPitch).Name("SFX max Pitch"),
 		property_var(fadeInTime).Name("Fade In Time (s)"),
@@ -299,11 +304,17 @@ property_begin_name(Animator, "Animator") {
 
 struct TextRenderer : Object
 {
+	Vector4 color{1.f};
+	Engine::GUID<FontAsset> guid{ 0 };
+	unsigned int charCount = 0;
+	unsigned int lineCount = 1;
+	float x = 0.f, y = 0.f, fontSize = 4.f;
+	float width = 0.f, height = 0.f;
+
+	bool centerAlign = false;
+	bool wrapping = false;
+	bool worldSpace = false;
 	std::string text = "Default Text";
-	float x = 0.f, y = 0.f, fontSize = 1.f; // need to find out  how to link with existing obj srt
-	float r = 0.5, g = 0.8f, b = 0.2f;
-	float alpha = 1.f;
-	Engine::GUID<FontAsset> guid{0};
 	property_vtable();
 };
 
@@ -314,22 +325,22 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(x).Name("X-axis Offset"),
 		property_var(y).Name("Y-axis Offset"),
 		property_var(fontSize).Name("Font Size"),
-		property_var(r).Name("Color R"),
-		property_var(g).Name("Color G"),
-		property_var(b).Name("Color B"),
-		property_var(alpha).Name("Opacity")
+		property_var(width).Name("Textbox Width"),
+		property_var(height).Name("Textbox Height"),
+		property_var(centerAlign).Name("Center Alignment"),
+		property_var(wrapping).Name("Wrap Text"),
+		property_var(worldSpace).Name("WorldSpace"),
+		property_var(color).Name("Color"),
 } property_vend_h(TextRenderer)
 
 struct Camera : Object, BaseCamera
 {
 	Camera();
-	Vector4 backgroundColor{};
 	property_vtable();
 };
 
 property_begin_name(Camera, "Camera") {
 	property_parent(Object).Flags(property::flags::DONTSHOW),
-	property_var(backgroundColor).Name("BackgroundColor"),
 	property_parent(BaseCamera)
 } property_vend_h(Camera)
 
@@ -462,15 +473,14 @@ property_begin_name(MeshRenderer, "MeshRenderer") {
 
 struct LightSource : Object
 {
-	bool enableShadow = true;
 	//index for light type for serializing and de-serializing
-	int lightType = (int)SPOT_LIGHT;	
-
 	// Used in point & Spot
 	Vector3 lightpos;
-
 	// Used in directional & spot
 	Vector3 direction;
+
+	Vector3 lightingColor{ 1.f, 1.f, 1.f };
+	int lightType = (int)SPOT_LIGHT;
 
 	// Used only in Spot
 	float inner_CutOff = 50.f;
@@ -478,8 +488,8 @@ struct LightSource : Object
 
 	// Used for all
 	float intensity = 10.f;
-	Vector3 lightingColor{1.f, 1.f, 1.f };
 
+	bool enableShadow = true;
 	bool toRender = true; // Dirtybit 
 	property_vtable()
 };
@@ -542,14 +552,14 @@ struct Particle : Object
 	Particle() {}
 	Particle(const vec3& position, const vec3& velocity, const float& acceleration, float lifetime, float scale)
 		: position(position), velocity(velocity), acceleration(acceleration), lifetime(lifetime), scale(scale) {}
-	vec3 position;
-	vec3 velocity;
-	vec3 direction;
+	vec3 position{ 0.f , 0.f, 0.f };
+	vec3 velocity{ 0.f , 0.f, 0.f };
+	vec3 direction{ 0.f , 0.f, 0.f };
 	float acceleration{0.f};
-	float lifetime;
-	float scale; 
-	float speed;
-	float noiselifetime;
+	float lifetime{ 0.f };
+	float scale{ 0.f };
+	float speed{0.f};
+	float noiselifetime{ 0.f };
 	Trail trails;
 };
 
@@ -559,11 +569,8 @@ struct ParticleComponent : Object
 	Engine::GUID<MeshAsset> meshID{ ASSET_CUBE };
 	Engine::GUID<MaterialAsset> materialGUID{ 0 };
 	//Engine::GUID<TextureAsset> ParticleTexture{ 0 };
-
-	bool particleLooping{ false };
-	bool is2D{ false };
-	bool trailEnabled{ false };
-	bool isLocalSpace{ false };
+	Vector3 direction{ 0.f,0.f,0.f };
+	Vector3 trailColor{ 1.f, 1.f, 1.f };
 
 	int numParticles_{ 1 };
 	int trailSize{ 0 };
@@ -576,11 +583,16 @@ struct ParticleComponent : Object
 	float particleMaxScale_{ 1.0f };
 	float particleScaleRate_{ 0.5f };
 	float speed_{ 0.5f };
+	float acceleration_{ 0.f };
 	float desiredLifetime{ 5.0f };
 	float noiseMovement{ 0.f };
 	float noisefrequency{ 0.f };
 
-	Vector3 direction{0.f,0.f,0.f};
+	bool particleLooping{ false };
+	bool is2D{ false };
+	bool trailEnabled{ false };
+	bool isLocalSpace{ false };
+
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -601,10 +613,12 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(particleMaxScale_).Name("Particle Max Scale"),
 	property_var(particleScaleRate_).Name("Particle Scale Rate"),
 	property_var(speed_).Name("Particle Speed"),
+	property_var(acceleration_).Name("Particle acceleration"),
 	property_var(noiseMovement).Name("Particle Noise Movement Percentage"),
 	property_var(noisefrequency).Name("Particle Noise Frequency"),
 	property_var(is2D).Name("2D particle"),
 	property_var(trailEnabled).Name("Trailing"),
+	property_var(trailColor).Name("Trail Color"),
 	property_var(trailSize).Name("Trail Size"),
 	property_var(trailThiccness).Name("Trail Thickness"),
 	property_var(particleLooping).Name("Looping")

@@ -63,6 +63,9 @@ public:
 
 	//Get steps after running fixed delta time
 	size_t GetSteps() const { return steps; }
+
+	float timeScale = 1.f;
+	float deltaTime = 0;
 };
 
 

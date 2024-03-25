@@ -11,8 +11,30 @@ public class GameManager : Script
     static public GameManager instance;
     public AudioSource BGM_Source;
     public float fadeTime = 1f;
+    public GameObject pauseCanvas;
 
-    public bool paused = false;
+    bool _paused = false;
+
+    public bool paused
+    {
+        get
+        {
+            return _paused;
+        }
+        set
+        {
+            _paused = value;
+            if (value)
+            {
+                Time.timeScale = 0;
+            }
+            else
+            {
+                Time.timeScale = 1;
+            }
+            if (pauseCanvas != null) pauseCanvas.SetActive(value);
+        }
+    } 
 
     void Awake()
     {
@@ -24,6 +46,7 @@ public class GameManager : Script
     void Start()
     {
         Input.LockCursor(true);
+        if (pauseCanvas != null) pauseCanvas.SetActive(false);
     }
 
     void Update()

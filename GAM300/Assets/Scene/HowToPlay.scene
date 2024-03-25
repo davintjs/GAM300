@@ -77,14 +77,14 @@ Script:
   m_GameObject: {fileID: 11651427043620866289}
   m_IsEnabled: true
   Script: {guid: a72da4ff4d8909e9409d75131b127ed3}
-  isStartActive: true
-  flickerTimer: 0
-  duration: 2
   back: false
-  timer: 0
+  duration: 2
+  flickerTimer: 0
+  isStartActive: true
   sizeMultiplier: 1.5
-  mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
+  timer: 0
   backButton: {fileID: 15122834859859923062}  # GameObject
+  mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
 ---
 ID: 4418236984561621579
 GameObject:
@@ -129,9 +129,9 @@ GameObject:
 ID: 5205254661984323289
 Transform:
   m_GameObject: {fileID: 15122834859859923062}
-  Translation: [0.796714067, -0.800188184, 0.388678581]
+  Translation: [1.20467055, -0.718038678, 0]
   Rotation: [-3.14159226, 0, 0]
-  Scale: [0.200000018, 0.200000003, 0.25]
+  Scale: [0.368269056, 0.584277987, 1]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
@@ -193,6 +193,10 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 9c486f763103cbfcc865df4a387b9bf3}
@@ -225,6 +229,10 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: -1
+  SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}

@@ -40,6 +40,7 @@ TemplatePack
 	Lighting,
 	Renderer,
 	Shadows,
+	UIRenderer,
 	ParticleRenderer,
 	TextSystem
 >;
@@ -273,29 +274,22 @@ void GraphicsSystem::Update(float dt)
 	}
 
 	// Game Cameras
-	EditorWindowEvent e1("Game");
-	EVENTS.Publish(&e1);
-
-	if (e1.isOpened)
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+	for (Camera& camera : currentScene.GetArray<Camera>())
 	{
-		Scene& currentScene = MySceneManager.GetCurrentScene();
-		for (Camera& camera : currentScene.GetArray<Camera>())
-		{
-			if (camera.state == DELETED) continue;
+		if (camera.state == DELETED) continue;
 
-			Transform* transform = &currentScene.Get<Transform>(camera.EUID());
+		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
 
-			const glm::vec3 translation = transform->GetGlobalTranslation();
-			const glm::vec3 rotation = transform->GetGlobalRotation();
-			// Update camera view 
-			camera.UpdateCamera(translation,rotation);
+		const glm::vec3 translation = transform->GetGlobalTranslation();
+		const glm::vec3 rotation = transform->GetGlobalRotation();
+		// Update camera view 
+		camera.UpdateCamera(translation, rotation);
 
-			COLOURPICKER.ColorPickingUIButton(camera);
+		COLOURPICKER.ColorPickingUIButton(camera);
 
-			PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
-
-		}
+		PreDraw(camera, cameraQuadVAO, cameraQuadVBO);
 	}
 #endif	
 
@@ -309,7 +303,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glDrawBuffers(2, attachments);
 
 	Draw(_camera);
-	UIRENDERER.UIDraw_3D(_camera);
 
 	FRAMEBUFFER.Unbind();
 
@@ -317,7 +310,10 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	{
 		BLOOMER.RenderBloomTexture(0.005, _camera, cameraQuadVAO, cameraQuadVBO);
 		
-		
+		FRAMEBUFFER.Bind(_camera.GetFramebufferID(), _camera.GetHDRAttachment());
+		GLSLShader& shader = SHADER.GetShader(SHADERTYPE::MERGE_BLOOM);
+		shader.Use();
+
 		//bool index = bloom(RENDERER.GetBloomCount(), _vao, _vbo, _camera);
 		
 		glActiveTexture(GL_TEXTURE1);
@@ -325,6 +321,23 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 		glBindTexture(GL_TEXTURE_2D, BLOOMER.BloomTexture());
 
+		// Bean: This is not being used right now if the camera is using colorBuffer, will be used if using ColorAttachment when drawing in the camera
+		glActiveTexture(GL_TEXTURE0);
+		// glBindTexture(GL_TEXTURE_2D, _camera.GetFramebuffer().colorBuffer[0]);
+
+		glBindTexture(GL_TEXTURE_2D, FRAMEBUFFER.GetTextureID(_camera.GetFramebufferID(), _camera.GetHDRAttachment()));
+		//glActiveTexture(GL_TEXTURE1);
+		//glBindTexture(GL_TEXTURE_2D, pingpongColorbuffers[index]); 
+
+
+		GLint uniform1 =
+			glGetUniformLocation(shader.GetHandle(), "bloomStrength");
+		glUniform1f(uniform1, (float)(RENDERER.GetBloomCount()) / 100.f);
+
+		renderQuad(_vao, _vbo);
+		shader.UnUse();
+
+		FRAMEBUFFER.Unbind();
 	}
 
 	// Draw debug drawing without being affected by the bloom
@@ -332,19 +345,18 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 
 	if (_camera.GetCameraType() == CAMERATYPE::GAME)
 	{
-		UIRENDERER.UIDraw_2D(_camera);
-		//TEXTSYSTEM.Draw(_camera);
+		UIRENDERER.UIDrawScreenSpace(_camera);
 	}
 	else
 	{
-		UIRENDERER.UIDraw_2DWorldSpace(_camera);
+		UIRENDERER.UIDrawSceneView(_camera);
 	}
 	if (_camera.GetCameraType() == CAMERATYPE::SCENE)
 	{
 		DEBUGDRAW.Draw();
-
 	}
-	TEXTSYSTEM.Draw(_camera);
+
+	PARTICLERENDER.Draw2D(_camera);
 
 	FRAMEBUFFER.Unbind();
 
@@ -382,6 +394,11 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glUniform1f(uniform2, RENDERER.GetExposure());
 
 	GLint uniform3 =
+		glGetUniformLocation(shader.GetHandle(), "gammaCorrection");
+
+	glUniform1f(uniform3, RENDERER.getGamma());
+
+	/*GLint uniform3 =
 		glGetUniformLocation(shader.GetHandle(), "enableBloom");
 
 	glUniform1f(uniform3, RENDERER.enableBloom());
@@ -389,7 +406,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	GLint uniform4 =
 		glGetUniformLocation(shader.GetHandle(), "bloomStrength");
 
-	glUniform1f(uniform4, (float)(RENDERER.GetBloomCount())/100.f);
+	glUniform1f(uniform4, (float)(RENDERER.GetBloomCount())/100.f);*/
 
 	renderQuad(_vao, _vbo);
 	shader.UnUse();
@@ -407,10 +424,13 @@ void GraphicsSystem::Draw(BaseCamera& _camera)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.f, 0.5f, 0.5f, 1.f);
 
-	glEnable(GL_DEPTH_BUFFER);
+	//glEnable(GL_DEPTH_TEST);
 	MYSKYBOX.Draw(_camera);
 
 	RENDERER.Draw(_camera);
+
+	UIRENDERER.UIDrawWorldSpace(_camera);
+
 	PARTICLERENDER.Draw(_camera);
 }
 

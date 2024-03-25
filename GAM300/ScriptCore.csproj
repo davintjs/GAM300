@@ -40,6 +40,7 @@
     <Compile Include="Assets\Scripts\AttackTrigger.cs" />
     <Compile Include="Assets\Scripts\AudioManager.cs" />
     <Compile Include="Assets\Scripts\BossBehaviour.cs" />
+    <Compile Include="Assets\Scripts\ButtonLogic.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\CompanionMovement.cs" />
     <Compile Include="Assets\Scripts\CutsceneCamera.cs" />
@@ -62,13 +63,17 @@
     <Compile Include="Assets\Scripts\KeyDoor.cs" />
     <Compile Include="Assets\Scripts\MainMenu.cs" />
     <Compile Include="Assets\Scripts\MaxStatPack.cs" />
+    <Compile Include="Assets\Scripts\OverdriveChip.cs" />
     <Compile Include="Assets\Scripts\PlatformScript.cs" />
     <Compile Include="Assets\Scripts\PlayerAttack.cs" />
     <Compile Include="Assets\Scripts\PlaySound.cs" />
     <Compile Include="Assets\Scripts\RangeEnemy.cs" />
     <Compile Include="Assets\Scripts\RangeEnemyNavMesh.cs" />
+    <Compile Include="Assets\Scripts\SceneTransitionTrigger.cs" />
+    <Compile Include="Assets\Scripts\Settings.cs" />
     <Compile Include="Assets\Scripts\SpinningPropeller.cs" />
     <Compile Include="Assets\Scripts\Splashscreen.cs" />
+    <Compile Include="Assets\Scripts\StartingAnimation.cs" />
     <Compile Include="Assets\Scripts\Terminal.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonCamera.cs" />
     <Compile Include="Assets\Scripts\ThirdPersonController.cs" />

@@ -85,7 +85,7 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 	}
 
 	// Get the current scene and save it
-	std::cout << "Saving Scene...\n";
+	PRINT("Saving Scene...\n");
 	Scene& currentScene = GetCurrentScene();
 	std::string filePath;
 
@@ -111,7 +111,7 @@ bool SceneManager::SaveScene(const std::string& _filePath)
 		return false;
 	}
 
-	std::cout << "Scene \"" << currentScene.sceneName << "\" has been saved.\n";
+	PRINT("Scene \"", currentScene.sceneName, "\" has been saved.\n");
 	return true;
 }
 
@@ -194,7 +194,7 @@ void SceneManager::StartScene()
 	EVENTS.Publish(&e);
 
 	SceneStartEvent startEvent{};
-	EVENTS.Publish(&startEvent);
+		EVENTS.Publish(&startEvent);
 }
 
 void SceneManager::CallbackCreateScene(CreateSceneEvent* pEvent)

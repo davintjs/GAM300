@@ -51,7 +51,18 @@ void Scene::StoreComponentHierarchy(ReferencesTable& storage, Engine::UUID entit
 			storage[GetType::E<T>()][component] = *object;
 			if constexpr (std::is_same<T, Tag>())
 			{
-				object->name += " - Copy";
+				size_t startPos = object->name.find('('); // Find the opening parenthesis
+				size_t endPos = object->name.find(')'); // Find the closing parenthesis
+
+				// Check if both opening and closing parentheses exist and are in the correct order
+				if (startPos != std::string::npos && endPos != std::string::npos && startPos < endPos) 
+					object->name.replace(startPos + 1, endPos - startPos - 1, std::to_string(object->euid >> (sizeof(size_t) * 7)));
+				else
+				{
+					object->name += "(";
+					object->name += std::to_string(object->euid >> (sizeof(size_t) * 7));
+					object->name += ")";
+				}
 			}
 		}
 		else
@@ -106,10 +117,6 @@ void Scene::LinkReferences(ReferencesTable& storage)
 {
 	for (auto& old_new : storage[GetType::E<T>()])
 	{
-		if (std::is_same<T, Script>())
-		{
-			PRINT("WASSUP!");
-		}
 		Handle handle = old_new.second;
 
 		T& newObject = Get<T>(handle.euid, handle.uuid);
@@ -373,14 +380,19 @@ bool Scene::IsActive(T& object, bool checkParents)
 
 	if constexpr (std::is_same_v<T, Entity>)
 	{
+		auto id = arr.GetDenseIndex(object);
 		bool isActive = arr.IsActiveDense(arr.GetDenseIndex(object));
+		auto& obj = arr.DenseSubscript(id);
+
 		Transform& t = Get<Transform>(object);
 
-		if (checkParents && isActive && t.parent)
+		if (!isActive)
+			return false;
+
+		if (checkParents && t.parent != Engine::UUID(0))
 		{
 			return t.GetFlag(Transform::Flag::WorldEnabled);
 		}
-
 		return isActive;
 	}
 	else if constexpr (SingleComponentTypes::Has<T>())

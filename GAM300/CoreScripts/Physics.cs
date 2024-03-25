@@ -20,22 +20,22 @@ using System.Collections.Generic;
 
 namespace BeanFactory
 {
-    public struct RayCastResult
+    public static class Physics
     {
-        GameObject obj;
-        vec3 hitPosition;
-        bool hit;
-    }
-
-    public class Physics
-    {
-        public GameObject Raycast(vec3 position, vec3 direction, float distance)
+        public static RaycastHit Raycast(vec3 position, vec3 direction, float distance)
         {
-            return InternalCalls.Raycast(position, direction, distance);
+            RaycastHit hit = new RaycastHit();
+            InternalCalls.Raycast(position, direction, distance, ref hit.hit, ref hit.point, ref hit.gameObj);
+            return hit;
         }
     }
 
-
+    public struct RaycastHit
+    {
+        public vec3 point;
+        public bool hit;
+        public GameObject gameObj;
+    }
 
     public enum ForceMode2D
     {

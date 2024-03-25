@@ -33,9 +33,11 @@ void NavMeshBuilder::Init()
 
 void NavMeshBuilder::Update(float dt)
 {
+	if (dt == 0)
+		return;
 	Scene& tempScene = MySceneManager.GetCurrentScene();
 
-	float fixedDt = (float)MyFrameRateController.GetFixedDt();
+	//float fixedDt = (float)MyFrameRateController.GetFixedDt();
 	for (NavMeshAgent& i : tempScene.GetArray<NavMeshAgent>())
 	{
 		Transform& agentTransform = tempScene.Get<Transform>(i);
