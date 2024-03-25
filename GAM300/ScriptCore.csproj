@@ -72,6 +72,7 @@
     <Compile Include="Assets\Scripts\RangeEnemyNavMesh.cs" />
     <Compile Include="Assets\Scripts\SceneTransitionTrigger.cs" />
     <Compile Include="Assets\Scripts\Settings.cs" />
+    <Compile Include="Assets\Scripts\SliderButtonLogic.cs" />
     <Compile Include="Assets\Scripts\SpinningPropeller.cs" />
     <Compile Include="Assets\Scripts\Splashscreen.cs" />
     <Compile Include="Assets\Scripts\StartingAnimation.cs" />

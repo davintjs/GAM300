@@ -63,7 +63,6 @@ Transform:
   Scale: [1.60844898, 0.972704649, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 13832416887864285901}
     - {fileID: 9386478579826465449}
     - {fileID: 15358237258630853129}
     - {fileID: 13067152016376394435}
@@ -135,10 +134,10 @@ GameObject:
 ID: 4612391060768230338
 Transform:
   m_GameObject: {fileID: 13832416887864285901}
-  Translation: [-0.381771743, -0.673265517, 0.0363104343]
-  Rotation: [0, 0, 0]
-  Scale: [0.621718049, 1.0280627, 0.999929965]
-  Father: {fileID: 17065559468612678914}
+  Translation: [-0.287283212, 0.00522714853, -0.033319775]
+  Rotation: [0, -0, 0]
+  Scale: [0.72117734, 0.785745919, 0.999980927]
+  Father: {fileID: 3501737523948874866}
   m_Children:
     []
 ---
@@ -171,7 +170,7 @@ Transform:
   Scale: [1.38662457, 1.27267754, 0.999876976]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 13832416887864285901}
 ---
 ID: 9628928646385654731
 SpriteRenderer:
@@ -196,7 +195,7 @@ Script:
   button: {fileID: 3501737523948874866}  # GameObject
   clickSound: {fileID: 4439635201888755812}  # Component
   hoverSound: {fileID: 12629001260182743623}  # Component
-  sliderFill: {fileID: 13832416887864285901}  # Component
+  sliderFill: {fileID: 13832416887864285901}  # GameObject
 ---
 ID: 6712040991204226818
 GameObject:
@@ -498,7 +497,7 @@ SpriteRenderer:
 ID: 13067152016376394435
 GameObject:
   m_IsActive: true
-  m_Name: testSliderBar
+  m_Name: Bar
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -508,9 +507,9 @@ GameObject:
 ID: 2401636980383934360
 Transform:
   m_GameObject: {fileID: 13067152016376394435}
-  Translation: [-0.0896467119, -0.672128499, 0.012009386]
+  Translation: [-0.113862202, -0.672128499, 0.0120092528]
   Rotation: [0, 0, 0]
-  Scale: [2.00000024, 0.972706735, 0.99985081]
+  Scale: [2.00000072, 0.972706795, 0.999842286]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []

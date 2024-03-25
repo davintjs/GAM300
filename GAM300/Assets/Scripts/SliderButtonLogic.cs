@@ -16,9 +16,12 @@ class SliderButtonLogic : Script
     private bool soundPlayed = false;
 
     public Transform sliderFill;
-    public float MinValue = 0f;
-    public float MaxValue = 1f;
-    public float value = 10f;
+    //public float MinValue = 0f;
+    //public float MaxValue = 1f;
+    //public float value = 0.5f;
+    public vec3 MinValue = new vec3(0);
+    public vec3 MaxValue = new vec3(1);
+    public vec3 value = new vec3(1);
     private float sliderWidth;
     private bool onClick = false;
     private float mouse; 
@@ -97,11 +100,9 @@ class SliderButtonLogic : Script
 
             //Update the slider value 
             UpdateSliderValue();
-            Console.WriteLine("Slider Width: " + sliderWidth);
 
             //Update the slider's visual representation
             UpdateSliderVisual();
-            Console.WriteLine(Input.GetMouseDelta());
         }
         else if (Input.GetMouseHolding(0) != true)
         {
@@ -115,20 +116,19 @@ class SliderButtonLogic : Script
         //Calculating the new value based on the mouse position
         mouse = Input.GetMouseDelta().x;
         vec3 slider = button.transform.localPosition;
-        //float normalisedX = (mouse - slider.x) / sliderWidth;
         slider.x += mouse * 16;
         button.transform.localPosition = slider;
-        Console.WriteLine("Update");
 
     }
 
     void UpdateSliderVisual()
     {
+        //vec3 slider = button.transform.localPosition;
         vec3 newScale = sliderFill.localScale;
-        newScale.x = (value - MinValue) / (MaxValue - MinValue) * sliderWidth;
-        sliderFill.localScale = newScale;
-        Console.WriteLine("Slider Width: " + sliderWidth);
-
+        vec3 fillScale = (value - MinValue) / (MaxValue - MinValue);
+        //newScale.x = (value - MinValue) / (MaxValue - MinValue);
+        //sliderFill.localScale = newScale;
+        newScale = fillScale;
     }
 
 
