@@ -60,6 +60,8 @@ public class Enemy : Script
     public float stunDuration = 0.5f;
     public float currentStunDuration;
 
+    private NavMeshAgent mNavMeshAgent;
+
     // Staggering stuff
     public float staggerCooldown = 5f;
     public float staggerTimer = 5f;
@@ -71,6 +73,8 @@ public class Enemy : Script
     PlayerAudioManager playerSounds;
     public EnemyAudioManager enemySounds;
 
+    private vec3 initialPosition;
+
     void Start()
     {
         if (enemySounds == null)
@@ -78,6 +82,8 @@ public class Enemy : Script
             Console.WriteLine("Missing Enemy audio manager in enemy");
             return;
         }
+        initialPosition = transform.position;
+        mNavMeshAgent = GetComponent<NavMeshAgent>();
         playerSounds = PlayerAudioManager.instance;
         //enemySounds = EnemyAudioManager.instance;
         playOnce = true;
@@ -182,10 +188,15 @@ public class Enemy : Script
         }
 
 
-        vec3 direction = player.localPosition - transform.position;
-        direction.y = 0f;
+        vec3 direction = player.position - transform.position;
         direction = direction.NormalizedSafe;
-        if(!isDead)
+        direction.y = 0f;
+
+        vec3 dir = initialPosition - transform.position;
+        dir = dir.NormalizedSafe;
+        dir.y = 0f;
+
+        if (!isDead)
         {
             switch (state)
             {
@@ -196,6 +207,9 @@ public class Enemy : Script
                     playOnce = true;//reset ability to play audio
                     alertedOnce = true;
                     SetState("Idle", true);
+
+                    float dist = vec2.Distance(initialPosition.xz, transform.position.xz);
+                    //Console.WriteLine("DistanceIdle: " + dist);
                     //attackTrigger.SetActive(false);
                     //player detection
                     if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
@@ -207,12 +221,24 @@ public class Enemy : Script
                         //change to chase state
                         state = 1;
                     }
+                    else if (dist >= 1.5f)
+                    {
+                        if (animationManager.GetState("Idle").state)
+                        {
+                            SetState("Idle", false);
+                        }
+                        // Change to go back initial position state
+                        state = 5;
+                    }
+
+                    GetComponent<Rigidbody>().linearVelocity = vec3.Zero;
                     break;
                 //chase state
                 case 1:
                     //Console.WriteLine("Chase");
                     SetState("Run", true);
                     playOnce = true;//reset ability to play audio
+                   
                     //attackTrigger.SetActive(false);
                     //change to attack state once it has reach it is in range
 
@@ -252,23 +278,27 @@ public class Enemy : Script
                             SetState("Run", false);
                         }
                         //return back to its previous position state
+                        mNavMeshAgent.FindPath(initialPosition);
                         state = 0;
                     }
-
-                    NavMeshAgent check = GetComponent<NavMeshAgent>();
-                    if (check != null) // Use navmesh if is navmesh agent
+                    else
                     {
-                        check.FindPath(player.localPosition);
-                    }
-                    else // Default
-                    {
-                        LookAt(direction);
-                        GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                        
+                        if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
+                        {
+                            mNavMeshAgent.FindPath(player.localPosition);
+                        }
+                        else // Default
+                        {
+                            LookAt(direction);
+                            GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                        }
                     }
 
                     break;
                 //attack state
                 case 2:
+                    //Console.WriteLine("Attack");
                     SetState("Attack", true); //attack animation
                     staggerTimer += Time.deltaTime; // Start counting stagger timer
 
@@ -278,7 +308,7 @@ public class Enemy : Script
                         enemySounds.MeleeEnemyAttack.Play();
                     }
 
-                    LookAt(direction);
+                    //LookAt(direction);
                     if(!isAttacking)
                     {
                         //change to chase state once player has reach out of range
@@ -318,6 +348,32 @@ public class Enemy : Script
                         currentStunDuration = stunDuration;
                     }
                     //animationManager.UpdateState();
+                    break;
+                // Go back to initial position state
+                case 5:
+                    SetState("Run", true);
+                    float distance = vec3.Distance(initialPosition, transform.position);
+                    if (distance < 1.5f)
+                    {
+                        if (animationManager.GetState("Run").state)
+                        {
+                            SetState("Run", false);
+                        }
+                        state = 0; // Go back to idle state
+                    }
+                    else
+                    {
+                        if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
+                        {
+                            mNavMeshAgent.FindPath(player.localPosition);
+                        }
+                        else // Default
+                        {
+                            LookAt(direction);
+                            GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                        }
+                    }
+
                     break;
 
             }
