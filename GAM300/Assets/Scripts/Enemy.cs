@@ -278,14 +278,15 @@ public class Enemy : Script
                             SetState("Run", false);
                         }
                         //return back to its previous position state
+                        LookAt(direction);
                         mNavMeshAgent.FindPath(initialPosition);
                         state = 0;
                     }
                     else
                     {
-                        
                         if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
                         {
+                            LookAt(direction);
                             mNavMeshAgent.FindPath(player.localPosition);
                         }
                         else // Default
@@ -336,6 +337,7 @@ public class Enemy : Script
                     //Console.WriteLine("Stunned");
                     SetState("Stun", true);
                     //attackTrigger.SetActive(false);
+                    mNavMeshAgent.FindPath(transform.position);
                     currentStunDuration -= Time.deltaTime;
                     if (currentStunDuration <= 0)
                     {
@@ -365,12 +367,13 @@ public class Enemy : Script
                     {
                         if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
                         {
-                            mNavMeshAgent.FindPath(player.localPosition);
+                            LookAt(dir);
+                            mNavMeshAgent.FindPath(initialPosition);
                         }
                         else // Default
                         {
-                            LookAt(direction);
-                            GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                            LookAt(dir);
+                            GetComponent<Rigidbody>().linearVelocity = dir * moveSpeed;
                         }
                     }
 
@@ -508,7 +511,7 @@ public class Enemy : Script
             {
                 StopCoroutine(damagedCoroutine);
             }
-            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 5));
+            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 7));
 
             if (ThirdPersonController.instance.currentlyOverdriven == true)
             {
