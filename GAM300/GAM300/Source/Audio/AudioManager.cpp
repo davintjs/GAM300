@@ -59,7 +59,7 @@ void AudioManager::DestroyAudioManager() {
 
 void AudioManager::Update(float dt) {
 	//const float fadeTime = 2.f; // in seconds
-	static float masterVolume = 0.f;
+	static float masterVolume = GetMasterVolume();
 	if (!Application::Instance().IsWindowFocused())
 	{
 		masterVolume = (GetMasterVolume() != 0.01f) ? GetMasterVolume() : masterVolume;
