@@ -113,6 +113,14 @@ static bool GetKey(int keyCode)
 {
 	return InputHandler::isKeyButtonHolding(keyCode);
 }
+static bool GetMouseHolding(int mouseCode)
+{
+	if (mouseCode == 0)
+	{
+		return InputHandler::isMouseButtonHolding_L();
+	}
+	return InputHandler::isMouseButtonHolding_R();
+}
 
 static void GetMouseDelta(Vector2& mouseDelta)
 {
@@ -812,6 +820,7 @@ static void RegisterScriptWrappers()
 	Register(GetMouseDown);
 	Register(GetMouseDelta);
 	Register(LockCursor);
+	Register(GetMouseHolding);
 
 	// Physics System
 	Register(Raycast);

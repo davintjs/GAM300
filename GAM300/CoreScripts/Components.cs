@@ -374,6 +374,11 @@ namespace BeanFactory
             InternalCalls.GetChild(this, out Transform child);
             return child;
         }
+
+        public void Translate(vec3 translation)
+        {
+            position += translation;
+        }
     }
 
     [StructLayout(LayoutKind.Sequential)]

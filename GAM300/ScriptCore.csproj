@@ -46,6 +46,7 @@
     <Compile Include="Assets\Scripts\CheckBox.cs" />
     <Compile Include="Assets\Scripts\CombatManager.cs" />
     <Compile Include="Assets\Scripts\CompanionMovement.cs" />
+    <Compile Include="Assets\Scripts\Credits.cs" />
     <Compile Include="Assets\Scripts\CutsceneCamera.cs" />
     <Compile Include="Assets\Scripts\CutsceneTrigger.cs" />
     <Compile Include="Assets\Scripts\Dialogue.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Assets\Scripts\RangeEnemyNavMesh.cs" />
     <Compile Include="Assets\Scripts\SceneTransitionTrigger.cs" />
     <Compile Include="Assets\Scripts\Settings.cs" />
+    <Compile Include="Assets\Scripts\SliderButtonLogic.cs" />
     <Compile Include="Assets\Scripts\SpinningPropeller.cs" />
     <Compile Include="Assets\Scripts\Splashscreen.cs" />
     <Compile Include="Assets\Scripts\StartingAnimation.cs" />

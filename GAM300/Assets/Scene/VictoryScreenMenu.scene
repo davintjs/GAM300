@@ -64,8 +64,8 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     - {fileID: 4418236984561621579}
-    - {fileID: 15122834859859923062}
     - {fileID: 15628350562473262138}
+    - {fileID: 17795899732976064060}
 ---
 ID: 2748547964756519209
 Canvas:
@@ -84,8 +84,8 @@ Script:
   sizeMultiplier: 1.10000002
   timer: 7.41286888e-43
   bgm: {fileID: 12773935355036224696}  # Component
-  mainMenuBGImage: {fileID: 0}
-  mainMenuTitle: {fileID: 15122834859859923062}  # GameObject
+  mainMenuBGImage: {fileID: 4418236984561621579}  # GameObject
+  mainMenuTitle: {fileID: 17795899732976064060}  # GameObject
   pressStartText: {fileID: 15628350562473262138}  # GameObject
   uibutton: {fileID: 1586736388842185412}  # Component
 ---
@@ -119,42 +119,6 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: 250bd3f97d6791cd89aa119c063c76d9}
 ---
-ID: 15122834859859923062
-GameObject:
-  m_IsActive: true
-  m_Name: YouWin_Text
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 5205254661984323289}  # Transform
-    - component: {fileID: 1278430713987826152}  # TextRenderer
----
-ID: 5205254661984323289
-Transform:
-  m_GameObject: {fileID: 15122834859859923062}
-  Translation: [-0.144334912, 0.0143430941, 0.282837987]
-  Rotation: [0, 0, 0]
-  Scale: [0.555157483, 0.387330055, 0.555157483]
-  Father: {fileID: 11651427043620866289}
-  m_Children:
-    []
----
-ID: 1278430713987826152
-TextRenderer:
-  m_GameObject: {fileID: 15122834859859923062}
-  m_IsEnabled: true
-  Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: You are now the new Seer...
-  X-axis Offset: -0.720000029
-  Y-axis Offset: 0
-  Font Size: 1.21000004
-  Textbox Width: 200
-  Leading: 1.25
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
----
 ID: 15628350562473262138
 GameObject:
   m_IsActive: true
@@ -168,9 +132,9 @@ GameObject:
 ID: 445726148051528729
 Transform:
   m_GameObject: {fileID: 15628350562473262138}
-  Translation: [0, -0.404258549, 0.297466874]
-  Rotation: [-3.14159203, 0, 0]
-  Scale: [0.466178864, 0.532000005, -1.08299994]
+  Translation: [0.0478011593, -0.44511798, 0.173465669]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [0.641362011, 1, 1]
   Father: {fileID: 11651427043620866289}
   m_Children:
     []
@@ -232,6 +196,8 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
@@ -266,9 +232,48 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
   Play: false
+---
+ID: 17795899732976064060
+GameObject:
+  m_IsActive: true
+  m_Name: Victory
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12978060427883889507}  # Transform
+    - component: {fileID: 7912530101262926515}  # TextRenderer
+---
+ID: 12978060427883889507
+Transform:
+  m_GameObject: {fileID: 17795899732976064060}
+  Translation: [-0.141606137, 0.379139453, 0.083702445]
+  Rotation: [0, 0, 0]
+  Scale: [0.895337641, 1.61476123, 0.999999762]
+  Father: {fileID: 11651427043620866289}
+  m_Children:
+    []
+---
+ID: 7912530101262926515
+TextRenderer:
+  m_GameObject: {fileID: 17795899732976064060}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: You are now the new Seer...
+  X-axis Offset: -0.720000029
+  Y-axis Offset: 0
+  Font Size: 1.21000004
+  Textbox Width: 200
+  Leading: 1.25
+  Center Alignment: false
+  Color R: 1
+  Color G: 1
+  Color B: 1
+  Opacity: 1

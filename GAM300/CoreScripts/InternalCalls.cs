@@ -215,6 +215,9 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void LockCursor(bool toggle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetMouseHolding(int mouseCode);
         #endregion
 
         #region PHYSICS_SYSTEM
@@ -350,7 +353,6 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsButtonHovered(SpriteRenderer spriteRenderer);
-
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetTimeScale(float timescale);
