@@ -767,7 +767,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			PRINT(scene.Get<Tag>(boxCollider).name,'\n');
 
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
+			UINT32 bid = SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
 
 		}
 		else if (scene.Has<SphereCollider>(entity)) {
@@ -782,7 +782,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			GlmVec3ToJoltVec3(finalPos, pos);
 
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-			SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+			UINT32 bid = SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
 
 		}
 		else if (scene.Has<CapsuleCollider>(entity)) {
@@ -794,11 +794,11 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			float offset = 0.5f * (tscale.y * cc.height);
 			if (cc.height >= 0.0f) {
 				JPH::BodyCreationSettings capsuleCreationSettings(new JPH::CapsuleShape(offset, radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-				SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
+				UINT32 bid = SetBodyCreationSettings(capsuleCreationSettings, rb, enabledStatus);
 			}
 			else {
 				JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
-				SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+				UINT32 bid = SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
 			}
 
 		}
@@ -994,6 +994,7 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		return;
 
 	Entity& entity = scene.Get<Entity>(rb);
+	entity.
 
 	// Set enabled status
 	JPH::EActivation enabledStatus = JPH::EActivation::Activate;
@@ -1092,7 +1093,8 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	GlmVec3ToJoltVec3(pos, jphPos);
 	GlmVec3ToJoltQuat(rot, jphRot);
 	JPH::BodyCreationSettings bodyCreationSettings(shape, jphPos, jphRot, motionType, EngineObjectLayers::DYNAMIC);
-	SetBodyCreationSettings(bodyCreationSettings, rb, enabledStatus);
+	UINT32 bid = SetBodyCreationSettings(bodyCreationSettings, rb, enabledStatus);
+	rigidbodyHashMap[bid] = rb.EUID();
 }
 
 // Create and add a Jolt Character to a Jolt physics system using a character controller
@@ -1154,7 +1156,7 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	return;
 }
 
-void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigidbody& rb, JPH::EActivation enabledStatus) {
+UINT32 PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigidbody& rb, JPH::EActivation enabledStatus) {
 	
 	// Linear + Angular Velocity
 	JPH::RVec3 linearVel;
@@ -1188,6 +1190,8 @@ void PhysicsSystem::SetBodyCreationSettings(JPH::BodyCreationSettings& bcs, Rigi
 	bodyInterface->AddBody(body->GetID(), enabledStatus);
 	rb.bid = body->GetID().GetIndexAndSequenceNumber();
 	//std::cout << "add\n";
+
+	return body->GetID().GetIndexAndSequenceNumber();
 }
 
 EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& distance) {
@@ -1231,6 +1235,9 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 		bid = results[i].mBodyID.GetIndexAndSequenceNumber();
 		JPH::RVec3 v = ray.GetPointOnRay(results[i].mFraction);
 		
+		//scene.Get<Rigidbody>()
+
+
 		for (auto it = rbArray.begin(); it != rbArray.end(); ++it) 
 		{
 			Rigidbody& rb = *it;
