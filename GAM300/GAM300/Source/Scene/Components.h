@@ -557,6 +557,7 @@ struct Particle : Object
 	vec3 direction{ 0.f , 0.f, 0.f };
 	float acceleration{0.f};
 	float lifetime{ 0.f };
+	float lifetimeInitial{ 0.f };
 	float scale{ 0.f };
 	float speed{0.f};
 	float noiselifetime{ 0.f };
@@ -577,7 +578,10 @@ struct ParticleComponent : Object
 	float trailThiccness{ 1.f };
 
 	float angle{ 30.f }; // for directional particles
+
+	float particleLifetime_Min{ 1.0f };
 	float particleLifetime_{ 3.0f };
+
 	float particleEmissionRate_{ 100.0f };
 	float particleMinScale_{ 0.1f };
 	float particleMaxScale_{ 1.0f };
@@ -593,6 +597,12 @@ struct ParticleComponent : Object
 	bool trailEnabled{ false };
 	bool isLocalSpace{ false };
 
+	bool spawnFromShape{ false };
+	Vector3 fromShapeAxis{ 1.f,1.f,1.f };
+
+	bool fadeToColor{ false };
+	Vector3 colorToFadeTowards{ 1.f,1.f,1.f };
+
 	std::vector<Particle> particles_;
 
 	property_vtable();
@@ -601,13 +611,17 @@ struct ParticleComponent : Object
 property_begin_name(ParticleComponent, "ParticleComponent")
 {
 	property_var(meshID).Name("Mesh"),
-	property_var(materialGUID).Name("Material"),
+	property_var(materialGUID).Name("Particle Material"),
 	//property_var(ParticleTexture).Name("Particle Texture"),
 	property_var(isLocalSpace).Name("Local Space"),
 	property_var(direction).Name("Particle Direction"),
 	property_var(angle).Name("Angle of Direction"),
 	property_var(numParticles_).Name("Number Of Particles"),
-	property_var(particleLifetime_).Name("Particle Lifetime"),
+
+	property_var(particleLifetime_Min).Name("Min Particle Lifetime"),
+	property_var(particleLifetime_).Name("Max Particle Lifetime"),
+
+
 	property_var(particleEmissionRate_).Name("Particle Emission Rate"),
 	property_var(particleMinScale_).Name("Particle Min Scale"),
 	property_var(particleMaxScale_).Name("Particle Max Scale"),
@@ -617,11 +631,17 @@ property_begin_name(ParticleComponent, "ParticleComponent")
 	property_var(noiseMovement).Name("Particle Noise Movement Percentage"),
 	property_var(noisefrequency).Name("Particle Noise Frequency"),
 	property_var(is2D).Name("2D particle"),
+	property_var(spawnFromShape).Name("Spawn From Shape"),
+	property_var(fromShapeAxis).Name("Shape's Size"),
 	property_var(trailEnabled).Name("Trailing"),
 	property_var(trailColor).Name("Trail Color"),
 	property_var(trailSize).Name("Trail Size"),
 	property_var(trailThiccness).Name("Trail Thickness"),
-	property_var(particleLooping).Name("Looping")
+	property_var(particleLooping).Name("Looping"),
+
+	property_var(fadeToColor).Name("Fade towards Color"),
+	property_var(colorToFadeTowards).Name("Color to Fade to")
+
 
 } property_vend_h(ParticleComponent)
 //
