@@ -30,6 +30,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include "Graphics/GraphicsHeaders.h"
 #include "Physics/PhysicsSystem.h"
 #include "Core/FramerateController.h"
+#include "AppEntry/Application.h"
 
 #ifndef SCRIPT_WRAPPERS_H
 #define SCRIPT_WRAPPERS_H
@@ -112,6 +113,14 @@ static bool GetKey(int keyCode)
 {
 	return InputHandler::isKeyButtonHolding(keyCode);
 }
+static bool GetMouseHolding(int mouseCode)
+{
+	if (mouseCode == 0)
+	{
+		return InputHandler::isMouseButtonHolding_L();
+	}
+	return InputHandler::isMouseButtonHolding_R();
+}
 
 static void GetMouseDelta(Vector2& mouseDelta)
 {
@@ -144,15 +153,41 @@ static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	AUDIOMANAGER.PlayComponent(audioSource);
 }
 
-static void SetMasterVolume(bool toggle) { // toggle for now, change to float when ready
-	AUDIOMANAGER.SetMasterVolume(float(toggle));
+static void SetMasterVolume(float value) 
+{
+	AUDIOMANAGER.SetMasterVolume(value);
+}
+
+static float GetMasterVolume() 
+{
+	return AUDIOMANAGER.GetMasterVolume();
+}
+
+static void SetSFXVolume(float value)
+{
+	AUDIOMANAGER.SetSFXVolume(value);
+}
+
+static float GetSFXVolume()
+{
+	return AUDIOMANAGER.GetSFXVolume();
+}
+
+static void SetMusicVolume(float value)
+{
+	AUDIOMANAGER.SetMusicVolume(value);
+}
+
+static float GetMusicVolume()
+{
+	return AUDIOMANAGER.GetMusicVolume();
 }
 
 static void StopMusic(float fade = 1.f) {
 	AUDIOMANAGER.StopMusic(fade);
 }
 
-static void PauseMusic() {
+static void PauseMusic() { // no more of this right?
 	AUDIOMANAGER.SetMusicVolume(0.f);
 }
 
@@ -170,6 +205,17 @@ static void EnableSFX(bool toggle) {
 static void PauseComponent(ScriptObject<AudioSource> audioSource) {
 	AUDIOMANAGER.PauseComponent(audioSource);
 }
+
+static void AudioSourceSetVolume(ScriptObject<AudioSource> audioSource, float volume) {
+	AUDIOMANAGER.SetComponentVolume(audioSource, volume);
+}
+
+static float AudioSourceGetVolume(ScriptObject<AudioSource> audioSource) {
+	return AUDIOMANAGER.GetComponentVolume(audioSource);
+}
+
+
+
 #pragma endregion
 
 #pragma region ANIMATOR
@@ -439,6 +485,24 @@ static bool IsButtonHovered(ScriptObject<SpriteRenderer> spriteRenderer)
 
 #pragma endregion
 
+#pragma region PERSISTENCEDATA
+static void SaveData(MonoString* mString, float value)
+{
+	std::string key = mono_string_to_utf8(mString);
+	SCRIPTING.persistenceData[key] = value;
+}
+
+static float GetData(MonoString* mString)
+{
+	std::string key = mono_string_to_utf8(mString);
+	auto it = SCRIPTING.persistenceData.find(key);
+	if (it != SCRIPTING.persistenceData.end())
+		return it->second;
+
+	return 0.f;
+}
+#pragma endregion
+
 static void QuitGame()
 {
 #ifdef _BUILD
@@ -644,7 +708,7 @@ static bool FindPath(ScriptObject<NavMeshAgent> pEnemy, glm::vec3 pDest)
 	return NAVMESHBUILDER.GetNavMesh()->FindPath(_player, pDest);
 }
 
-// Graphics
+#pragma region GRAPHCIS
 
 static float GetGamma()
 {
@@ -656,6 +720,40 @@ static void SetGamma(float gammaValue)
 	float& gamma = RENDERER.getGamma();
 	gamma = gammaValue;
 }
+
+static bool GetBloom()
+{
+	return RENDERER.enableBloom();
+}
+
+static void SetBloom(bool value)
+{
+	bool& bloom = RENDERER.enableBloom();
+	bloom = value;
+}
+
+static bool GetShadow()
+{
+	return RENDERER.enableShadows();
+}
+
+static void SetShadow(bool value)
+{
+	bool& shadow = RENDERER.enableShadows();
+	shadow = value;
+}
+
+static bool GetFullScreen()
+{
+	return Application::IsWindowFullScreen();
+}
+
+static void SetFullscreenMode(bool value)
+{
+	Application::Instance().Fullscreen(value, 1600, 900);
+}
+
+#pragma endregion
 
 static void SetTimeScale(float timescale)
 {
@@ -733,6 +831,7 @@ static void RegisterScriptWrappers()
 	Register(GetMouseDown);
 	Register(GetMouseDelta);
 	Register(LockCursor);
+	Register(GetMouseHolding);
 
 	// Physics System
 	Register(Raycast);
@@ -766,6 +865,14 @@ static void RegisterScriptWrappers()
 	Register(SetMusicFade);
 	Register(EnableSFX);
 	Register(PauseComponent);
+	Register(SetMasterVolume);
+	Register(GetMasterVolume);
+	Register(SetSFXVolume);
+	Register(GetSFXVolume);
+	Register(SetMusicVolume);
+	Register(GetMusicVolume);
+	Register(AudioSourceSetVolume);
+	Register(AudioSourceGetVolume);
 
 	//Text renderer
 	Register(SetTextString);
@@ -803,10 +910,19 @@ static void RegisterScriptWrappers()
 	Register(IsButtonClicked);
 	Register(IsButtonHovered);
 
+	// Persistence Data
+	Register(SaveData);
+	Register(GetData);
 
 	// Graphics
 	Register(GetGamma);
 	Register(SetGamma);
+	Register(GetBloom);
+	Register(SetBloom);
+	Register(GetShadow);
+	Register(SetShadow);
+	Register(GetFullScreen);
+	Register(SetFullscreenMode);
 
 	//TimeScale
 	Register(SetTimeScale);

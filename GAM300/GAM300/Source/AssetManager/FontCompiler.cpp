@@ -37,7 +37,7 @@ void LoadFont(const std::filesystem::path& _filePath) {
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 	}
 	else {
-		FT_Set_Pixel_Sizes(face, 0, 96);
+		FT_Set_Pixel_Sizes(face, 0, 256);
 		if (FT_Load_Char(face, 'X', FT_LOAD_RENDER))
 		{
 			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;

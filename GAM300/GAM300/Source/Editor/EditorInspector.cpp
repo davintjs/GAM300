@@ -402,7 +402,7 @@ void DisplayType(Change& change, const char* name, Vector3& val)
     idName = "##";
     idName += name;
 
-    if (!strcmp(name, "Color") || !strcmp(name, "Trail Color")) {
+    if (!strcmp(name, "Color") || !strcmp(name, "Trail Color") || !strcmp(name, "Color to Fade to")) {
         Vector4 buf = Vector4(val.x, val.y, val.z, 1.f);
         ImVec4 color = ImVec4(buf.x, buf.y, buf.z, buf.w);
 
@@ -884,19 +884,23 @@ void Display_Property(T& comp) {
                     }
                     else {
                         Display<T1>(newchange, DisplayName.c_str(), Value);
-                        if (DisplayName == "Material_ID") {
+                        if (DisplayName == "Material_ID" || DisplayName == "Particle Material") {
                             ImGui::SameLine();
                             if (!EditorScene::Instance().multiselectEntities.size()) {
                                 if (ImGui::Button("Mat")) {
                                     Scene& scene = MySceneManager.GetCurrentScene();
                                     Entity& ent = scene.Get<Entity>(comp);
                                     auto& mr = scene.Get<MeshRenderer>(ent);
+                                    auto& particle = scene.Get<ParticleComponent>(ent);
                                     if (!EditorInspector::Instance().material_inspector) {
                                         EditorInspector::Instance().material_inspector = true;
                                     }
 
                                     ImGui::SetWindowFocus("Material");
-                                    EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                                    if(DisplayName == "Material_ID")
+                                        EditorContentBrowser::Instance().selectedAss = mr.materialGUID;
+                                    else
+                                        EditorContentBrowser::Instance().selectedAss = particle.materialGUID;
                                 }
                             }                       
                         }

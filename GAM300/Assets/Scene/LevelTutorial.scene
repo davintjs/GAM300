@@ -364,6 +364,7 @@ Script:
   _isAttacking: false
   _isDashAttacking: false
   _isOverdrive: false
+  _isSprinting: false
   animCancelPercentage: 0.600000024
   attack1duration: 0.5
   attack2duration: 0.600000024
@@ -455,8 +456,11 @@ Script:
   maxStatPackCount: 0
   staminaPackCount: 0
   staminaPackValue: 50
+  dashIcon: {fileID: 14855078077787617845}  # Component
+  dodgeIcon: {fileID: 5434327487198052390}  # Component
   healthCounter: {fileID: 7106348496936394930}  # Component
   maxPackCounter: {fileID: 18062030643615582512}  # Component
+  sprintIcon: {fileID: 9491998807236455091}  # Component
   stamCounter: {fileID: 3793286798138583367}  # Component
   thirdPersonController: {fileID: 0}
 ---
@@ -641,11 +645,8 @@ Transform:
     - {fileID: 12115195871797465227}
     - {fileID: 4720521423488205772}
     - {fileID: 11966624967280915999}
-    - {fileID: 10673191397735378312}
     - {fileID: 9691624766500435789}
-    - {fileID: 13993313988089347944}
     - {fileID: 1370432261870288088}
-    - {fileID: 12478379518054110186}
     - {fileID: 14449198235318879022}
     - {fileID: 14843899441988254193}
     - {fileID: 4891637289365399706}
@@ -654,9 +655,7 @@ Transform:
     - {fileID: 17065559468612678914}
     - {fileID: 13238106671876530389}
     - {fileID: 15384277846337641445}
-    - {fileID: 8999464013272844116}
-    - {fileID: 8902240131670545970}
-    - {fileID: 2362914623510004527}
+    - {fileID: 13091064029857359106}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -16844,12 +16843,14 @@ GameObject:
 ID: 11180506814816798271
 Transform:
   m_GameObject: {fileID: 11966624967280915999}
-  Translation: [-1.64952528, -0.899993896, 5]
-  Rotation: [0, 0, 0]
-  Scale: [1, 0.999999762, 0.999999762]
+  Translation: [-1.65064228, -0.902999878, 0.101000004]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [0.101000004, 0.100999981, 0.100999981]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    []
+    - {fileID: 10673191397735378312}
+    - {fileID: 8999464013272844116}
+    - {fileID: 23695980592848708}
 ---
 ID: 9429827192945704677
 SpriteRenderer:
@@ -16859,7 +16860,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+  SpriteTexture: {guid: c56ad377937ec59542a9216d77804efc}
 ---
 ID: 10673191397735378312
 GameObject:
@@ -16874,10 +16875,10 @@ GameObject:
 ID: 1051630031486288378
 Transform:
   m_GameObject: {fileID: 10673191397735378312}
-  Translation: [-1.64999998, -0.899999976, 7]
-  Rotation: [3.14159274, 0, 0]
-  Scale: [0.200000003, 0.200000003, -0.200000003]
-  Father: {fileID: 4212138099454399691}
+  Translation: [0.00636100769, -0.0297851562, -68.3069458]
+  Rotation: [0, 0, 3.14159274]
+  Scale: [-1.98019791, -1.98019803, -1.98019803]
+  Father: {fileID: 11966624967280915999}
   m_Children:
     []
 ---
@@ -16904,12 +16905,14 @@ GameObject:
 ID: 2755569868383402096
 Transform:
   m_GameObject: {fileID: 9691624766500435789}
-  Translation: [-1.5, -0.899999976, 5]
-  Rotation: [3.14158487, 0, 0]
-  Scale: [1, 1, -1]
+  Translation: [-1.47525656, -0.902999878, 5]
+  Rotation: [3.14158463, 0, 0]
+  Scale: [0.101000004, 0.100999981, 0.100999981]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    []
+    - {fileID: 13993313988089347944}
+    - {fileID: 8902240131670545970}
+    - {fileID: 15068109410705320378}
 ---
 ID: 5378824823806842645
 SpriteRenderer:
@@ -16919,7 +16922,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+  SpriteTexture: {guid: c56ad377937ec59542a9216d77804efc}
 ---
 ID: 13993313988089347944
 GameObject:
@@ -16934,10 +16937,10 @@ GameObject:
 ID: 13691015580275777266
 Transform:
   m_GameObject: {fileID: 13993313988089347944}
-  Translation: [-1.5, -0.899999976, 7]
-  Rotation: [3.14159274, 0, 0]
-  Scale: [0.200000003, 0.200000003, -0.200000003]
-  Father: {fileID: 4212138099454399691}
+  Translation: [9.53674316e-07, -0.0295410156, -19.8019886]
+  Rotation: [0, 0, 3.14159274]
+  Scale: [-1.98019791, -1.98019803, -1.98019803]
+  Father: {fileID: 9691624766500435789}
   m_Children:
     []
 ---
@@ -16964,12 +16967,14 @@ GameObject:
 ID: 10817413614210890440
 Transform:
   m_GameObject: {fileID: 1370432261870288088}
-  Translation: [-1.35000002, -0.899999976, 5]
-  Rotation: [3.14158487, 0, 0]
-  Scale: [1, 1, -1]
+  Translation: [-1.30034757, -0.902999878, 5]
+  Rotation: [3.14158463, 0, 0]
+  Scale: [0.101000004, 0.100999981, 0.100999981]
   Father: {fileID: 4212138099454399691}
   m_Children:
-    []
+    - {fileID: 12478379518054110186}
+    - {fileID: 2362914623510004527}
+    - {fileID: 12206223420669289900}
 ---
 ID: 3686822582642055789
 SpriteRenderer:
@@ -16979,7 +16984,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 126b2b22ae6b9d05dd09633504cc8b41}
+  SpriteTexture: {guid: c56ad377937ec59542a9216d77804efc}
 ---
 ID: 12478379518054110186
 GameObject:
@@ -16994,10 +16999,10 @@ GameObject:
 ID: 11083728837774791348
 Transform:
   m_GameObject: {fileID: 12478379518054110186}
-  Translation: [-1.35000002, -0.899999976, 7]
-  Rotation: [3.14159274, 0, 0]
-  Scale: [0.200000003, 0.200000003, -0.200000003]
-  Father: {fileID: 4212138099454399691}
+  Translation: [9.53674316e-07, -0.0295410156, -19.8019886]
+  Rotation: [-8.10623169e-06, -0, 3.14159274]
+  Scale: [-1.98019791, -1.98019803, -1.98019803]
+  Father: {fileID: 1370432261870288088}
   m_Children:
     []
 ---
@@ -17718,8 +17723,8 @@ ID: 11284489195304747706
 BoxCollider:
   m_GameObject: {fileID: 10239403197338088721}
   m_IsEnabled: true
-  Dimensions: [1, 1.20000005, 1]
-  Offset: [0, 0.699999988, 0]
+  Dimensions: [5.05000019, 4.05000019, 3.54999995]
+  Offset: [1.20000005, 1.75, 1.35000002]
 ---
 ID: 9206095836556255734
 Rigidbody:
@@ -17733,7 +17738,7 @@ Rigidbody:
   IsStatic: true
   IsKinematic: false
   UseGravity: false
-  Is_trigger: false
+  Is_trigger: true
 ---
 ID: 16584733367619209921
 Script:
@@ -17784,6 +17789,8 @@ GameObject:
   m_Component:
     - component: {fileID: 15731775766012682249}  # Transform
     - component: {fileID: 15972800431127212080}  # MeshRenderer
+    - component: {fileID: 2203035197680240706}  # BoxCollider
+    - component: {fileID: 7440176994673655320}  # Rigidbody
 ---
 ID: 15731775766012682249
 Transform:
@@ -17801,6 +17808,27 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 434ad1b54876e659e9f858ac0ee638cf}
   Material_ID: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
+---
+ID: 2203035197680240706
+BoxCollider:
+  m_GameObject: {fileID: 14764595615424322734}
+  m_IsEnabled: true
+  Dimensions: [0.682932675, 1.36126828, 0.531217039]
+  Offset: [-5.21540642e-06, 0.679729462, 0.0769838691]
+---
+ID: 7440176994673655320
+Rigidbody:
+  m_GameObject: {fileID: 14764595615424322734}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 13798602388106733380
 GameObject:
@@ -34966,9 +34994,9 @@ GameObject:
 ID: 17695070528309476151
 Transform:
   m_GameObject: {fileID: 13238106671876530389}
-  Translation: [1.3214184, -0.861160278, 0]
-  Rotation: [3.14159274, 0, 0]
-  Scale: [0.14418, 0.14417997, 0.14417997]
+  Translation: [1.45706797, -0.902999878, 0]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [0.100925997, 0.10092596, 0.10092596]
   Father: {fileID: 4212138099454399691}
   m_Children:
     - {fileID: 3901125534421942576}
@@ -34997,9 +35025,9 @@ GameObject:
 ID: 13144244445408533122
 Transform:
   m_GameObject: {fileID: 15384277846337641445}
-  Translation: [1.59194958, -0.861160278, 0]
+  Translation: [1.64018726, -0.903152466, 0]
   Rotation: [-3.14159226, 0, 0]
-  Scale: [0.14418, 0.14417997, 0.14417997]
+  Scale: [0.101000004, 0.101000004, 0.101000004]
   Father: {fileID: 4212138099454399691}
   m_Children:
     - {fileID: 3011815803033459280}
@@ -35048,7 +35076,7 @@ SpriteRenderer:
 ID: 3901125534421942576
 GameObject:
   m_IsActive: true
-  m_Name: DodgeRoll
+  m_Name: DodgeRoll_Icon
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -35078,7 +35106,7 @@ SpriteRenderer:
 ID: 16160416220025300441
 GameObject:
   m_IsActive: true
-  m_Name: DashAttack
+  m_Name: DashAttack_Icon
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -35118,7 +35146,7 @@ GameObject:
 ID: 9145624052885399182
 Transform:
   m_GameObject: {fileID: 15401023532947402957}
-  Translation: [-4.27560139, 0.562927246, -7.09696906e-08]
+  Translation: [0.070898056, 0.846984863, -1.03595085e-07]
   Rotation: [-3.14159226, 0, 0]
   Scale: [1, 0.999999344, 0.999999344]
   Father: {fileID: 13238106671876530389}
@@ -35133,9 +35161,9 @@ TextRenderer:
   Text: CTRL
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 1.63
-  Textbox Width: 0.560720026
-  Textbox Height: 0.102690004
+  Font Size: 2.72000003
+  Textbox Width: 0.935680091
+  Textbox Height: 0.171360016
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35154,10 +35182,10 @@ GameObject:
 ID: 8720823304217764596
 Transform:
   m_GameObject: {fileID: 8999464013272844116}
-  Translation: [-0.958000541, -0.909805298, 1.28763437]
-  Rotation: [0, 0, 0]
-  Scale: [1, 0.999999762, 0.999999762]
-  Father: {fileID: 4212138099454399691}
+  Translation: [0.303432465, 0.49621582, -11.7488585]
+  Rotation: [3.14159226, 0, 0]
+  Scale: [9.90098953, 9.90099049, 9.90099049]
+  Father: {fileID: 11966624967280915999}
   m_Children:
     []
 ---
@@ -35169,13 +35197,13 @@ TextRenderer:
   Text: 0
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 0.200000003
-  Textbox Width: 0.0168000013
-  Textbox Height: 0.0126000009
+  Font Size: 0.400000006
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
-  Color: [1, 1, 1, 1]
+  Color: [1, 0.999899983, 0.999899983, 1]
 ---
 ID: 8902240131670545970
 GameObject:
@@ -35190,10 +35218,10 @@ GameObject:
 ID: 4338872382419012729
 Transform:
   m_GameObject: {fileID: 8902240131670545970}
-  Translation: [-0.873085856, -0.909805298, 1.28763437]
-  Rotation: [0, 0, 0]
-  Scale: [1, 0.999999762, 0.999999762]
-  Father: {fileID: 4212138099454399691}
+  Translation: [0.294438362, 0.49597168, 36.7560997]
+  Rotation: [-3.14158463, 0, 0]
+  Scale: [9.90098953, 9.90099144, 9.90099144]
+  Father: {fileID: 9691624766500435789}
   m_Children:
     []
 ---
@@ -35205,9 +35233,9 @@ TextRenderer:
   Text: 0
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 0.200000003
-  Textbox Width: 0.0168000013
-  Textbox Height: 0.0126000009
+  Font Size: 0.400000006
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35226,10 +35254,10 @@ GameObject:
 ID: 15449216803697819372
 Transform:
   m_GameObject: {fileID: 2362914623510004527}
-  Translation: [-0.791153371, -0.909805298, 1.28763437]
-  Rotation: [0, 0, 0]
-  Scale: [1, 0.999999762, 0.999999762]
-  Father: {fileID: 4212138099454399691}
+  Translation: [0.393507957, 0.49597168, -1.2392627]
+  Rotation: [-3.14158463, 0, 0]
+  Scale: [9.90098953, 9.90099144, 9.90099144]
+  Father: {fileID: 1370432261870288088}
   m_Children:
     []
 ---
@@ -35241,9 +35269,9 @@ TextRenderer:
   Text: 0
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 0.200000003
-  Textbox Width: 0.0168000013
-  Textbox Height: 0.0126000009
+  Font Size: 0.400000006
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35284,3 +35312,208 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: 63ebb10b2da608e4a1b9d3098cd8ca22}
   Play: false
+---
+ID: 23695980592848708
+GameObject:
+  m_IsActive: true
+  m_Name: HealthPackCounter_Control
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17780450602332179874}  # Transform
+    - component: {fileID: 2161838575911020946}  # TextRenderer
+---
+ID: 17780450602332179874
+Transform:
+  m_GameObject: {fileID: 23695980592848708}
+  Translation: [-0.0429611206, 0.869262695, -11.7488613]
+  Rotation: [3.14159226, 0, 0]
+  Scale: [9.90098953, 9.90099144, 9.90099144]
+  Father: {fileID: 11966624967280915999}
+  m_Children:
+    []
+---
+ID: 2161838575911020946
+TextRenderer:
+  m_GameObject: {fileID: 23695980592848708}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 1
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.400000006
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 0.999899983, 0.999899983, 1]
+---
+ID: 15068109410705320378
+GameObject:
+  m_IsActive: true
+  m_Name: StaminaPackCounter_Control
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5845634370899648515}  # Transform
+    - component: {fileID: 7605996745042495054}  # TextRenderer
+---
+ID: 5845634370899648515
+Transform:
+  m_GameObject: {fileID: 15068109410705320378}
+  Translation: [0.0364093781, 0.869018555, 36.7541733]
+  Rotation: [-3.14158463, 0, 0]
+  Scale: [9.90098953, 9.90099144, 9.90099144]
+  Father: {fileID: 9691624766500435789}
+  m_Children:
+    []
+---
+ID: 7605996745042495054
+TextRenderer:
+  m_GameObject: {fileID: 15068109410705320378}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 2
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.400000006
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 12206223420669289900
+GameObject:
+  m_IsActive: true
+  m_Name: MaxPackCounter_Control
+  m_TagString: Untagged
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4173810827835496224}  # Transform
+    - component: {fileID: 14369414861804426695}  # TextRenderer
+---
+ID: 4173810827835496224
+Transform:
+  m_GameObject: {fileID: 12206223420669289900}
+  Translation: [0.0526390076, 0.868774414, -1.23926437]
+  Rotation: [-3.14158463, 0, 0]
+  Scale: [9.90098953, 9.90099144, 9.90099144]
+  Father: {fileID: 1370432261870288088}
+  m_Children:
+    []
+---
+ID: 14369414861804426695
+TextRenderer:
+  m_GameObject: {fileID: 12206223420669289900}
+  m_IsEnabled: true
+  Font: {guid: a7cae9393a3a20320ff941174aa43890}
+  Text: 3
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 0.400000006
+  Textbox Width: 0.0336000025
+  Textbox Height: 0.0252000019
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 13091064029857359106
+GameObject:
+  m_IsActive: true
+  m_Name: SkillBorder_Sprint
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10844726746066648490}  # Transform
+    - component: {fileID: 7648414287142509041}  # SpriteRenderer
+---
+ID: 10844726746066648490
+Transform:
+  m_GameObject: {fileID: 13091064029857359106}
+  Translation: [1.27696121, -0.902999878, 0]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [0.100925997, 0.10092596, 0.10092596]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 116756458099848226}
+    - {fileID: 10152718624619182785}
+---
+ID: 7648414287142509041
+SpriteRenderer:
+  m_GameObject: {fileID: 13091064029857359106}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: c56ad377937ec59542a9216d77804efc}
+---
+ID: 116756458099848226
+GameObject:
+  m_IsActive: true
+  m_Name: SHIFT_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 31112738003993514}  # Transform
+    - component: {fileID: 11895883824617072809}  # TextRenderer
+---
+ID: 31112738003993514
+Transform:
+  m_GameObject: {fileID: 116756458099848226}
+  Translation: [0.070898056, 0.846984863, -1.03595085e-07]
+  Rotation: [-3.14159226, 0, 0]
+  Scale: [1, 0.999999344, 0.999999344]
+  Father: {fileID: 13091064029857359106}
+  m_Children:
+    []
+---
+ID: 11895883824617072809
+TextRenderer:
+  m_GameObject: {fileID: 116756458099848226}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: SHIFT
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 2.72000003
+  Textbox Width: 1.03632009
+  Textbox Height: 0.171360016
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 10152718624619182785
+GameObject:
+  m_IsActive: true
+  m_Name: SprintIcon
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9371346022336682629}  # Transform
+    - component: {fileID: 9491998807236455091}  # SpriteRenderer
+---
+ID: 9371346022336682629
+Transform:
+  m_GameObject: {fileID: 10152718624619182785}
+  Translation: [-0.0446710587, 0.0308837891, -0.173161596]
+  Rotation: [0, 0, 0]
+  Scale: [1.70446825, 1.70446754, 1.70446754]
+  Father: {fileID: 13091064029857359106}
+  m_Children:
+    []
+---
+ID: 9491998807236455091
+SpriteRenderer:
+  m_GameObject: {fileID: 10152718624619182785}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 29a511ce496f764ee1308dda7d666137}

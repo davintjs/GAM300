@@ -19,6 +19,7 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserv
 #include <Precompiled.h>
 #include "AudioManager.h"
 #include "Core/EventsManager.h"
+#include "AppEntry/Application.h"
 
 void AudioManager::InitAudioManager() {
 	EVENTS.Subscribe(this, &AudioManager::CallbackAudioAssetLoaded);
@@ -58,6 +59,14 @@ void AudioManager::DestroyAudioManager() {
 
 void AudioManager::Update(float dt) {
 	//const float fadeTime = 2.f; // in seconds
+	static float masterVolume = GetMasterVolume();
+	if (!Application::Instance().IsWindowFocused())
+	{
+		masterVolume = (GetMasterVolume() != 0.01f) ? GetMasterVolume() : masterVolume;
+		master->setVolume(0.01f);
+	}
+	else
+		master->setVolume(masterVolume);
 
 	for (MusicBuffer& musicBuffer : musics) {
 		if (musicBuffer.currentMusic != 0 && musicBuffer.fade == FADE_IN) {
@@ -369,22 +378,24 @@ void AudioManager::EnableSFX(bool toggle) {
 }
 void AudioManager::StopAllAudio() {
 
-	musics[0].currentMusicPath = 0;
-	musics[1].currentMusicPath = 0;
 	currentFXPath = 0;
+	musics[0].currentMusicPath = 0;
 	musics[0].nextMusicPath = 0;
+	musics[0].currentMusic = 0;
+	musics[0].currentMusic->stop();
+	musics[0].fade = FADE_OUT;
+	
+	musics[1].currentMusicPath = 0;
 	musics[1].nextMusicPath = 0;
+	musics[1].currentMusic = 0;
+	musics[1].currentMusic->stop();
+	musics[1].fade = FADE_OUT;
+
 	groups[CATEGORY_SFX]->stop();
 	groups[CATEGORY_MUSIC]->stop();
 	groups[CATEGORY_MUSIC2]->stop();
 	groups[CATEGORY_LOOPFX]->stop();
-	musics[0].currentMusic = 0;
-	musics[1].currentMusic = 0;
-	musics[0].currentMusic->stop();
-	musics[1].currentMusic->stop();
 	currentFX->stop();
-	musics[0].fade = FADE_OUT;
-	musics[1].fade = FADE_OUT;
 }
 
 void AudioManager::StopAudioComponent(AudioSource& Source) {
@@ -423,11 +434,19 @@ void AudioManager::SetSFXVolume(float volume) {
 }
 
 void AudioManager::SetMusicVolume(float volume) {
-	//groups[CATEGORY_MUSIC]->setVolume(1.f);
-	//groups[CATEGORY_MUSIC2]->setVolume(1.f);
+	groups[CATEGORY_MUSIC]->setVolume(volume);
+	groups[CATEGORY_MUSIC2]->setVolume(volume);
 	//musics[currentMusicIdx].currentMusic->setVolume(volume);
 	musicVolume = volume;
 }
+void AudioManager::SetComponentVolume(AudioSource& source, float volume) {
+	source.volume = volume;
+}
+
+float AudioManager::GetComponentVolume(AudioSource& source) {
+	return source.volume;
+}
+
 float AudioManager::GetMasterVolume() {
 	float vol;
 	master->getVolume(&vol);

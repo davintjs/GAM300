@@ -171,4 +171,17 @@ namespace BeanFactory
         List<Coroutine> coroutines = new List<Coroutine>();
         List<Coroutine> coroutinesBuffer = new List<Coroutine>();
     }
+
+    public class InstanceData
+    {
+        public static void SaveData(string key, float value)
+        {
+            InternalCalls.SaveData(key, value);
+        }
+
+        public static float GetData(string key)
+        {
+            return InternalCalls.GetData(key);
+        }
+    }
 }

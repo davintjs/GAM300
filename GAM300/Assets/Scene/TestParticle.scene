@@ -9,7 +9,7 @@ Scene Settings:
 ---
 ID: 14989680110700367717
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: Particle Generator
   m_TagString: ""
   m_Layer: 0
@@ -21,7 +21,7 @@ GameObject:
 ID: 1373255009547200345
 Transform:
   m_GameObject: {fileID: 14989680110700367717}
-  Translation: [-0.239672065, 2, -2.32830644e-10]
+  Translation: [-0.239672065, -0.56156075, -2.32830644e-10]
   Rotation: [0, 0, 0]
   Scale: [0.200000003, 0.200000003, 0.200000003]
   Father: {fileID: 0}
@@ -40,12 +40,13 @@ ParticleComponent:
   m_GameObject: {fileID: 14989680110700367717}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 9cfcab317aac71fe2c9e8ef7ddd3f2d6}
+  Particle Material: {guid: 56beda9f6de373b9d5955e84bb2420d2}
   Local Space: false
   Particle Direction: [0, 1, 0]
   Angle of Direction: 90
-  Number Of Particles: 3
-  Particle Lifetime: 0.5
+  Number Of Particles: 50
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
   Particle Emission Rate: 1
   Particle Min Scale: 0.100000001
   Particle Max Scale: 0.100000001
@@ -55,11 +56,15 @@ ParticleComponent:
   Particle Noise Movement Percentage: 20
   Particle Noise Frequency: 5
   2D particle: false
-  Trailing: true
-  Trail Color: [1, 0, 0.838253021]
-  Trail Size: 5
-  Trail Thickness: 1
+  Spawn From Shape: true
+  Shape's Size: [10, 0, 10]
+  Trailing: false
+  Trail Color: [1, 0.999899983, 0.999983788]
+  Trail Size: 10
+  Trail Thickness: 10.3500004
   Looping: true
+  Fade towards Color: true
+  Color to Fade to: [1, 1, 1]
 ---
 ID: 1589847083358243135
 GameObject:
@@ -215,9 +220,9 @@ GameObject:
 ID: 5915572405052181223
 Transform:
   m_GameObject: {fileID: 7998039492543491522}
-  Translation: [0, 2, 10]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Translation: [12.5560627, 2, 0.136843085]
+  Rotation: [-3.14159203, 1.56446707, -3.14159203]
+  Scale: [0.999988317, 1, 0.999988377]
   Father: {fileID: 0}
   m_Children:
     []
@@ -344,12 +349,13 @@ ParticleComponent:
   m_GameObject: {fileID: 14396046046181180447}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 86a0c5b256888901f84595d211b97767}
+  Particle Material: {guid: ebe3551dcf9b050a42b046a5e95efb87}
   Local Space: false
   Particle Direction: [0, 0, 0]
   Angle of Direction: 0
-  Number Of Particles: 3
-  Particle Lifetime: 2
+  Number Of Particles: 50
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
   Particle Emission Rate: 1
   Particle Min Scale: 0.5
   Particle Max Scale: 0.5
@@ -359,8 +365,12 @@ ParticleComponent:
   Particle Noise Movement Percentage: 0
   Particle Noise Frequency: 0
   2D particle: true
+  Spawn From Shape: true
+  Shape's Size: [10, 1, 10]
   Trailing: false
   Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
+  Fade towards Color: true
+  Color to Fade to: [1, 1, 1]

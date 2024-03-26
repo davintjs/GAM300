@@ -12,6 +12,7 @@
 
 All content © 2023 DigiPen Institute of Technology Singapore. All rights reserved.
 *****************************************************************************************/
+using GlmSharp;
 using System;
 namespace GlmSharp
 {
@@ -52,8 +53,18 @@ namespace BeanFactory
 {
     public static class Mathf
     {
+        public enum EasingType
+        {
+            LINEAR,
+            EASEIN,
+            EASEOUT,
+            BEZIER,
+            PARAMETRIC
+        }
+
         public static float PI = 3.1415926f;
         public static float Rad2Deg = 180f / PI;
+        public static float Deg2Rad = PI / 180f;
         public static float Abs(float value)
         {
             return value < 0 ? -value : value;
@@ -61,6 +72,34 @@ namespace BeanFactory
         public static float Lerp(float start, float end, float percentage)
         {
             return start + (end - start) * percentage;
+        }
+        public static float Lerp(float start, float end, float value, float duration, EasingType type)
+        {
+            value /= duration;
+
+            switch (type)
+            {
+                case EasingType.EASEIN:
+                    value = EaseIn(value);
+                    break;
+                case EasingType.EASEOUT:
+                    value = EaseOut(value);
+                    break;
+                case EasingType.BEZIER:
+                    value = BezierBlend(value);
+                    break;
+                case EasingType.PARAMETRIC:
+                    value = ParametricBlend(value);
+                    break;
+                case EasingType.LINEAR:
+                default:
+                    break;
+            }
+
+            float temp = new float();
+            temp = (1.0f - value) * (start) + value * (end);
+
+            return temp;
         }
 
         public static T Clamp<T>(T value, T min, T max) where T : IComparable<T>
@@ -120,6 +159,27 @@ namespace BeanFactory
 
             // Return the smoothed angle
             return current;
+        }
+
+        private static float EaseIn(float t)
+        {
+            return t * t;
+        }
+
+        private static float EaseOut(float t)
+        {
+            return 1 - (1 - t) * (1 - t);
+        }
+
+        private static float BezierBlend(float t)
+        {
+            return t * t * (3.0f - 2.0f * t);
+        }
+
+        private static float ParametricBlend(float t)
+        {
+            float sqt = t * t;
+            return (sqt / (2.0f * (sqt - t) + 1.0f));
         }
     }
 }

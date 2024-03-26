@@ -172,15 +172,19 @@ void TextSystem::RenderText(TextRenderer& text)
 {
 	allVertices.clear();
 
+	if (text.guid == 0)
+		return;
+
 	unsigned int currentLine = 1;
 	float x = text.x, width, currentWidth, newLineWidth;
 	width = currentWidth = newLineWidth = 0.f;
 	float y = text.y;
-	float scale = text.fontSize * 0.001f;
+	float scale = text.fontSize * 0.001f / 3.0f;
 	float baseHeight = mFontContainer.at(text.guid).at('A').Size.y * scale;
 
-	if (text.text.size() != text.charCount)
+	if (text.text.size() != text.charCount || text.fontSize != fontSize)
 	{
+		fontSize = text.fontSize;
 		float tempWidth = 0.f;
 		text.charCount = text.text.size();
 		std::string::const_iterator c;
@@ -208,7 +212,7 @@ void TextSystem::RenderText(TextRenderer& text)
 		float xpos = x + ch.Bearing.x * scale;
 
 		float ypos = y - (ch.Bearing.y * 2.f) * scale;
-		if(*c == 'p')
+		if(*c == 'p' || *c == 'y' || *c == 'q' || *c == 'g' || *c == 'j')
 			ypos = y - (ch.Bearing.y) * scale;
 
 		float nextChWidth = 0.f;

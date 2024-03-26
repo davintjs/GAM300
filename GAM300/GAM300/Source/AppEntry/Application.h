@@ -85,6 +85,9 @@ public:
 	// Check if the window is focused
 	static const bool& IsWindowFocused() { return windowFocused; }
 
+	// Check if the window is focused
+	static const bool& IsWindowFullScreen() { return windowFullscreen; }
+
 	// Get the window application
 	static GLFWwindow* GetWindow() { return window; }
 

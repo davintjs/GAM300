@@ -1,0 +1,15 @@
+Material:
+  Material Name: PlayerSkin
+  Shader: 1
+  Albedo: [0.784798741, 0.602061212, 0.508460045, 1]
+  Metallic: 1
+  Roughness: 0
+  AmbientOcclusion: 2
+  Is Emission: false
+  Emission: 1
+  AlbedoTexture: {guid: 00000000000000000000000000000000}
+  NormalMap: {guid: 00000000000000000000000000000000}
+  MetallicTexture: {guid: 00000000000000000000000000000000}
+  RoughnessTexture: {guid: 00000000000000000000000000000000}
+  AoTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 00000000000000000000000000000000}

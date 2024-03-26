@@ -147,6 +147,7 @@ uniform float bloomThreshold;
 uniform float ambience_multiplier;
 uniform vec3 ambient_tint;
 
+uniform float gammaCorrection;
 
 //End
 vec3 getNormalFromMap()
@@ -353,7 +354,7 @@ void main()
     // ALBEDO
     if (hasTexture != 0)
     {
-        albedo = vec3(Albedo) * pow(texture(AlbedoTexture, TexCoords).rgb, vec3(2.2));
+        albedo = vec3(Albedo) * pow(texture(AlbedoTexture, TexCoords).rgb, vec3(gammaCorrection));
     }
     else
     {
@@ -450,7 +451,10 @@ void main()
         if( Albedo.a < 1.f)
         {
             color = vec3(ambience_multiplier) * albedo * ao + emission ;
-            
+            if(isEmission)
+            {
+                toBloom = true;
+            }   
         }
         else
         {
