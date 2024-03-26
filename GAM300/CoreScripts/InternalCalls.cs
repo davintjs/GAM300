@@ -149,6 +149,9 @@ namespace BeanFactory
         public static extern void PauseMusic();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetMusicVolume(float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ResumeMusic();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -158,19 +161,22 @@ namespace BeanFactory
         public static extern void EnableSFX(bool toggle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetMasterVolume(bool toggle);
+        public static extern void SetSFXVolume(float volume);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void AudioSourceStop(ulong ID);
+        public static extern void SetMasterVolume(float volume);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void AudioSourceSetVolume(ulong ID, float volume);
+        public static extern void AudioSourceStop(AudioSource audioSource);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern float AudioSourceGetVolume(ulong ID);
+        public static extern void AudioSourceSetVolume(AudioSource audioSource, float volume);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern UInt32 GetSoundLength(ulong ID);
+        public static extern float AudioSourceGetVolume(AudioSource audioSource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern UInt32 GetSoundLength(AudioSource audioSource);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetAllVolume(float volume);

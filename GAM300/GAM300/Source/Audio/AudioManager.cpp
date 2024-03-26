@@ -369,22 +369,24 @@ void AudioManager::EnableSFX(bool toggle) {
 }
 void AudioManager::StopAllAudio() {
 
-	musics[0].currentMusicPath = 0;
-	musics[1].currentMusicPath = 0;
 	currentFXPath = 0;
+	musics[0].currentMusicPath = 0;
 	musics[0].nextMusicPath = 0;
+	musics[0].currentMusic = 0;
+	musics[0].currentMusic->stop();
+	musics[0].fade = FADE_OUT;
+	
+	musics[1].currentMusicPath = 0;
 	musics[1].nextMusicPath = 0;
+	musics[1].currentMusic = 0;
+	musics[1].currentMusic->stop();
+	musics[1].fade = FADE_OUT;
+
 	groups[CATEGORY_SFX]->stop();
 	groups[CATEGORY_MUSIC]->stop();
 	groups[CATEGORY_MUSIC2]->stop();
 	groups[CATEGORY_LOOPFX]->stop();
-	musics[0].currentMusic = 0;
-	musics[1].currentMusic = 0;
-	musics[0].currentMusic->stop();
-	musics[1].currentMusic->stop();
 	currentFX->stop();
-	musics[0].fade = FADE_OUT;
-	musics[1].fade = FADE_OUT;
 }
 
 void AudioManager::StopAudioComponent(AudioSource& Source) {
@@ -428,6 +430,14 @@ void AudioManager::SetMusicVolume(float volume) {
 	//musics[currentMusicIdx].currentMusic->setVolume(volume);
 	musicVolume = volume;
 }
+void AudioManager::SetComponentVolume(AudioSource& source, float volume) {
+	source.volume = volume;
+}
+
+float AudioManager::GetComponentVolume(AudioSource& source) {
+	return source.volume;
+}
+
 float AudioManager::GetMasterVolume() {
 	float vol;
 	master->getVolume(&vol);

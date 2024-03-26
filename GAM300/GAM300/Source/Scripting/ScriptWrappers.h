@@ -144,16 +144,20 @@ static void AudioSourcePlay(ScriptObject<AudioSource> audioSource)
 	AUDIOMANAGER.PlayComponent(audioSource);
 }
 
-static void SetMasterVolume(bool toggle) { // toggle for now, change to float when ready
-	AUDIOMANAGER.SetMasterVolume(float(toggle));
+static void SetMasterVolume(float toggle) { // toggle for now, change to float when ready
+	AUDIOMANAGER.SetMasterVolume(toggle);
 }
 
 static void StopMusic(float fade = 1.f) {
 	AUDIOMANAGER.StopMusic(fade);
 }
 
-static void PauseMusic() {
+static void PauseMusic() { // no more of this right?
 	AUDIOMANAGER.SetMusicVolume(0.f);
+}
+
+static void SetMusicVolume(float volume) {
+	AUDIOMANAGER.SetMusicVolume(volume);
 }
 
 static void ResumeMusic() {
@@ -170,6 +174,21 @@ static void EnableSFX(bool toggle) {
 static void PauseComponent(ScriptObject<AudioSource> audioSource) {
 	AUDIOMANAGER.PauseComponent(audioSource);
 }
+
+static void SetSFXVolume(float volume) {
+	AUDIOMANAGER.SetSFXVolume(volume);
+}
+
+static void AudioSourceSetVolume(ScriptObject<AudioSource> audioSource, float volume) {
+	AUDIOMANAGER.SetComponentVolume(audioSource, volume);
+}
+
+static float AudioSourceGetVolume(ScriptObject<AudioSource> audioSource) {
+	return AUDIOMANAGER.GetComponentVolume(audioSource);
+}
+
+
+
 #pragma endregion
 
 #pragma region ANIMATOR
@@ -762,10 +781,15 @@ static void RegisterScriptWrappers()
 	Register(AudioSourcePlay);
 	Register(StopMusic);
 	Register(PauseMusic);
+	Register(SetMusicVolume);
+	Register(SetSFXVolume);
 	Register(ResumeMusic);
 	Register(SetMusicFade);
 	Register(EnableSFX);
 	Register(PauseComponent);
+	Register(SetMasterVolume);
+	Register(AudioSourceSetVolume);
+	Register(AudioSourceGetVolume);
 
 	//Text renderer
 	Register(SetTextString);
