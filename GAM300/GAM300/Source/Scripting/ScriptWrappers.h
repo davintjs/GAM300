@@ -191,10 +191,6 @@ static void PauseMusic() { // no more of this right?
 	AUDIOMANAGER.SetMusicVolume(0.f);
 }
 
-static void SetMusicVolume(float volume) {
-	AUDIOMANAGER.SetMusicVolume(volume);
-}
-
 static void ResumeMusic() {
 	AUDIOMANAGER.PlayMusic();
 }
@@ -208,10 +204,6 @@ static void EnableSFX(bool toggle) {
 }
 static void PauseComponent(ScriptObject<AudioSource> audioSource) {
 	AUDIOMANAGER.PauseComponent(audioSource);
-}
-
-static void SetSFXVolume(float volume) {
-	AUDIOMANAGER.SetSFXVolume(volume);
 }
 
 static void AudioSourceSetVolume(ScriptObject<AudioSource> audioSource, float volume) {
@@ -869,8 +861,6 @@ static void RegisterScriptWrappers()
 	Register(AudioSourcePlay);
 	Register(StopMusic);
 	Register(PauseMusic);
-	Register(SetMusicVolume);
-	Register(SetSFXVolume);
 	Register(ResumeMusic);
 	Register(SetMusicFade);
 	Register(EnableSFX);

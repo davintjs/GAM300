@@ -149,9 +149,6 @@ namespace BeanFactory
         public static extern void PauseMusic();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetMusicVolume(float volume);
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ResumeMusic();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
@@ -177,9 +174,6 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern float GetMusicVolume();
-
-        [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetMasterVolume(float volume);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void AudioSourceStop(AudioSource audioSource);
