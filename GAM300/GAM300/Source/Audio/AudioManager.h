@@ -109,6 +109,8 @@ public:
 	float GetMusicVolume();
 	void SetSFXVolume(float volume);
 	void SetMusicVolume(float volume);
+	void SetComponentVolume(AudioSource& source, float volume);
+	float GetComponentVolume(AudioSource& source);
 	void SetMusicFade(AudioSource & source, float fadeOut, float fadeIn);
 	// Functions for volume settings end
 
