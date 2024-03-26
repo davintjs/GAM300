@@ -189,12 +189,12 @@ public class Enemy : Script
 
 
         vec3 direction = player.position - transform.position;
-        direction = direction.NormalizedSafe;
         direction.y = 0f;
+        direction = direction.NormalizedSafe;
 
         vec3 dir = initialPosition - transform.position;
-        dir = dir.NormalizedSafe;
         dir.y = 0f;
+        dir = dir.NormalizedSafe;
 
         if (!isDead)
         {
