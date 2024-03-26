@@ -18,16 +18,16 @@ in vec3 TexCoords;
 
 uniform samplerCube skybox;
 
+uniform float gammaCorrection;
+
 //End
 
 void main()
 {    
 
-	const float gamma = 3.2f;
-
     FragColor = texture(skybox, TexCoords);
 
-    FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
+    FragColor.rgb = pow(FragColor.rgb, vec3(gammaCorrection));
 
 
 //    float gamma = 2.2;
