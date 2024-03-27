@@ -4516,7 +4516,7 @@ ID: 5453074270413038117
 BoxCollider:
   m_GameObject: {fileID: 16905222177648308199}
   m_IsEnabled: true
-  Dimensions: [0.999999881, 1, 0.999999881]
+  Dimensions: [0.699999988, 0.699999988, 0.699999988]
   Offset: [1.49011612e-08, 1.49011612e-08, 0]
 ---
 ID: 13266309705110330970
@@ -8033,7 +8033,7 @@ GameObject:
 ID: 1363589281020347742
 Transform:
   m_GameObject: {fileID: 10712419355432134318}
-  Translation: [59.7221451, 43.954361, -76.860054]
+  Translation: [60.2646141, 44.020134, -76.860054]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 10907430610981256203}
@@ -8083,7 +8083,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 4.5
+  shootDistance: 10
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
