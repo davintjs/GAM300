@@ -34,8 +34,9 @@ Script:
   Script: {guid: 308f36d28486328374ac349b3503b942}
   apex1: {fileID: 15687312904048643492}  # Component
   apex2: {fileID: 339555793545048330}  # Component
-  apex3: {fileID: 3724742815310155344}  # Component
-  dialogueText: {fileID: 5676392047881511918}  # GameObject
+  apex3: {fileID: 8117809333135974231}  # Component
+  apex4: {fileID: 3724742815310155344}  # Component
+  dialogueText: {fileID: 10482025102164204176}  # GameObject
   level1: {fileID: 14369827522225455365}  # Component
   level2: {fileID: 12036444684904803991}  # Component
   level3: {fileID: 10572921210759547208}  # Component
@@ -512,11 +513,11 @@ Transform:
     - {fileID: 5769265740441844970}
     - {fileID: 15996983871537068920}
     - {fileID: 3787274920911425495}
-    - {fileID: 5676392047881511918}
     - {fileID: 17065559468612678914}
     - {fileID: 7440149643479964697}
     - {fileID: 10041568034456654821}
     - {fileID: 14958344430007027125}
+    - {fileID: 10482025102164204176}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -44847,7 +44848,7 @@ ID: 9169780922658253905
 Transform:
   m_GameObject: {fileID: 10589105948784954568}
   Translation: [-2.25518306e-08, 7.33337164, -0.310161352]
-  Rotation: [-0.042272713, 6.69513756e-05, -0.00213414687]
+  Rotation: [-0.042272713, 6.69513684e-05, -0.00213414687]
   Scale: [0.999999642, 0.99999994, 1.00000012]
   Father: {fileID: 383668116300315972}
   m_Children:
@@ -44982,7 +44983,7 @@ ID: 9809591277645126838
 Transform:
   m_GameObject: {fileID: 8886665999065384408}
   Translation: [2.68220901e-07, 9.38611603, -8.57561827e-06]
-  Rotation: [-0.222700804, -0.000858201063, 0.0139973257]
+  Rotation: [-0.222700804, -0.000858201005, 0.0139973266]
   Scale: [1.0000006, 1.00000036, 1.00000024]
   Father: {fileID: 11406192150390888869}
   m_Children:
@@ -45058,7 +45059,7 @@ ID: 10888064048767530507
 Transform:
   m_GameObject: {fileID: 17724991590097540518}
   Translation: [4.86455974e-07, 1.03478706, 1.53132714e-06]
-  Rotation: [-0.227070794, -0.00144509703, -0.0126738008]
+  Rotation: [-0.227070794, -0.00144509692, -0.0126737999]
   Scale: [1, 1.00000024, 1.00000012]
   Father: {fileID: 15469753426419407164}
   m_Children:
@@ -45134,7 +45135,7 @@ ID: 14977086574586303114
 Transform:
   m_GameObject: {fileID: 11657059819254827832}
   Translation: [-6.40749931e-07, 9.38611698, 2.10553408e-05]
-  Rotation: [-0.223022759, 0.00227635819, -0.00717219803]
+  Rotation: [-0.223022759, 0.00227635819, -0.00717219757]
   Scale: [0.99999994, 0.999999344, 1]
   Father: {fileID: 16116952986532813985}
   m_Children:
@@ -45419,7 +45420,7 @@ ID: 8228418226091831146
 Transform:
   m_GameObject: {fileID: 17458590961539025008}
   Translation: [5.74218575e-07, 11.939352, 8.54837708e-07]
-  Rotation: [0.670438945, -0.0282720774, 2.98142382e-08]
+  Rotation: [0.670438945, -0.0282720774, 3.07459338e-08]
   Scale: [1.00000024, 0.999999821, 0.99999994]
   Father: {fileID: 11126160581785034402}
   m_Children:
@@ -82945,42 +82946,6 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: 5ad2b5f4f3e4ed1a5f789c21c24b3e62}
 ---
-ID: 5676392047881511918
-GameObject:
-  m_IsActive: false
-  m_Name: subtitles
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13704200365559655184}  # Transform
-    - component: {fileID: 15588496912826152058}  # TextRenderer
----
-ID: 13704200365559655184
-Transform:
-  m_GameObject: {fileID: 5676392047881511918}
-  Translation: [-0.634227455, -0.831888437, 7]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4212138099454399691}
-  m_Children:
-    []
----
-ID: 15588496912826152058
-TextRenderer:
-  m_GameObject: {fileID: 5676392047881511918}
-  m_IsEnabled: true
-  Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: Default Text
-  X-axis Offset: 0
-  Y-axis Offset: 0
-  Font Size: 0.25
-  Textbox Width: 95
-  Textbox Height: 0
-  Center Alignment: true
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
----
 ID: 17633603467252348022
 GameObject:
   m_IsActive: true
@@ -83044,6 +83009,7 @@ Transform:
     - {fileID: 9824744411261246132}
     - {fileID: 5753009934991238724}
     - {fileID: 7359964402167818618}
+    - {fileID: 6140361324581815844}
 ---
 ID: 3476722836763241155
 GameObject:
@@ -84565,6 +84531,7 @@ Transform:
     - {fileID: 7575960678470787192}
     - {fileID: 7347557997703022592}
     - {fileID: 534373427350032960}
+    - {fileID: 5654249122384004282}
 ---
 ID: 7575960678470787192
 GameObject:
@@ -84641,7 +84608,7 @@ AudioSource:
 ID: 534373427350032960
 GameObject:
   m_IsActive: true
-  m_Name: Apex3
+  m_Name: Apex4
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -84671,7 +84638,7 @@ AudioSource:
   SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 41c565f37b1feb2402f7cf1133687892}
+  Sound File: {guid: fc8606df4af7183961021cc0212d7f37}
   Play: false
 ---
 ID: 9824744411261246132
@@ -84789,9 +84756,9 @@ GameObject:
 ID: 18378077357969225113
 Transform:
   m_GameObject: {fileID: 7359964402167818618}
-  Translation: [41.8901176, 39.103363, -119.031349]
+  Translation: [66.3465881, 37.7132416, -113.686401]
   Rotation: [0, 0, 0]
-  Scale: [1.27011466, 5.57132959, 5.66181421]
+  Scale: [22.7806606, 0.925927818, 12.0109921]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -94211,6 +94178,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94320,6 +94288,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94356,6 +94325,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94392,6 +94362,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94428,6 +94399,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94464,6 +94436,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94500,6 +94473,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94536,6 +94510,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94572,6 +94547,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94608,6 +94584,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94644,6 +94621,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -94680,6 +94658,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -96317,6 +96296,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
+  Vertical Spacing: 1.5
   Textbox Width: 0.31066668
   Textbox Height: 0.225333348
   Center Alignment: true
@@ -96353,6 +96333,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
+  Vertical Spacing: 1.5
   Textbox Width: 0.31066668
   Textbox Height: 0.225333348
   Center Alignment: true
@@ -96389,6 +96370,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
+  Vertical Spacing: 1.5
   Textbox Width: 0.31066668
   Textbox Height: 0.225333348
   Center Alignment: true
@@ -96583,6 +96565,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
+  Vertical Spacing: 1.5
   Textbox Width: 0.31066668
   Textbox Height: 0.225333348
   Center Alignment: true
@@ -96619,6 +96602,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
+  Vertical Spacing: 1.5
   Textbox Width: 0.31066668
   Textbox Height: 0.225333348
   Center Alignment: true
@@ -96655,6 +96639,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
+  Vertical Spacing: 1.5
   Textbox Width: 0.31066668
   Textbox Height: 0.225333348
   Center Alignment: true
@@ -96813,6 +96798,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.75
+  Vertical Spacing: 1.5
   Textbox Width: 0.836000085
   Textbox Height: 0.154916689
   Center Alignment: true
@@ -96910,6 +96896,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.75
+  Vertical Spacing: 1.5
   Textbox Width: 0.925833464
   Textbox Height: 0.154916689
   Center Alignment: true
@@ -97096,3 +97083,126 @@ Rigidbody:
   IsKinematic: true
   UseGravity: true
   Is_trigger: false
+---
+ID: 10482025102164204176
+GameObject:
+  m_IsActive: true
+  m_Name: Subtitles
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14668362047316885406}  # Transform
+    - component: {fileID: 7921089866721039980}  # TextRenderer
+---
+ID: 14668362047316885406
+Transform:
+  m_GameObject: {fileID: 10482025102164204176}
+  Translation: [0, -0.879999995, 0.0800111741]
+  Rotation: [0, 0, 0]
+  Scale: [0.100999616, 0.100991637, 0.10095425]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 7921089866721039980
+TextRenderer:
+  m_GameObject: {fileID: 10482025102164204176}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: "SEER: This is the propeller room. Be careful of those blades, they will do some serious damage."
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 5
+  Vertical Spacing: 2
+  Textbox Width: 22.3999996
+  Textbox Height: 0.563333392
+  Center Alignment: true
+  Wrap Text: true
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 6140361324581815844
+GameObject:
+  m_IsActive: true
+  m_Name: ApexTrigger4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12912354692767933931}  # Transform
+    - component: {fileID: 7471244745955034967}  # BoxCollider
+    - component: {fileID: 13294711353586321273}  # Rigidbody
+    - component: {fileID: 11050604169777268850}  # Script
+---
+ID: 12912354692767933931
+Transform:
+  m_GameObject: {fileID: 6140361324581815844}
+  Translation: [41.8901176, 39.103363, -119.031349]
+  Rotation: [0, 0, 0]
+  Scale: [1.27011466, 5.57132959, 5.66181421]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 7471244745955034967
+BoxCollider:
+  m_GameObject: {fileID: 6140361324581815844}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 13294711353586321273
+Rigidbody:
+  m_GameObject: {fileID: 6140361324581815844}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 11050604169777268850
+Script:
+  m_GameObject: {fileID: 6140361324581815844}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 14
+---
+ID: 5654249122384004282
+GameObject:
+  m_IsActive: true
+  m_Name: Apex3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10462669278366235586}  # Transform
+    - component: {fileID: 8117809333135974231}  # AudioSource
+---
+ID: 10462669278366235586
+Transform:
+  m_GameObject: {fileID: 5654249122384004282}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1712204151478464524}
+  m_Children:
+    []
+---
+ID: 8117809333135974231
+AudioSource:
+  m_GameObject: {fileID: 5654249122384004282}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 41c565f37b1feb2402f7cf1133687892}
+  Play: false

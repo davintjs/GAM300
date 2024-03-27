@@ -25,7 +25,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 4592072074559840146}
 ---
 ID: 2199169755166096751
 Camera:
@@ -121,10 +121,10 @@ GameObject:
 ID: 4120904777019993763
 Transform:
   m_GameObject: {fileID: 4592072074559840146}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Translation: [0, 0, -0.816037178]
+  Rotation: [0, -0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 0}
+  Father: {fileID: 7305319039410813174}
   m_Children:
     - {fileID: 16470510239641695939}
     - {fileID: 2408824139090975511}
@@ -758,7 +758,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
   min hearing Distance: 1
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -794,7 +794,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
   min hearing Distance: 1
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -830,7 +830,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
   min hearing Distance: 1
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -959,6 +959,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 5
+  Vertical Spacing: 1.5
   Textbox Width: 20
   Textbox Height: 0.281666696
   Center Alignment: true

@@ -189,7 +189,7 @@ public class StartingAnimation : Script
             }
 
         }
-        else if (timer < 59f)
+        else if (timer < 57f)
         {
             systeminit.SetActive(false);
             loading.SetActive(false);
@@ -268,39 +268,39 @@ public class StartingAnimation : Script
         {
             textTimer += Time.deltaTime;
 
-            if(textTimer < 7f)
+            if(textTimer < 6.5f)
             {
                 subtitles.SetActive(true);
                 text.text = "Hmm...good, looks like it worked. Oh I almost forgot about the welcoming speech.";
             }
-            else if(textTimer < 12f)
+            else if(textTimer < 13f)
             {
                 text.text = "Welcome to the GRID, one of the world's premier robotics facilities,";
                 // text1.SetActive(false);
                 //text2.SetActive(true);
             }
-            else if(textTimer < 19f)
+            else if(textTimer < 20f)
             {
-                text.text = "where cutting-edge robotics constructs such as yourself are manufactured to enhance and uphold societal progress.";
+                text.text = "where cutting-edge robotics constructs such as yourself are manufactured to    enhance and uphold societal progress.";
                 //text2.SetActive(false);
                 //text3.SetActive(true);            
             }
-            else if (textTimer < 23f)
+            else if (textTimer < 24f)
             {
                 text.text = "Here, innovation thrives, and the future is forged.";
                 //text3.SetActive(false);
                 //text4.SetActive(true);
             }
-            else if (textTimer < 31f)
+            else if (textTimer < 32f)
             {
-                text.text = "My designation is APEX and I am the current overseer of this facility. You are the first in a new line of robots of my design.";
+                text.text = "My designation is APEX and I am the current overseer of this facility. You are     the first in a new line of robots of my design.";
                 //text4.SetActive(false);
                 //text5.SetActive(true);
             }
-            else if (textTimer < 38f)
+            else if (textTimer < 39f)
             {
                 // Fear not, these tests should prove to be rudimentary for any creation of mine.
-                text.text = "As per facility protocols, you must undergo some tests before authorisation for deployment.";
+                text.text = "As per facility protocols, you must undergo some tests before authorisation for  deployment.";
                 //text5.SetActive(false);
                 //text6.SetActive(true);
             }

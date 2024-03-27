@@ -34436,6 +34436,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34545,6 +34546,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34581,6 +34583,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34617,6 +34620,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34653,6 +34657,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34689,6 +34694,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34725,6 +34731,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34761,6 +34768,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34797,6 +34805,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34833,6 +34842,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34869,6 +34879,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34905,6 +34916,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -35146,6 +35158,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.72000003
+  Vertical Spacing: 1.5
   Textbox Width: 0.826880038
   Textbox Height: 0.153226674
   Center Alignment: true
@@ -35182,6 +35195,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
+  Vertical Spacing: 1.5
   Textbox Width: 0.0297333375
   Textbox Height: 0.0225333367
   Center Alignment: true
@@ -35218,6 +35232,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
+  Vertical Spacing: 1.5
   Textbox Width: 0.0297333375
   Textbox Height: 0.0225333367
   Center Alignment: true
@@ -35254,6 +35269,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
+  Vertical Spacing: 1.5
   Textbox Width: 0.0297333375
   Textbox Height: 0.0225333367
   Center Alignment: true
@@ -35326,6 +35342,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
+  Vertical Spacing: 1.5
   Textbox Width: 0.0297333375
   Textbox Height: 0.0225333367
   Center Alignment: true
@@ -35362,6 +35379,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
+  Vertical Spacing: 1.5
   Textbox Width: 0.0297333375
   Textbox Height: 0.0225333367
   Center Alignment: true
@@ -35398,6 +35416,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
+  Vertical Spacing: 1.5
   Textbox Width: 0.0297333375
   Textbox Height: 0.0225333367
   Center Alignment: true
@@ -35465,6 +35484,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.72000003
+  Vertical Spacing: 1.5
   Textbox Width: 0.915733397
   Textbox Height: 0.153226674
   Center Alignment: true
@@ -35504,7 +35524,7 @@ SpriteRenderer:
 ---
 ID: 18109588227295363251
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: Subtitles
   m_TagString: ""
   m_Layer: 0
@@ -35531,7 +35551,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 5
-  Textbox Width: 20
+  Vertical Spacing: 1.5
+  Textbox Width: 22
   Textbox Height: 0.281666696
   Center Alignment: true
   Wrap Text: true

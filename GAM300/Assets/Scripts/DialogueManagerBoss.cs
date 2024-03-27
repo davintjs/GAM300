@@ -25,6 +25,12 @@ public class DialogueManagerBoss : Script
     public AudioSource apex5;
     public AudioSource apex6;
     public AudioSource apex7;
+    public AudioSource apex8;
+    public AudioSource apex9;
+    public AudioSource apex10;
+    public AudioSource apex11;
+    public AudioSource apex12;
+    public AudioSource apex13;
 
     bool startTimer;
     float Timer;
@@ -98,6 +104,36 @@ public class DialogueManagerBoss : Script
                 text.text = "Apex: You're just a cheap knockoff!";
                 apex7.Play();
                 setTimer(3f);
+                break;
+            case 8: 
+                text.text = "Apex: Dodge this!";
+                apex8.Play();
+                setTimer(1.5f);
+                break;
+            case 9: 
+                text.text = "Apex: There's no escape!";
+                apex9.Play();
+                setTimer(1.4f);
+                break;
+            case 10: 
+                text.text = "Apex: Catch me if you can.";
+                apex10.Play();
+                setTimer(1.5f);
+                break;
+            case 11:
+                text.text = "Apex: HAHAHAHA!!!";
+                apex11.Play();
+                setTimer(2.2f);
+                break;
+            case 12:
+                text.text = "Apex: What a joke!";
+                apex12.Play();
+                setTimer(2.2f);
+                break;
+            case 13:
+                text.text = "Apex: Did I overestimate your abilities?";
+                apex13.Play();
+                setTimer(2.4f);
                 break;
         }
     }

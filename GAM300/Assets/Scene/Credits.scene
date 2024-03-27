@@ -31,7 +31,6 @@ ID: 6290748605718139895
 Camera:
   m_GameObject: {fileID: 5255847082789301257}
   m_IsEnabled: true
-  BackgroundColor: [0, 0, 0, 0]
   ClearFlags: "\x01"
   CullingMask: "\x00"
   NearClip: 0.100000001
