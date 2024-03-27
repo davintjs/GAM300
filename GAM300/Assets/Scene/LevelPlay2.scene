@@ -31450,7 +31450,7 @@ Script:
   RotationSpeed: 6
   back: false
   bulletSpeed: 15
-  chaseDistance: 18
+  chaseDistance: 13
   currentHealth: 3
   duration: 2
   floatingY: 0.200000003
@@ -31462,7 +31462,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 13
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -31729,7 +31729,7 @@ Script:
   RotationSpeed: 6
   back: false
   bulletSpeed: 15
-  chaseDistance: 18
+  chaseDistance: 13
   currentHealth: 3
   duration: 2
   floatingY: 0.200000003
@@ -31741,7 +31741,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 13
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -32008,7 +32008,7 @@ Script:
   RotationSpeed: 6
   back: false
   bulletSpeed: 10
-  chaseDistance: 18
+  chaseDistance: 13
   currentHealth: 3
   duration: 2
   floatingY: 0.200000003
@@ -32020,7 +32020,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 13
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -32299,7 +32299,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 18
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject

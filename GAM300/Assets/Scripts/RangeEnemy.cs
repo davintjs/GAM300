@@ -74,7 +74,7 @@ public class RangeEnemy : Script
         if (player == null)
             return;
 
-        vec3 direction = player.localPosition - transform.position;
+        vec3 direction = player.position - transform.position;
         direction.y = 0f;
         direction = direction.NormalizedSafe;
 
