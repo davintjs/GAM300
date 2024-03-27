@@ -120,6 +120,8 @@ void TextSystem::RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Eng
 
 	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(txtVAO);
 
@@ -154,6 +156,9 @@ void TextSystem::RenderWorldSpace(Scene& _scene, BaseCamera& _camera, const Engi
 		text.color.w);
 
 	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
+
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(txtVAO);
