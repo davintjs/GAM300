@@ -4269,12 +4269,13 @@ ParticleComponent:
   m_GameObject: {fileID: 17611351097031071778}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
+  Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: false
   Particle Direction: [0, 0, 0]
   Angle of Direction: 30
   Number Of Particles: 16
-  Particle Lifetime: 0.300000012
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
   Particle Emission Rate: 1
   Particle Min Scale: 0.0299999993
   Particle Max Scale: 0.0599999987
@@ -4284,11 +4285,15 @@ ParticleComponent:
   Particle Noise Movement Percentage: 0
   Particle Noise Frequency: 0
   2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
   Trailing: false
   Trail Color: [1, 1, 1]
   Trail Size: 0
   Trail Thickness: 1
   Looping: false
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
 ---
 ID: 13482372997539004348
 GameObject:
@@ -27511,9 +27516,9 @@ GameObject:
 ID: 3694986087622353895
 Transform:
   m_GameObject: {fileID: 13025417182947408799}
-  Translation: [66.5716248, 36.3312607, -119.984283]
+  Translation: [66.5438766, 36.3312607, -112.766396]
   Rotation: [0, 0, 0]
-  Scale: [19.5, 0.5, 4.4000001]
+  Scale: [19.5, 0.5, 19.9728298]
   Father: {fileID: 0}
   m_Children:
     []
@@ -27528,41 +27533,6 @@ MeshRenderer:
 ID: 9995246613727977319
 BoxCollider:
   m_GameObject: {fileID: 13025417182947408799}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 12182959782790575471
-GameObject:
-  m_IsActive: true
-  m_Name: BossLiftNavMesh - Copy
-  m_TagString: ""
-  m_Layer: 5
-  m_Component:
-    - component: {fileID: 11745791738163346042}  # Transform
-    - component: {fileID: 13329632250188881287}  # MeshRenderer
-    - component: {fileID: 5877163961152267511}  # BoxCollider
----
-ID: 11745791738163346042
-Transform:
-  m_GameObject: {fileID: 12182959782790575471}
-  Translation: [66.7457733, 36.3312607, -106.675453]
-  Rotation: [0, 0, 0]
-  Scale: [19.5, 0.5, 6.19999981]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 13329632250188881287
-MeshRenderer:
-  m_GameObject: {fileID: 12182959782790575471}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 5877163961152267511
-BoxCollider:
-  m_GameObject: {fileID: 12182959782790575471}
   m_IsEnabled: true
   Dimensions: [1, 1, 1]
   Offset: [0, 0, 0]
@@ -29207,8 +29177,10 @@ Script:
   back: false
   currentRestTimer: 0
   duration: 10
+  hangTimerCap: 1
   rest: false
   restTimer: 2
+  returnDuration: 5
   timer: 0
   endPoint: {fileID: 8582466596051997587}  # Component
 ---
@@ -34627,12 +34599,13 @@ ParticleComponent:
   m_GameObject: {fileID: 1342498447182496088}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 86a0c5b256888901f84595d211b97767}
+  Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: false
   Particle Direction: [0, 1, 0]
   Angle of Direction: 30
   Number Of Particles: 15
-  Particle Lifetime: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
   Particle Emission Rate: 1
   Particle Min Scale: 0
   Particle Max Scale: 0
@@ -34642,11 +34615,15 @@ ParticleComponent:
   Particle Noise Movement Percentage: 30
   Particle Noise Frequency: 30
   2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
   Trailing: true
   Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
 ---
 ID: 13027737300980970512
 GameObject:
@@ -48974,7 +48951,7 @@ GameObject:
   m_IsActive: true
   m_Name: Cabinet - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 2540031132282157025}  # Transform
     - component: {fileID: 9135133170925432081}  # MeshRenderer
@@ -49024,7 +49001,7 @@ GameObject:
   m_IsActive: true
   m_Name: Cabinet - Copy - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 14432671299795778085}  # Transform
     - component: {fileID: 6101469571628521631}  # MeshRenderer
@@ -49524,7 +49501,7 @@ GameObject:
   m_IsActive: true
   m_Name: BrokenSecurityCamera - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 7733837254994291093}  # Transform
     - component: {fileID: 16605253096237536077}  # MeshRenderer
@@ -49624,7 +49601,7 @@ GameObject:
   m_IsActive: true
   m_Name: BrokenSecurityCamera - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 7492273338961406482}  # Transform
     - component: {fileID: 8284656264519248297}  # MeshRenderer
@@ -49934,7 +49911,7 @@ GameObject:
 ID: 16657388234190897955
 Transform:
   m_GameObject: {fileID: 4724155989949222933}
-  Translation: [70.6665192, 36.6394997, -113.295708]
+  Translation: [70.9578629, 36.6394997, -113.295708]
   Rotation: [-3.14159226, -0.771056175, -3.14159226]
   Scale: [0.999366105, 0.999821663, 0.999316335]
   Father: {fileID: 15202522457526674551}
@@ -49984,9 +49961,9 @@ GameObject:
 ID: 5039164071796894151
 Transform:
   m_GameObject: {fileID: 685428555167534952}
-  Translation: [69.7403412, 37.0202179, -113.295708]
-  Rotation: [2.97320104, 0.0647009015, -1.60469401]
-  Scale: [0.99913764, 0.999623358, 0.998900294]
+  Translation: [70.1452637, 37.0202179, -113.375015]
+  Rotation: [2.97320127, 0.0647010207, -1.60462129]
+  Scale: [0.999077499, 0.999566615, 0.998783469]
   Father: {fileID: 15202522457526674551}
   m_Children:
     []
@@ -50224,7 +50201,7 @@ GameObject:
   m_IsActive: true
   m_Name: BrokenSecurityCamera - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 6871528439060651830}  # Transform
     - component: {fileID: 7433966677296793450}  # MeshRenderer
@@ -50924,7 +50901,7 @@ GameObject:
   m_IsActive: true
   m_Name: Cabinet - Copy - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 18009475449513302753}  # Transform
     - component: {fileID: 11369749722483197590}  # MeshRenderer
@@ -93988,7 +93965,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -94029,7 +94008,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -94070,7 +94051,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -94302,7 +94285,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -96332,8 +96317,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
-  Textbox Width: 0.34800002
-  Textbox Height: 0.252000004
+  Textbox Width: 0.31066668
+  Textbox Height: 0.225333348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96368,8 +96353,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
-  Textbox Width: 0.34800002
-  Textbox Height: 0.252000004
+  Textbox Width: 0.31066668
+  Textbox Height: 0.225333348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96404,8 +96389,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
-  Textbox Width: 0.34800002
-  Textbox Height: 0.252000004
+  Textbox Width: 0.31066668
+  Textbox Height: 0.225333348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96507,12 +96492,13 @@ ParticleComponent:
   m_GameObject: {fileID: 17595281446523183228}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 86a0c5b256888901f84595d211b97767}
+  Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: true
   Particle Direction: [0, 1, 0]
   Angle of Direction: 30
   Number Of Particles: 15
-  Particle Lifetime: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
   Particle Emission Rate: 1
   Particle Min Scale: 0.100000001
   Particle Max Scale: 0.100000001
@@ -96522,11 +96508,15 @@ ParticleComponent:
   Particle Noise Movement Percentage: 30
   Particle Noise Frequency: 30
   2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
   Trailing: false
   Trail Color: [1, 1, 1]
   Trail Size: 10
   Trail Thickness: 1
   Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
 ---
 ID: 8108389175939038789
 GameObject:
@@ -96593,8 +96583,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
-  Textbox Width: 0.34800002
-  Textbox Height: 0.252000004
+  Textbox Width: 0.31066668
+  Textbox Height: 0.225333348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96629,8 +96619,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
-  Textbox Width: 0.34800002
-  Textbox Height: 0.252000004
+  Textbox Width: 0.31066668
+  Textbox Height: 0.225333348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96665,8 +96655,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 4
-  Textbox Width: 0.34800002
-  Textbox Height: 0.252000004
+  Textbox Width: 0.31066668
+  Textbox Height: 0.225333348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96823,8 +96813,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.75
-  Textbox Width: 0.94600004
-  Textbox Height: 0.17325002
+  Textbox Width: 0.836000085
+  Textbox Height: 0.154916689
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96920,8 +96910,8 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.75
-  Textbox Width: 1.04775012
-  Textbox Height: 0.17325002
+  Textbox Width: 0.925833464
+  Textbox Height: 0.154916689
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -96956,3 +96946,153 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 29a511ce496f764ee1308dda7d666137}
+---
+ID: 17785360502356981163
+GameObject:
+  m_IsActive: true
+  m_Name: NavMesh Obstacle
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 12541155970112414096}  # Transform
+    - component: {fileID: 18334653955697036878}  # MeshRenderer
+    - component: {fileID: 7993203771683080098}  # BoxCollider
+    - component: {fileID: 12511017914139696890}  # Rigidbody
+---
+ID: 12541155970112414096
+Transform:
+  m_GameObject: {fileID: 17785360502356981163}
+  Translation: [63.9914436, 36.3173027, -110.114975]
+  Rotation: [0, 0, 0]
+  Scale: [2.3499999, 0.5, 1.39999998]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 18334653955697036878
+MeshRenderer:
+  m_GameObject: {fileID: 17785360502356981163}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 7993203771683080098
+BoxCollider:
+  m_GameObject: {fileID: 17785360502356981163}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 12511017914139696890
+Rigidbody:
+  m_GameObject: {fileID: 17785360502356981163}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4388481834860289388
+GameObject:
+  m_IsActive: true
+  m_Name: NavMesh Obstacle 2
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 14396113162469048765}  # Transform
+    - component: {fileID: 14921303395086285527}  # MeshRenderer
+    - component: {fileID: 18275062980745405588}  # BoxCollider
+    - component: {fileID: 8803369883369332729}  # Rigidbody
+---
+ID: 14396113162469048765
+Transform:
+  m_GameObject: {fileID: 4388481834860289388}
+  Translation: [69.8002548, 36.3173027, -113.059631]
+  Rotation: [0, 0, 0]
+  Scale: [4.14004993, 0.5, 1.39999998]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14921303395086285527
+MeshRenderer:
+  m_GameObject: {fileID: 4388481834860289388}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 18275062980745405588
+BoxCollider:
+  m_GameObject: {fileID: 4388481834860289388}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 8803369883369332729
+Rigidbody:
+  m_GameObject: {fileID: 4388481834860289388}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 13853559668321667239
+GameObject:
+  m_IsActive: true
+  m_Name: NavMesh Obstacle 3
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 13044964840134277267}  # Transform
+    - component: {fileID: 2280167900498217684}  # MeshRenderer
+    - component: {fileID: 10036439925359430582}  # BoxCollider
+    - component: {fileID: 16988318659059012616}  # Rigidbody
+---
+ID: 13044964840134277267
+Transform:
+  m_GameObject: {fileID: 13853559668321667239}
+  Translation: [63.6248894, 36.3173027, -116.952065]
+  Rotation: [0, 0, 0]
+  Scale: [3.74492931, 0.5, 2.55478144]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2280167900498217684
+MeshRenderer:
+  m_GameObject: {fileID: 13853559668321667239}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 10036439925359430582
+BoxCollider:
+  m_GameObject: {fileID: 13853559668321667239}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 16988318659059012616
+Rigidbody:
+  m_GameObject: {fileID: 13853559668321667239}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
