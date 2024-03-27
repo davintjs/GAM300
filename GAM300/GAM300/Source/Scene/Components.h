@@ -309,6 +309,7 @@ struct TextRenderer : Object
 	unsigned int charCount = 0;
 	unsigned int lineCount = 1;
 	float x = 0.f, y = 0.f, fontSize = 4.f;
+	float vSpacing = 1.5f;
 	float width = 0.f, height = 0.f;
 
 	bool centerAlign = false;
@@ -325,6 +326,7 @@ property_begin_name(TextRenderer, "TextRenderer") {
 		property_var(x).Name("X-axis Offset"),
 		property_var(y).Name("Y-axis Offset"),
 		property_var(fontSize).Name("Font Size"),
+		property_var(vSpacing).Name("Vertical Spacing"),
 		property_var(width).Name("Textbox Width"),
 		property_var(height).Name("Textbox Height"),
 		property_var(centerAlign).Name("Center Alignment"),

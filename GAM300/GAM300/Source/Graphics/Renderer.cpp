@@ -293,6 +293,9 @@ void Renderer::DrawPBR(BaseCamera& _camera)
 
 	glUniform3fv(camPos, 1, glm::value_ptr(cameraPosition));
 
+	//Gamma Correction
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
 	// Instanced Rendering	
 	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)])
 	{
@@ -371,6 +374,8 @@ void Renderer::DrawDefault(BaseCamera& _camera)
 	// Shadow
 	glUniform1i(glGetUniformLocation(shader.GetHandle(), "ShadowCubeMap"), 8);
 
+	//GammaCorrection
+	 glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
 	// Default Rendering
 	for (DefaultRenderProperties& prop : defaultProperties)
 	{

@@ -124,6 +124,8 @@ uniform float bloomThreshold;
 // ambience value
 uniform float ambience_multiplier;
 uniform vec3 ambient_tint;
+
+uniform float gammaCorrection;
 //End
 
 const float PI = 3.14159265359;
@@ -332,7 +334,7 @@ void main()
     // ALBEDO
     if (Tex_index < 32)
     {
-        albedo = vec3(frag_Albedo) * pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(2.2));
+        albedo = vec3(frag_Albedo) * pow(texture(myTextureSampler[Tex_index], TexCoords).rgb, vec3(gammaCorrection));
     }
     else
     {

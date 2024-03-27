@@ -213,6 +213,8 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
 
         glUniform1f(maxLifetime, particleComponent.particleLifetime_);
 
+        glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
         glUniformMatrix4fv(perspective, 1, GL_FALSE,
             glm::value_ptr(_camera.GetProjMatrix()));
         glUniformMatrix4fv(view, 1, GL_FALSE,
@@ -317,6 +319,7 @@ void ParticleRenderer::Draw2D(BaseCamera& _camera) {
         GLint Colour =
             glGetUniformLocation(shader.GetHandle(), "frag_Albedo");
 
+        glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
 
         glUniform1f(fadeToColor, particleComponent.fadeToColor);
 

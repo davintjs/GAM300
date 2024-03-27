@@ -35,12 +35,15 @@ uniform vec4 uColor;
 uniform bool RenderSprite; // if there is a texture, this is true else false
 uniform bool RenderIcon;
 uniform float AlphaScaler;
+
+uniform float gammaCorrection;
+
 //End
 
 void main()
 {    
 
-	const float gamma = 2.2f;
+//	const float gamma = 2.2f;
 
     //FragColor = vec4(spriteColor, 1.0) * texture(image, TexCoords);
     vec4 colour;
@@ -66,6 +69,6 @@ void main()
     }
 
         FragColor.a *= AlphaScaler;
-        FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
+        FragColor.rgb = pow(FragColor.rgb, vec3(gammaCorrection));
 
 }   

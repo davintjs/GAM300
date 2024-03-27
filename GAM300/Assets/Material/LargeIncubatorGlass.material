@@ -1,7 +1,7 @@
 Material:
   Material Name: LargeIncubatorGlass
   Shader: 0
-  Albedo: [1, 0.890196145, 0.890196145, 0.10980393]
+  Albedo: [1, 0.890196145, 0.890196145, 0.108280241]
   Metallic: 1
   Roughness: 1
   AmbientOcclusion: 1

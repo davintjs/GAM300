@@ -17,6 +17,9 @@ uniform bool fadeToColor;
 uniform vec3 colorToFadeTo;
 uniform float maxLifetime;
 
+uniform float gammaCorrection;
+
+
 layout (location = 0) out vec4 FragColor;
 layout (location = 1) out vec4 Blooming;
 
@@ -27,9 +30,15 @@ void main()
 
     if(hasTexture){
         vec4 texColor = texture(albedoTexture, TexCoords);
-        albedo *= pow(texColor.rgb * frag_Albedo.rgb, vec3(2.2));
+//        albedo *= pow(texColor.rgb * frag_Albedo.rgb, vec3(gammaCorrection));
+        albedo *= texColor.rgb;
+
         alpha *= texColor.a;
     }
+//    else
+//    {
+//        albedo = pow(albedo,vec3(gammaCorrection));
+//    }
 
     if(alpha < 0.05f){
         discard;
@@ -58,10 +67,11 @@ void main()
 //        albedo = vec3(lerp,lerp,lerp);
     }
 
-
     vec3 color = vec3(ambience_multiplier) * albedo * AoConstant + EmissionConstant;
     //color /= (color + vec3(1.0));
     float brightness = dot(color.rgb, vec3(0.2126, 0.7152, 0.0722));
+
+    color = pow(color,vec3(gammaCorrection));
 
     FragColor = vec4(color, alpha);
     Blooming = FragColor;

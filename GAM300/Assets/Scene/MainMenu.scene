@@ -10744,16 +10744,48 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 15099834998599464185}  # Transform
+    - component: {fileID: 13226810224570816868}  # ParticleComponent
 ---
 ID: 15099834998599464185
 Transform:
   m_GameObject: {fileID: 167587689074432387}
-  Translation: [0, 1.83398283, 0]
+  Translation: [0, 2.0999999, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 5589271132425103465}
   m_Children:
     []
+---
+ID: 13226810224570816868
+ParticleComponent:
+  m_GameObject: {fileID: 167587689074432387}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 5f6f30398880c0d0f14bd200d1242f6b}
+  Local Space: false
+  Particle Direction: [0, 0.5, 0]
+  Angle of Direction: 0
+  Number Of Particles: 100
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 6
+  Particle Emission Rate: 100
+  Particle Min Scale: 0.00999999978
+  Particle Max Scale: 0.00999999978
+  Particle Scale Rate: 0.5
+  Particle Speed: 0.100000001
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: true
+  Shape's Size: [0.899999976, 2, 0.800000012]
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 0
+  Trail Thickness: 1
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [0, 0.235748768, 1]
 ---
 ID: 13101866775114958736
 GameObject:
@@ -12526,16 +12558,16 @@ Script:
   m_GameObject: {fileID: 14993186529203053056}
   m_IsEnabled: true
   Script: {guid: fb9164ff81f560e926219329262a8b87}
-  bgmObj: {fileID: 7444458813515797325}  # GameObject
-  masterObj: {fileID: 1627053996443823265}  # GameObject
-  sfxObj: {fileID: 11914878260069720244}  # GameObject
+  bgmSlider: {fileID: 6139163003059543837}  # Component
+  masterSlider: {fileID: 15236292847845777703}  # Component
+  sfxSlider: {fileID: 8458698007830383298}  # Component
 ---
 ID: 8322360515191054112
 Script:
   m_GameObject: {fileID: 14993186529203053056}
   m_IsEnabled: true
   Script: {guid: 66541ef9fb1a29bc1b9b574dc60b258a}
-  gammaObj: {fileID: 5025454116081322359}  # GameObject
+  gammaSlider: {fileID: 5419302154516907815}  # Component
 ---
 ID: 10458039413483263078
 Script:
@@ -12722,6 +12754,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 2710512181228744512}  # Transform
+    - component: {fileID: 5419302154516907815}  # Script
 ---
 ID: 2710512181228744512
 Transform:
@@ -12734,6 +12767,20 @@ Transform:
     - {fileID: 9712636449910607818}
     - {fileID: 6857993424936574129}
     - {fileID: 1308670381251737083}
+---
+ID: 5419302154516907815
+Script:
+  m_GameObject: {fileID: 5025454116081322359}
+  m_IsEnabled: true
+  Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
+  MaxValue: 5
+  MinValue: 0
+  inverted: true
+  maxX: 0.709999979
+  minX: -0.709999979
+  value: 0.5
+  buttonObj: {fileID: 9712636449910607818}  # GameObject
+  sliderTextObj: {fileID: 1308670381251737083}  # GameObject
 ---
 ID: 7454816294857865540
 GameObject:
@@ -12851,6 +12898,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 5895489260971516135}  # Transform
+    - component: {fileID: 15236292847845777703}  # Script
 ---
 ID: 5895489260971516135
 Transform:
@@ -12863,6 +12911,20 @@ Transform:
     - {fileID: 8994722542415437916}
     - {fileID: 15876110498353326432}
     - {fileID: 10870457192150947301}
+---
+ID: 15236292847845777703
+Script:
+  m_GameObject: {fileID: 1627053996443823265}
+  m_IsEnabled: true
+  Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
+  MaxValue: 1
+  MinValue: 0
+  inverted: true
+  maxX: 1.10000002
+  minX: -1.10000002
+  value: 0.5
+  buttonObj: {fileID: 8994722542415437916}  # GameObject
+  sliderTextObj: {fileID: 10870457192150947301}  # GameObject
 ---
 ID: 8994722542415437916
 GameObject:
@@ -12968,6 +13030,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 17229512290291313057}  # Transform
+    - component: {fileID: 8458698007830383298}  # Script
 ---
 ID: 17229512290291313057
 Transform:
@@ -12980,6 +13043,20 @@ Transform:
     - {fileID: 7091100355578800126}
     - {fileID: 4946564986145734044}
     - {fileID: 6479069291501227691}
+---
+ID: 8458698007830383298
+Script:
+  m_GameObject: {fileID: 11914878260069720244}
+  m_IsEnabled: true
+  Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
+  MaxValue: 1
+  MinValue: 0
+  inverted: true
+  maxX: 1.10000002
+  minX: -1.10000002
+  value: 0.5
+  buttonObj: {fileID: 7091100355578800126}  # GameObject
+  sliderTextObj: {fileID: 6479069291501227691}  # GameObject
 ---
 ID: 7091100355578800126
 GameObject:
@@ -13085,6 +13162,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 5019446190592291743}  # Transform
+    - component: {fileID: 6139163003059543837}  # Script
 ---
 ID: 5019446190592291743
 Transform:
@@ -13097,6 +13175,20 @@ Transform:
     - {fileID: 14571891404093188607}
     - {fileID: 12322814354824925024}
     - {fileID: 4090370652779046302}
+---
+ID: 6139163003059543837
+Script:
+  m_GameObject: {fileID: 7444458813515797325}
+  m_IsEnabled: true
+  Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
+  MaxValue: 1
+  MinValue: 0
+  inverted: true
+  maxX: 1.10000002
+  minX: -1.10000002
+  value: 0.5
+  buttonObj: {fileID: 14571891404093188607}  # GameObject
+  sliderTextObj: {fileID: 4090370652779046302}  # GameObject
 ---
 ID: 14571891404093188607
 GameObject:

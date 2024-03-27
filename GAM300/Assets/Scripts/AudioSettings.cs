@@ -8,26 +8,24 @@ using GlmSharp;
 
 class AudioSettings : Script
 {
-    public GameObject masterObj;
-    public GameObject sfxObj;
-    public GameObject bgmObj;
-
-    // private sliders
-    float masterVolume;
-    float sfxVolume;
-    float bgmVolume;
+    public SliderButtonLogic masterSlider;
+    public SliderButtonLogic sfxSlider;
+    public SliderButtonLogic bgmSlider;
 
     void Start()
     {
-        masterVolume = Audio.masterVolume;
-        sfxVolume = Audio.sfxVolume;
-        bgmVolume = Audio.musicVolume;
-    }
+        masterSlider.value = Audio.masterVolume;
+        sfxSlider.value = Audio.sfxVolume;
+        bgmSlider.value = Audio.musicVolume;
 
+        masterSlider.UpdateSliderValue();
+        sfxSlider.UpdateSliderValue();
+        bgmSlider.UpdateSliderValue();
+    }
     void Update()
     {
-        Audio.masterVolume = masterVolume;
-        Audio.sfxVolume = sfxVolume;
-        Audio.musicVolume = bgmVolume;
+        Audio.masterVolume = Audio.masterVolume;
+        Audio.sfxVolume = Audio.sfxVolume;
+        Audio.musicVolume = Audio.musicVolume;
     }
 }
