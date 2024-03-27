@@ -97,7 +97,7 @@ public class DialogueManager : Script
 
     public void SetState(int i)
     {
-        dialogueText.SetActive (true);
+        dialogueText.SetActive(true);
         switch (i)
         {
             case 1:

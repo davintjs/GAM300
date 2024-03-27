@@ -189,7 +189,7 @@ public class StartingAnimation : Script
             }
 
         }
-        else if (timer < 56f)
+        else if (timer < 59f)
         {
             systeminit.SetActive(false);
             loading.SetActive(false);
@@ -304,7 +304,7 @@ public class StartingAnimation : Script
                 //text5.SetActive(false);
                 //text6.SetActive(true);
             }
-            else if (textTimer < 43f)
+            else if (textTimer < 45f)
             {
                 text.text = "Fear not, these tests should prove to be rudimentary for any creation of mine.";
                 //text6.SetActive(false);

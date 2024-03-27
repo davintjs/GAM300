@@ -31,7 +31,6 @@ ID: 2199169755166096751
 Camera:
   m_GameObject: {fileID: 7305319039410813174}
   m_IsEnabled: true
-  BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -159,6 +158,8 @@ AudioSource:
   AudioChannel: 0
   Loop: false
   Volume: 0.699999988
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -758,6 +759,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -792,6 +795,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -826,6 +831,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -926,7 +933,7 @@ SpriteRenderer:
 ID: 15177962187234400664
 GameObject:
   m_IsActive: false
-  m_Name: subtitles
+  m_Name: Subtitles
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -936,9 +943,9 @@ GameObject:
 ID: 5296641902821484860
 Transform:
   m_GameObject: {fileID: 15177962187234400664}
-  Translation: [-0.629999995, -0.769999981, 0]
+  Translation: [0, -0.879999995, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.101000004, 0.101000004, 0.101000004]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -948,14 +955,13 @@ TextRenderer:
   m_GameObject: {fileID: 15177962187234400664}
   m_IsEnabled: true
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: hmm...good. Looks like it worked
+  Text: This is the subtitles
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 0.25
-  Textbox Width: 92
-  Leading: 2
+  Font Size: 5
+  Textbox Width: 20
+  Textbox Height: 0.281666696
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: true
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
