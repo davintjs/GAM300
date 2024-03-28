@@ -434,7 +434,7 @@ public class ThirdPersonController : Script
             }
         }
 
-        if (isDead) return;
+        if (isDead || updateInvulnerability) return;
 
         if (CC.velocity.y > JumpSpeed)
         {
