@@ -78,6 +78,7 @@ Script:
   hitShakeDur: 0.100000001
   hitShakeMag: 0.100000001
   hitEffect: {fileID: 17611351097031071778}  # GameObject
+  hitEffect2: {fileID: 128562352063763926}  # GameObject
 ---
 ID: 11768379503594195228
 GameObject:
@@ -97596,3 +97597,54 @@ TextRenderer:
   Wrap Text: false
   WorldSpace: false
   Color: [1, 1, 1, 1]
+---
+ID: 128562352063763926
+GameObject:
+  m_IsActive: true
+  m_Name: ParticleEmitter_Enemy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 777957583402713736}  # Transform
+    - component: {fileID: 5624992609434081276}  # ParticleComponent
+---
+ID: 777957583402713736
+Transform:
+  m_GameObject: {fileID: 128562352063763926}
+  Translation: [-13.3517504, -0.263694435, 15.7915907]
+  Rotation: [0, 0, 0]
+  Scale: [0.0318250023, 0.0318250023, 0.0318250023]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5624992609434081276
+ParticleComponent:
+  m_GameObject: {fileID: 128562352063763926}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 283b4d530ddbba0170927e5c18040b4f}
+  Local Space: false
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 16
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.600000024
+  Particle Max Scale: 0.100000001
+  Particle Scale Rate: 0.699999988
+  Particle Speed: 4
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 0
+  Trail Thickness: 1
+  Looping: false
+  Fade towards Color: false
+  Color to Fade to: [1, 0, 0]

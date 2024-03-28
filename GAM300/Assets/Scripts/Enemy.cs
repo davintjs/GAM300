@@ -470,6 +470,7 @@ public class Enemy : Script
         //set particle transform to enemy position
         if (currentHealth <= 0)
         {
+            CombatManager.instance.SpawnHitEffect2(transform);
             currentHealth = 0;
             hpBar.gameObject.SetActive(false);
             isDead = true;

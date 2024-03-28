@@ -15,6 +15,7 @@ public class CombatManager : Script
     public float hitEffectDuration = 1f;
 
     public GameObject hitEffect;
+    public GameObject hitEffect2;
 
     void Awake()
     {
@@ -32,6 +33,12 @@ public class CombatManager : Script
     {
         GameObject particles = Instantiate(hitEffect, transform.position, transform.rotation);
         StartCoroutine(DestroyParticles(hitEffectDuration/2f, particles));
+    }
+
+    public void SpawnHitEffect2(Transform transform)
+    {
+        GameObject particles = Instantiate(hitEffect2, transform.position, transform.rotation);
+        StartCoroutine(DestroyParticles(hitEffectDuration / 2f, particles));
     }
 
     IEnumerator DestroyParticles(float duration,GameObject gameObj)
