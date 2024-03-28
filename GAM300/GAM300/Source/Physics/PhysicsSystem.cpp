@@ -331,18 +331,12 @@ void PhysicsSystem::Exit() {
 }
 
 void PhysicsSystem::PrePhysicsUpdate(float dt) {
-	//// Test raycast
-	//if (InputHandler::isKeyButtonPressed(GLFW_KEY_T)) {
-	//	std::cout << "Casting Ray\n";
-	//	JPH::Vec3 pt = CastRay(JPH::Vec3(0, -50, 0), JPH::Vec3(0,300,0), 100.f);
-	//}
 	// Resolve any character controller movement from scripting system
 	ResolveCharacterMovement();
-
 }
 void PhysicsSystem::PostPhysicsUpdate() {
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
-	//std::cout << "Post physics update\n";
+	std::cout << "Post physics update\n";
 
 	// Handle collision events
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
@@ -350,43 +344,76 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		PhysicsComponent* pc1 = nullptr;
 		PhysicsComponent* pc2 = nullptr;
 		bool found = false;
+
 		Scene& scene = MySceneManager.GetCurrentScene();
-		auto& rbArray = scene.GetArray<Rigidbody>();
-		for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) 
-		{
 
-			Rigidbody& rb = *it;
 
-			if (rb.state == DELETED) continue;
-
-			if (rb.bid == e.bid1) {
+		std::cout << "treasure hunt\n";
+		if (rigidbodyHashMap.count(e.bid1)) {
+			std::cout << "rb1\n";
+			Rigidbody& rb = scene.Get<Rigidbody>(rigidbodyHashMap[e.bid1]);
+			if (rb.state != DELETED)
 				pc1 = &rb;
-			}
-			else if (rb.bid == e.bid2) {
+		}
+		else if (characterHashMap.count(e.bid1)) {
+			std::cout << "cc1\n";
+
+			pc1 = &scene.Get<CharacterController>(characterHashMap[e.bid1]);
+		}
+
+		if (rigidbodyHashMap.count(e.bid2)) {
+			std::cout << "rb2\n";
+
+			Rigidbody& rb = scene.Get<Rigidbody>(rigidbodyHashMap[e.bid2]);
+			if (rb.state != DELETED)
 				pc2 = &rb;
-			}
-
-			if (pc1 && pc2)
-				found = true;
 		}
-		auto& ccArray = scene.GetArray<CharacterController>();
-		for (auto it = ccArray.begin(); it != ccArray.end() && !found; ++it)
-		{
-			CharacterController& cc = *it;
-			if (cc.bid == e.bid1) {
-				pc1 = &cc;
-			}
-			else if (cc.bid == e.bid2) {
-				pc2 = &cc;
-			}
+		else if (characterHashMap.count(e.bid2)) {
+			std::cout << "cc2\n";
 
-			if (pc1 && pc2)
-				found = true;
+			pc2 = &scene.Get<CharacterController>(characterHashMap[e.bid2]);
 		}
 
+		
+		// DEPRECATED, REMOVE BEFORE SUBMISSION
+		
+		//auto& rbArray = scene.GetArray<Rigidbody>();
+		//for (auto it = rbArray.begin(); it != rbArray.end() && !found; ++it) 
+		//{
+
+		//	Rigidbody& rb = *it;
+
+		//	if (rb.state == DELETED) continue;
+
+		//	if (rb.bid == e.bid1) {
+		//		pc1 = &rb;
+		//	}
+		//	else if (rb.bid == e.bid2) {
+		//		pc2 = &rb;
+		//	}
+
+		//	if (pc1 && pc2)
+		//		found = true;
+		//}
+		//auto& ccArray = scene.GetArray<CharacterController>();
+		//for (auto it = ccArray.begin(); it != ccArray.end() && !found; ++it)
+		//{
+		//	CharacterController& cc = *it;
+		//	if (cc.bid == e.bid1) {
+		//		pc1 = &cc;
+		//	}
+		//	else if (cc.bid == e.bid2) {
+		//		pc2 = &cc;
+		//	}
+
+		//	if (pc1 && pc2)
+		//		found = true;
+		//}
+		
+		
 		if (!pc1 || !pc2)
 		continue;
-
+		std::cout << "test1\n";
 		// Publish the right event
 		if (e.op == EngineCollisionData::collisionOperation::added) {
 
@@ -479,6 +506,8 @@ void PhysicsSystem::PostPhysicsUpdate() {
 				//PRINT("Sending Collision stay Event\n");
 			}
 		}
+
+		std::cout << "test2\n";
 	}
 	// Clear engine collisions
 	engineContactListener->collisionResolution.clear();
@@ -506,6 +535,7 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		if (cc.state == DELETED) continue;
 		if (!scene.IsActive(cc)) continue;
 		JPH::Ref<JPH::Character> mCharacter = nullptr;
+
 		for (JPH::Ref<JPH::Character> r : characters) {
 			if (cc.bid == r->GetBodyID().GetIndexAndSequenceNumber()) {
 				mCharacter = r;
@@ -623,6 +653,10 @@ void PhysicsSystem::CallbackSceneStop(SceneStopEvent* pEvent)
 	}
 
 	engineContactListener->pSystem = nullptr;
+
+	rigidbodyHashMap.clear();
+	characterHashMap.clear();
+
 }
 void PhysicsSystem::CallbackObjectCreated(ObjectCreatedEvent<Rigidbody>* pEvent) {
 	if (!pEvent || !pEvent->pObject)
@@ -768,6 +802,7 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 			JPH::BodyCreationSettings boxCreationSettings(new JPH::BoxShape(scale), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			UINT32 bid = SetBodyCreationSettings(boxCreationSettings, rb, enabledStatus);
+			rigidbodyHashMap[bid] = entity.EUID();
 
 		}
 		else if (scene.Has<SphereCollider>(entity)) {
@@ -783,6 +818,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 
 			JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 			UINT32 bid = SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+			rigidbodyHashMap[bid] = entity.EUID();
+
 
 		}
 		else if (scene.Has<CapsuleCollider>(entity)) {
@@ -799,6 +836,8 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 			else {
 				JPH::BodyCreationSettings sphereCreationSettings(new JPH::SphereShape(radius), pos, rot, motionType, EngineObjectLayers::DYNAMIC);
 				UINT32 bid = SetBodyCreationSettings(sphereCreationSettings, rb, enabledStatus);
+				rigidbodyHashMap[bid] = entity.EUID();
+
 			}
 
 		}
@@ -814,10 +853,15 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	for (auto it = ccArray.begin(); it != ccArray.end(); ++it) {
 		CreateJoltCharacter(*it, physicsSystem, this);
 	}
-
+	 
 	size_t numBodies = rbArray.size() + ccArray.size();
 
-	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+
+	std::cout << "Map size: " << rigidbodyHashMap.size() << std::endl;
+	//for (auto it = rigidbodyHashMap.begin(); it != rigidbodyHashMap.end(); ++it) {
+	//	std::cout << '[' << it->first << ',' << scene.Get<Tag>(it->second).name << ']' << std::endl;
+	//}
 
 	//std::cout << "Number of jolt bodies:" << physicsSystem->GetNumActiveBodies(JPH::EBodyType::RigidBody) << std::endl;
 
@@ -923,6 +967,8 @@ void PhysicsSystem::DeleteBody(PhysicsComponent& pc) {
 
 	if (pc.componentType == PhysicsComponent::Type::cc) {
 
+		characterHashMap.erase(pc.bid);
+
 		for (JPH::Ref<JPH::Character>& r : characters) {
 			if (r->GetBodyID().GetIndexAndSequenceNumber() == pc.bid) {
 				r->RemoveFromPhysicsSystem();
@@ -931,12 +977,15 @@ void PhysicsSystem::DeleteBody(PhysicsComponent& pc) {
 			}
 
 		}
+
 	}
 	else {
-
+		rigidbodyHashMap.erase(pc.bid);
 		bodyInterface->RemoveBody(JPH::BodyID(pc.bid));
 
 	}
+
+
 
 	//std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
 
@@ -951,6 +1000,8 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 	//std::cout << "Num Bodies before: " << physicsSystem->GetNumBodies() << std::endl;
 
 	if (ccTest->mCharacter && ccTest->mCharacter->GetBodyID().GetIndexAndSequenceNumber() == bid) {
+
+
 		ccTest->mCharacter->RemoveFromPhysicsSystem();
 		bodyInterface->DestroyBody(ccTest->mCharacter->GetBodyID());
 		ccTest->mCharacter = nullptr;
@@ -960,19 +1011,23 @@ void PhysicsSystem::DeleteBody(UINT32 bid) {
 		return;
 	}
 
+	if (rigidbodyHashMap.contains(bid))
+		rigidbodyHashMap.erase(bid);
+	else {
+		for (JPH::Ref<JPH::Character>& r : characters) {
+			if (r->GetBodyID().GetIndexAndSequenceNumber() == bid) {
 
-	for (JPH::Ref<JPH::Character>& r : characters) {
-		if (r->GetBodyID().GetIndexAndSequenceNumber() == bid) {
+				characterHashMap.erase(bid);
+				r->RemoveFromPhysicsSystem();
+				r = nullptr;
+				//PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
 
-			r->RemoveFromPhysicsSystem();
-			r = nullptr;
-			//PRINT("Number of Jolt Bodies after: " + physicsSystem->GetNumBodies());
+				return;
+			}
 
-			return;
 		}
-
 	}
-	
+
 
 	bodyInterface->RemoveBody(JPH::BodyID(bid));
 	//std::cout << "Num Bodies after: " << physicsSystem->GetNumBodies() << std::endl;
@@ -994,7 +1049,6 @@ void PhysicsSystem::AddRigidBody(ObjectCreatedEvent<Rigidbody>* pEvent) {
 		return;
 
 	Entity& entity = scene.Get<Entity>(rb);
-	entity.
 
 	// Set enabled status
 	JPH::EActivation enabledStatus = JPH::EActivation::Activate;
@@ -1151,6 +1205,8 @@ void CreateJoltCharacter(CharacterController& cc, JPH::PhysicsSystem* psystem, P
 	cc.bid = character->GetBodyID().GetIndexAndSequenceNumber();
 	cc.componentType = PhysicsComponent::Type::cc;
 
+	enginePSystem->characterHashMap[cc.bid] = cc.EUID();
+
 	enginePSystem->characters.push_back(character);
 
 	return;
@@ -1231,13 +1287,23 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 	bool selected = false;
 	for (size_t i = 0; i < numHits; i++)
 	{
-		selected = false;
 		bid = results[i].mBodyID.GetIndexAndSequenceNumber();
 		JPH::RVec3 v = ray.GetPointOnRay(results[i].mFraction);
 		
 		//scene.Get<Rigidbody>()
+		if (!rigidbodyHashMap.contains(bid))
+			continue;
 
+		Rigidbody& rb = scene.Get<Rigidbody>(rigidbodyHashMap[bid]);
+		if (!rb.is_trigger) {
+			JoltVec3ToGlmVec3(v, hitPt);
+			tag = scene.Get<Tag>(rb);
+			selected = true;
+			break;
+		}
 
+		// DEPRECATED REMOVE BEFORE SUBMISSION
+		/*
 		for (auto it = rbArray.begin(); it != rbArray.end(); ++it) 
 		{
 			Rigidbody& rb = *it;
@@ -1252,36 +1318,9 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 
 		if (selected)
 			break;
+		*/
 	}
 
-
-	
-
-	//collector.Sort();
-	/*
-	for (int i{ 0 }; i < numHits; ++i) {
-		
-		JPH::Vec3 pt = ray.GetPointOnRay(results[i].mFraction);
-		
-		std::cout << "Contact pt: " << pt.GetX() << '|' << pt.GetY() << '|' << pt.GetZ() << std::endl;
-
-		// Find 1st contact pt outside of max distance
-		float distance = (pt - ray.mOrigin).Length();
-		if (distance >= maxDistance && i >= 1) {
-
-			closestPointToEnd = ray.GetPointOnRay(results[i-1].mFraction);
-			break;
-			
-		}
-
-		if (i == numHits - 1) {
-			closestPointToEnd = ray.GetPointOnRay(results[i].mFraction);
-			break;
-		}
-	}*/
-	/*std::cout << "Closest pt " << tag.name << ": " << hitPt.x << '|'
-									<< hitPt.y << '|' 
-									<< hitPt.z << std::endl;*/
 	return EngineRayCastResult(tag, hitPt, selected);
 	
 }

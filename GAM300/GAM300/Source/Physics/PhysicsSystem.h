@@ -174,7 +174,7 @@ public:
 };
 struct EngineRayCastResult {
 
-	EngineRayCastResult(Tag tag, Vector3 pt, bool hasHit) : tag{ name }, point { pt }, hit{ hasHit }{}
+	EngineRayCastResult(Tag tag, Vector3 pt, bool hasHit) : name{ tag }, point { pt }, hit{ hasHit }{}
 
 	Tag name;
 	Vector3 point;
