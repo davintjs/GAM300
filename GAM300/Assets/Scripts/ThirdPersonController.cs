@@ -434,7 +434,7 @@ public class ThirdPersonController : Script
             }
         }
 
-        if (isDead || updateInvulnerability) return;
+        if (isDead || GetState("Stun")) return;
 
         if (CC.velocity.y > JumpSpeed)
         {
