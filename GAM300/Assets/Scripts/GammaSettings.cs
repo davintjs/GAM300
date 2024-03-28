@@ -12,12 +12,12 @@ class GammaSettings : Script
 
     void Start()
     {
-        gammaSlider.value = Graphics.gamma;
-        gammaSlider.UpdateSliderValue();
+        gammaSlider.InitializeSliderValue(Graphics.gamma);
     }
 
     void Update()
     {
-        Graphics.gamma = gammaSlider.value;
+        if(Graphics.gamma != gammaSlider.value)
+            Graphics.gamma = gammaSlider.value;
     }
 }
