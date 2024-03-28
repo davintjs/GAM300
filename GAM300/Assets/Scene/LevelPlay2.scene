@@ -34649,10 +34649,10 @@ ParticleComponent:
   Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: false
   Particle Direction: [0, 1, 0]
-  Angle of Direction: 30
-  Number Of Particles: 15
-  Min Particle Lifetime: 1
-  Max Particle Lifetime: 3
+  Angle of Direction: 90
+  Number Of Particles: 30
+  Min Particle Lifetime: 0
+  Max Particle Lifetime: 0.5
   Particle Emission Rate: 1
   Particle Min Scale: 0
   Particle Max Scale: 0
@@ -96503,7 +96503,7 @@ GameObject:
 ID: 4005314250094043051
 Transform:
   m_GameObject: {fileID: 17595281446523183228}
-  Translation: [-13.8839588, 35.9337692, -117.081535]
+  Translation: [-13.4110737, 35.8548965, -117.246078]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -96525,10 +96525,10 @@ ParticleComponent:
   Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: true
   Particle Direction: [0, 1, 0]
-  Angle of Direction: 30
-  Number Of Particles: 15
-  Min Particle Lifetime: 1
-  Max Particle Lifetime: 3
+  Angle of Direction: 90
+  Number Of Particles: 20
+  Min Particle Lifetime: 0
+  Max Particle Lifetime: 0.5
   Particle Emission Rate: 1
   Particle Min Scale: 0.100000001
   Particle Max Scale: 0.100000001
@@ -96540,7 +96540,7 @@ ParticleComponent:
   2D particle: false
   Spawn From Shape: false
   Shape's Size: [1, 1, 1]
-  Trailing: false
+  Trailing: true
   Trail Color: [1, 1, 1]
   Trail Size: 10
   Trail Thickness: 1
