@@ -212,7 +212,7 @@ public class Enemy : Script
                     //Console.WriteLine("DistanceIdle: " + dist);
                     //attackTrigger.SetActive(false);
                     //player detection
-                    if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
+                    if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance && mNavMeshAgent.FindPath(player.position))
                     {
                         if (animationManager.GetState("Idle").state)
                         {
@@ -287,7 +287,7 @@ public class Enemy : Script
                         if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
                         {
                             LookAt(direction);
-                            mNavMeshAgent.FindPath(player.localPosition);
+                            mNavMeshAgent.FindPath(player.position);
                         }
                         else // Default
                         {
