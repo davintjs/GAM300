@@ -1,5 +1,5 @@
-[2024-03-25 23:47:59.205] [Error] [critical] 
-Caused By:	mClass
-Info:		MONO CLASS NOT LOADED
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scripting\ScriptingSystem.cpp (Line: 300)
+[2024-03-28 20:58:38.189] [Error] [critical] 
+Caused By:	false
+Info:		Could not find handle!
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)
 

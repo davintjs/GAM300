@@ -362,8 +362,8 @@ AudioSource:
   Volume: 0.800000012
   min hearing Distance: 999
   max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
+  SFX min Pitch: 1
+  SFX max Pitch: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
@@ -11632,7 +11632,7 @@ GameObject:
 ID: 11237156434400751748
 Transform:
   m_GameObject: {fileID: 15869362262719794040}
-  Translation: [-1.22189522e-06, 0.467472076, 0.100175858]
+  Translation: [-1.22189522e-06, 0.449999988, 0.100175858]
   Rotation: [0, 0, 0]
   Scale: [0.999999642, 1.00000024, 0.99999994]
   Father: {fileID: 6752217455587753583}
@@ -11644,13 +11644,13 @@ TextRenderer:
   m_GameObject: {fileID: 15869362262719794040}
   m_IsEnabled: true
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: "||||||||||||||||||||||| "
+  Text: "|||||||||||||||||| "
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
-  Vertical Spacing: 1.5
+  Vertical Spacing: 1.34000003
   Textbox Width: 0.0480000004
-  Textbox Height: 0.056333337
+  Textbox Height: 1.12666678
   Center Alignment: true
   Wrap Text: true
   WorldSpace: true
@@ -12464,7 +12464,7 @@ Script:
 ---
 ID: 9285233082005299583
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: AudioPortion
   m_TagString: ""
   m_Layer: 0
@@ -12488,7 +12488,7 @@ Transform:
 ---
 ID: 18334411025587276265
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: GraphicsPortion
   m_TagString: ""
   m_Layer: 0
@@ -12512,7 +12512,7 @@ Transform:
 ---
 ID: 6713450706993220945
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: GammaPortion
   m_TagString: ""
   m_Layer: 0
@@ -12744,7 +12744,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 1719ff7d2329f798155c60fb66d2a61c}
+  SpriteTexture: {guid: e2cbe5428e0131c3bd0335ac45f90ec5}
 ---
 ID: 1308670381251737083
 GameObject:
@@ -12796,7 +12796,7 @@ GameObject:
 ID: 2710512181228744512
 Transform:
   m_GameObject: {fileID: 5025454116081322359}
-  Translation: [-0.779999971, -1, -0.0499658585]
+  Translation: [-0.800000012, -1, -0.0499591827]
   Rotation: [0, 0, 0]
   Scale: [0.999998331, 1, 0.999998033]
   Father: {fileID: 6713450706993220945}
@@ -12811,10 +12811,10 @@ Script:
   m_IsEnabled: true
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 5
-  MinValue: 0
+  MinValue: 0.5
   inverted: true
-  maxX: 0.709999979
-  minX: -0.709999979
+  maxX: 1.10000002
+  minX: -1.10000002
   value: 0.5
   buttonObj: {fileID: 9712636449910607818}  # GameObject
   sliderTextObj: {fileID: 1308670381251737083}  # GameObject
