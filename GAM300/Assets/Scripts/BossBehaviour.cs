@@ -24,18 +24,6 @@ public class BossBehaviour : Script
         ProjectileAttack,
     }
 
-    //Start boss fight - DashAttacks towards you to close the distance
-    //1st phase rotation:
-    //  Chase 3s, if within distance, basic attack, else dash attack
-    //  If after 3 basic attacks, jump back, dash attack
-
-    //Transition:
-    //  Health drops to 0 for the first time, enters sphere shield, doesnt take damage, does big aoe damage after charging up
-
-    //2nd phase rotation
-    //  Starts of with slam attack
-    //  Then throws projectile in a 360* angle
-
     BossState state = 0;
 
     public float chaseSpeed = 10f;
@@ -67,6 +55,9 @@ public class BossBehaviour : Script
 
     public int projectileCount = 16;
 
+    
+
+
     public Transform attack1;
     public Transform attack2;
     public Transform attack2Left;
@@ -82,9 +73,11 @@ public class BossBehaviour : Script
     public Transform ultiDomeVFX;
     public Transform ultiLaserVFX;
     public Transform ultiLight;
+    public Transform ultiForceField;
 
     public Transform openingCameraStartTarget;
     public Transform openingCameraEndTarget;
+    public GameObject deathAnimation;
 
     //public AudioSource bossOpeningSFX;
     //public AudioSource bossPhase2SFX;
@@ -95,6 +88,27 @@ public class BossBehaviour : Script
     public Transform ultiSphere;
 
     AnimationStateMachine animationManager;
+
+    bool _forceFieldUp;
+
+    bool forceFieldUp
+    {
+        get
+        {
+            return _forceFieldUp;
+        }
+        set
+        {
+            if (value)
+            {
+                StartCoroutine(StartForceField(0.3f));
+            }
+            else
+            {
+                StartCoroutine(StopForceField(1f));
+            }
+        }
+    }
 
     ThirdPersonController player;
 
@@ -122,6 +136,12 @@ public class BossBehaviour : Script
         }
         set 
         {
+            if (forceFieldUp)
+            {
+                bossSounds.ultimateForceField.Play();
+                return;
+            }
+
             _health = value;
             if (_health <= maxHealth / 2)
             {
@@ -161,9 +181,6 @@ public class BossBehaviour : Script
 
                     //if (animator.GetProgress() >= 0.5)
                     StartCoroutine(Death());
-
-                    instance.SetState(3); //Death dialogue
-                    StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
                     //DIE
                 }
             }
@@ -226,8 +243,15 @@ public class BossBehaviour : Script
 
     IEnumerator Death()
     {
+        instance.SetState(3); //Death dialogue
+        deathAnimation.SetActive(true);
+        model.gameObject.SetActive(false);
+        yield return new WaitForSeconds(6);
+        deathAnimation.SetActive(false);
+        model.gameObject.SetActive(true);
         yield return new WaitForSeconds(3);
-        animator.SetSpeed(0f);
+        animator.SetSpeed(0);
+        StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
     }
 
     IEnumerator EnterBossCutscene()
@@ -250,6 +274,11 @@ public class BossBehaviour : Script
             vec3 targetRot = vec3.Lerp(openingCameraEndTarget.rotation, openingCameraStartTarget.rotation, percentage * percentage);
             camera.localPosition = targetPos;
             camera.localRotation = targetRot;
+            if (Input.GetKeyDown(KeyCode.X))
+            {
+                //Skip cutscen
+                break;
+            }
             timer -= Time.deltaTime;
             yield return null;
         }
@@ -604,9 +633,11 @@ public class BossBehaviour : Script
         vec3 sphereScale = ultiSphere.localScale;
 
         ultiSphere.gameObject.SetActive(true);
+        forceFieldUp = true;
 
         ThirdPersonCamera.instance.ShakeCamera(0.05f, timer);
         SetState("Ultimate", true);
+
         animator.SetSpeed(0.2f);
         while (timer > ultiChargeDuration - 0.05f)
         {
@@ -615,6 +646,7 @@ public class BossBehaviour : Script
             yield return null;
         }
         bossSounds.ultimateEnergy.Play();
+        float timeDiff = ultiChargeDuration - 2.3f;
         while (timer > 2.3f)
         {
             ultiSphere.localScale = vec3.Lerp(ultimateSize, sphereScale, timer / ultiChargeDuration);
@@ -631,6 +663,7 @@ public class BossBehaviour : Script
         }
         yield return StartCoroutine(UltimateLaser());
         yield return StartCoroutine(UltimateLightVFX());
+        forceFieldUp = false;
 
         timer = ultiExplodeDuration;
         float explode = ultiExplodeDuration / 3f * 2f;
@@ -894,5 +927,42 @@ public class BossBehaviour : Script
         //    Console.WriteLine("Collected");
         //    AudioManager.instance.itemCollected.Play();//play audio sound
         //}
+    }
+
+    IEnumerator StartForceField(float duration)
+    {
+        MeshRenderer mr = ultiForceField.gameObject.GetComponent<MeshRenderer>();
+        float timer = 0;
+        ultiForceField.gameObject.SetActive(true);
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float percentage = timer / duration;
+            mr.material.emission = Mathf.Lerp(0, 2, percentage);
+            vec4 color = mr.material.color;
+            color.a = percentage/4f;
+            mr.material.color = color;
+            ultiForceField.localScale = vec3.Lerp(0, 3, percentage);
+            yield return null;
+        }
+        _forceFieldUp = true;
+    }
+
+    IEnumerator StopForceField(float duration)
+    {
+        float timer = 0;
+        MeshRenderer mr = ultiForceField.gameObject.GetComponent<MeshRenderer>();
+        while (timer < duration)
+        {
+            timer += Time.deltaTime;
+            float percentage = timer / duration;
+            mr.material.emission = Mathf.Lerp(2, 0, percentage);
+            vec4 color = mr.material.color;
+            color.a = (1 - percentage) / 4f;
+            mr.material.color = color;
+            yield return null;
+        }
+        ultiForceField.gameObject.SetActive(false);
+        _forceFieldUp = false;
     }
 }

@@ -295,6 +295,8 @@ Material_instance::Material_instance(const Material_instance& other)
 
 Material_instance& Material_instance::operator = (const Material_instance& rhs)
 {
+	shaderType = rhs.shaderType;
+
 	albedoColour = rhs.albedoColour;
 	metallicConstant = rhs.metallicConstant;
 	roughnessConstant = rhs.roughnessConstant;
