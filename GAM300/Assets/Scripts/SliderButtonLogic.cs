@@ -76,6 +76,22 @@ class SliderButtonLogic : Script
         value = (newValue + Mathf.Abs(minX)) / sliderWidth;
         value = value * (MaxValue - MinValue) + MinValue;
         buttonObj.transform.localPosition = slider;
-        sliderTextRenderer.text = value.ToString("0.0#");
+        sliderTextRenderer.text = value.ToString("0.00");
+    }
+
+    public void InitializeSliderValue(float startValue)
+    {
+        value = startValue;
+
+        float tempWidth = Mathf.Abs(minX) + maxX;
+
+        vec3 slider = buttonObj.transform.localPosition;
+        float sliderValue = (value - MinValue) / (MaxValue - MinValue);
+        sliderValue = (sliderValue * tempWidth) - Mathf.Abs(minX);
+        sliderValue = (inverted) ? -sliderValue : sliderValue;
+        slider.x = Mathf.Clamp(sliderValue, minX, maxX);
+
+        buttonObj.transform.localPosition = slider;
+        sliderTextRenderer.text = value.ToString("0.00");
     }
 }

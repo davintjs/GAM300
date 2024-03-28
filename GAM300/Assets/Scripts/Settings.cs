@@ -40,7 +40,9 @@ public class Settings : Script
 
     void Start()
     {
-
+        audioCanvas.SetActive(false);
+        graphicsCanvas.SetActive(false);
+        gammaCanvas.SetActive(false);
     }
 
     void Update()

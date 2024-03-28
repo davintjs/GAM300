@@ -31,7 +31,6 @@ ID: 2199169755166096751
 Camera:
   m_GameObject: {fileID: 7305319039410813174}
   m_IsEnabled: true
-  BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -79,6 +78,7 @@ Transform:
     - {fileID: 16526287598854957340}
     - {fileID: 6711356329535506755}
     - {fileID: 15177962187234400664}
+    - {fileID: 15594258803371519194}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -159,6 +159,8 @@ AudioSource:
   AudioChannel: 0
   Loop: false
   Volume: 0.699999988
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -758,6 +760,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -792,6 +796,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -826,6 +832,8 @@ AudioSource:
   AudioChannel: 1
   Loop: false
   Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -952,10 +960,40 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.25
+  Vertical Spacing: 1.5
   Textbox Width: 92
-  Leading: 2
+  Textbox Height: 0
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 15594258803371519194
+GameObject:
+  m_IsActive: true
+  m_Name: Background
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11074281893167764285}  # Transform
+    - component: {fileID: 104588895419677232}  # SpriteRenderer
+---
+ID: 11074281893167764285
+Transform:
+  m_GameObject: {fileID: 15594258803371519194}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [7, 4.5999999, 1]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 104588895419677232
+SpriteRenderer:
+  m_GameObject: {fileID: 15594258803371519194}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}

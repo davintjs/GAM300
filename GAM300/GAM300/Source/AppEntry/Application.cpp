@@ -106,6 +106,7 @@ void Application::InitApp(const int& _width, const int& _height, const std::stri
     // Initialise Viewport
     glViewport(0, 0, windowWidth, windowHeight);
 
+    fullscreen = true;
     Fullscreen(fullscreen, 1600, 900);
 }
 
