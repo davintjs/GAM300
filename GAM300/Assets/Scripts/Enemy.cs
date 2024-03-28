@@ -463,6 +463,7 @@ public class Enemy : Script
             vec3 hpScale = hpBar.localScale;
             hpScale.x = currentHealth / maxHealth;
             hpBar.localScale = hpScale;
+            //Console.WriteLine("HHHH: " + hpBar.localScale.x + " " + hpBar.localScale.y + " " + hpBar.localScale.z);
             CombatManager.instance.SpawnHitEffect(transform);
         }
 
@@ -470,11 +471,7 @@ public class Enemy : Script
         if (currentHealth <= 0)
         {
             currentHealth = 0;
-            vec3 hpScale = hpBar.localScale;
-            hpScale.x = currentHealth / maxHealth;
-            hpScale.y = currentHealth / maxHealth;
-            hpScale.z = currentHealth / maxHealth;
-            hpBar.localScale = hpScale;
+            hpBar.gameObject.SetActive(false);
             isDead = true;
             //Console.WriteLine("EnemyDead");
             SetState("Death", true);
