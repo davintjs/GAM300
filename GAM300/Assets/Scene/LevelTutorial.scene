@@ -385,6 +385,7 @@ Script:
   currentOverdriveCharge: 0
   currentOverdriveCooldown: 0
   currentOverdriveHealthTimer: 0
+  currentOverdriveScaleTimer: 0
   currentOverdriveTimer: 0
   currentStamina: 0
   currentlyOverdriven: false
@@ -410,6 +411,7 @@ Script:
   maxStamina: 100
   overDriveCooldown: 10
   overDriveStamina: 40
+  overDriveUIScaleBool: true
   overdriveTimer: 2
   playOverdrivePowerUpOnce: true
   regenRate: 60
@@ -436,6 +438,7 @@ Script:
   overDriveBar: {fileID: 4720521423488205772}  # GameObject
   overDriveCollider: {fileID: 17412142376824622519}  # GameObject
   overDriveTransform: {fileID: 3925618525247661714}  # Component
+  overDriveUI: {fileID: 8453804496131120496}  # Component
   overDriveVFX: {fileID: 17569942394685385403}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
   playerRespawningVFX: {fileID: 15725915692613796166}  # GameObject
@@ -657,6 +660,7 @@ Transform:
     - {fileID: 15384277846337641445}
     - {fileID: 13091064029857359106}
     - {fileID: 18109588227295363251}
+    - {fileID: 8453804496131120496}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -35648,3 +35652,70 @@ AudioSource:
   Fade Out Time (s): 1
   Sound File: {guid: 0c1b4d0ac1d4e5471da3d6a3d13c4924}
   Play: false
+---
+ID: 8453804496131120496
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveUI
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5684345695039167422}  # Transform
+    - component: {fileID: 16034956675756397514}  # SpriteRenderer
+---
+ID: 5684345695039167422
+Transform:
+  m_GameObject: {fileID: 8453804496131120496}
+  Translation: [-1.0634433, 0.784866333, 0.223993808]
+  Rotation: [0, 0, 0]
+  Scale: [0.202999994, 0.202999994, 0.202999994]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 17901179117781654481}
+---
+ID: 16034956675756397514
+SpriteRenderer:
+  m_GameObject: {fileID: 8453804496131120496}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: c555c881a762b6d825e0665d52a1ab9f}
+---
+ID: 17901179117781654481
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveQQ_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17396026029788341579}  # Transform
+    - component: {fileID: 16220588625416215409}  # TextRenderer
+---
+ID: 17396026029788341579
+Transform:
+  m_GameObject: {fileID: 17901179117781654481}
+  Translation: [0, -0.0257415771, 0.0801789165]
+  Rotation: [0, 0, 0]
+  Scale: [0.579999983, 0.579999983, 0.579999983]
+  Father: {fileID: 8453804496131120496}
+  m_Children:
+    []
+---
+ID: 16220588625416215409
+TextRenderer:
+  m_GameObject: {fileID: 17901179117781654481}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: Q
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 4
+  Vertical Spacing: 1.5
+  Textbox Width: 0.31733337
+  Textbox Height: 0.225333348
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]

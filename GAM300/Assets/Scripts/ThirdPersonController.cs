@@ -86,7 +86,11 @@ public class ThirdPersonController : Script
     public bool cutscene = false;
     public bool _isSprinting = false;
 
+    //new particles
     public GameObject playerRespawningVFX;
+
+    //overdrive QQ
+    public Transform overDriveUI;
     void Awake()
     {
         if (instance != null)
@@ -193,6 +197,8 @@ public class ThirdPersonController : Script
     public float currentOverdriveCharge = 0f;
     public float currentOverdriveHealthTimer = 0f;
     public float chargeOverdriveTimer = 0f;
+    public float currentOverdriveScaleTimer = 0f;
+    public bool overDriveUIScaleBool = true;
 
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
@@ -283,6 +289,12 @@ public class ThirdPersonController : Script
         //Material mat = doorTestMesh.material;
         //mat.color = vec4.Ones;
         //reference check
+        if (overDriveUI == null)
+        {
+            Console.WriteLine("Missing overDriveUI reference in ThirdPersonController script");
+        }
+
+
         if (overDriveTransform == null)
         {
             Console.WriteLine("Missing OverdriveBarTransform reference in ThirdPersonController script");
@@ -457,6 +469,38 @@ public class ThirdPersonController : Script
         if (currentStamina >= 20f)
         {
             playerSounds.LowStaminaSound.Pause();
+        }
+
+        if (currentOverdriveCharge >= maxOverdriveCharge && isOverdriveEnabled == true)
+        {
+            overDriveUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            overDriveUI.gameObject.SetActive(false);
+        }
+
+        if (overDriveUI.gameObject.activeSelf == true)
+        {
+            currentOverdriveScaleTimer += Time.deltaTime;
+
+            if (currentOverdriveScaleTimer >= 0.25f)
+            {
+                currentOverdriveScaleTimer = 0f;
+                overDriveUIScaleBool = !overDriveUIScaleBool;
+            }
+
+            if (overDriveUIScaleBool == true)
+            {
+                vec3 target = vec3.Lerp(overDriveUI.localScale, 0.307f, Time.deltaTime * 2);
+                overDriveUI.localScale = target;
+            }
+            else
+            {
+                vec3 target = vec3.Lerp(overDriveUI.localScale, 0.203f, Time.deltaTime * 2);
+                overDriveUI.localScale = target;
+            }
+
         }
 
         vec3 dir = GetDirection();
@@ -753,6 +797,7 @@ public class ThirdPersonController : Script
             //OVERDRIVE
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && currentOverdriveCharge == maxOverdriveCharge && isOverdriveEnabled == true && currentlyOverdriven == false)
             {
+                overDriveUI.gameObject.SetActive(false);
                 playerSounds.PlayerOverdrive.Play();
                 playerSounds.OverdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use

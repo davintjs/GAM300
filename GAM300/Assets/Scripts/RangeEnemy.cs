@@ -286,6 +286,7 @@ public class RangeEnemy : Script
                         {
                             ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
                             playerSounds.PowerUp.Play();
+                            ThirdPersonController.instance.overDriveUI.gameObject.SetActive(true);
                         }
                     }
                     else
@@ -297,6 +298,7 @@ public class RangeEnemy : Script
                         {
                             ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
                             playerSounds.PowerUp.Play();
+                            ThirdPersonController.instance.overDriveUI.gameObject.SetActive(true);
                         }
                     }
                 }
