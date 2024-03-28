@@ -86,6 +86,7 @@ public class ThirdPersonController : Script
     public bool cutscene = false;
     public bool _isSprinting = false;
 
+    public GameObject playerRespawningVFX;
     void Awake()
     {
         if (instance != null)
@@ -407,9 +408,12 @@ public class ThirdPersonController : Script
         //death animation timer
         if (startDeathAnimationCountdown)
         {
+            playerRespawningVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y - 1, transform.localPosition.z);
+            playerRespawningVFX.SetActive(true);
             currentAnimationTimer -= Time.deltaTime;
             if (currentAnimationTimer <= 0.2)
             {
+                //ie numerator to delay playeRespawnVFX setactive(false0
                 currentAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
                 //animator.Pause();//pause the death animation to prevent it from returning to idle animation
@@ -919,21 +923,30 @@ public class ThirdPersonController : Script
         isOverdriveEnabled = true;
     }
 
+    IEnumerator delayRespawnVFX()
+    {
+        yield return new WaitForSeconds(2f);
+
+        playerRespawningVFX.SetActive(false);
+    }
+
     public void Respawn()
     {
+        PlayerAudioManager.instance.playerRespawn.Play();
         //Console.WriteLine("Respawn");
         isDead = false;
         healthStaminaCanvas.SetActive(true);
         SetState("Death", false);
         //animator.Play();
         player.localPosition = spawnPoint;
+        playerRespawningVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y - 1, transform.localPosition.z);
         HealHealth(maxHealth);
         healthBarFill.GetComponent<Transform>().localPosition = initialHealthBarPos;
         UpdatehealthBar();
         staminaBarFill.GetComponent<Transform>().localPosition = initialStaminaBarPos;
         UpdateStaminaBar();
 
-
+        StartCoroutine(delayRespawnVFX());
     }
 
     public void restoreStamina(float staminaPackAmount)
