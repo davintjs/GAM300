@@ -203,6 +203,9 @@ void UIRenderer::RenderSprite2D(Scene& _scene, BaseCamera& _camera, const Engine
 	GLint uniform1 =
 		glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
+
 	BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
 	GLuint spriteTextureID = 0;
 
@@ -264,6 +267,8 @@ void UIRenderer::RenderSprite3D(Scene& _scene, BaseCamera& _camera, const Engine
 	// Setting bool to see if there is a sprite to render
 	GLint uniform1 = glGetUniformLocation(shader.GetHandle(), "RenderSprite");
 	glUniform1f(uniform1, false);
+
+	glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
 
 	BaseTexture* pTexture = TextureManager.GetBaseTexture(Sprite.SpriteTexture);
 	GLuint spriteTextureID = 0;

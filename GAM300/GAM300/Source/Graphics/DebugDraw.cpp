@@ -262,7 +262,7 @@ void DebugDraw::DrawTextOutlines()
 		if (text.centerAlign)
 			offset -= text.width * 0.5f;
 		if (text.wrapping)
-			yOffset = text.height * text.lineCount;
+			yOffset = text.height;
 
 		glm::vec4 pos0 = { text.x + offset, height + text.y, 0.f, 1.f };
 		glm::vec4 pos1 = { text.x + offset, text.y - yOffset, 0.f, 1.f };
@@ -304,7 +304,7 @@ void DebugDraw::DrawTextBounds(const Engine::UUID& _euid)
 	if (text.centerAlign)
 		offset -= text.width * 0.5f;
 	if (text.wrapping)
-		yOffset = text.height * text.lineCount;
+		yOffset = text.height;
 
 	glm::vec4 pos0 = { text.x + offset, height + text.y, 0.f, 1.f };
 	glm::vec4 pos1 = { text.x + offset, text.y - yOffset, 0.f, 1.f };

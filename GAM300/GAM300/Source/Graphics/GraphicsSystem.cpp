@@ -303,6 +303,7 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	glDrawBuffers(2, attachments);
 
 	Draw(_camera);
+	PARTICLERENDER.Draw2D(_camera);
 
 	FRAMEBUFFER.Unbind();
 
@@ -355,8 +356,6 @@ void GraphicsSystem::PreDraw(BaseCamera& _camera, unsigned int& _vao, unsigned i
 	{
 		DEBUGDRAW.Draw();
 	}
-
-	PARTICLERENDER.Draw2D(_camera);
 
 	FRAMEBUFFER.Unbind();
 

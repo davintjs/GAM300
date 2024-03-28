@@ -33,6 +33,8 @@ out vec4 FragColor;
 uniform sampler2D text;
 uniform vec3 textColor;
 uniform float AlphaScaler;
+
+uniform float gammaCorrection;
 //End
 
 void main()
@@ -40,6 +42,7 @@ void main()
     vec4 sampled = vec4(1.0, 1.0, 1.0, texture(text, TexCoords).r);
     FragColor = vec4(textColor, AlphaScaler) * sampled;
 
+    FragColor.rgb = pow(FragColor.rgb , vec3(gammaCorrection));
 
 
 
@@ -71,5 +74,7 @@ void main()
 //
 //        FragColor.a *= AlphaScaler;
 //        FragColor.rgb = pow(FragColor.rgb, vec3(gamma));
+
+
 
 }   
