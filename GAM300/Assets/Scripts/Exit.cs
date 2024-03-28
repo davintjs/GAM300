@@ -9,42 +9,25 @@ using GlmSharp;
 
 public class Exit : Script
 {
-    public GameObject mainMenuBGImage;
-
     public GameObject noButton;
-
     public GameObject yesButton; 
-
-    public bool isStartActive = true;
-    public float flickerTimer = 0f;
-
-    //movement variables
-    public float duration = 2f;
-    public float timer = 0f;
-    public bool back = false;
-
-    public float sizeMultiplier = 1.5f;
-
-    //sounds
-    //public AudioSource bgm;
-    //public AudioSource uibutton;
+    public GameObject yesTextObj; 
+    public GameObject noTextObj;
+    public FreeLookCamera camera;
+    public FadeEffect fader;
 
     private SpriteRenderer noButtonRenderer;
-    private SpriteRenderer yesButtonRenderer; 
+    private SpriteRenderer yesButtonRenderer;
+    private bool waitingExit = false;
 
-    //vec3 startGridTextSize;
+    void Awake()
+    {
+        noButtonRenderer = noButton.GetComponent<SpriteRenderer>();
+        yesButtonRenderer = yesButton.GetComponent<SpriteRenderer>();
+    }
 
     void Start()
     {
-        //bgm.Play();
-        //startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
-        //currentRestTimer = restTimer;
-
-        if (noButton.HasComponent<SpriteRenderer>())
-            noButtonRenderer = noButton.GetComponent<SpriteRenderer>();
-
-        if (yesButton.HasComponent<SpriteRenderer>())
-            yesButtonRenderer = yesButton.GetComponent<SpriteRenderer>();
 
     }
 
@@ -53,17 +36,21 @@ public class Exit : Script
         // Get refto Button
         if (noButtonRenderer != null && noButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            SceneManager.LoadScene("MainMenu", true);
+            camera.GoToMainMenu();
         }
 
         if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
         {
-            //LoadScene(1.0f);
-            Console.WriteLine("Scene");
-            Application.Quit();
+            camera.GoToFinalExit();
 
+            fader.StartFadeIn(2.5f, true, 0f, 1f);
+            waitingExit = true;
+        }
+
+        // Pan camera to black
+        if (waitingExit && fader.finished)
+        {
+            Application.Quit();
         }
     }
 

@@ -82,15 +82,14 @@ void AudioSystem::Update(float dt) {
 
 			Transform& pos = currentScene.Get<Transform>(audio);
 			glm::vec3 glmPos = pos.GetGlobalTranslation();
-			AUDIOMANAGER.SetSFXVolume(audio.volume);
 			FMOD_VECTOR velocity = { 0.0f, 0.0f, 0.0f }; // Assuming no velocity for now
 			FMOD_VECTOR position = { glmPos.x, glmPos.y, glmPos.z };
 			float newVol = audio.volume;
-			if (glm::length(glmPos - campos) >= audio.maxDistance) {
+			if (glm::length2(glmPos - campos) >= audio.maxDistance * audio.maxDistance) {
 				newVol = 0;
 			}
+			//AUDIOMANAGER.SetSFXVolume(newVol);
 			if (audio.loop) {
-				audio.channel->set3DAttributes(&position, &velocity);
 				bool isPlaying;
 				audio.channel->isPlaying(&isPlaying);
 				if (!isPlaying) {
@@ -101,7 +100,7 @@ void AudioSystem::Update(float dt) {
 				audio.channel = AUDIOMANAGER.PlaySFX(audio.currentSound, position, audio.channel, audio.minDistance, audio.maxDistance, newVol, audio.minPitch, audio.maxPitch);
 				audio.play = false;
 			}
-
+			audio.channel->set3DAttributes(&position, &velocity);
 			continue;
 		}
 	}

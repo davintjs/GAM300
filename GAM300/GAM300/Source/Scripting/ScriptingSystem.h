@@ -346,6 +346,8 @@ public:
 
 	float timeUntilRecompile{ 0 };
 
+	std::unordered_map<std::string, float> persistenceData;
+
 	bool playMode = false;
 
 	template<class EventType>

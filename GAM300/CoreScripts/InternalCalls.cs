@@ -158,19 +158,34 @@ namespace BeanFactory
         public static extern void EnableSFX(bool toggle);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void SetMasterVolume(bool toggle);
+        public static extern void SetMasterVolume(float volume);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void AudioSourceStop(ulong ID);
+        public static extern float GetMasterVolume();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void AudioSourceSetVolume(ulong ID, float volume);
+        public static extern void SetSFXVolume(float volume);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern float AudioSourceGetVolume(ulong ID);
+        public static extern float GetSFXVolume();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern UInt32 GetSoundLength(ulong ID);
+        public static extern void SetMusicVolume(float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetMusicVolume();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourceStop(AudioSource audioSource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void AudioSourceSetVolume(AudioSource audioSource, float volume);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float AudioSourceGetVolume(AudioSource audioSource);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern UInt32 GetSoundLength(AudioSource audioSource);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetAllVolume(float volume);
@@ -200,6 +215,9 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void LockCursor(bool toggle);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetMouseHolding(int mouseCode);
         #endregion
 
         #region PHYSICS_SYSTEM
@@ -280,10 +298,31 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetGamma(float gammaValue);
 
-        #endregion
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetBloom();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetBloom(bool bloomValue);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetShadow();
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetShadow(bool shadowValue);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern bool GetFullScreen();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetFullscreenMode(bool fullscreenMode);
+
+        #endregion
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SaveData(string key, float value);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern float GetData(string key);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void LoadNext();
@@ -314,7 +353,6 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern bool IsButtonHovered(SpriteRenderer spriteRenderer);
-
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void SetTimeScale(float timescale);

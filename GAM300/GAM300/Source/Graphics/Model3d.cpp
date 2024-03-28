@@ -850,6 +850,8 @@ void SkyBox::SkyBoxDraw(GLuint skyboxtex, BaseCamera& _camera)
     glUniformMatrix4fv(uniform_var_loc2, 1, GL_FALSE,
         glm::value_ptr(glm::mat4(glm::mat3(_camera.GetViewMatrix()))));
 
+    glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
     glBindVertexArray(vaoid);
 
     glActiveTexture(GL_TEXTURE0);

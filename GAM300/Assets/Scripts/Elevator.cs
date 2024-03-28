@@ -80,7 +80,7 @@ public class Elevator : Script
             }
             else
             { 
-                Console.WriteLine("Timer is "+ timer);
+                //Console.WriteLine("Timer is "+ timer);
                 target = vec3.Lerp(startinglocation, endPoint.localPosition, timer / duration);
                 diff = target - transform.localPosition;
 
@@ -104,7 +104,7 @@ public class Elevator : Script
             }
             else // Start Lerping it down
             {
-                Console.WriteLine("Return is " + returnTimer);
+                //Console.WriteLine("Return is " + returnTimer);
 
 
                 target = vec3.Lerp(endPoint.localPosition, startinglocation, returnTimer / duration);
@@ -125,7 +125,7 @@ public class Elevator : Script
                     returnTimer = 0f;
                     transform.localPosition = startinglocation;
                 }
-                Console.WriteLine("YIKES is " + timer);
+                //Console.WriteLine("YIKES is " + timer);
                 //transform.localPosition = startinglocation;
             }
 

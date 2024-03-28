@@ -1,14 +1,15 @@
 Material:
-  Material Name: Player_02
+  Material Name: WindowGlass
   Shader: 0
-  Albedo: [1, 1, 0.999899983, 1]
-  Metallic: 1
+  Albedo: [0.999899983, 0.999997199, 1, 0.0191082954]
+  Metallic: 0
   Roughness: 1
   AmbientOcclusion: 1
-  Emission: 0
+  Is Emission: false
+  Emission: 1
   AlbedoTexture: {guid: 021d5c19b5a41ac3f8f668e37ef40393}
   NormalMap: {guid: 00000000000000000000000000000000}
   MetallicTexture: {guid: da9dc7e3ae3f41e97440621172b9c9ba}
   RoughnessTexture: {guid: f8d1e6291bad251891a69a5ebca5ae0b}
   AoTexture: {guid: a017e57da03570b8c0f6396502dea97c}
-  EmissionTexture: {guid: 7b51b3b0849331bf775ad53abd62967a}
+  EmissionTexture: {guid: 00000000000000000000000000000000}

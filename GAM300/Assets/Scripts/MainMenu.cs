@@ -9,131 +9,149 @@ using GlmSharp;
 
 public class MainMenu : Script
 {
-    public GameObject mainMenuBGImage;
-
-    public GameObject mainMenuTitle;
-
     public GameObject startButton;
-
     public GameObject settingsButton; 
-
     public GameObject HTPButton; 
+    public GameObject ExitButton;
+    public GameObject mainMenuObj;
 
-    public GameObject ExitButton; 
+    public GameObject spotLightObj;
+    public GameObject incubatorObj;
+    public FadeEffect fader;
 
+    public FreeLookCamera camera;
 
-
-    public bool isStartActive = true;
-    public float flickerTimer = 0f;
-
-    //movement variables
-    public float duration = 2f;
-    public float timer = 0f;
-    public bool back = false;
-
-    public float sizeMultiplier = 1.5f;
-
-    //sounds
     public AudioSource bgm;
-    public AudioSource uibutton;
 
     private SpriteRenderer startButtonRenderer;
-
     private SpriteRenderer settingsButtonRenderer;
-
     private SpriteRenderer HTPButtonRenderer;
-
     private SpriteRenderer ExitButtonRenderer;
+    //private SpriteRenderer mainMenuRenderer;
 
+    private LightSource spotLight;
+    private MeshRenderer incubatorGlass;
+    private float timer = 0f;
+    private float duration = 2f;
+    private float alpha = 0.11f;
+    private bool waitingPlay = false;
 
-    vec3 startGridTextSize;
+    void Awake()
+    {
+        spotLight = spotLightObj.GetComponent<LightSource>();
+        incubatorGlass = incubatorObj.GetComponent<MeshRenderer>();
+        //mainMenuRenderer = mainMenuObj.GetComponent<SpriteRenderer>();
+
+        startButtonRenderer = startButton.GetComponent<SpriteRenderer>();
+        settingsButtonRenderer = settingsButton.GetComponent<SpriteRenderer>();
+        HTPButtonRenderer = HTPButton.GetComponent<SpriteRenderer>();
+        ExitButtonRenderer = ExitButton.GetComponent<SpriteRenderer>();
+
+    }
 
     void Start()
     {
+        vec4 color = incubatorGlass.material.color;
+        color.a = 1f;
+        spotLightObj.SetActive(false);
+        incubatorGlass.material.SetRawColor(color);
+
+        startButton.SetActive(false);
+        HTPButton.SetActive(false);
+        settingsButton.SetActive(false);
+        ExitButton.SetActive(false);
+
         bgm.Play();
-        startGridTextSize = new vec3(mainMenuTitle.transform.localScale);
-        //currentRestTimer = restTimer;
-
-        //Play Button
-        if (startButton.HasComponent<SpriteRenderer>())
-        {
-            startButtonRenderer = startButton.GetComponent<SpriteRenderer>();
-        }
-        //Settings Button
-        if (settingsButton.HasComponent<SpriteRenderer>())
-        {
-            settingsButtonRenderer = settingsButton.GetComponent<SpriteRenderer>();
-        }
-        //HTP Button
-        if (HTPButton.HasComponent<SpriteRenderer>())
-        {
-            HTPButtonRenderer = HTPButton.GetComponent<SpriteRenderer>();
-        }
-        //Exit Button
-        if (ExitButton.HasComponent<SpriteRenderer>())
-        {
-            ExitButtonRenderer = ExitButton.GetComponent<SpriteRenderer>();
-        }
-
-
-            
     }
 
     void Update()
     {
         // Get refto Button
-        if (startButtonRenderer != null && startButtonRenderer.IsButtonClicked())
+        if (startButton.activeSelf && startButtonRenderer.IsButtonClicked())
+        {
+            camera.GoToPlay();
+
+            fader.StartFadeIn(2f, true, 0f, 1f);
+            waitingPlay = true;
+        }
+
+        if(waitingPlay && fader.finished)
         {
             Action loadScene = () => SceneManager.LoadScene("StartingScene", true);
             StartCoroutine(QueueAction(loadScene));
         }
 
-        if (settingsButtonRenderer != null && settingsButtonRenderer.IsButtonClicked())
+        if(Input.GetKeyDown(KeyCode.Escape)) 
         {
-            Action loadScene = () => SceneManager.LoadScene("Settings", true);
-
-            StartCoroutine(QueueAction(loadScene));
-
+            camera.GoToMainMenu();
         }
 
-        if (HTPButtonRenderer != null && HTPButtonRenderer.IsButtonClicked())
+        if (settingsButton.activeSelf && settingsButtonRenderer.IsButtonClicked())
         {
-            Action loadScene = () => SceneManager.LoadScene("HowToPlay",true);
-
-            StartCoroutine(QueueAction(loadScene));
+            camera.GoToSettings();
         }
 
-        if (ExitButtonRenderer.IsButtonClicked())
+        if (HTPButton.activeSelf && HTPButtonRenderer.IsButtonClicked())
         {
-            Action loadScene = () => SceneManager.LoadScene("Exit", true);
-            StartCoroutine(QueueAction(loadScene));
+            camera.GoToHTP();
         }
 
+        if (ExitButton.activeSelf && ExitButtonRenderer.IsButtonClicked())
+        {
+            camera.GoToExit();
+        }
 
-        //code not working atm
-        //selfFlicker();
-        movement();
     }
 
-
-
-    void movement()
+    public void InitializeMainMenu()
     {
-        if (!back)
+        StartCoroutine(InitializeSceneObjects());
+    }
+
+    IEnumerator InitializeSceneObjects()
+    {
+        yield return new WaitForSeconds(0.5f);
+
+        vec4 oldColor = incubatorGlass.material.color;
+        float intensity = spotLight.intensity;
+        float glassAlpha = 1f;
+        spotLight.intensity = 0f;
+        spotLightObj.SetActive(true);
+        duration = 2f;
+
+        while (timer < duration)
         {
-            mainMenuTitle.transform.localScale = vec3.Lerp(startGridTextSize, startGridTextSize * sizeMultiplier, timer / duration);
+            spotLight.intensity = Mathf.Lerp(0f, intensity, timer, 1f, Mathf.EasingType.LINEAR);
+            glassAlpha = Mathf.Lerp(1f, alpha, timer, duration, Mathf.EasingType.BEZIER);
+            incubatorGlass.material.SetRawColor(new vec4(oldColor.xyz, glassAlpha));
+
+            timer += Time.deltaTime;
+            yield return null;
         }
-        else
+
+        StartCoroutine(FadeIn(startButtonRenderer, startButton, 0f));
+        StartCoroutine(FadeIn(HTPButtonRenderer, HTPButton, 0.1f));
+        StartCoroutine(FadeIn(settingsButtonRenderer, settingsButton, 0.2f));
+        StartCoroutine(FadeIn(ExitButtonRenderer, ExitButton, 0.3f));
+    }
+
+    IEnumerator FadeIn(SpriteRenderer renderer, GameObject spriteObj, float wait)
+    {
+        float tempTimer = 0f;
+        float tempDuration = 0.5f;
+        renderer.alpha = 0f;
+        spriteObj.SetActive(true);
+
+        yield return new WaitForSeconds(wait);
+
+        while (tempTimer < tempDuration)
         {
-            mainMenuTitle.transform.localScale = vec3.Lerp(startGridTextSize*sizeMultiplier, startGridTextSize, timer / duration);
-        }
-        timer += Time.deltaTime;
-        if (timer >= duration)
-        {
-            timer = 0f;
-            back = !back;
+            renderer.alpha = Mathf.Lerp(0f, 1f, tempTimer, tempDuration, Mathf.EasingType.BEZIER);
+            tempTimer += Time.deltaTime;
+            yield return null;
         }
     }
+
     IEnumerator QueueAction(Action action)
     {
         yield return new WaitForSeconds(0.2f);

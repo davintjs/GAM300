@@ -120,6 +120,8 @@ void TextSystem::RenderScreenSpace(Scene& _scene, BaseCamera& _camera, const Eng
 
 	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(txtVAO);
 
@@ -155,6 +157,9 @@ void TextSystem::RenderWorldSpace(Scene& _scene, BaseCamera& _camera, const Engi
 
 	glUniform3f(glGetUniformLocation(txtshader.GetHandle(), "textColor"), text.color.x, text.color.y, text.color.z);
 
+	glUniform1f(glGetUniformLocation(txtshader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
+
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(txtVAO);
 
@@ -172,31 +177,37 @@ void TextSystem::RenderText(TextRenderer& text)
 {
 	allVertices.clear();
 
+	if (text.guid == 0)
+		return;
+
 	unsigned int currentLine = 1;
 	float x = text.x, width, currentWidth, newLineWidth;
 	width = currentWidth = newLineWidth = 0.f;
 	float y = text.y;
-	float scale = text.fontSize * 0.001f;
+	float scale = text.fontSize * 0.001f / 3.0f;
 	float baseHeight = mFontContainer.at(text.guid).at('A').Size.y * scale;
 
-	if (text.text.size() != text.charCount)
+	float tempWidth = 0.f;
+	std::string::const_iterator ci;
+	for (ci = text.text.begin(); ci != text.text.end(); ci++)
 	{
-		float tempWidth = 0.f;
+		Character& ch = mFontContainer.at(text.guid).at(*ci);
+		tempWidth += (ch.Advance >> 6) * scale;
+	}
+	if (text.text.size() != text.charCount || text.fontSize != fontSize)
+	{
+		fontSize = text.fontSize;
 		text.charCount = text.text.size();
-		std::string::const_iterator c;
-		for (c = text.text.begin(); c != text.text.end(); c++)
-		{
-			Character& ch = mFontContainer.at(text.guid).at(*c);
-			tempWidth += (ch.Advance >> 6) * scale;
-		}
-
+		
 		if (!text.wrapping)
 		{
 			text.width = tempWidth;
 			text.height = baseHeight;
 		}
 		else
+		{
 			text.height = baseHeight * text.lineCount;
+		}
 	}
 
 	// iterate through all characters
@@ -208,7 +219,7 @@ void TextSystem::RenderText(TextRenderer& text)
 		float xpos = x + ch.Bearing.x * scale;
 
 		float ypos = y - (ch.Bearing.y * 2.f) * scale;
-		if(*c == 'p')
+		if(*c == 'p' || *c == 'y' || *c == 'q' || *c == 'g' || *c == 'j')
 			ypos = y - (ch.Bearing.y) * scale;
 
 		float nextChWidth = 0.f;
@@ -217,11 +228,12 @@ void TextSystem::RenderText(TextRenderer& text)
 		nextc = c;
 		nextc++;
 		currentWidth += (ch.Advance >> 6) * scale;
-		if (nextc != text.text.end())
+		if (nextc != text.text.end()) // Check that the next character exists within the text
 		{
 			Character& nextCh = mFontContainer.at(text.guid).at(*nextc);
 			nextChWidth = (nextCh.Advance >> 6) * scale;
 
+			// Check if the addition of the next char is more than the current width
 			if (currentWidth + nextChWidth > text.width)
 			{
 				updateNewLine = true;
@@ -229,8 +241,8 @@ void TextSystem::RenderText(TextRenderer& text)
 				std::string::const_iterator cit;
 				for (cit = c; cit != text.text.end(); cit++)
 				{
-					Character& ch = mFontContainer.at(text.guid).at(*cit);
-					newLineWidth += (ch.Advance >> 6) * scale;
+					Character& cha = mFontContainer.at(text.guid).at(*cit);
+					newLineWidth += (cha.Advance >> 6) * scale;
 				}
 			}
 		}
@@ -238,20 +250,29 @@ void TextSystem::RenderText(TextRenderer& text)
 		if (text.centerAlign && text.wrapping)
 		{
 			xpos -= text.width * 0.5f;
-			ypos -= baseHeight * currentLine;
+			ypos -= baseHeight * (currentLine - 1) * text.vSpacing;
 
-			if (text.lineCount == currentLine)
+			if (text.lineCount == currentLine && text.lineCount != 1)
 			{
-				xpos = x + ch.Bearing.x * scale - newLineWidth * 0.5f;
+				xpos = x + ch.Bearing.x * scale - (newLineWidth - nextChWidth) * 0.5f;
+			}
+			else if(text.lineCount == 1 && text.width > currentWidth) // If it is the first line and the text width is more than the actual text width
+			{
+				ypos += baseHeight * (currentLine - 1) * text.vSpacing;
+				xpos += (text.width - tempWidth) * 0.5f;
 			}
 		}
 		else if (text.centerAlign)
 		{
+			// Offset by the text's size
+			if (tempWidth < text.width)
+				xpos += (text.width - tempWidth) * 0.5f;
+				
 			xpos -= text.width * 0.5f;
 		}
-		else if (text.wrapping)
+		else if (text.wrapping && currentLine != 1)
 		{
-			ypos -= baseHeight * currentLine;
+			ypos -= baseHeight * (currentLine - 1) * text.vSpacing;
 		}
 
 		if (updateNewLine)

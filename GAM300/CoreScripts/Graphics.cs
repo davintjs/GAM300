@@ -25,7 +25,10 @@ namespace BeanFactory
     static class Graphics
     {
         public static float gamma { get { return InternalCalls.GetGamma(); } set { InternalCalls.SetGamma(value); } }
-    
+        public static bool shadows { get { return InternalCalls.GetShadow(); } set { InternalCalls.SetShadow(value); } }
+        public static bool bloom { get { return InternalCalls.GetBloom(); } set { InternalCalls.SetBloom(value); } }
+        public static bool fullscreen { get { return InternalCalls.GetFullScreen(); } set { InternalCalls.SetFullscreenMode(value); } }
+
     }
 
     public struct AssetID
