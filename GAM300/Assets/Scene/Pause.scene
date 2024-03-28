@@ -43,20 +43,17 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 57a77298b44f5fb3470ba29cc7d74265}
-  back: false
-  duration: 2
-  flickerTimer: 0
-  isStartActive: true
-  sizeMultiplier: 1.5
-  timer: 0
-  HTPButton: {fileID: 17452717900490079642}  # GameObject
-  HowToPlayBack: {fileID: 0}
-  HowToPlayPanel: {fileID: 17452717900490079642}  # GameObject
-  MainMenu: {fileID: 2978225901370053795}  # GameObject
-  PauseImage: {fileID: 0}
-  PausePanel: {fileID: 624169214278105939}  # GameObject
-  pauseTitle: {fileID: 17065559468612678914}  # GameObject
-  resumeButton: {fileID: 14866259166967195886}  # GameObject
+  ExitMenuObj: {fileID: 9352945451380270954}  # GameObject
+  ExitRenderer: {fileID: 3530477588656220466}  # Component
+  HTPMenuObj: {fileID: 17452717900490079642}  # GameObject
+  HTPRenderer: {fileID: 12555846207825398205}  # Component
+  MainMenuRenderer: {fileID: 12706628770519076681}  # Component
+  NoRenderer: {fileID: 5210308855036346474}  # Component
+  OptionsMenuObj: {fileID: 3558718262050591536}  # GameObject
+  OptionsRenderer: {fileID: 2124406177308919450}  # Component
+  PauseMenuObj: {fileID: 624169214278105939}  # GameObject
+  ResumeRenderer: {fileID: 4428148251743601674}  # Component
+  fader: {fileID: 0}
 ---
 ID: 13236326914152460117
 GameObject:
@@ -104,7 +101,6 @@ GameObject:
   m_Component:
     - component: {fileID: 15771131599214855093}  # Transform
     - component: {fileID: 4428148251743601674}  # SpriteRenderer
-    - component: {fileID: 12071184077203671272}  # Script
 ---
 ID: 15771131599214855093
 Transform:
@@ -125,18 +121,6 @@ SpriteRenderer:
   Include Alpha (ColourPicking): true
   Alpha Scalar: 0
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
----
-ID: 12071184077203671272
-Script:
-  m_GameObject: {fileID: 14866259166967195886}
-  m_IsEnabled: true
-  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
-  hoverDuration: 0.200000003
-  isText: false
-  targetScaleMultiplier: [1.10000002, 1.10000002, 1]
-  button: {fileID: 0}
-  clickSound: {fileID: 2051875914575560535}  # Component
-  hoverSound: {fileID: 12588843576671626264}  # Component
 ---
 ID: 8758669372345574323
 GameObject:
@@ -233,7 +217,7 @@ AudioSource:
 ID: 17452717900490079642
 GameObject:
   m_IsActive: false
-  m_Name: HowToPlay
+  m_Name: HowToPlayMenu
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -313,7 +297,7 @@ TextRenderer:
 ---
 ID: 624169214278105939
 GameObject:
-  m_IsActive: false
+  m_IsActive: true
   m_Name: PauseMain
   m_TagString: ""
   m_Layer: 0
@@ -779,6 +763,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 8892793752424040520}  # Transform
+    - component: {fileID: 581772254053849020}  # Script
 ---
 ID: 8892793752424040520
 Transform:
@@ -796,6 +781,19 @@ Transform:
     - {fileID: 8931274251272081959}
     - {fileID: 2852544023292968621}
     - {fileID: 10120878713237275216}
+---
+ID: 581772254053849020
+Script:
+  m_GameObject: {fileID: 3558718262050591536}
+  m_IsEnabled: true
+  Script: {guid: 2ea11ccf97287329911603c97e51758b}
+  currentMenu: 0
+  audioButtonObj: {fileID: 3595021299750593688}  # GameObject
+  audioCanvas: {fileID: 2852544023292968621}  # GameObject
+  gammaButtonObj: {fileID: 9248436827534134791}  # GameObject
+  gammaCanvas: {fileID: 10120878713237275216}  # GameObject
+  graphicsButtonObj: {fileID: 7636017863176673550}  # GameObject
+  graphicsCanvas: {fileID: 8931274251272081959}  # GameObject
 ---
 ID: 18027331976845020977
 GameObject:
@@ -1971,7 +1969,6 @@ GameObject:
   m_Component:
     - component: {fileID: 7392737394135859506}  # Transform
     - component: {fileID: 16547888314924312051}  # TextRenderer
-    - component: {fileID: 16512813851706593197}  # Script
 ---
 ID: 7392737394135859506
 Transform:
@@ -1994,23 +1991,11 @@ TextRenderer:
   Font Size: 1
   Vertical Spacing: 1.32000005
   Textbox Width: 0.0276666693
-  Textbox Height: 0.901333392
+  Textbox Height: 0.056333337
   Center Alignment: true
   Wrap Text: true
   WorldSpace: false
   Color: [0.0470588282, 0.729411781, 1, 1]
----
-ID: 16512813851706593197
-Script:
-  m_GameObject: {fileID: 15324680614789968275}
-  m_IsEnabled: true
-  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
-  hoverDuration: 0.300000012
-  isText: true
-  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
-  button: {fileID: 15147899103238565620}  # Component
-  clickSound: {fileID: 2051875914575560535}  # Component
-  hoverSound: {fileID: 12588843576671626264}  # Component
 ---
 ID: 11581535908069245102
 GameObject:
@@ -2378,6 +2363,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 10807765692575813295}  # Transform
+    - component: {fileID: 1551367969714800633}  # Script
 ---
 ID: 10807765692575813295
 Transform:
@@ -2394,6 +2380,15 @@ Transform:
     - {fileID: 14222061201813124250}
     - {fileID: 17966659423372481501}
 ---
+ID: 1551367969714800633
+Script:
+  m_GameObject: {fileID: 8931274251272081959}
+  m_IsEnabled: true
+  Script: {guid: 282c844e4e2f02d791d76cc182c9e69f}
+  bloomObj: {fileID: 17966659423372481501}  # GameObject
+  fullscreenObj: {fileID: 12367131214572251441}  # GameObject
+  shadowObj: {fileID: 14222061201813124250}  # GameObject
+---
 ID: 2852544023292968621
 GameObject:
   m_IsActive: false
@@ -2402,6 +2397,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 14679648910685593814}  # Transform
+    - component: {fileID: 18378576406479709699}  # Script
 ---
 ID: 14679648910685593814
 Transform:
@@ -2417,6 +2413,15 @@ Transform:
     - {fileID: 6015150721758642484}
     - {fileID: 13925131884888531310}
     - {fileID: 3437768977513831968}
+---
+ID: 18378576406479709699
+Script:
+  m_GameObject: {fileID: 2852544023292968621}
+  m_IsEnabled: true
+  Script: {guid: fb9164ff81f560e926219329262a8b87}
+  bgmSlider: {fileID: 7571647308285224003}  # Component
+  masterSlider: {fileID: 17783808125982917232}  # Component
+  sfxSlider: {fileID: 13773741570488192022}  # Component
 ---
 ID: 3282992455918003022
 GameObject:
@@ -2559,11 +2564,12 @@ Script:
   MaxValue: 1
   MinValue: 0
   inverted: false
-  maxX: 0
-  minX: 0
+  maxX: 0.560000002
+  minX: -0.560000002
+  slideSpeed: 800
   value: 0.5
-  buttonObj: {fileID: 0}
-  sliderTextObj: {fileID: 0}
+  buttonObj: {fileID: 3837557141907955647}  # GameObject
+  sliderTextObj: {fileID: 10683771249975390909}  # GameObject
 ---
 ID: 10683771249975390909
 GameObject:
@@ -2657,7 +2663,7 @@ SpriteRenderer:
   m_GameObject: {fileID: 3837557141907955647}
   m_IsEnabled: true
   World Space: false
-  Colour Picker Mode: false
+  Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
@@ -2692,11 +2698,12 @@ Script:
   MaxValue: 1
   MinValue: 0
   inverted: false
-  maxX: 0
-  minX: 0
+  maxX: 0.560000002
+  minX: -0.560000002
+  slideSpeed: 800
   value: 0.5
-  buttonObj: {fileID: 0}
-  sliderTextObj: {fileID: 0}
+  buttonObj: {fileID: 16432005865971837572}  # GameObject
+  sliderTextObj: {fileID: 10402154493338136639}  # GameObject
 ---
 ID: 10402154493338136639
 GameObject:
@@ -2790,7 +2797,7 @@ SpriteRenderer:
   m_GameObject: {fileID: 16432005865971837572}
   m_IsEnabled: true
   World Space: false
-  Colour Picker Mode: false
+  Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
@@ -2825,11 +2832,12 @@ Script:
   MaxValue: 1
   MinValue: 0
   inverted: false
-  maxX: 0
-  minX: 0
+  maxX: 0.560000002
+  minX: -0.560000002
+  slideSpeed: 800
   value: 0.5
-  buttonObj: {fileID: 0}
-  sliderTextObj: {fileID: 0}
+  buttonObj: {fileID: 13025755940254410433}  # GameObject
+  sliderTextObj: {fileID: 16603589090303827277}  # GameObject
 ---
 ID: 14872740804228924139
 GameObject:
@@ -2923,7 +2931,7 @@ SpriteRenderer:
   m_GameObject: {fileID: 13025755940254410433}
   m_IsEnabled: true
   World Space: false
-  Colour Picker Mode: false
+  Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
@@ -2936,6 +2944,7 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 13584229748793532290}  # Transform
+    - component: {fileID: 15606507894226138790}  # Script
 ---
 ID: 13584229748793532290
 Transform:
@@ -2949,6 +2958,13 @@ Transform:
     - {fileID: 9862922027215413828}
     - {fileID: 10660679202673096690}
     - {fileID: 14169290571310822634}
+---
+ID: 15606507894226138790
+Script:
+  m_GameObject: {fileID: 10120878713237275216}
+  m_IsEnabled: true
+  Script: {guid: 66541ef9fb1a29bc1b9b574dc60b258a}
+  gammaSlider: {fileID: 11429007331869135488}  # Component
 ---
 ID: 8203067969706997324
 GameObject:
@@ -3081,14 +3097,15 @@ Script:
   m_GameObject: {fileID: 14169290571310822634}
   m_IsEnabled: true
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
-  MaxValue: 1
-  MinValue: 0
+  MaxValue: 5
+  MinValue: 0.5
   inverted: false
-  maxX: 0
-  minX: 0
+  maxX: 0.550000012
+  minX: -0.550000012
+  slideSpeed: 800
   value: 0.5
-  buttonObj: {fileID: 0}
-  sliderTextObj: {fileID: 0}
+  buttonObj: {fileID: 18052166248832161833}  # GameObject
+  sliderTextObj: {fileID: 1137712744709410449}  # GameObject
 ---
 ID: 1137712744709410449
 GameObject:
@@ -3182,19 +3199,20 @@ SpriteRenderer:
   m_GameObject: {fileID: 18052166248832161833}
   m_IsEnabled: true
   World Space: false
-  Colour Picker Mode: false
+  Colour Picker Mode: true
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: e553756f878023ee102898ff74af4cc6}
 ---
 ID: 9352945451380270954
 GameObject:
-  m_IsActive: true
-  m_Name: Exit
+  m_IsActive: false
+  m_Name: ExitMenu
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 17787221229371360712}  # Transform
+    - component: {fileID: 5707710513970741314}  # Script
 ---
 ID: 17787221229371360712
 Transform:
@@ -3205,9 +3223,22 @@ Transform:
   Father: {fileID: 17065559468612678914}
   m_Children:
     - {fileID: 5800089674974781927}
-    - {fileID: 18069337670764889154}
     - {fileID: 5412856711210004307}
     - {fileID: 2781535148401569210}
+    - {fileID: 18069337670764889154}
+---
+ID: 5707710513970741314
+Script:
+  m_GameObject: {fileID: 9352945451380270954}
+  m_IsEnabled: true
+  Script: {guid: 4cf27c0d93a1496bb047824f4b69d79a}
+  hasCamera: false
+  camera: {fileID: 0}
+  fader: {fileID: 0}
+  noButton: {fileID: 2781535148401569210}  # GameObject
+  noTextObj: {fileID: 13481648616233458407}  # GameObject
+  yesButton: {fileID: 5412856711210004307}  # GameObject
+  yesTextObj: {fileID: 7032478963500999487}  # GameObject
 ---
 ID: 5800089674974781927
 GameObject:
@@ -3279,7 +3310,7 @@ SpriteRenderer:
 ID: 7032478963500999487
 GameObject:
   m_IsActive: true
-  m_Name: Text(97)
+  m_Name: YesText(97)
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -3415,7 +3446,6 @@ GameObject:
   m_Component:
     - component: {fileID: 9402819198310522762}  # Transform
     - component: {fileID: 1858428983102445005}  # TextRenderer
-    - component: {fileID: 1940276078994929149}  # Script
 ---
 ID: 9402819198310522762
 Transform:
@@ -3443,15 +3473,3 @@ TextRenderer:
   Wrap Text: false
   WorldSpace: false
   Color: [1, 1, 1, 1]
----
-ID: 1940276078994929149
-Script:
-  m_GameObject: {fileID: 18069337670764889154}
-  m_IsEnabled: true
-  Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
-  hoverDuration: 0.300000012
-  isText: true
-  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
-  button: {fileID: 6550115130624952728}  # Component
-  clickSound: {fileID: 2051875914575560535}  # Component
-  hoverSound: {fileID: 12588843576671626264}  # Component

@@ -144,6 +144,7 @@ Script:
   m_GameObject: {fileID: 11768379503594195228}
   m_IsEnabled: true
   Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
+  currentLevel: 1
   fadeTime: 1
   BGM_Source: {fileID: 5692009074999031082}  # Component
   pauseCanvas: {fileID: 17065559468612678914}  # GameObject
@@ -12357,12 +12358,13 @@ ParticleComponent:
   m_GameObject: {fileID: 17611351097031071778}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: b57036938cee3e06aad1785f03361791}
+  Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: false
   Particle Direction: [6.1500001, 1.5, 0]
   Angle of Direction: 34.1199989
   Number Of Particles: 356
-  Particle Lifetime: 0.300000012
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
   Particle Emission Rate: 1
   Particle Min Scale: 0.0299999993
   Particle Max Scale: 0.0199999996
@@ -12372,11 +12374,15 @@ ParticleComponent:
   Particle Noise Movement Percentage: 4.98999977
   Particle Noise Frequency: 4.42999983
   2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
   Trailing: true
   Trail Color: [1, 1, 1]
   Trail Size: 66
   Trail Thickness: 1
   Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
 ---
 ID: 13482372997539004348
 GameObject:
@@ -12525,8 +12531,10 @@ Script:
   back: false
   currentRestTimer: 0
   duration: 10
+  hangTimerCap: 1
   rest: false
   restTimer: 2
+  returnDuration: 5
   timer: 0
   endPoint: {fileID: 14260613841086092935}  # Component
 ---
@@ -18921,12 +18929,13 @@ ParticleComponent:
   m_GameObject: {fileID: 17569942394685385403}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Material: {guid: 00000000000000000000000000000000}
+  Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: false
   Particle Direction: [0, 1, 0]
   Angle of Direction: 30
   Number Of Particles: 15
-  Particle Lifetime: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
   Particle Emission Rate: 1
   Particle Min Scale: 0
   Particle Max Scale: 0
@@ -18936,11 +18945,15 @@ ParticleComponent:
   Particle Noise Movement Percentage: 30
   Particle Noise Frequency: 20
   2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
   Trailing: true
   Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 1
   Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
 ---
 ID: 7724456078516633189
 GameObject:
@@ -33536,6 +33549,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.25
+  Vertical Spacing: 1.5
   Textbox Width: 92.5
   Textbox Height: 0
   Center Alignment: true
@@ -34102,20 +34116,15 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 57a77298b44f5fb3470ba29cc7d74265}
-  back: false
-  duration: 2
-  flickerTimer: 0
-  isStartActive: true
-  sizeMultiplier: 1.5
-  timer: 0
-  HTPButton: {fileID: 5208993662452398043}  # GameObject
-  HowToPlayBack: {fileID: 12422173001296569163}  # GameObject
-  HowToPlayPanel: {fileID: 17452717900490079642}  # GameObject
-  MainMenu: {fileID: 1254823211106383066}  # GameObject
-  PauseImage: {fileID: 9386478579826465449}  # GameObject
-  PausePanel: {fileID: 624169214278105939}  # GameObject
-  pauseTitle: {fileID: 17065559468612678914}  # GameObject
-  resumeButton: {fileID: 14866259166967195886}  # GameObject
+  ExitMenuObj: {fileID: 0}
+  ExitRenderer: {fileID: 0}
+  HTPMenuObj: {fileID: 0}
+  HTPRenderer: {fileID: 0}
+  MainMenuRenderer: {fileID: 0}
+  OptionsMenuObj: {fileID: 0}
+  OptionsRenderer: {fileID: 0}
+  PauseMenuObj: {fileID: 0}
+  ResumeRenderer: {fileID: 0}
 ---
 ID: 9386478579826465449
 GameObject:
@@ -34214,7 +34223,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -34255,7 +34266,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -34296,7 +34309,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -34454,6 +34469,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34528,7 +34544,9 @@ Script:
   m_IsEnabled: true
   Script: {guid: 9b5e573087eb53159ed96c32e74870ce}
   hoverDuration: 0.200000003
+  isText: false
   targetScaleMultiplier: [1.10000002, 1.10000002, 1]
+  button: {fileID: 0}
   clickSound: {fileID: 2051875914575560535}  # Component
   hoverSound: {fileID: 12588843576671626264}  # Component
 ---
@@ -34561,6 +34579,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34597,6 +34616,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34633,6 +34653,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34669,6 +34690,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34705,6 +34727,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34741,6 +34764,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34777,6 +34801,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34813,6 +34838,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34849,6 +34875,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34885,6 +34912,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -34921,6 +34949,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 3.55999994
+  Vertical Spacing: 1.5
   Textbox Width: 10
   Textbox Height: 0
   Center Alignment: false
@@ -35162,8 +35191,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.72000003
-  Textbox Width: 0.935680091
-  Textbox Height: 0.171360016
+  Vertical Spacing: 1.5
+  Textbox Width: 0.826880038
+  Textbox Height: 0.153226674
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35198,8 +35228,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0336000025
-  Textbox Height: 0.0252000019
+  Vertical Spacing: 1.5
+  Textbox Width: 0.0297333375
+  Textbox Height: 0.0225333367
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35234,8 +35265,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0336000025
-  Textbox Height: 0.0252000019
+  Vertical Spacing: 1.5
+  Textbox Width: 0.0297333375
+  Textbox Height: 0.0225333367
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35270,8 +35302,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0336000025
-  Textbox Height: 0.0252000019
+  Vertical Spacing: 1.5
+  Textbox Width: 0.0297333375
+  Textbox Height: 0.0225333367
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35342,8 +35375,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0336000025
-  Textbox Height: 0.0252000019
+  Vertical Spacing: 1.5
+  Textbox Width: 0.0297333375
+  Textbox Height: 0.0225333367
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35378,8 +35412,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0336000025
-  Textbox Height: 0.0252000019
+  Vertical Spacing: 1.5
+  Textbox Width: 0.0297333375
+  Textbox Height: 0.0225333367
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35414,8 +35449,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 0.400000006
-  Textbox Width: 0.0336000025
-  Textbox Height: 0.0252000019
+  Vertical Spacing: 1.5
+  Textbox Width: 0.0297333375
+  Textbox Height: 0.0225333367
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false
@@ -35481,8 +35517,9 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.72000003
-  Textbox Width: 1.03632009
-  Textbox Height: 0.171360016
+  Vertical Spacing: 1.5
+  Textbox Width: 0.915733397
+  Textbox Height: 0.153226674
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false

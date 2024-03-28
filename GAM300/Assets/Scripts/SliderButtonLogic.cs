@@ -26,6 +26,7 @@ class SliderButtonLogic : Script
 
     public float minX = 0f;
     public float maxX = 0f;
+    public float slideSpeed = 800f;
 
     void Awake()
     {
@@ -64,7 +65,7 @@ class SliderButtonLogic : Script
     {
         //Calculating the new value based on the mouse position
         vec3 slider = buttonObj.transform.localPosition;
-        float mouseDelta = Input.GetMouseDelta().x * 16f;
+        float mouseDelta = Input.GetMouseDelta().x * slideSpeed * Time.deltaTime;
         mouse += (inverted) ? -mouseDelta : mouseDelta;
 
         //Console.WriteLine("Mouse: " + mouse + " " + maxX + " " + minX);
