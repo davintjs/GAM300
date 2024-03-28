@@ -498,7 +498,6 @@ Transform:
   Scale: [160, 90, 1]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 3940713627885508865}
     - {fileID: 2866402867161245437}
     - {fileID: 3525555548824268013}
     - {fileID: 6826500622308863951}
@@ -523,6 +522,7 @@ Transform:
     - {fileID: 10041568034456654821}
     - {fileID: 14958344430007027125}
     - {fileID: 10482025102164204176}
+    - {fileID: 3940713627885508865}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -97487,7 +97487,6 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 9220501566107666244}  # Transform
-    - component: {fileID: 1948773183099593758}  # MeshRenderer
     - component: {fileID: 15666169003738312394}  # ParticleComponent
 ---
 ID: 9220501566107666244
@@ -97499,13 +97498,6 @@ Transform:
   Father: {fileID: 0}
   m_Children:
     []
----
-ID: 1948773183099593758
-MeshRenderer:
-  m_GameObject: {fileID: 17324707596223635025}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000002}
-  Material_ID: {guid: 244acdadaec78a3a5e31ec94de7392c7}
 ---
 ID: 15666169003738312394
 ParticleComponent:
@@ -97598,8 +97590,8 @@ TextRenderer:
   Y-axis Offset: 0
   Font Size: 4
   Vertical Spacing: 1.71000004
-  Textbox Width: 0.347000003
-  Textbox Height: 0.245000005
+  Textbox Width: 0.31733337
+  Textbox Height: 0.225333348
   Center Alignment: true
   Wrap Text: false
   WorldSpace: false

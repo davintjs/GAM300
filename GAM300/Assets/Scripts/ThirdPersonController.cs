@@ -1156,6 +1156,8 @@ public class ThirdPersonController : Script
             //dmg noise
             playerSounds.PlayerInjured.Play();
 
+            CombatManager.instance.SpawnHitEffect(gameObject.transform);
+
             Random rd = new Random();
             damageAudioRotation = rd.Next(0, 1);
 
