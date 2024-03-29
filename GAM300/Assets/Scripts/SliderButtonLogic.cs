@@ -26,6 +26,7 @@ class SliderButtonLogic : Script
 
     public float minX = 0f;
     public float maxX = 0f;
+    public float slideSpeed = 800f;
 
     void Awake()
     {
@@ -64,7 +65,7 @@ class SliderButtonLogic : Script
     {
         //Calculating the new value based on the mouse position
         vec3 slider = buttonObj.transform.localPosition;
-        float mouseDelta = Input.GetMouseDelta().x * 16f;
+        float mouseDelta = Input.GetMouseDelta().x * slideSpeed * Time.deltaTime;
         mouse += (inverted) ? -mouseDelta : mouseDelta;
 
         //Console.WriteLine("Mouse: " + mouse + " " + maxX + " " + minX);
@@ -76,6 +77,22 @@ class SliderButtonLogic : Script
         value = (newValue + Mathf.Abs(minX)) / sliderWidth;
         value = value * (MaxValue - MinValue) + MinValue;
         buttonObj.transform.localPosition = slider;
-        sliderTextRenderer.text = value.ToString("0.0#");
+        sliderTextRenderer.text = value.ToString("0.00");
+    }
+
+    public void InitializeSliderValue(float startValue)
+    {
+        value = startValue;
+
+        float tempWidth = Mathf.Abs(minX) + maxX;
+
+        vec3 slider = buttonObj.transform.localPosition;
+        float sliderValue = (value - MinValue) / (MaxValue - MinValue);
+        sliderValue = (sliderValue * tempWidth) - Mathf.Abs(minX);
+        sliderValue = (inverted) ? -sliderValue : sliderValue;
+        slider.x = Mathf.Clamp(sliderValue, minX, maxX);
+
+        buttonObj.transform.localPosition = slider;
+        sliderTextRenderer.text = value.ToString("0.00");
     }
 }

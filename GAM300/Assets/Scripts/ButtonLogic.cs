@@ -34,7 +34,7 @@ class ButtonLogic : Script
         {
             textRenderer = GetComponent<TextRenderer>();
             initialColor = textRenderer.color.xyz;
-            finalColor = textRenderer.color.xyz * 4f;
+            finalColor = textRenderer.color.xyz * 2f;
         }
     }
 

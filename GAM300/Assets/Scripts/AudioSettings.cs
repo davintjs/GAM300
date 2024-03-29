@@ -14,18 +14,17 @@ class AudioSettings : Script
 
     void Start()
     {
-        masterSlider.value = Audio.masterVolume;
-        sfxSlider.value = Audio.sfxVolume;
-        bgmSlider.value = Audio.musicVolume;
-
-        masterSlider.UpdateSliderValue();
-        sfxSlider.UpdateSliderValue();
-        bgmSlider.UpdateSliderValue();
+        masterSlider.InitializeSliderValue(Audio.masterVolume);
+        sfxSlider.InitializeSliderValue(Audio.sfxVolume);
+        bgmSlider.InitializeSliderValue(Audio.musicVolume);
     }
     void Update()
     {
-        Audio.masterVolume = Audio.masterVolume;
-        Audio.sfxVolume = Audio.sfxVolume;
-        Audio.musicVolume = Audio.musicVolume;
+        if(Audio.masterVolume != masterSlider.value)
+            Audio.masterVolume = masterSlider.value;
+        if (Audio.sfxVolume != sfxSlider.value)
+            Audio.sfxVolume = sfxSlider.value;
+        if (Audio.musicVolume != bgmSlider.value)
+            Audio.musicVolume = bgmSlider.value;
     }
 }
