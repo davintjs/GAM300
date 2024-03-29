@@ -157,7 +157,7 @@ public class RangeEnemy : Script
                         playOnce = false;
                         AudioManager.instance.rangeEnemyFiring.Play();
                     }
-                    
+                    CombatManager.instance.SpawnHitEffect2(modelOffset);
                     GameObject bulletPrefab = Instantiate(bullet, modelOffset.position, transform.rotation);
                     vec3 dir = player.position - transform.position;
                     dir = dir.NormalizedSafe;

@@ -216,6 +216,8 @@ public class ThirdPersonController : Script
     public PlayerAudioManager playerSounds;
     private bool noInterpolate = true;
 
+    public ParticleComponent dashVFX;
+
     bool _wasMoving = false;
     bool wasMoving
     {
@@ -289,6 +291,11 @@ public class ThirdPersonController : Script
         //Material mat = doorTestMesh.material;
         //mat.color = vec4.Ones;
         //reference check
+        if (dashVFX == null)
+        {
+            Console.WriteLine("Missing dashVFX reference in ThirdPersonController script");
+        }
+
         if (overDriveUI == null)
         {
             Console.WriteLine("Missing overDriveUI reference in ThirdPersonController script");
@@ -441,6 +448,11 @@ public class ThirdPersonController : Script
             CC.velocity.y = JumpSpeed;
         }
 
+        if (_isDashAttacking == false)
+        {
+            dashVFX.gameObject.SetActive(false);
+        }
+
         //Testing taking damage
         if (Input.GetKeyDown(KeyCode.T))
         {
@@ -549,6 +561,7 @@ public class ThirdPersonController : Script
         if(_isDashAttacking)
         {
             startDashCooldown = true;
+
             //CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
 
             //selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
@@ -723,6 +736,7 @@ public class ThirdPersonController : Script
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
             if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
             {
+                dashVFX.gameObject.SetActive(true);
                 //Console.WriteLine("DashAttack");
                 IsAttacking = false;
                 UseStamina(dashAttackStamina);

@@ -145,6 +145,7 @@ Script:
   m_GameObject: {fileID: 11768379503594195228}
   m_IsEnabled: true
   Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
+  currentLevel: 0
   fadeTime: 1
   BGM_Source: {fileID: 5692009074999031082}  # Component
   pauseCanvas: {fileID: 17065559468612678914}  # GameObject
@@ -322,7 +323,6 @@ Transform:
     - {fileID: 6663313825132233637}
     - {fileID: 11998253260673808900}
     - {fileID: 17382752399387768490}
-    - {fileID: 8829426418411601686}
 ---
 ID: 15939117778428800744
 CharacterController:
@@ -434,6 +434,7 @@ Script:
   animator: {fileID: 16486884645913952574}  # Component
   attackLight: {fileID: 16176702755422307341}  # GameObject
   audioSource: {fileID: 16716648517964172389}  # Component
+  dashVFX: {fileID: 3285602589308154029}  # Component
   healthBar: {fileID: 4225260783100130983}  # Component
   healthBarFill: {fileID: 6364420056334471666}  # GameObject
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
@@ -23082,6 +23083,7 @@ Transform:
   Father: {fileID: 11998253260673808900}
   m_Children:
     - {fileID: 17272627220744050551}
+    - {fileID: 15565901381372343389}
 ---
 ID: 17272627220744050551
 GameObject:
@@ -23295,6 +23297,7 @@ Transform:
   Father: {fileID: 16064636492944896971}
   m_Children:
     - {fileID: 13632604595466999349}
+    - {fileID: 1319468459810374537}
 ---
 ID: 13632604595466999349
 GameObject:
@@ -23447,6 +23450,7 @@ Transform:
   Father: {fileID: 15068207287568409831}
   m_Children:
     - {fileID: 10896686569272749642}
+    - {fileID: 7670121435764541644}
 ---
 ID: 10896686569272749642
 GameObject:
@@ -34138,20 +34142,17 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 57a77298b44f5fb3470ba29cc7d74265}
-  back: false
-  duration: 2
-  flickerTimer: 0
-  isStartActive: true
-  sizeMultiplier: 1.5
-  timer: 0
-  HTPButton: {fileID: 5208993662452398043}  # GameObject
-  HowToPlayBack: {fileID: 12422173001296569163}  # GameObject
-  HowToPlayPanel: {fileID: 17452717900490079642}  # GameObject
-  MainMenu: {fileID: 1254823211106383066}  # GameObject
-  PauseImage: {fileID: 9386478579826465449}  # GameObject
-  PausePanel: {fileID: 624169214278105939}  # GameObject
-  pauseTitle: {fileID: 17065559468612678914}  # GameObject
-  resumeButton: {fileID: 14866259166967195886}  # GameObject
+  ExitMenuObj: {fileID: 0}
+  ExitRenderer: {fileID: 0}
+  HTPMenuObj: {fileID: 0}
+  HTPRenderer: {fileID: 0}
+  MainMenuRenderer: {fileID: 0}
+  NoRenderer: {fileID: 0}
+  OptionsMenuObj: {fileID: 0}
+  OptionsRenderer: {fileID: 0}
+  PauseMenuObj: {fileID: 0}
+  ResumeRenderer: {fileID: 0}
+  fader: {fileID: 0}
 ---
 ID: 9386478579826465449
 GameObject:
@@ -35722,57 +35723,6 @@ TextRenderer:
   WorldSpace: false
   Color: [1, 1, 1, 1]
 ---
-ID: 8829426418411601686
-GameObject:
-  m_IsActive: true
-  m_Name: dashLine
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 3245351485977360174}  # Transform
-    - component: {fileID: 17227875212725679438}  # ParticleComponent
----
-ID: 3245351485977360174
-Transform:
-  m_GameObject: {fileID: 8829426418411601686}
-  Translation: [0.00940704346, -0.1011796, 0.0848846883]
-  Rotation: [-3.14159226, 0, -3.14159226]
-  Scale: [1.00000048, 1, 1.00000048]
-  Father: {fileID: 3977294589520766028}
-  m_Children:
-    []
----
-ID: 17227875212725679438
-ParticleComponent:
-  m_GameObject: {fileID: 8829426418411601686}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000002}
-  Particle Material: {guid: 00000000000000000000000000000000}
-  Local Space: false
-  Particle Direction: [0, 0, 1]
-  Angle of Direction: 0
-  Number Of Particles: 1
-  Min Particle Lifetime: 1
-  Max Particle Lifetime: 3
-  Particle Emission Rate: 1
-  Particle Min Scale: 0
-  Particle Max Scale: 0
-  Particle Scale Rate: 0
-  Particle Speed: 30
-  Particle acceleration: 0
-  Particle Noise Movement Percentage: 1
-  Particle Noise Frequency: 1
-  2D particle: false
-  Spawn From Shape: false
-  Shape's Size: [1, 1, 1]
-  Trailing: true
-  Trail Color: [1, 1, 1]
-  Trail Size: 5
-  Trail Thickness: 1
-  Looping: true
-  Fade towards Color: false
-  Color to Fade to: [1, 1, 1]
----
 ID: 9999230629640764540
 GameObject:
   m_IsActive: true
@@ -35823,3 +35773,156 @@ ParticleComponent:
   Looping: true
   Fade towards Color: false
   Color to Fade to: [1, 0, 0]
+---
+ID: 1319468459810374537
+GameObject:
+  m_IsActive: true
+  m_Name: right_dashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15016325619419815443}  # Transform
+    - component: {fileID: 16969296589580490424}  # ParticleComponent
+---
+ID: 15016325619419815443
+Transform:
+  m_GameObject: {fileID: 1319468459810374537}
+  Translation: [-1.53151679, 74.8176193, -5.92120314]
+  Rotation: [-1.52238965, 0, 1.57077253]
+  Scale: [100.000931, 100.003143, 100.001022]
+  Father: {fileID: 9633302792237166113}
+  m_Children:
+    []
+---
+ID: 16969296589580490424
+ParticleComponent:
+  m_GameObject: {fileID: 1319468459810374537}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 0.999899983, 0.999899983]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 7670121435764541644
+GameObject:
+  m_IsActive: true
+  m_Name: left_dashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7074833617711470457}  # Transform
+    - component: {fileID: 18044453741474601341}  # ParticleComponent
+---
+ID: 7074833617711470457
+Transform:
+  m_GameObject: {fileID: 7670121435764541644}
+  Translation: [2.66603279, 77.6759033, -5.99752808]
+  Rotation: [-1.52376771, 0, -1.57080781]
+  Scale: [99.9977646, 99.9987717, 99.997757]
+  Father: {fileID: 7466947798395458884}
+  m_Children:
+    []
+---
+ID: 18044453741474601341
+ParticleComponent:
+  m_GameObject: {fileID: 7670121435764541644}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 15565901381372343389
+GameObject:
+  m_IsActive: true
+  m_Name: dashAttack_dashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 279563812492411857}  # Transform
+    - component: {fileID: 3285602589308154029}  # ParticleComponent
+---
+ID: 279563812492411857
+Transform:
+  m_GameObject: {fileID: 15565901381372343389}
+  Translation: [1.46350098, 77.2209473, -0.180967897]
+  Rotation: [0, 0, 0]
+  Scale: [100.000946, 100.00309, 100.000946]
+  Father: {fileID: 13667354508004312860}
+  m_Children:
+    []
+---
+ID: 3285602589308154029
+ParticleComponent:
+  m_GameObject: {fileID: 15565901381372343389}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 0.999899983, 0.999899983]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]

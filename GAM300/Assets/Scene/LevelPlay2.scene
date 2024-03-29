@@ -105,6 +105,7 @@ Script:
   m_GameObject: {fileID: 11768379503594195228}
   m_IsEnabled: true
   Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
+  currentLevel: 0
   fadeTime: 1
   BGM_Source: {fileID: 13334384434134814286}  # Component
   pauseCanvas: {fileID: 624169214278105939}  # GameObject
@@ -445,6 +446,7 @@ Script:
   animator: {fileID: 9953969093344891570}  # Component
   attackLight: {fileID: 16176702755422307341}  # GameObject
   audioSource: {fileID: 16716648517964172389}  # Component
+  dashVFX: {fileID: 738546090561784950}  # Component
   healthBar: {fileID: 4056269345217226233}  # Component
   healthBarFill: {fileID: 18315212324025487925}  # GameObject
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
@@ -4634,7 +4636,7 @@ ParticleComponent:
   2D particle: false
   Spawn From Shape: false
   Shape's Size: [1, 1, 1]
-  Trailing: true
+  Trailing: false
   Trail Color: [1, 0.548122764, 0]
   Trail Size: 5
   Trail Thickness: 0.25
@@ -44892,6 +44894,7 @@ Transform:
   Father: {fileID: 3187203319805926689}
   m_Children:
     - {fileID: 383668116300315972}
+    - {fileID: 8252669615322955072}
 ---
 ID: 383668116300315972
 GameObject:
@@ -45105,6 +45108,7 @@ Transform:
   Father: {fileID: 671105312912157445}
   m_Children:
     - {fileID: 15469753426419407164}
+    - {fileID: 11026905248631548947}
 ---
 ID: 15469753426419407164
 GameObject:
@@ -45257,6 +45261,7 @@ Transform:
   Father: {fileID: 17441072719817854021}
   m_Children:
     - {fileID: 984123964470655071}
+    - {fileID: 10974317866893035270}
 ---
 ID: 984123964470655071
 GameObject:
@@ -63546,7 +63551,7 @@ ID: 4265295552149611951
 Transform:
   m_GameObject: {fileID: 9173642400808956319}
   Translation: [0, 0, 0]
-  Rotation: [1.62920671e-07, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 5297853854918785373}
   m_Children:
@@ -63565,7 +63570,7 @@ ID: 4325924194822668009
 Transform:
   m_GameObject: {fileID: 9589361301767231035}
   Translation: [-0.00100122951, 88.3813248, 0.70748055]
-  Rotation: [1.73846854e-06, -8.69905944e-06, 0.000189501021]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 9173642400808956319}
   m_Children:
@@ -63586,7 +63591,7 @@ ID: 2693066278364573453
 Transform:
   m_GameObject: {fileID: 6873277327145256891}
   Translation: [2.04249773e-09, 9.45211029, -0.946702182]
-  Rotation: [-0.0998267233, 8.97334394e-06, -0.000189600381]
+  Rotation: [-0.0998267233, 0, 0]
   Scale: [1, 1.00000024, 1.00000036]
   Father: {fileID: 9589361301767231035}
   m_Children:
@@ -63605,7 +63610,7 @@ ID: 17644892974792834535
 Transform:
   m_GameObject: {fileID: 2937262225452335113}
   Translation: [-1.69677605e-11, 11.082634, 5.95258371e-07]
-  Rotation: [2.60770374e-08, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 0.99999994, 1]
   Father: {fileID: 6873277327145256891}
   m_Children:
@@ -63624,7 +63629,7 @@ ID: 18040900734898723145
 Transform:
   m_GameObject: {fileID: 18186928386424854996}
   Translation: [-1.17097443e-11, 12.6658592, -2.392064e-07]
-  Rotation: [1.86264515e-08, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1.00000012, 1]
   Father: {fileID: 2937262225452335113}
   m_Children:
@@ -63645,7 +63650,7 @@ ID: 2519534003758242974
 Transform:
   m_GameObject: {fileID: 11578976208202744024}
   Translation: [-2.32716957e-10, 14.2490911, -1.43129898e-06]
-  Rotation: [0.0998248905, -0, 0]
+  Rotation: [0.0998248905, 0, 0]
   Scale: [1, 0.999999642, 0.999999642]
   Father: {fileID: 18186928386424854996}
   m_Children:
@@ -63702,7 +63707,7 @@ ID: 5382771218587778547
 Transform:
   m_GameObject: {fileID: 7489720971115786331}
   Translation: [5.36714125, 12.1520815, -0.188388973]
-  Rotation: [-1.01498342, 1.5574286, -2.73625779]
+  Rotation: [-1.01498342, 1.5574286, -2.73625803]
   Scale: [1, 1.00000036, 0.999999404]
   Father: {fileID: 18186928386424854996}
   m_Children:
@@ -63721,7 +63726,7 @@ ID: 10715421670221492727
 Transform:
   m_GameObject: {fileID: 16019219102609612314}
   Translation: [-5.66244125e-07, 11.798461, -9.86456871e-06]
-  Rotation: [-0.151646703, 0.125845969, -0.00676134555]
+  Rotation: [-0.151646703, 0.125845969, 0]
   Scale: [0.999999583, 0.999999642, 1.00000012]
   Father: {fileID: 7489720971115786331}
   m_Children:
@@ -63740,7 +63745,7 @@ ID: 3972059035942867822
 Transform:
   m_GameObject: {fileID: 9096540091806257769}
   Translation: [4.02656042e-07, 25.1169109, 1.21756675e-05]
-  Rotation: [-5.22127664e-07, 0.00163796439, -3.71428627e-07]
+  Rotation: [0, 0, 0]
   Scale: [1.00000048, 0.99999994, 1.0000006]
   Father: {fileID: 16019219102609612314}
   m_Children:
@@ -64181,7 +64186,7 @@ ID: 3753881738166056047
 Transform:
   m_GameObject: {fileID: 5972297200917451067}
   Translation: [-5.06639481e-07, 11.7984657, 2.23219395e-05]
-  Rotation: [-0.150528744, -0.110024996, -0.00346025452]
+  Rotation: [-0.150528744, -0.110024996, 0]
   Scale: [0.999999881, 1.00000024, 0.999999702]
   Father: {fileID: 16154106715213401243}
   m_Children:
@@ -64200,7 +64205,7 @@ ID: 8124997982402120329
 Transform:
   m_GameObject: {fileID: 2204859183704943108}
   Translation: [5.9910235e-08, 25.1152344, 5.6377321e-06]
-  Rotation: [-2.93286848e-06, -0.00196347502, 6.0628895e-07]
+  Rotation: [0, 0, 0]
   Scale: [0.999999583, 1, 0.999999702]
   Father: {fileID: 5972297200917451067}
   m_Children:
@@ -64219,7 +64224,7 @@ ID: 8276704276532400892
 Transform:
   m_GameObject: {fileID: 8322697727339066887}
   Translation: [-3.53320502e-08, 23.2977161, -1.38428004e-06]
-  Rotation: [0.0356810316, 0.0207434762, 0.0919679776]
+  Rotation: [0.0356810316, 0.0207434762, 0.091967985]
   Scale: [0.999999881, 0.999999702, 0.999999821]
   Father: {fileID: 2204859183704943108}
   m_Children:
@@ -93901,20 +93906,17 @@ Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 57a77298b44f5fb3470ba29cc7d74265}
-  back: false
-  duration: 2
-  flickerTimer: 0
-  isStartActive: true
-  sizeMultiplier: 1.5
-  timer: 0
-  HTPButton: {fileID: 5208993662452398043}  # GameObject
-  HowToPlayBack: {fileID: 12422173001296569163}  # GameObject
-  HowToPlayPanel: {fileID: 17452717900490079642}  # GameObject
-  MainMenu: {fileID: 1254823211106383066}  # GameObject
-  PauseImage: {fileID: 9386478579826465449}  # GameObject
-  PausePanel: {fileID: 624169214278105939}  # GameObject
-  pauseTitle: {fileID: 17065559468612678914}  # GameObject
-  resumeButton: {fileID: 14866259166967195886}  # GameObject
+  ExitMenuObj: {fileID: 0}
+  ExitRenderer: {fileID: 0}
+  HTPMenuObj: {fileID: 0}
+  HTPRenderer: {fileID: 0}
+  MainMenuRenderer: {fileID: 0}
+  NoRenderer: {fileID: 0}
+  OptionsMenuObj: {fileID: 0}
+  OptionsRenderer: {fileID: 0}
+  PauseMenuObj: {fileID: 0}
+  ResumeRenderer: {fileID: 0}
+  fader: {fileID: 0}
 ---
 ID: 9386478579826465449
 GameObject:
@@ -97659,12 +97661,12 @@ ParticleComponent:
   Local Space: false
   Particle Direction: [0, 0, 0]
   Angle of Direction: 30
-  Number Of Particles: 16
-  Min Particle Lifetime: 1
-  Max Particle Lifetime: 3
+  Number Of Particles: 8
+  Min Particle Lifetime: 3
+  Max Particle Lifetime: 4
   Particle Emission Rate: 1
-  Particle Min Scale: 0.600000024
-  Particle Max Scale: 0.100000001
+  Particle Min Scale: 0.0500000007
+  Particle Max Scale: 0.0500000007
   Particle Scale Rate: 0.699999988
   Particle Speed: 4
   Particle acceleration: 0
@@ -97680,3 +97682,156 @@ ParticleComponent:
   Looping: false
   Fade towards Color: false
   Color to Fade to: [1, 0, 0]
+---
+ID: 8252669615322955072
+GameObject:
+  m_IsActive: true
+  m_Name: dashAttack_dashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14333855268744945600}  # Transform
+    - component: {fileID: 738546090561784950}  # ParticleComponent
+---
+ID: 14333855268744945600
+Transform:
+  m_GameObject: {fileID: 8252669615322955072}
+  Translation: [0, 88.578125, 8.41930962]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6521774849105860025}
+  m_Children:
+    []
+---
+ID: 738546090561784950
+ParticleComponent:
+  m_GameObject: {fileID: 8252669615322955072}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 11026905248631548947
+GameObject:
+  m_IsActive: true
+  m_Name: right_dashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18403431391588427015}  # Transform
+    - component: {fileID: 18022210614532859008}  # ParticleComponent
+---
+ID: 18403431391588427015
+Transform:
+  m_GameObject: {fileID: 11026905248631548947}
+  Translation: [-2.30387878, 76.5048828, -6.05834961]
+  Rotation: [-1.52241731, 0, 1.57062411]
+  Scale: [0.999999225, 1.00001168, 0.999999881]
+  Father: {fileID: 4902761444011782099}
+  m_Children:
+    []
+---
+ID: 18022210614532859008
+ParticleComponent:
+  m_GameObject: {fileID: 11026905248631548947}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 10974317866893035270
+GameObject:
+  m_IsActive: true
+  m_Name: left_DashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17645749602526315205}  # Transform
+    - component: {fileID: 17735365419129732152}  # ParticleComponent
+---
+ID: 17645749602526315205
+Transform:
+  m_GameObject: {fileID: 10974317866893035270}
+  Translation: [2.20266747, 75.2988358, -6.06420946]
+  Rotation: [-1.52386904, 0, -1.57095838]
+  Scale: [0.999995291, 1.00000489, 0.99999243]
+  Father: {fileID: 16634065559162262692}
+  m_Children:
+    []
+---
+ID: 17735365419129732152
+ParticleComponent:
+  m_GameObject: {fileID: 10974317866893035270}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
