@@ -297,8 +297,11 @@ void Renderer::DrawPBR(BaseCamera& _camera)
 	glUniform1f(glGetUniformLocation(shader.GetHandle(), "gammaCorrection"), RENDERER.getGamma());
 
 	// Instanced Rendering	
-	for (auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)])
+	for (const auto& [vao, prop] : instanceContainers[static_cast<size_t>(SHADERTYPE::PBR)])
 	{
+		if (prop.iter == 0) {
+			continue;
+		}
 		size_t buffersize = prop.iter;
 		glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 		glBufferSubData(GL_ARRAY_BUFFER, 0, (buffersize) * sizeof(glm::mat4), prop.entitySRT.data());
@@ -327,6 +330,7 @@ void Renderer::DrawPBR(BaseCamera& _camera)
 
 	shader.UnUse();
 }
+
 
 void Renderer::DrawDefault(BaseCamera& _camera)
 {
