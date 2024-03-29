@@ -153,7 +153,7 @@ public class DialogueManagerLevel : Script
                 break;
             case 13:
                 text.text = "      APEX: Why persist with your design? Look at the robots you've been fighting,      functional but woefully inadequate for my plans.";
-                apex4.Play();
+                apex3.Play();
                 setTimer(8f);
                 break;
             case 14:
