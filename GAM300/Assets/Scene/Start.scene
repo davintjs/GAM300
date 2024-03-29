@@ -31,7 +31,6 @@ ID: 2199169755166096751
 Camera:
   m_GameObject: {fileID: 7305319039410813174}
   m_IsEnabled: true
-  BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -65,6 +64,7 @@ Transform:
   m_Children:
     - {fileID: 12690634969259096449}
     - {fileID: 1497825775628923368}
+    - {fileID: 4594590152443437112}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -218,9 +218,41 @@ AudioSource:
   AudioChannel: 0
   Loop: true
   Volume: 0.699999988
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: -1
   SFX max Pitch: 3
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 06d1d4f0ab34cacc1302f83a05093ea4}
   Play: false
+---
+ID: 4594590152443437112
+GameObject:
+  m_IsActive: true
+  m_Name: Background
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4229101481008767480}  # Transform
+    - component: {fileID: 15830818205732686161}  # SpriteRenderer
+---
+ID: 4229101481008767480
+Transform:
+  m_GameObject: {fileID: 4594590152443437112}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [7.1500001, 4.30000019, 1]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 15830818205732686161
+SpriteRenderer:
+  m_GameObject: {fileID: 4594590152443437112}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}

@@ -16,10 +16,11 @@ public class Exit : Script
     public FreeLookCamera camera;
     public FadeEffect fader;
 
+    public bool hasCamera = true;
+
     private SpriteRenderer noButtonRenderer;
     private SpriteRenderer yesButtonRenderer;
     private bool waitingExit = false;
-
     void Awake()
     {
         noButtonRenderer = noButton.GetComponent<SpriteRenderer>();
@@ -33,19 +34,33 @@ public class Exit : Script
 
     void Update()
     {
-        // Get refto Button
-        if (noButtonRenderer != null && noButtonRenderer.IsButtonClicked())
+        if(hasCamera)
         {
-            camera.GoToMainMenu();
-        }
+            if (noButtonRenderer != null && noButtonRenderer.IsButtonClicked())
+            {
+                camera.GoToMainMenu();
+            }
 
-        if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
+            if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
+            {
+                camera.GoToFinalExit();
+
+                fader.StartFadeIn(2.5f, true, 0f, 1f);
+                waitingExit = true;
+            }
+        }
+        else
         {
-            camera.GoToFinalExit();
+            // No portion in pause script
+            
+            if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
+            {
+                fader.StartFadeIn(1f, true, 0f, 1f);
+                waitingExit = true;
+            }
 
-            fader.StartFadeIn(2.5f, true, 0f, 1f);
-            waitingExit = true;
         }
+        
 
         // Pan camera to black
         if (waitingExit && fader.finished)

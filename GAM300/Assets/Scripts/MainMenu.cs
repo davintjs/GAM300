@@ -13,7 +13,7 @@ public class MainMenu : Script
     public GameObject settingsButton; 
     public GameObject HTPButton; 
     public GameObject ExitButton;
-    public GameObject mainMenuObj;
+    //public GameObject mainMenuObj;
 
     public GameObject spotLightObj;
     public GameObject incubatorObj;
@@ -77,7 +77,22 @@ public class MainMenu : Script
 
         if(waitingPlay && fader.finished)
         {
+            float currentLevel = InstanceData.GetData("CurrentLevel");
             Action loadScene = () => SceneManager.LoadScene("StartingScene", true);
+            switch (currentLevel)
+            {
+                case 1f:
+                    loadScene = () => SceneManager.LoadScene("LevelTutorial", true);
+                    break;
+                case 2f:
+                    loadScene = () => SceneManager.LoadScene("LevelPlay2", true);
+                    break;
+                case 3f:
+                    loadScene = () => SceneManager.LoadScene("LevelBoss", true);
+                    break;
+                default:
+                    break;
+            }
             StartCoroutine(QueueAction(loadScene));
         }
 

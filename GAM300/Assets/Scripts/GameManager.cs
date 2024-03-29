@@ -12,6 +12,7 @@ public class GameManager : Script
     public AudioSource BGM_Source;
     public float fadeTime = 1f;
     public GameObject pauseCanvas;
+    public float currentLevel = 0f;
 
     bool _paused = false;
 
@@ -47,6 +48,8 @@ public class GameManager : Script
     {
         Input.LockCursor(true);
         if (pauseCanvas != null) pauseCanvas.SetActive(false);
+
+        InstanceData.SaveData("CurrentLevel", currentLevel);
     }
 
     void Update()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,108 +10,107 @@ using GlmSharp;
 
 public class Pause : Script
 {
-    public GameObject PauseImage;
+    public GameObject PauseMenuObj;
+    public GameObject HTPMenuObj;
+    public GameObject OptionsMenuObj;
+    public GameObject ExitMenuObj;
 
-    public GameObject pauseTitle;
+    public SpriteRenderer ResumeRenderer;
+    public SpriteRenderer HTPRenderer;
+    public SpriteRenderer MainMenuRenderer;
+    public SpriteRenderer OptionsRenderer;
+    public SpriteRenderer ExitRenderer;
+    public SpriteRenderer NoRenderer;
+    public FadeEffect fader;
 
-    public GameObject resumeButton;
-
-    public GameObject HTPButton; 
-
-    public GameObject MainMenu;
-
-    public GameObject HowToPlayBack;
-
-    public GameObject HowToPlayPanel;
-    public GameObject PausePanel;
-
-    public bool isStartActive = true;
-    public float flickerTimer = 0f;
-
-    //movement variables
-    public float duration = 2f;
-    public float timer = 0f;
-    public bool back = false;
-
-    public float sizeMultiplier = 1.5f;
-
-
-    private SpriteRenderer resumeButtonRenderer;
-
-    private SpriteRenderer HTPButtonRenderer;
-
-    private SpriteRenderer MainMenuRenderer;
-
-    private SpriteRenderer HowToPlayBackRenderer;
-
+    private int currentMenu = 0;
+    private bool waitingMainMenu = false;
 
     void Start()
     {
-        //Play Button
-        if (resumeButton.HasComponent<SpriteRenderer>())
-        {
-            resumeButtonRenderer = resumeButton.GetComponent<SpriteRenderer>();
-        }
-        //HTP Button
-        if (HTPButton.HasComponent<SpriteRenderer>())
-        {
-            HTPButtonRenderer = HTPButton.GetComponent<SpriteRenderer>();
-        }
-        //Exit Button
-        if (MainMenu.HasComponent<SpriteRenderer>())
-        {
-            MainMenuRenderer = MainMenu.GetComponent<SpriteRenderer>();
-        }
-
-        if (HowToPlayBack.HasComponent<SpriteRenderer>())
-        {
-            HowToPlayBackRenderer = HowToPlayBack.GetComponent<SpriteRenderer>();
-        }
-
+        HTPMenuObj.SetActive(false);
+        OptionsMenuObj.SetActive(false);
+        ExitMenuObj.SetActive(false);
     }
 
     void Update()
     {
-        // Get refto Button
-        if (resumeButtonRenderer != null && resumeButtonRenderer.IsButtonClicked())
+        if (ResumeRenderer != null && ResumeRenderer.IsButtonClicked())
         {
-            Action resume = () =>
-            {
-                GameManager.instance.paused = false;
-            };
-            StartCoroutine(QueueAction(resume));
+            gameObject.SetActive(false);
         }
 
-        if (HTPButtonRenderer != null && HTPButtonRenderer.IsButtonClicked())
+        if (HTPRenderer != null && HTPRenderer.IsButtonClicked())
         {
-            HowToPlayPanel.SetActive(true);
-            PausePanel.SetActive(false);
+            StartCoroutine(Wait(1));
         }
 
         if (MainMenuRenderer != null && MainMenuRenderer.IsButtonClicked())
         {
-            Action loadMain = () =>
-            {
-                SceneManager.LoadScene("MainMenu", true);
-            };
-            StartCoroutine(QueueAction(loadMain));
+            fader.StartFadeIn(1f, true, 0f, 1f);
+            waitingMainMenu = true;
         }
 
-        if (HowToPlayBackRenderer != null && HowToPlayBackRenderer.IsButtonClicked())
+        if(waitingMainMenu && fader.finished)
         {
-            Action closeHTP = () =>
-            {
-                HowToPlayPanel.SetActive(false);
-                PausePanel.SetActive(true);
-            };
-            StartCoroutine(QueueAction(closeHTP));
+            SceneManager.LoadScene("MainMenu", true);
+        }    
+
+        if (OptionsRenderer != null && OptionsRenderer.IsButtonClicked())
+        {
+            StartCoroutine(Wait(2));
         }
 
+        if (ExitRenderer != null && ExitRenderer.IsButtonClicked())
+        {
+            StartCoroutine(Wait(3));
+        }
+
+        if (NoRenderer != null && NoRenderer.IsButtonClicked())
+        {
+            StartCoroutine(Wait(0));
+        }
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (currentMenu != 0)
+                StartCoroutine(Wait(0));
+            else
+                gameObject.SetActive(false);
+        }
     }
 
-    IEnumerator QueueAction (Action action)
+    void SelectMenu(int menu)
     {
-        yield return new WaitForUnscaledSeconds(0.2f);
-        action();
+        currentMenu = menu;
+
+        PauseMenuObj.SetActive(false);
+        HTPMenuObj.SetActive(false);
+        OptionsMenuObj.SetActive(false);
+        ExitMenuObj.SetActive(false);
+
+        switch (currentMenu)
+        {
+            case 0:
+                PauseMenuObj.SetActive(true);
+                break;
+            case 1:
+                HTPMenuObj.SetActive(true);
+                break;
+            case 2:
+                OptionsMenuObj.SetActive(true);
+                break;
+            case 3:
+                ExitMenuObj.SetActive(true);
+                break;
+            default:
+                break;
+        }
+    }
+
+    IEnumerator Wait(int menu)
+    {
+        SelectMenu(menu);
+        yield return new WaitForSeconds(0.1f);
     }
 }

@@ -8,19 +8,16 @@ using GlmSharp;
 
 class GammaSettings : Script
 {
-    public GameObject gammaObj;
-
-    // private sliders
-
-    private float gammaFactor;
+    public SliderButtonLogic gammaSlider;
 
     void Start()
     {
-        gammaFactor = Graphics.gamma;
+        gammaSlider.InitializeSliderValue(Graphics.gamma);
     }
 
     void Update()
     {
-        Graphics.gamma = gammaFactor;
+        if(Graphics.gamma != gammaSlider.value)
+            Graphics.gamma = gammaSlider.value;
     }
 }
