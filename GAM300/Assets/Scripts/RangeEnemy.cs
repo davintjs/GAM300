@@ -99,16 +99,16 @@ public class RangeEnemy : Script
                 }
 
                 //player detection
-                if (vec3.Distance(player.position, transform.position) <= chaseDistance)
-                {
-                    if (navMeshtimer >= navMeshduration)
-                    {
-                        newRequest = true;
-                        navMeshtimer = 0f;
-                    }
-                    //change to chase state
-                    state = 1;
-                }
+                //if (vec3.Distance(player.position, transform.position) <= chaseDistance)
+                //{
+                //    if (navMeshtimer >= navMeshduration)
+                //    {
+                //        newRequest = true;
+                //        navMeshtimer = 0f;
+                //    }
+                //    //change to chase state
+                //    state = 1;
+                //}
                 if (vec3.Distance(player.position, transform.position) <= shootDistance)
                 {
                     state = 2;
@@ -169,10 +169,10 @@ public class RangeEnemy : Script
                     }
                 }
                 LookAt(direction);
-                //change to chase state once player has reach out of range
+                //change to idle state once player has reach out of range
                 if (vec3.Distance(player.position, transform.position) > shootDistance)
                 {
-                    state = 1;
+                    state = 0;
                 }
                 break;
             //death state
