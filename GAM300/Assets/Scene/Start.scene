@@ -156,7 +156,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 0
-  SpriteTexture: {guid: 951aa8d2c1666788ebb81984b77754a5}
+  SpriteTexture: {guid: 1bfb233cf78fb5c3b997dec7684d03f2}
 ---
 ID: 12304487287803117599
 Script:

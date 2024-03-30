@@ -55,6 +55,12 @@ public class Credits : Script
             }
         }
 
+        if(Input.GetKeyDown(KeyCode.Escape) && !waitingOnFader)
+        {
+            fader.StartFadeIn(1f, true, 2f, 0.5f);
+            waitingOnFader = true;
+        }
+
         if(waitingOnFader && fader.finished)
         {
             GoToMainMenu();

@@ -38,97 +38,30 @@ void UISystem::Update(float dt)
 	// ColorpickingUIbutton - change to return the entity
 	for (Camera& camera : currentScene.GetArray<Camera>())
 	{
-		Engine::UUID id = COLOURPICKER.ColorPickingUIButton(camera);
+		const Engine::UUID id = COLOURPICKER.ColorPickingUIButton(camera);
 		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
 		{
-
 			sr.onClick = false;
 			sr.onHover = false;
-			//if (sr.onHover == false)
-			//{
-			//	sr.orgScale = currentScene.Get<Transform>(sr).GetLocalScale();
-			//	sr.hoverTimer = 0.f;
-
-			//}
 		}
+
 		for (SpriteRenderer& sr : currentScene.GetArray<SpriteRenderer>())
 		{
-			if (sr.EUID() == id)
+			if (sr.EUID() != id)
+				continue;
+			
+			if (!InputHandler::isMouseButtonPressed_L())
 			{
-				if (!InputHandler::isMouseButtonPressed_L())
-				{
-					sr.onHover = true;
-					//std::cout << "buttonHover" << std::endl;
-					//To scale the size of the text when hovering 
-					//Transform& t = currentScene.Get<Transform>(sr);
-					//if (sr.hoverDuration > 0 && sr.hoverTimer < sr.hoverDuration)
-					//{
-					//	vec3 targetScale = glm::mix((glm::vec3)sr.orgScale, (glm::vec3)sr.hoverTarget, sr.hoverTimer / sr.hoverDuration);	//Scale the text '
-					//	sr.hoverTimer += dt;
-					//	//std::cout << targetScale.x << "," << targetScale.y << "," << targetScale.z << std::endl;
-					//	t.SetLocalScale(targetScale);
-
-					//}
-					//SpriteRenderer::onHover = true;
-				}
-				else
-				{
-					//SpriteRenderer::ColourPicked = true;
-
-					//sr.ColourPicked = true;
-					//std::cout << "buttonClicked" << std::endl;
-					//std::cout << "Object: " << currentScene.Get<Tag>(sr).name << "\n";
-					sr.onClick = true;
-
-					//SceneManager::Instance().LoadScene("Assets/Scene/LevelPlay2.scene");
-				}
-				return;
+				sr.onHover = true;
 			}
 			else
 			{
-				//Transform& t = currentScene.Get<Transform>(sr);
-				//if (sr.hoverDuration > 0 && sr.hoverTimer > 0)
-				//{
-				//	vec3 targetScale = glm::mix((glm::vec3)sr.orgScale, (glm::vec3)sr.hoverTarget, sr.hoverTimer / sr.hoverDuration);	//Scale the text '
-				//	sr.hoverTimer -= dt;
-				//	//std::cout << targetScale.x << "," << targetScale.y << "," << targetScale.z << std::endl;
-				//	t.SetLocalScale(targetScale);
-
-				//}
+				sr.onClick = true;
 			}
+			return;
 		}
-
-		//Entity& test = currentScene.Get<Entity>();
 	}
-
-
-	// IF ur not hovering a button
-
-		// RETURN
-
-	// U ARE HOVERING OVER A BUTTON
-
-		// IF mouse NEVER press -> change the texture onButtonHover()
-
-		// IF MOUSE PRESS -> run the button functionlity onButtonClick()
-
-
-
-	//std::cout << "test" << std::endl;
-
-
-
 };
-
-//void UISystem::drawButton(Button &button)
-//{
-//    //To draw the button 
-//}
-//
-//void UISystem::handleButtonclick(Button &button) {
-//    // Call the button's click handler function
-//    button.clickHandler();
-//}
 
 void UISystem::Exit()
 {

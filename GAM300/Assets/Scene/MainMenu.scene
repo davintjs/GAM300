@@ -70,8 +70,8 @@ SpriteRenderer:
   World Space: false
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
-  Alpha Scalar: 0.400000006
-  SpriteTexture: {guid: 951aa8d2c1666788ebb81984b77754a5}
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 1bfb233cf78fb5c3b997dec7684d03f2}
 ---
 ID: 15122834859859923062
 GameObject:

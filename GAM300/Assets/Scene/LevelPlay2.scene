@@ -453,8 +453,9 @@ Script:
   healthBarFill: {fileID: 18315212324025487925}  # GameObject
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
   overDriveBar: {fileID: 4720521423488205772}  # GameObject
+  overDriveBarFill: {fileID: 3925618525247661714}  # GameObject
   overDriveCollider: {fileID: 6669890113452856865}  # GameObject
-  overDriveTransform: {fileID: 3925618525247661714}  # Component
+  overDriveTransform: {fileID: 4691923219392822044}  # Component
   overDriveUI: {fileID: 3940713627885508865}  # Component
   overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
@@ -466,7 +467,6 @@ Script:
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
   staminaBar: {fileID: 1155348055569638397}  # Component
   staminaBarFill: {fileID: 4490157770252088129}  # GameObject
-  staminaBarPos: {fileID: 1155348055569638397}  # Component
 ---
 ID: 14362096387145765665
 Script:
@@ -4463,6 +4463,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 03efcb3e5ae6648610a87d35ebb74208}
   sceneIndex: 1
+  triggerEnter: false
   fader: {fileID: 7008586789333044373}  # Component
 ---
 ID: 3014923677190018251
@@ -8728,7 +8729,7 @@ Transform:
   Father: {fileID: 13025348357797129489}
   m_Children:
     - {fileID: 1953613848853671180}
-    - {fileID: 3925618525247661714}
+    - {fileID: 4691923219392822044}
 ---
 ID: 15241298173543357892
 SpriteRenderer:
@@ -8783,10 +8784,10 @@ GameObject:
 ID: 6440725200320908511
 Transform:
   m_GameObject: {fileID: 3925618525247661714}
-  Translation: [0, 2.14576721e-06, 0.100000001]
+  Translation: [0.182000041, 7.62939453e-06, 0.100008279]
   Rotation: [0, 0, 0]
   Scale: [1, 1.00000012, 1]
-  Father: {fileID: 4720521423488205772}
+  Father: {fileID: 4691923219392822044}
   m_Children:
     []
 ---
@@ -100012,8 +100013,8 @@ Script:
   MaxValue: 5
   MinValue: 0.5
   inverted: false
-  maxX: 0.550000012
-  minX: -0.550000012
+  maxX: 0.560000002
+  minX: -0.560000002
   slideSpeed: 800
   value: 0.5
   buttonObj: {fileID: 18052166248832161833}  # GameObject
@@ -100399,7 +100400,7 @@ ID: 1512220130203542579
 Transform:
   m_GameObject: {fileID: 13025348357797129489}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 15240334966158831452}
   m_Children:
@@ -100483,3 +100484,22 @@ Transform:
     - {fileID: 10482025102164204176}
     - {fileID: 13025348357797129489}
     - {fileID: 11886136654637832775}
+---
+ID: 4691923219392822044
+GameObject:
+  m_IsActive: true
+  m_Name: OverdriveBarPos
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 408182949325206566}  # Transform
+---
+ID: 408182949325206566
+Transform:
+  m_GameObject: {fileID: 4691923219392822044}
+  Translation: [-0.181999996, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 4720521423488205772}
+  m_Children:
+    - {fileID: 3925618525247661714}

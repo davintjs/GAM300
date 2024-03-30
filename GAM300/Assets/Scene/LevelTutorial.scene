@@ -36704,8 +36704,8 @@ Script:
   MaxValue: 5
   MinValue: 0.5
   inverted: false
-  maxX: 0.550000012
-  minX: -0.550000012
+  maxX: 0.560000002
+  minX: -0.560000002
   slideSpeed: 800
   value: 0.5
   buttonObj: {fileID: 18052166248832161833}  # GameObject
