@@ -336,7 +336,7 @@ void PhysicsSystem::PrePhysicsUpdate(float dt) {
 }
 void PhysicsSystem::PostPhysicsUpdate() {
 	ACQUIRE_SCOPED_LOCK(PhysicsCollision);
-	std::cout << "Post physics update\n";
+	//std::cout << "Post physics update\n";
 
 	// Handle collision events
 	for (EngineCollisionData& e : engineContactListener->collisionResolution) {
@@ -348,28 +348,28 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		Scene& scene = MySceneManager.GetCurrentScene();
 
 
-		std::cout << "treasure hunt\n";
+		//std::cout << "treasure hunt\n";
 		if (rigidbodyHashMap.count(e.bid1)) {
-			std::cout << "rb1\n";
+			//std::cout << "rb1\n";
 			Rigidbody& rb = scene.Get<Rigidbody>(rigidbodyHashMap[e.bid1]);
 			if (rb.state != DELETED)
 				pc1 = &rb;
 		}
 		else if (characterHashMap.count(e.bid1)) {
-			std::cout << "cc1\n";
+			//std::cout << "cc1\n";
 
 			pc1 = &scene.Get<CharacterController>(characterHashMap[e.bid1]);
 		}
 
 		if (rigidbodyHashMap.count(e.bid2)) {
-			std::cout << "rb2\n";
+			//std::cout << "rb2\n";
 
 			Rigidbody& rb = scene.Get<Rigidbody>(rigidbodyHashMap[e.bid2]);
 			if (rb.state != DELETED)
 				pc2 = &rb;
 		}
 		else if (characterHashMap.count(e.bid2)) {
-			std::cout << "cc2\n";
+			//std::cout << "cc2\n";
 
 			pc2 = &scene.Get<CharacterController>(characterHashMap[e.bid2]);
 		}
@@ -413,7 +413,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 		
 		if (!pc1 || !pc2)
 		continue;
-		std::cout << "test1\n";
+		//std::cout << "test1\n";
 		// Publish the right event
 		if (e.op == EngineCollisionData::collisionOperation::added) {
 
@@ -507,7 +507,7 @@ void PhysicsSystem::PostPhysicsUpdate() {
 			}
 		}
 
-		std::cout << "test2\n";
+		//std::cout << "test2\n";
 	}
 	// Clear engine collisions
 	engineContactListener->collisionResolution.clear();
@@ -856,9 +856,9 @@ void PhysicsSystem::PopulatePhysicsWorld() {
 	 
 	size_t numBodies = rbArray.size() + ccArray.size();
 
-	std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
+	//std::cout << "Rigido bodios:" << scene.GetArray<Rigidbody>().size() << std::endl;
 
-	std::cout << "Map size: " << rigidbodyHashMap.size() << std::endl;
+	//std::cout << "Map size: " << rigidbodyHashMap.size() << std::endl;
 	//for (auto it = rigidbodyHashMap.begin(); it != rigidbodyHashMap.end(); ++it) {
 	//	std::cout << '[' << it->first << ',' << scene.Get<Tag>(it->second).name << ']' << std::endl;
 	//}
@@ -1303,22 +1303,22 @@ EngineRayCastResult PhysicsSystem::CastRay(JPH::RVec3& origin, const JPH::Vec3& 
 		}
 
 		// DEPRECATED REMOVE BEFORE SUBMISSION
-		/*
-		for (auto it = rbArray.begin(); it != rbArray.end(); ++it) 
-		{
-			Rigidbody& rb = *it;
-			if (rb.bid == bid && !rb.is_trigger) 
-			{
-				JoltVec3ToGlmVec3(v, hitPt);
-				tag = scene.Get<Tag>(rb);
-				selected = true;
-				break;
-			}
-		}
+		
+		//for (auto it = rbArray.begin(); it != rbArray.end(); ++it) 
+		//{
+		//	Rigidbody& rb = *it;
+		//	if (rb.bid == bid && !rb.is_trigger) 
+		//	{
+		//		JoltVec3ToGlmVec3(v, hitPt);
+		//		tag = scene.Get<Tag>(rb);
+		//		selected = true;
+		//		break;
+		//	}
+		//}
 
-		if (selected)
-			break;
-		*/
+		//if (selected)
+		//	break;
+		
 	}
 
 	return EngineRayCastResult(tag, hitPt, selected);
