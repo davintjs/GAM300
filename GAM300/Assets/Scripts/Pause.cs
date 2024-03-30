@@ -23,7 +23,7 @@ public class Pause : Script
     public SpriteRenderer NoRenderer;
     public FadeEffect fader;
 
-    private int currentMenu = 0;
+    public int currentMenu = 0;
     private bool waitingMainMenu = false;
 
     void Start()
@@ -37,7 +37,7 @@ public class Pause : Script
     {
         if (ResumeRenderer != null && ResumeRenderer.IsButtonClicked())
         {
-            gameObject.SetActive(false);
+            GameManager.instance.paused = false;
         }
 
         if (HTPRenderer != null && HTPRenderer.IsButtonClicked())
@@ -71,12 +71,12 @@ public class Pause : Script
             StartCoroutine(Wait(0));
         }
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape))
         {
             if (currentMenu != 0)
+            {
                 StartCoroutine(Wait(0));
-            else
-                gameObject.SetActive(false);
+            }
         }
     }
 

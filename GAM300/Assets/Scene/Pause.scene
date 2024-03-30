@@ -15,13 +15,12 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 11736666798754351607}  # Transform
-    - component: {fileID: 11224049176946812361}  # Canvas
     - component: {fileID: 3757701296965781500}  # Script
 ---
 ID: 11736666798754351607
 Transform:
   m_GameObject: {fileID: 17065559468612678914}
-  Translation: [0.0160647016, 0, 0]
+  Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -33,16 +32,12 @@ Transform:
     - {fileID: 3558718262050591536}
     - {fileID: 9352945451380270954}
 ---
-ID: 11224049176946812361
-Canvas:
-  m_GameObject: {fileID: 17065559468612678914}
-  m_IsEnabled: true
----
 ID: 3757701296965781500
 Script:
   m_GameObject: {fileID: 17065559468612678914}
   m_IsEnabled: true
   Script: {guid: 57a77298b44f5fb3470ba29cc7d74265}
+  currentMenu: 0
   ExitMenuObj: {fileID: 9352945451380270954}  # GameObject
   ExitRenderer: {fileID: 3530477588656220466}  # Component
   HTPMenuObj: {fileID: 17452717900490079642}  # GameObject
@@ -332,7 +327,7 @@ GameObject:
 ID: 12508685616046627158
 Transform:
   m_GameObject: {fileID: 15849399269626052261}
-  Translation: [0, 0, 0]
+  Translation: [0, 0, -1]
   Rotation: [3.14159274, 0, 0]
   Scale: [1.10000002, 1.10000002, 1]
   Father: {fileID: 17065559468612678914}
@@ -349,42 +344,6 @@ SpriteRenderer:
   Alpha Scalar: 0.899999976
   SpriteTexture: {guid: c0ada3d99493fce39006fe2433f79a77}
 ---
-ID: 13539260078692898610
-GameObject:
-  m_IsActive: true
-  m_Name: Camera
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 7213234218411545401}  # Transform
-    - component: {fileID: 1207957736602259073}  # Camera
----
-ID: 7213234218411545401
-Transform:
-  m_GameObject: {fileID: 13539260078692898610}
-  Translation: [0, 0, 3.8538537]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 1207957736602259073
-Camera:
-  m_GameObject: {fileID: 13539260078692898610}
-  m_IsEnabled: true
-  ClearFlags: "\x01"
-  CullingMask: "\x00"
-  NearClip: 0.100000001
-  FarClip: 100
-  FieldOfView: 45
-  Orthographic: false
-  TargetDisplay: 0
-  HDR: true
-  OcclusionCulling: false
-  FrustumCulling: true
-  DistanceCulling: 5
----
 ID: 15902801049330222787
 GameObject:
   m_IsActive: true
@@ -399,9 +358,9 @@ GameObject:
 ID: 13113751923317369002
 Transform:
   m_GameObject: {fileID: 15902801049330222787}
-  Translation: [0, -1.49011612e-08, 0.300000012]
+  Translation: [0, -1.1920929e-07, 0.300000012]
   Rotation: [0, 0, 0]
-  Scale: [1, 3.33333302, 2.08341432]
+  Scale: [1, 3.33333278, 2.08341432]
   Father: {fileID: 14866259166967195886}
   m_Children:
     []
@@ -413,7 +372,7 @@ TextRenderer:
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
   Text: Resume
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.0299999993
   Font Size: 1
   Vertical Spacing: 1.5
   Textbox Width: 0.391333371
@@ -450,7 +409,7 @@ Transform:
   m_GameObject: {fileID: 2978225901370053795}
   Translation: [-9.31322575e-10, -0.25, -0.100000001]
   Rotation: [0, 0, 0]
-  Scale: [1, 0.300000012, 0.479981333]
+  Scale: [1.20000005, 0.300000012, 0.479981333]
   Father: {fileID: 624169214278105939}
   m_Children:
     - {fileID: 17927300076653325405}
@@ -479,9 +438,9 @@ GameObject:
 ID: 10082094248995629624
 Transform:
   m_GameObject: {fileID: 17927300076653325405}
-  Translation: [0, 0, 0.300000012]
-  Rotation: [0, 0, 0]
-  Scale: [1, 3.33333302, 2.08341432]
+  Translation: [0, 0, 0.299999982]
+  Rotation: [0, -0, 0]
+  Scale: [0.833333254, 3.33333278, 2.08341432]
   Father: {fileID: 2978225901370053795}
   m_Children:
     []
@@ -493,7 +452,7 @@ TextRenderer:
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
   Text: Main Menu
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.0299999993
   Font Size: 1
   Vertical Spacing: 1.5
   Textbox Width: 0.53366667
@@ -530,7 +489,7 @@ Transform:
   m_GameObject: {fileID: 10241921150267666312}
   Translation: [-9.31322575e-10, 0.150000006, -0.100000001]
   Rotation: [0, 0, 0]
-  Scale: [1, 0.300000012, 0.479981333]
+  Scale: [1.39999998, 0.300000012, 0.479981333]
   Father: {fileID: 624169214278105939}
   m_Children:
     - {fileID: 16915422175475646542}
@@ -559,9 +518,9 @@ GameObject:
 ID: 18365347405122758920
 Transform:
   m_GameObject: {fileID: 16915422175475646542}
-  Translation: [0, 0, 0.300000012]
-  Rotation: [0, 0, 0]
-  Scale: [1, 3.33333302, 2.08341432]
+  Translation: [-9.31322575e-10, 0, 0.300000012]
+  Rotation: [0, -0, 0]
+  Scale: [0.714285731, 3.33333302, 2.08341432]
   Father: {fileID: 10241921150267666312}
   m_Children:
     []
@@ -573,7 +532,7 @@ TextRenderer:
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
   Text: How To Play
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.0299999993
   Font Size: 1
   Vertical Spacing: 1.5
   Textbox Width: 0.630000114
@@ -608,7 +567,7 @@ GameObject:
 ID: 8692494025962396385
 Transform:
   m_GameObject: {fileID: 2416672417844073739}
-  Translation: [-9.31322575e-10, -0.0560000017, -0.100000001]
+  Translation: [-9.31322575e-10, -0.0500000007, -0.100000001]
   Rotation: [0, 0, 0]
   Scale: [1, 0.300000012, 0.479981333]
   Father: {fileID: 624169214278105939}
@@ -653,7 +612,7 @@ TextRenderer:
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
   Text: Options
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.0299999993
   Font Size: 1
   Vertical Spacing: 1.5
   Textbox Width: 0.375666678
@@ -733,7 +692,7 @@ TextRenderer:
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
   Text: Exit
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.0299999993
   Font Size: 1
   Vertical Spacing: 1.5
   Textbox Width: 0.190666676
@@ -1813,9 +1772,9 @@ GameObject:
 ID: 18103876016946745678
 Transform:
   m_GameObject: {fileID: 7636017863176673550}
-  Translation: [-1.20000005, -0.0500000007, -0.100000001]
+  Translation: [-1.19000006, -0.0500000007, -0.100000001]
   Rotation: [0, 0, 0]
-  Scale: [1, 0.300000012, 0.479981333]
+  Scale: [1.10000002, 0.300000012, 0.479981333]
   Father: {fileID: 3558718262050591536}
   m_Children:
     - {fileID: 12926058073056181484}
@@ -1844,9 +1803,9 @@ GameObject:
 ID: 9743182938837662075
 Transform:
   m_GameObject: {fileID: 12926058073056181484}
-  Translation: [0, 0, 0.300000012]
-  Rotation: [0, 0, 0]
-  Scale: [1, 3.33333302, 2.08341432]
+  Translation: [-0.00909090135, -1.4901163e-08, 0.300000042]
+  Rotation: [0, -0, 0]
+  Scale: [0.909090936, 3.33333325, 2.08341455]
   Father: {fileID: 7636017863176673550}
   m_Children:
     []

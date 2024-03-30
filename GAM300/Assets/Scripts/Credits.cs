@@ -24,6 +24,10 @@ public class Credits : Script
     //sounds
     public AudioSource bgm;
 
+    public FadeEffect fader;
+
+    private bool waitingOnFader = false;
+
 
     void Start()
     {
@@ -34,6 +38,7 @@ public class Credits : Script
 
 
         startPos = credits.transform.localPosition;
+        fader.StartFadeOut(2f, false, 0.5f, 0f);
     }
 
     void Update()
@@ -45,36 +50,20 @@ public class Credits : Script
             timer += Time.unscaledDeltaTime;
             if (timer >= scrollDuration)
             {
-                StartCoroutine(WaitTime());
+                fader.StartFadeIn(1f, true, 2f, 0.5f);
+                waitingOnFader = true;
             }
+        }
+
+        if(waitingOnFader && fader.finished)
+        {
+            GoToMainMenu();
         }
 
     }
 
-    IEnumerator WaitTime()
-    {
-        yield return new WaitForSeconds(3f);
-        GoToMainMenu();
-    }
-
-    //void goToPlay()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        SceneManager.LoadScene("MainMenu", true);
-    //    }
-    //}
     void GoToMainMenu()
     {
-        SceneManager.LoadScene("VictoryScreenMenu", true);
+        SceneManager.LoadScene("MainMenu", true);
     }
-
-    //void Update()
-    //{
-    //    //goToPlay();
-
-    //}
-
-
-
 }

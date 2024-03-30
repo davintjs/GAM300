@@ -9,53 +9,38 @@ using BeanFactory;
 public class SceneTransitionTrigger : Script
 {
     public int sceneIndex = 0;
-    public SpriteRenderer fadeBlackSR;
+    public FadeEffect fader;
+    public bool triggerEnter = false;
 
-    public float fadeDuration = 2f;
+    void Awake()
+    {
+        if(fader == null)
+        {
+            Console.WriteLine("Please assign FadeEffect script in SceneTransitionTrigger!");
+        }
+    }
 
     void Start()
     {
-        if (fadeBlackSR == null)
-        {
-            Console.WriteLine("No fade black SR assigned to SceneTransition");
-            return;
-        }
-        StartCoroutine(StartFadeIn());
+        fader.StartFadeOut();
     }
 
-    public IEnumerator StartFadeIn()
+    void Update()
     {
-        float timer = 0f;
-        while (timer < fadeDuration)
+        if(triggerEnter && fader.finished)
         {
-            fadeBlackSR.alpha = Mathf.Lerp(1, 0, timer / fadeDuration);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        SetEnabled(fadeBlackSR,false);
-    }
-
-    public IEnumerator StartFadeOut()
-    {
-        SetEnabled(fadeBlackSR, true);
-        float timer = 0f;
-        while (timer < fadeDuration)
-        {
-            fadeBlackSR.alpha = Mathf.Lerp(0, 1, timer / fadeDuration);
-            timer += Time.deltaTime;
-            yield return null;
-        }
-        switch (sceneIndex)
-        {
-            case 0:
-                SceneManager.LoadScene("LevelPlay2", true);
-                break;
-            case 1:
-                SceneManager.LoadScene("LevelBoss", true);
-                break;
-            case 2:
-                SceneManager.LoadScene("Credits", true);
-                break;
+            switch (sceneIndex)
+            {
+                case 0:
+                    SceneManager.LoadScene("LevelPlay2", true);
+                    break;
+                case 1:
+                    SceneManager.LoadScene("LevelBoss", true);
+                    break;
+                case 2:
+                    SceneManager.LoadScene("Credits", true);
+                    break;
+            }
         }
     }
 
@@ -63,8 +48,9 @@ public class SceneTransitionTrigger : Script
     {
         if (GetTag(rb) == "Player")
         {
-            InternalCalls.StopMusic(fadeDuration*2f);
-            StartCoroutine(StartFadeOut());
+            InternalCalls.StopMusic(4f);
+            fader.StartFadeIn(1f, true, 0f, 0.5f);
+            triggerEnter = true;
         }
     }
 }

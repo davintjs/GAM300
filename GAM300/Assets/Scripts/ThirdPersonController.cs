@@ -158,8 +158,6 @@ public class ThirdPersonController : Script
     public Transform healthBar;
     public GameObject healthStaminaCanvas;
     vec3 initialHealthBarPos;
-    float initialHealthBarXpos;
-    float initialHealthBarXScale;
     bool lowHealthSound = false;
     bool playingLowHealthSound = false;
 
@@ -168,14 +166,11 @@ public class ThirdPersonController : Script
     public float currentStamina;
     public GameObject staminaBarFill;
     public Transform staminaBar;
-    public Transform staminaBarPos;
     private Coroutine regen;
     public float timeBeforeRegen = 1.5f;
     public float regenRate = 60f;//the higher the number, the slower the regen is
     private WaitForSeconds regenTick = new WaitForSeconds(0.1f);
     vec3 initialStaminaBarPos;
-    float initialStaminaBarXpos;
-    float initialStaminaBarXScale;
     public float sprintStamina = 0.5f;
     public float jumpStamina = 10f;
     public float attackStamina = 10f;
@@ -188,7 +183,9 @@ public class ThirdPersonController : Script
     //public float currentOverdrive = 0;
     public GameObject overDriveBar;
     public Transform overDriveTransform;
+    public GameObject overDriveBarFill;
     public GameObject overDriveVFX;
+    vec3 initialOverdriveBarPos;
     //for overdrive chip purposes
     public bool isOverdriveEnabled = false;
     //used to check if in overdrive for dmg boost, regen and stamina reset
@@ -368,11 +365,11 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("Missing staminaBarFill reference in ThirdPersonController script");
         }
-        if(staminaBarPos == null)
+        if (overDriveBarFill == null)
         {
-            Console.WriteLine("Missing staminaBarPos reference in ThirdPersonController script");
+            Console.WriteLine("Missing overDriveBarFill reference in ThirdPersonController script");
         }
-        if(animator == null)
+        if (animator == null)
         {
             Console.WriteLine("Missing animator reference in ThirdPersonController script");
         }
@@ -393,13 +390,9 @@ public class ThirdPersonController : Script
         currentOverdriveTimer = overdriveTimer;
         currentOverdriveCooldown = overDriveCooldown;
 
-        initialHealthBarPos = healthBarFill.GetComponent<Transform>().localPosition;
-        initialHealthBarXpos = healthBarFill.GetComponent<Transform>().localPosition.x;
-        initialHealthBarXScale = healthBarFill.GetComponent<Transform>().localScale.x;
-
-        initialStaminaBarPos = staminaBarFill.GetComponent<Transform>().localPosition;
-        initialStaminaBarXpos = staminaBarFill.GetComponent<Transform>().localPosition.x;
-        initialStaminaBarXScale = staminaBarFill.GetComponent<Transform>().localScale.x;
+        initialHealthBarPos = healthBarFill.transform.localPosition;
+        initialStaminaBarPos = staminaBarFill.transform.localPosition;
+        initialOverdriveBarPos = overDriveBarFill.transform.localPosition;
         walkSoundTime = walkStepsInterval;
         InitAnimStates();
         spawnPoint = transform.position;
@@ -1027,10 +1020,12 @@ public class ThirdPersonController : Script
         player.localPosition = spawnPoint;
         playerRespawningVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y - 1, transform.localPosition.z);
         HealHealth(maxHealth);
-        healthBarFill.GetComponent<Transform>().localPosition = initialHealthBarPos;
+        healthBarFill.transform.localPosition = initialHealthBarPos;
         UpdatehealthBar();
-        staminaBarFill.GetComponent<Transform>().localPosition = initialStaminaBarPos;
+        staminaBarFill.transform.localPosition = initialStaminaBarPos;
         UpdateStaminaBar();
+        overDriveBarFill.transform.localPosition = initialOverdriveBarPos;
+        UpdateOverdriveBar();
 
         StartCoroutine(delayRespawnVFX());
     }

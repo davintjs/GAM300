@@ -1,4 +1,4 @@
-[2024-03-28 22:46:08.854] [Error] [critical] 
+[2024-03-30 18:23:14.505] [Error] [critical] 
 Caused By:	false
 Info:		Could not find handle!
 Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Scene\HandlesTable.cpp (Line: 58)

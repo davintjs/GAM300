@@ -44,7 +44,6 @@ public class Exit : Script
             if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
             {
                 camera.GoToFinalExit();
-
                 fader.StartFadeIn(2.5f, true, 0f, 1f);
                 waitingExit = true;
             }

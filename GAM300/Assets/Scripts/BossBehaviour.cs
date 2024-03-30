@@ -163,7 +163,9 @@ public class BossBehaviour : Script
                     StartCoroutine(Death());
 
                     instance.SetState(3); //Death dialogue
-                    StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
+                    GameManager.instance.GetComponent<SceneTransitionTrigger>().fader.StartFadeIn(2f, true, 8f, 1f);
+                    GameManager.instance.GetComponent<SceneTransitionTrigger>().triggerEnter = true;
+                    InstanceData.SaveData("CurrentLevel", 0);
                     //DIE
                 }
             }

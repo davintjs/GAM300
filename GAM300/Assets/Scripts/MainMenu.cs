@@ -62,6 +62,8 @@ public class MainMenu : Script
         ExitButton.SetActive(false);
 
         bgm.Play();
+
+        fader.StartFadeOut(2f, false, 0.5f, 0f);
     }
 
     void Update()
