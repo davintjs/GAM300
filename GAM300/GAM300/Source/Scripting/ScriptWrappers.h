@@ -701,11 +701,16 @@ static void SetActive(ScriptObject<Object> pObject, MonoReflectionType* componen
 }
 
 // Pathfinding
-static bool FindPath(ScriptObject<NavMeshAgent> pEnemy, glm::vec3 pDest)
+static bool FindPath(ScriptObject<NavMeshAgent> pAgent, glm::vec3 pDest)
 {
-	NavMeshAgent& _player = pEnemy;
+	NavMeshAgent& agent = pAgent;
+	return NAVMESHBUILDER.GetNavMesh()->FindPath(agent, pDest);
+}
 
-	return NAVMESHBUILDER.GetNavMesh()->FindPath(_player, pDest);
+static void ResetPather(ScriptObject<NavMeshAgent> pAgent)
+{
+	NavMeshAgent& agent = pAgent;
+	agent.mPather.ResetPather();
 }
 
 #pragma region GRAPHCIS
@@ -901,9 +906,12 @@ static void RegisterScriptWrappers()
 	Register(GetUpVec);
 	Register(GetForwardVec);
 
+	// NavMeshAgent Component
+	Register(FindPath);
+	Register(ResetPather);
+
 	// Tag Component
 	Register(GetTag);
-	Register(FindPath);
 	Register(GetScrollState);
 
 	// SpriteRenderer Component

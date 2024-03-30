@@ -619,8 +619,8 @@ ID: 2169999402375080222
 BoxCollider:
   m_GameObject: {fileID: 12486642072026848141}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 10978448946441949271
 Rigidbody:
@@ -22473,7 +22473,7 @@ GameObject:
 ID: 11474289451305841016
 Transform:
   m_GameObject: {fileID: 8640499112490309379}
-  Translation: [65.8580933, 37.9738197, -79.3759079]
+  Translation: [65.8580933, 37.3441963, -79.3759079]
   Rotation: [0, 0.087161094, 0]
   Scale: [0.999958396, 1, 0.99996078]
   Father: {fileID: 10907430610981256203}
@@ -22492,8 +22492,8 @@ ID: 1719077044476158407
 BoxCollider:
   m_GameObject: {fileID: 8640499112490309379}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 8199329593864975362
 Rigidbody:
@@ -22503,10 +22503,10 @@ Rigidbody:
   AngularVelocity: [-5.75522165e-07, -1.80022663e-13, 5.86636872e-07]
   Force: [0, 0, 0]
   Friction: 0.100000001
-  Mass: 10
+  Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 16917575728751880174
@@ -22759,9 +22759,9 @@ GameObject:
 ID: 16033023070649407444
 Transform:
   m_GameObject: {fileID: 505178339176436673}
-  Translation: [134.838257, 36.8592339, -128.371216]
+  Translation: [134.838257, 36.2583275, -128.371216]
   Rotation: [-3.14159131, -1.51585293, 3.14159226]
-  Scale: [0.999929667, 1, 0.999933362]
+  Scale: [0.999909937, 1, 0.999915004]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 13563546279246814984}
@@ -22778,8 +22778,8 @@ ID: 15831316042514502337
 BoxCollider:
   m_GameObject: {fileID: 505178339176436673}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 724520002499799562
 Rigidbody:
@@ -22792,7 +22792,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 7767464123855890549
@@ -27616,7 +27616,7 @@ GameObject:
 ID: 828789885034574459
 Transform:
   m_GameObject: {fileID: 7216264740618189409}
-  Translation: [73.9027405, 37.879982, -120.017731]
+  Translation: [73.9027405, 37.3320084, -120.017731]
   Rotation: [0, -1.55933464, 0]
   Scale: [0.999947369, 1, 0.999949098]
   Father: {fileID: 10907430610981256203}
@@ -27635,8 +27635,8 @@ ID: 11835669485764814124
 BoxCollider:
   m_GameObject: {fileID: 7216264740618189409}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 8080883063366367383
 Rigidbody:
@@ -27649,7 +27649,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 16306568394256530663
@@ -30904,8 +30904,8 @@ GameObject:
 ID: 613722473488041713
 Transform:
   m_GameObject: {fileID: 15686065745655662925}
-  Translation: [84.3508911, 35.9095459, -152.31665]
-  Rotation: [0, -0.0464826152, 0]
+  Translation: [84.3508911, 35.6264496, -152.31665]
+  Rotation: [0, -0.0464822091, 0]
   Scale: [0.999930859, 1, 0.999934494]
   Father: {fileID: 10907430610981256203}
   m_Children:
@@ -30923,8 +30923,8 @@ ID: 7635134741802698513
 BoxCollider:
   m_GameObject: {fileID: 15686065745655662925}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 14464054543174636506
 Rigidbody:
@@ -30937,7 +30937,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 5294067433061973599
@@ -31225,9 +31225,9 @@ GameObject:
 ID: 13743423817598744102
 Transform:
   m_GameObject: {fileID: 9623545436869127279}
-  Translation: [35.2081108, 37.4366608, -119.333839]
+  Translation: [35.2081108, 37.3312378, -119.333839]
   Rotation: [0, -1.57045102, 0]
-  Scale: [0.999883652, 1, 0.999885738]
+  Scale: [0.999897659, 1, 0.999899745]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 10180225711759476473}
@@ -31244,8 +31244,8 @@ ID: 13798464554187689612
 BoxCollider:
   m_GameObject: {fileID: 9623545436869127279}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 17779615656724848730
 Rigidbody:
@@ -31258,7 +31258,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 1452556685750684861
@@ -33038,8 +33038,8 @@ ID: 16108243399380526292
 BoxCollider:
   m_GameObject: {fileID: 13608063128582373505}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 2790735772102063034
 Rigidbody:
@@ -33088,8 +33088,8 @@ ID: 7879984351043138175
 BoxCollider:
   m_GameObject: {fileID: 8737543050631908055}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 18025557957597526913
 Rigidbody:
@@ -33138,8 +33138,8 @@ ID: 11463043979405249954
 BoxCollider:
   m_GameObject: {fileID: 8752970089702699583}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 5744983805869878319
 Rigidbody:
@@ -33188,8 +33188,8 @@ ID: 155865891832357681
 BoxCollider:
   m_GameObject: {fileID: 2036189163671800282}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 15086471321673337318
 Rigidbody:
@@ -33238,8 +33238,8 @@ ID: 10023756055510667413
 BoxCollider:
   m_GameObject: {fileID: 1859320014956264795}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 4879800796180256890
 Rigidbody:
@@ -33288,8 +33288,8 @@ ID: 733454350368266933
 BoxCollider:
   m_GameObject: {fileID: 12702401490049601225}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 9561133318000287806
 Rigidbody:
@@ -33338,8 +33338,8 @@ ID: 3182145282608965818
 BoxCollider:
   m_GameObject: {fileID: 9873304508655296805}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 3321524479986829851
 Rigidbody:
@@ -33388,8 +33388,8 @@ ID: 4451546358558383814
 BoxCollider:
   m_GameObject: {fileID: 11728886119229421634}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 17536254862483903116
 Rigidbody:
@@ -33438,8 +33438,8 @@ ID: 3135112983731379591
 BoxCollider:
   m_GameObject: {fileID: 11431698503551896276}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 10372480190839420861
 Rigidbody:
@@ -34755,9 +34755,9 @@ GameObject:
 ID: 6421903116762958561
 Transform:
   m_GameObject: {fileID: 1540245306666661771}
-  Translation: [59.0007095, 38.1273651, -119.17556]
+  Translation: [59.0007095, 37.335556, -119.17556]
   Rotation: [-3.14159226, 0.0201624651, 3.14159226]
-  Scale: [0.999898911, 1, 0.999908686]
+  Scale: [0.999891639, 1, 0.999901414]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 898546543010589386}
@@ -34774,8 +34774,8 @@ ID: 5926068345633501664
 BoxCollider:
   m_GameObject: {fileID: 1540245306666661771}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 11452530731957032615
 Rigidbody:
@@ -34788,7 +34788,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 14877063584242722934
@@ -36410,7 +36410,7 @@ GameObject:
 ID: 16642054053310607086
 Transform:
   m_GameObject: {fileID: 3478415627049949006}
-  Translation: [38.8344612, 37.4989395, -83.6597977]
+  Translation: [38.8344612, 37.3334007, -83.6597977]
   Rotation: [0, 0, 0]
   Scale: [0.99987644, 1, 0.999885917]
   Father: {fileID: 10907430610981256203}
@@ -36429,8 +36429,8 @@ ID: 3213093077506626097
 BoxCollider:
   m_GameObject: {fileID: 3478415627049949006}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 2993265565255054734
 Rigidbody:
@@ -36443,7 +36443,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 4441734034985968169
@@ -37926,9 +37926,9 @@ GameObject:
 ID: 379443438441573678
 Transform:
   m_GameObject: {fileID: 1746742841599475727}
-  Translation: [37.9169998, 38.1273651, -118.116707]
+  Translation: [37.9169998, 37.3323326, -118.116707]
   Rotation: [0, -1.57045102, 0]
-  Scale: [0.999852121, 1, 0.999861658]
+  Scale: [0.999872446, 1, 0.999881983]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 15771493367344086800}
@@ -37945,8 +37945,8 @@ ID: 4610930333577665407
 BoxCollider:
   m_GameObject: {fileID: 1746742841599475727}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 13043359006268076409
 Rigidbody:
@@ -37959,7 +37959,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 3908749481069333350
@@ -39792,9 +39792,9 @@ GameObject:
 ID: 8975128693936343179
 Transform:
   m_GameObject: {fileID: 4992037817335595852}
-  Translation: [37.916626, 38.1273651, -119.605927]
+  Translation: [37.916626, 37.342186, -119.605927]
   Rotation: [0, -1.57045102, 0]
-  Scale: [0.999852121, 1, 0.999861658]
+  Scale: [0.999869585, 1, 0.999879122]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 2281979527073026994}
@@ -39811,8 +39811,8 @@ ID: 5493123935010336237
 BoxCollider:
   m_GameObject: {fileID: 4992037817335595852}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 8651941951645449012
 Rigidbody:
@@ -39825,7 +39825,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 6821404817029279294
@@ -40043,9 +40043,9 @@ GameObject:
 ID: 6189470650760978831
 Transform:
   m_GameObject: {fileID: 6553874688755371952}
-  Translation: [37.9169998, 38.1273651, -118.771698]
+  Translation: [37.9169998, 37.3363838, -118.771698]
   Rotation: [0, -1.57045102, 0]
-  Scale: [0.999852121, 1, 0.999861658]
+  Scale: [0.999868155, 1, 0.999877691]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 17410272475223950305}
@@ -40062,8 +40062,8 @@ ID: 11658462126424546353
 BoxCollider:
   m_GameObject: {fileID: 6553874688755371952}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 8105178717547693704
 Rigidbody:
@@ -40076,7 +40076,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 11046306106425119075
@@ -40294,9 +40294,9 @@ GameObject:
 ID: 2918168867778438379
 Transform:
   m_GameObject: {fileID: 1455824266175485744}
-  Translation: [73.6486435, 38.1273651, -105.633774]
+  Translation: [73.6486435, 37.3376198, -105.633774]
   Rotation: [0, -1.57045102, 0]
-  Scale: [0.999852121, 1, 0.999861658]
+  Scale: [0.999891758, 1, 0.999901295]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 13679024543590507492}
@@ -40313,8 +40313,8 @@ ID: 14382379940605000788
 BoxCollider:
   m_GameObject: {fileID: 1455824266175485744}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 219986740976504057
 Rigidbody:
@@ -40327,7 +40327,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 14981273875428427886
@@ -40545,9 +40545,9 @@ GameObject:
 ID: 8914410776003979112
 Transform:
   m_GameObject: {fileID: 697406533908281000}
-  Translation: [72.9489059, 38.1273651, -78.2336807]
+  Translation: [72.9489059, 37.331768, -78.2336807]
   Rotation: [0, -1.57045102, 0]
-  Scale: [0.999852121, 1, 0.999861658]
+  Scale: [0.999867797, 1, 0.999877334]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 10571348349847112841}
@@ -40564,8 +40564,8 @@ ID: 7834537857966857166
 BoxCollider:
   m_GameObject: {fileID: 697406533908281000}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 6787115892282347314
 Rigidbody:
@@ -40575,10 +40575,10 @@ Rigidbody:
   AngularVelocity: [-5.75522165e-07, -1.80022663e-13, 5.86636872e-07]
   Force: [0, 0, 0]
   Friction: 0.100000001
-  Mass: 10
+  Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 16796823143070481065
@@ -40796,7 +40796,7 @@ GameObject:
 ID: 6916606765761625050
 Transform:
   m_GameObject: {fileID: 7071747397128983016}
-  Translation: [59.6856956, 37.6774979, -106.008789]
+  Translation: [59.6856956, 37.3381042, -106.008789]
   Rotation: [-3.14159226, -0.0732034519, -3.14159226]
   Scale: [0.999839783, 1, 0.99985534]
   Father: {fileID: 10907430610981256203}
@@ -40815,8 +40815,8 @@ ID: 3897062687744862686
 BoxCollider:
   m_GameObject: {fileID: 7071747397128983016}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 13896792570558054523
 Rigidbody:
@@ -40829,7 +40829,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 472033380412633086
@@ -41047,9 +41047,9 @@ GameObject:
 ID: 2981755260636301186
 Transform:
   m_GameObject: {fileID: 7415176299370246757}
-  Translation: [39.1005363, 37.6774979, -72.5935745]
-  Rotation: [-3.14159226, -0.0732036009, -3.14159226]
-  Scale: [0.999843478, 1, 0.999852538]
+  Translation: [39.1005363, 37.3372154, -72.5935745]
+  Rotation: [-3.14159226, -0.0732034519, -3.14159226]
+  Scale: [0.999839783, 1, 0.99985534]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 13301186590583378764}
@@ -41066,8 +41066,8 @@ ID: 5438465200698950065
 BoxCollider:
   m_GameObject: {fileID: 7415176299370246757}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 18400224391055416542
 Rigidbody:
@@ -41080,7 +41080,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 7815444738707276848
@@ -41298,9 +41298,9 @@ GameObject:
 ID: 16072190576875932439
 Transform:
   m_GameObject: {fileID: 5108313163622967840}
-  Translation: [106.037453, 36.0164146, -127.972458]
-  Rotation: [0, 0.0573163554, 0]
-  Scale: [0.999822319, 1, 0.999836504]
+  Translation: [106.037453, 35.6263275, -127.972458]
+  Rotation: [0, 0.0573162623, 0]
+  Scale: [0.999823034, 1, 0.999836683]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 16213852318901244393}
@@ -41317,8 +41317,8 @@ ID: 7647377107725529175
 BoxCollider:
   m_GameObject: {fileID: 5108313163622967840}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 12343167602792576392
 Rigidbody:
@@ -41331,7 +41331,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 3606234874055109010
@@ -41549,9 +41549,9 @@ GameObject:
 ID: 9496620800201367755
 Transform:
   m_GameObject: {fileID: 17060877197459181967}
-  Translation: [127.891899, 36.0164146, -152.533081]
-  Rotation: [-3.14159226, 1.47177684, -3.14159226]
-  Scale: [0.999832809, 1, 0.999847591]
+  Translation: [127.891899, 35.6319351, -152.533081]
+  Rotation: [-3.14159226, 1.47177863, -3.14159226]
+  Scale: [0.999832749, 1, 0.999847531]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 10869195669279574947}
@@ -41568,8 +41568,8 @@ ID: 6626449277077635196
 BoxCollider:
   m_GameObject: {fileID: 17060877197459181967}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 10154983462544043826
 Rigidbody:
@@ -41582,7 +41582,7 @@ Rigidbody:
   Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 14419338288187248872
@@ -41810,8 +41810,8 @@ ID: 5248797211706420775
 BoxCollider:
   m_GameObject: {fileID: 5680074196717204813}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 16707788232169840821
 Rigidbody:
@@ -41860,8 +41860,8 @@ ID: 9181988359284015877
 BoxCollider:
   m_GameObject: {fileID: 17339074096294122883}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 9118148062062441227
 Rigidbody:
@@ -41910,8 +41910,8 @@ ID: 5313836988828989189
 BoxCollider:
   m_GameObject: {fileID: 12635576556742298042}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [0.600000024, 0.600000024, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 10837686222644329881
 Rigidbody:
@@ -41960,8 +41960,8 @@ ID: 5118315732385558811
 BoxCollider:
   m_GameObject: {fileID: 5976458865903935298}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 16651617620404722088
 Rigidbody:
@@ -42010,8 +42010,8 @@ ID: 14343886124613692998
 BoxCollider:
   m_GameObject: {fileID: 10182307845023477381}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 16497937035519144418
 Rigidbody:
@@ -42060,8 +42060,8 @@ ID: 9444270044413211392
 BoxCollider:
   m_GameObject: {fileID: 1034696538995432217}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 5708332134857005828
 Rigidbody:
@@ -42100,9 +42100,9 @@ GameObject:
 ID: 14498854325939667124
 Transform:
   m_GameObject: {fileID: 15613771325304660657}
-  Translation: [59.536274, 37.9421921, -76.2896805]
+  Translation: [59.536274, 37.3391037, -76.2896805]
   Rotation: [-3.14159226, 1.47177565, -3.14159226]
-  Scale: [0.99982059, 1, 0.999835134]
+  Scale: [0.999820471, 1, 0.999835014]
   Father: {fileID: 10907430610981256203}
   m_Children:
     - {fileID: 10169941270709570099}
@@ -42119,8 +42119,8 @@ ID: 7264712363528808581
 BoxCollider:
   m_GameObject: {fileID: 15613771325304660657}
   m_IsEnabled: true
-  Dimensions: [0.800000012, 1.39999998, 0.800000012]
-  Offset: [-0.100000001, 0, 0]
+  Dimensions: [0.600000024, 1.60000002, 0.600000024]
+  Offset: [0, 0.0500000007, 0]
 ---
 ID: 96571049086786637
 Rigidbody:
@@ -42130,10 +42130,10 @@ Rigidbody:
   AngularVelocity: [-5.75522165e-07, -1.80022663e-13, 5.86636872e-07]
   Force: [0, 0, 0]
   Friction: 0.100000001
-  Mass: 10
+  Mass: 1
   IsStatic: false
   IsKinematic: false
-  UseGravity: false
+  UseGravity: true
   Is_trigger: false
 ---
 ID: 3960515523421010685
@@ -42361,8 +42361,8 @@ ID: 11040349630335609006
 BoxCollider:
   m_GameObject: {fileID: 13265326449278859074}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 14983279567950642572
 Rigidbody:
@@ -42411,8 +42411,8 @@ ID: 9595516889442550060
 BoxCollider:
   m_GameObject: {fileID: 406715076858283333}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
-  Offset: [0, 0, 0]
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0.5]
 ---
 ID: 3305544753828485291
 Rigidbody:
@@ -42461,7 +42461,7 @@ ID: 10711661759787352282
 BoxCollider:
   m_GameObject: {fileID: 119253268068733130}
   m_IsEnabled: true
-  Dimensions: [0.600000024, 0.600000024, 0.400000006]
+  Dimensions: [0.600000024, 0.600000024, 1]
   Offset: [0, 0, 0]
 ---
 ID: 10084072951084136299
@@ -45695,7 +45695,7 @@ GameObject:
 ID: 1375504684616027583
 Transform:
   m_GameObject: {fileID: 14258831834809738195}
-  Translation: [65.7667999, 37.9016914, -74.7919159]
+  Translation: [65.5709381, 38.0403137, -74.5091476]
   Rotation: [-3.14159226, 1.57045102, 0]
   Scale: [0.474921227, 6.11882782, 0.558889806]
   Father: {fileID: 17551185539749227568}
@@ -96770,9 +96770,9 @@ GameObject:
 ID: 14333855268744945600
 Transform:
   m_GameObject: {fileID: 8252669615322955072}
-  Translation: [0, 88.578125, 8.41930962]
+  Translation: [-0.460449219, 88.5778809, 8.37183189]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.999999702, 1, 0.999999702]
   Father: {fileID: 6521774849105860025}
   m_Children:
     []

@@ -59,8 +59,8 @@ void NavMeshBuilder::Update(float dt)
 			// Enemy movement
 			enemyDir = glm::normalize(enemyDir);
 			enemyDir.y = 0;
-			float angle = static_cast<float>(atan2(enemyDir.x, enemyDir.z));
-			//agentTransform.SetGlobalRotation(Vector3(0.f, angle, 0.f));
+			/*float angle = static_cast<float>(atan2(enemyDir.x, enemyDir.z));
+			agentTransform.SetGlobalRotation(Vector3(0.f, angle, 0.f));*/
 			MySceneManager.GetCurrentScene().Get<Rigidbody>(i).linearVelocity = enemyDir * 2.f;
 		}
 	}
