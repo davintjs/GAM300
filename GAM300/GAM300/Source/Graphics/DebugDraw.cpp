@@ -126,7 +126,9 @@ void DebugDraw::Draw()
 			{
 				Transform& tCam = currentScene.Get<Transform>(camera);
 
-				glm::vec3 direction = t.GetParent()->GetGlobalTranslation() - tCam.GetGlobalTranslation();
+				glm::vec3 pos1 = t.GetParent()->GetGlobalTranslation();
+				pos1.y += 0.75f;
+				glm::vec3 direction = pos1 - tCam.GetGlobalTranslation();
 				glm::vec3 pos = tCam.GetGlobalTranslation() + 0.95f * direction;
 				float distance = glm::distance(pos, tCam.GetGlobalTranslation());
 				if (distance > 20.f)

@@ -42,6 +42,10 @@ void Animation_Manager::Update(float dt)
     {
         glm::vec3 minBound = { -1.f, -1.f, -1.f };
         glm::vec3 maxBound = { 1.f, 1.f, 1.f };
+
+        Transform& cameraTran{ currentScene.Get<Transform>(CurrCam) };
+        const glm::vec3 p = cameraTran.GetGlobalTranslation();
+
         for (Animator& animator : currentScene.GetArray<Animator>())
         {
     #ifndef _BUILD
@@ -78,12 +82,14 @@ void Animation_Manager::Update(float dt)
 
             if (distance > 20.f && withinFrustum) // Only raycast for those within frustum
             {
-                Transform& cameraTran{ currentScene.Get<Transform>(CurrCam) };
-                glm::vec3 p = cameraTran.GetGlobalTranslation();
                 Transform* parent = transForm.GetParent();
                 glm::vec3 d;
                 if (parent)
-                    d = parent->GetGlobalTranslation() - p;
+                {
+                    glm::vec3 pos = parent->GetGlobalTranslation();
+                    pos.y += 0.75f;
+                    d = pos - p;
+                }
                 else
                     d = transForm.GetGlobalTranslation() - p;
 
