@@ -158,7 +158,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 0
   Loop: false
-  Volume: 0.699999988
+  Volume: 0.5
   min hearing Distance: 1
   max hearing Distance: 1000
   SFX min Pitch: 0
