@@ -88,6 +88,7 @@ public class ThirdPersonController : Script
 
     //new particles
     public GameObject playerRespawningVFX;
+    public GameObject playerHealthVFX;
 
     //overdrive QQ
     public Transform overDriveUI;
@@ -217,6 +218,7 @@ public class ThirdPersonController : Script
     private bool noInterpolate = true;
 
     public ParticleComponent dashVFX;
+    public bool healthRegenEnabled = false;
 
     bool _wasMoving = false;
     bool wasMoving
@@ -291,6 +293,12 @@ public class ThirdPersonController : Script
         //Material mat = doorTestMesh.material;
         //mat.color = vec4.Ones;
         //reference check
+        if (playerHealthVFX == null)
+        {
+            Console.WriteLine("Missing playerHealthVFX reference in ThirdPersonController script");
+        }
+
+
         if (dashVFX == null)
         {
             Console.WriteLine("Missing dashVFX reference in ThirdPersonController script");
@@ -448,10 +456,7 @@ public class ThirdPersonController : Script
             CC.velocity.y = JumpSpeed;
         }
 
-        if (_isDashAttacking == false)
-        {
-            dashVFX.gameObject.SetActive(false);
-        }
+        vfxChecker();
 
         //Testing taking damage
         if (Input.GetKeyDown(KeyCode.T))
@@ -719,6 +724,7 @@ public class ThirdPersonController : Script
                 UpdateOverdriveBar();
 
                 //remove regen, stamina reset and double dmg here
+                healthRegenEnabled = false;
                 currentlyOverdriven = false;
             }
         }
@@ -811,6 +817,7 @@ public class ThirdPersonController : Script
             //OVERDRIVE
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && currentOverdriveCharge == maxOverdriveCharge && isOverdriveEnabled == true && currentlyOverdriven == false)
             {
+                healthRegenEnabled = true;
                 overDriveUI.gameObject.SetActive(false);
                 playerSounds.PlayerOverdrive.Play();
                 playerSounds.OverdriveVFXSound.Play();
@@ -980,6 +987,26 @@ public class ThirdPersonController : Script
     {
         overDriveBar.SetActive(true);
         isOverdriveEnabled = true;
+    }
+
+    public void vfxChecker()
+    {
+        //checks whether its dashing vfx should be enabled
+        if (_isDashAttacking == false)
+        {
+            dashVFX.gameObject.SetActive(false);
+        }
+
+        //checks whether healthregen sfx should be enabled
+        if (healthRegenEnabled == true)
+        {
+            playerHealthVFX.SetActive(true);
+        }
+        else
+        {
+            playerHealthVFX.SetActive(false);
+        }
+
     }
 
     IEnumerator delayRespawnVFX()

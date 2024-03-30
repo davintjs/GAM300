@@ -412,6 +412,7 @@ Script:
   dodgeSpeed: 11.5
   dodgeStamina: 10
   dodgeTimer: 0.5
+  healthRegenEnabled: false
   invulnerableTimer: 0.699999988
   isAtCheckpoint: false
   isDead: false
@@ -456,6 +457,7 @@ Script:
   overDriveUI: {fileID: 3940713627885508865}  # Component
   overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
+  playerHealthVFX: {fileID: 2454999104902735477}  # GameObject
   playerRespawningVFX: {fileID: 17324707596223635025}  # GameObject
   playerSounds: {fileID: 0}
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
@@ -44895,6 +44897,7 @@ Transform:
   m_Children:
     - {fileID: 383668116300315972}
     - {fileID: 8252669615322955072}
+    - {fileID: 2454999104902735477}
 ---
 ID: 383668116300315972
 GameObject:
@@ -97832,6 +97835,57 @@ ParticleComponent:
   Trail Color: [1, 1, 1]
   Trail Size: 5
   Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 2454999104902735477
+GameObject:
+  m_IsActive: true
+  m_Name: playHealthPack_VFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10124786951323790630}  # Transform
+    - component: {fileID: 10311412811271336519}  # ParticleComponent
+---
+ID: 10124786951323790630
+Transform:
+  m_GameObject: {fileID: 2454999104902735477}
+  Translation: [0, 44.4294434, 8.4456377]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6521774849105860025}
+  m_Children:
+    []
+---
+ID: 10311412811271336519
+ParticleComponent:
+  m_GameObject: {fileID: 2454999104902735477}
+  m_IsEnabled: true
+  Mesh: {guid: ee7d7228816fd99449f80dd47ff99465}
+  Particle Material: {guid: 2ecb71f675954da15370e879eb06b46e}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 0
+  Number Of Particles: 15
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1.5
+  Particle Emission Rate: 0
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0.200000003
+  Particle Scale Rate: 2
+  Particle Speed: 3
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 1
+  Particle Noise Frequency: 1
+  2D particle: false
+  Spawn From Shape: true
+  Shape's Size: [1, 1, 1]
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 0
+  Trail Thickness: 0
   Looping: true
   Fade towards Color: false
   Color to Fade to: [1, 1, 1]
