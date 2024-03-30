@@ -60,7 +60,7 @@ void ParticleManager::Update(float dt)
 
                 particleComponent.particles_[i].scale += dt * particleComponent.particleScaleRate_;
                 particleComponent.particles_[i].speed = particleComponent.speed_;
-                particleComponent.particles_[i].trails.pos.emplace_back(particleComponent.particles_[i].position);
+                //particleComponent.particles_[i].trails.pos.emplace_back(particleComponent.particles_[i].position);
                 //particleComponent.particles_[i].trails.count = 1;
             }
         }
