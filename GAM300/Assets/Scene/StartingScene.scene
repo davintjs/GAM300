@@ -25,7 +25,7 @@ Transform:
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 4592072074559840146}
 ---
 ID: 2199169755166096751
 Camera:
@@ -78,7 +78,6 @@ Transform:
     - {fileID: 16526287598854957340}
     - {fileID: 6711356329535506755}
     - {fileID: 15177962187234400664}
-    - {fileID: 15594258803371519194}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -122,10 +121,10 @@ GameObject:
 ID: 4120904777019993763
 Transform:
   m_GameObject: {fileID: 4592072074559840146}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Translation: [0, 0, -0.816037178]
+  Rotation: [0, -0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 0}
+  Father: {fileID: 7305319039410813174}
   m_Children:
     - {fileID: 16470510239641695939}
     - {fileID: 2408824139090975511}
@@ -759,7 +758,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
   min hearing Distance: 1
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -795,7 +794,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
   min hearing Distance: 1
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -831,7 +830,7 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
   min hearing Distance: 1
   max hearing Distance: 1000
   SFX min Pitch: 0
@@ -934,7 +933,7 @@ SpriteRenderer:
 ID: 15177962187234400664
 GameObject:
   m_IsActive: false
-  m_Name: subtitles
+  m_Name: Subtitles
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -944,9 +943,9 @@ GameObject:
 ID: 5296641902821484860
 Transform:
   m_GameObject: {fileID: 15177962187234400664}
-  Translation: [-0.629999995, -0.769999981, 0]
+  Translation: [0, -0.879999995, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.101000004, 0.101000004, 0.101000004]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -956,44 +955,14 @@ TextRenderer:
   m_GameObject: {fileID: 15177962187234400664}
   m_IsEnabled: true
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: hmm...good. Looks like it worked
+  Text: This is the subtitles
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 0.25
+  Font Size: 5
   Vertical Spacing: 1.5
-  Textbox Width: 92
-  Textbox Height: 0
+  Textbox Width: 20
+  Textbox Height: 0.281666696
   Center Alignment: true
-  Wrap Text: false
+  Wrap Text: true
   WorldSpace: false
   Color: [1, 1, 1, 1]
----
-ID: 15594258803371519194
-GameObject:
-  m_IsActive: true
-  m_Name: Background
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 11074281893167764285}  # Transform
-    - component: {fileID: 104588895419677232}  # SpriteRenderer
----
-ID: 11074281893167764285
-Transform:
-  m_GameObject: {fileID: 15594258803371519194}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
-  Scale: [7, 4.5999999, 1]
-  Father: {fileID: 17065559468612678914}
-  m_Children:
-    []
----
-ID: 104588895419677232
-SpriteRenderer:
-  m_GameObject: {fileID: 15594258803371519194}
-  m_IsEnabled: true
-  World Space: false
-  Colour Picker Mode: false
-  Include Alpha (ColourPicking): false
-  Alpha Scalar: 1
-  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}

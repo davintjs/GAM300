@@ -413,9 +413,9 @@ namespace BeanFactory
     [StructLayout(LayoutKind.Sequential)]
     public class NavMeshAgent
     {
-        public void FindPath(vec3 pDest)
+        public bool FindPath(vec3 pDest)
         {
-            InternalCalls.FindPath(this, pDest);
+            return InternalCalls.FindPath(this, pDest);
         }
         public void ResetPath()
         {

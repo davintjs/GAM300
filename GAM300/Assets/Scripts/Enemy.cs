@@ -212,7 +212,7 @@ public class Enemy : Script
                     //Console.WriteLine("DistanceIdle: " + dist);
                     //attackTrigger.SetActive(false);
                     //player detection
-                    if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
+                    if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance && mNavMeshAgent.FindPath(player.position))
                     {
                         if (animationManager.GetState("Idle").state)
                         {
@@ -287,7 +287,7 @@ public class Enemy : Script
                         if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
                         {
                             LookAt(direction);
-                            mNavMeshAgent.FindPath(player.localPosition);
+                            mNavMeshAgent.FindPath(player.position);
                         }
                         else // Default
                         {
@@ -463,18 +463,16 @@ public class Enemy : Script
             vec3 hpScale = hpBar.localScale;
             hpScale.x = currentHealth / maxHealth;
             hpBar.localScale = hpScale;
+            //Console.WriteLine("HHHH: " + hpBar.localScale.x + " " + hpBar.localScale.y + " " + hpBar.localScale.z);
             CombatManager.instance.SpawnHitEffect(transform);
         }
 
         //set particle transform to enemy position
         if (currentHealth <= 0)
         {
+            CombatManager.instance.SpawnHitEffect2(transform);
             currentHealth = 0;
-            vec3 hpScale = hpBar.localScale;
-            hpScale.x = currentHealth / maxHealth;
-            hpScale.y = currentHealth / maxHealth;
-            hpScale.z = currentHealth / maxHealth;
-            hpBar.localScale = hpScale;
+            hpBar.gameObject.SetActive(false);
             isDead = true;
             //Console.WriteLine("EnemyDead");
             SetState("Death", true);
@@ -533,6 +531,7 @@ public class Enemy : Script
                         {
                             ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
                             playerSounds.PowerUp.Play();
+                            ThirdPersonController.instance.overDriveUI.gameObject.SetActive(true);
                         }
                     }
                     else
@@ -544,6 +543,7 @@ public class Enemy : Script
                         {
                             ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
                             playerSounds.PowerUp.Play();
+                            ThirdPersonController.instance.overDriveUI.gameObject.SetActive(true);
                         }
                     }
                 }

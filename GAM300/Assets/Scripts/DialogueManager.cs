@@ -56,10 +56,9 @@ public class DialogueManager : Script
             else
             {
                 startTimer = false;
-                if(curr_state == 6)
-                {
+
+                if (curr_state == 6)
                     SetState(7);
-                }
                 else if (curr_state == 8)
                     SetState(9);
                 else if (curr_state == 9)
@@ -97,11 +96,11 @@ public class DialogueManager : Script
 
     public void SetState(int i)
     {
-        dialogueText.SetActive (true);
+        dialogueText.SetActive(true);
         switch (i)
         {
             case 1:
-                text.text = "APEX: Lets start off with some basic mobility functions. Use your mobility modules to navigate foward.";
+                text.text = "APEX: Lets start off with some basic mobility functions. Use your mobility modules to     navigate foward.";
                 tutorial1.Play();
                 ObjectiveManager.Instance.SetState(1);
                 setTimer(5f);              
@@ -111,10 +110,10 @@ public class DialogueManager : Script
                 ObjectiveManager.Instance.completeObjective(1);
                 ObjectiveManager.Instance.SetState(2);
                 tutorial2.Play();
-                setTimer(5f);
+                setTimer(6f);
                 break;
             case 3:
-                text.text = "APEX: I must say, the engineers that crafted your initial designs did some excellent work";
+                text.text = "APEX: I must say, the engineers that crafted your initial designs did some excellent work ...for humans";
                 tutoriallore1.Play();
                 setTimer(6f);
                 break;
@@ -126,11 +125,11 @@ public class DialogueManager : Script
                 setTimer(4f);
                 break;
             case 5:
-                text.text = "APEX: One last test, it should be trivial for you.";
+                text.text = "APEX: One last test, it should be trivial for you. Destroy that robot.";
                 ObjectiveManager.Instance.completeObjective(3);
                 ObjectiveManager.Instance.SetState(4);
                 tutorial4.Play();
-                setTimer(3f);
+                setTimer(5.2f);
                 break;
             case 6:
                 text.text = "APEX: Excellent! I've outdone myself. Looks like you're ready to... what was it again?";

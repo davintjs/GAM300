@@ -34,8 +34,9 @@ Script:
   Script: {guid: 308f36d28486328374ac349b3503b942}
   apex1: {fileID: 15687312904048643492}  # Component
   apex2: {fileID: 339555793545048330}  # Component
-  apex3: {fileID: 3724742815310155344}  # Component
-  dialogueText: {fileID: 5676392047881511918}  # GameObject
+  apex3: {fileID: 8117809333135974231}  # Component
+  apex4: {fileID: 3724742815310155344}  # Component
+  dialogueText: {fileID: 10482025102164204176}  # GameObject
   level1: {fileID: 14369827522225455365}  # Component
   level2: {fileID: 12036444684904803991}  # Component
   level3: {fileID: 10572921210759547208}  # Component
@@ -77,6 +78,7 @@ Script:
   hitShakeDur: 0.100000001
   hitShakeMag: 0.100000001
   hitEffect: {fileID: 17611351097031071778}  # GameObject
+  hitEffect2: {fileID: 128562352063763926}  # GameObject
 ---
 ID: 11768379503594195228
 GameObject:
@@ -103,7 +105,7 @@ Script:
   m_GameObject: {fileID: 11768379503594195228}
   m_IsEnabled: true
   Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
-  currentLevel: 2
+  currentLevel: 0
   fadeTime: 1
   BGM_Source: {fileID: 13334384434134814286}  # Component
   pauseCanvas: {fileID: 624169214278105939}  # GameObject
@@ -325,7 +327,7 @@ GameObject:
 ID: 18246905878658813158
 Transform:
   m_GameObject: {fileID: 3977294589520766028}
-  Translation: [66.307869, 37.3068237, -39.339077]
+  Translation: [61.9644966, 36.3414536, -35.8695221]
   Rotation: [-3.14159203, 0, -3.14159203]
   Scale: [0.999999285, 1, 0.999999285]
   Father: {fileID: 0}
@@ -397,6 +399,7 @@ Script:
   currentOverdriveCharge: 15
   currentOverdriveCooldown: 0
   currentOverdriveHealthTimer: 0
+  currentOverdriveScaleTimer: 0
   currentOverdriveTimer: 0
   currentStamina: 0
   currentlyOverdriven: false
@@ -409,6 +412,7 @@ Script:
   dodgeSpeed: 11.5
   dodgeStamina: 10
   dodgeTimer: 0.5
+  healthRegenEnabled: false
   invulnerableTimer: 0.699999988
   isAtCheckpoint: false
   isDead: false
@@ -422,6 +426,7 @@ Script:
   maxStamina: 100
   overDriveCooldown: 10
   overDriveStamina: 40
+  overDriveUIScaleBool: true
   overdriveTimer: 2
   playOverdrivePowerUpOnce: true
   regenRate: 60
@@ -442,14 +447,18 @@ Script:
   animator: {fileID: 9953969093344891570}  # Component
   attackLight: {fileID: 16176702755422307341}  # GameObject
   audioSource: {fileID: 16716648517964172389}  # Component
+  dashVFX: {fileID: 738546090561784950}  # Component
   healthBar: {fileID: 4056269345217226233}  # Component
   healthBarFill: {fileID: 18315212324025487925}  # GameObject
   healthStaminaCanvas: {fileID: 4212138099454399691}  # GameObject
   overDriveBar: {fileID: 4720521423488205772}  # GameObject
   overDriveCollider: {fileID: 6669890113452856865}  # GameObject
   overDriveTransform: {fileID: 3925618525247661714}  # Component
+  overDriveUI: {fileID: 3940713627885508865}  # Component
   overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
+  playerHealthVFX: {fileID: 2454999104902735477}  # GameObject
+  playerRespawningVFX: {fileID: 17324707596223635025}  # GameObject
   playerSounds: {fileID: 0}
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
@@ -513,11 +522,12 @@ Transform:
     - {fileID: 5769265740441844970}
     - {fileID: 15996983871537068920}
     - {fileID: 3787274920911425495}
-    - {fileID: 5676392047881511918}
     - {fileID: 17065559468612678914}
     - {fileID: 7440149643479964697}
     - {fileID: 10041568034456654821}
     - {fileID: 14958344430007027125}
+    - {fileID: 10482025102164204176}
+    - {fileID: 3940713627885508865}
 ---
 ID: 13547543225942679706
 Canvas:
@@ -563,6 +573,8 @@ GameObject:
   m_Component:
     - component: {fileID: 17352915696606311330}  # Transform
     - component: {fileID: 17784311625182926207}  # MeshRenderer
+    - component: {fileID: 13649284826887523872}  # BoxCollider
+    - component: {fileID: 5460438735511715669}  # Rigidbody
 ---
 ID: 17352915696606311330
 Transform:
@@ -580,6 +592,27 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 13649284826887523872
+BoxCollider:
+  m_GameObject: {fileID: 15387861300162020341}
+  m_IsEnabled: true
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
+  Offset: [-3.87430191e-05, 3.99993896, 3.45000005]
+---
+ID: 5460438735511715669
+Rigidbody:
+  m_GameObject: {fileID: 15387861300162020341}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 12486642072026848141
 GameObject:
@@ -1049,7 +1082,6 @@ Transform:
     - {fileID: 17513080989440410080}
     - {fileID: 816073881030457996}
     - {fileID: 10415847607219727370}
-    - {fileID: 12686675622707682081}
     - {fileID: 6363189290898864385}
     - {fileID: 18405210002441658138}
     - {fileID: 9603438574311347953}
@@ -1223,12 +1255,14 @@ GameObject:
   m_Component:
     - component: {fileID: 17695840391874275026}  # Transform
     - component: {fileID: 13795217219211764339}  # MeshRenderer
+    - component: {fileID: 5609781037385018900}  # BoxCollider
+    - component: {fileID: 12138470655549055664}  # Rigidbody
 ---
 ID: 17695840391874275026
 Transform:
   m_GameObject: {fileID: 9605661079073390682}
   Translation: [59.0843925, 28.5840874, -32.1183319]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 2.7758441, 0.999999821]
   Father: {fileID: 15145177650574399419}
   m_Children:
@@ -1240,6 +1274,27 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: beea719ad0f13246354b7aef8464bb89}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 5609781037385018900
+BoxCollider:
+  m_GameObject: {fileID: 9605661079073390682}
+  m_IsEnabled: true
+  Dimensions: [9.9998455, 7.99987793, 1.89762938]
+  Offset: [-7.7009201e-05, 3.99993896, -1.44839287e-05]
+---
+ID: 12138470655549055664
+Rigidbody:
+  m_GameObject: {fileID: 9605661079073390682}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 10834837868345684089
 GameObject:
@@ -1549,12 +1604,14 @@ GameObject:
   m_Component:
     - component: {fileID: 9118806305371392694}  # Transform
     - component: {fileID: 9948157610220602468}  # MeshRenderer
+    - component: {fileID: 17161666748682142003}  # BoxCollider
+    - component: {fileID: 14077295597442255741}  # Rigidbody
 ---
 ID: 9118806305371392694
 Transform:
   m_GameObject: {fileID: 7461450554749478257}
   Translation: [61.6549683, 28.5839996, -39.1086807]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.859480798, 2.77583694, 0.999998212]
   Father: {fileID: 15145177650574399419}
   m_Children:
@@ -1567,6 +1624,27 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 7f32af8f82f5d9c88609256696e28e99}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 17161666748682142003
+BoxCollider:
+  m_GameObject: {fileID: 7461450554749478257}
+  m_IsEnabled: true
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
+  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
+---
+ID: 14077295597442255741
+Rigidbody:
+  m_GameObject: {fileID: 7461450554749478257}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 2448945957099902706
 GameObject:
@@ -1713,6 +1791,8 @@ GameObject:
   m_Component:
     - component: {fileID: 12320053255655417569}  # Transform
     - component: {fileID: 9971100182001508863}  # MeshRenderer
+    - component: {fileID: 10732574241627197433}  # BoxCollider
+    - component: {fileID: 11880835519959694082}  # Rigidbody
 ---
 ID: 12320053255655417569
 Transform:
@@ -1730,6 +1810,27 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: 67b25b0062e48958d46e2d96e371de12}
   Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
+---
+ID: 10732574241627197433
+BoxCollider:
+  m_GameObject: {fileID: 4423372801228798985}
+  m_IsEnabled: true
+  Dimensions: [4.99992275, 7.99987793, 1.89762938]
+  Offset: [-3.87430191e-05, 3.99993896, -1.44839287e-05]
+---
+ID: 11880835519959694082
+Rigidbody:
+  m_GameObject: {fileID: 4423372801228798985}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
 ---
 ID: 1610947561634439664
 GameObject:
@@ -4491,7 +4592,8 @@ GameObject:
   m_Layer: 0
   m_Component:
     - component: {fileID: 7092983223759180045}  # Transform
-    - component: {fileID: 10430583078930695932}  # MeshRenderer
+    - component: {fileID: 7918601901671877590}  # MeshRenderer
+    - component: {fileID: 866002150055540262}  # ParticleComponent
     - component: {fileID: 5453074270413038117}  # BoxCollider
     - component: {fileID: 13266309705110330970}  # Rigidbody
     - component: {fileID: 6447695629041066278}  # Script
@@ -4499,25 +4601,56 @@ GameObject:
 ID: 7092983223759180045
 Transform:
   m_GameObject: {fileID: 16905222177648308199}
-  Translation: [-1.49011612e-08, 0, -1.45130455]
+  Translation: [0.878411055, 0, -2.06304455]
   Rotation: [0, 0, 0]
   Scale: [0.200000003, 0.200000003, 0.200000003]
   Father: {fileID: 0}
   m_Children:
     []
 ---
-ID: 10430583078930695932
+ID: 7918601901671877590
 MeshRenderer:
   m_GameObject: {fileID: 16905222177648308199}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
   Material_ID: {guid: d7ce797d6abd7b2eff4dce1ec9ef6508}
 ---
+ID: 866002150055540262
+ParticleComponent:
+  m_GameObject: {fileID: 16905222177648308199}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 0
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 1
+  Particle Noise Frequency: 1
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: false
+  Trail Color: [1, 0.548122764, 0]
+  Trail Size: 5
+  Trail Thickness: 0.25
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
 ID: 5453074270413038117
 BoxCollider:
   m_GameObject: {fileID: 16905222177648308199}
   m_IsEnabled: true
-  Dimensions: [0.999999881, 1, 0.999999881]
+  Dimensions: [0.699999988, 0.699999988, 0.699999988]
   Offset: [1.49011612e-08, 1.49011612e-08, 0]
 ---
 ID: 13266309705110330970
@@ -7558,7 +7691,7 @@ LightSource:
   EnableShadow: true
   lightType: 1
   lightpos: [0, 0, 0]
-  Intensity: 5
+  Intensity: 1
   Direction: [0, 0, 0]
   Inner Cutoff: 50
   Outer Cutoff: 70
@@ -8034,7 +8167,7 @@ GameObject:
 ID: 1363589281020347742
 Transform:
   m_GameObject: {fileID: 10712419355432134318}
-  Translation: [59.7221451, 43.954361, -76.860054]
+  Translation: [60.2646141, 44.020134, -76.860054]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 10907430610981256203}
@@ -8084,7 +8217,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 4.5
+  shootDistance: 10
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -9466,56 +9599,6 @@ MeshRenderer:
   m_IsEnabled: true
   Mesh: {guid: b3d12bd2fbbbf3ab403c7a9e9c2bcb04}
   Material_ID: {guid: 5e4e693b055be63b3cefcc1a7fac7d85}
----
-ID: 12686675622707682081
-GameObject:
-  m_IsActive: true
-  m_Name: Glass - Copy - Copy
-  m_TagString: ""
-  m_Layer: 1
-  m_Component:
-    - component: {fileID: 9488525474531031979}  # Transform
-    - component: {fileID: 15348155515598930436}  # MeshRenderer
-    - component: {fileID: 12970360629714286994}  # BoxCollider
-    - component: {fileID: 18179674804435200677}  # Rigidbody
----
-ID: 9488525474531031979
-Transform:
-  m_GameObject: {fileID: 12686675622707682081}
-  Translation: [63.5418549, 40.5590515, -36.4361954]
-  Rotation: [-3.14159226, 1.57045102, 0]
-  Scale: [7.22948408, 8.06359673, 1.13019955]
-  Father: {fileID: 8701853331577378169}
-  m_Children:
-    []
----
-ID: 15348155515598930436
-MeshRenderer:
-  m_GameObject: {fileID: 12686675622707682081}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 34178b72ff77518db94c61131fe47e44}
----
-ID: 12970360629714286994
-BoxCollider:
-  m_GameObject: {fileID: 12686675622707682081}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 18179674804435200677
-Rigidbody:
-  m_GameObject: {fileID: 12686675622707682081}
-  m_IsEnabled: true
-  LinearVelocity: [0, 0, 0]
-  AngularVelocity: [0, 0, 0]
-  Force: [0, 0, 0]
-  Friction: 0.100000001
-  Mass: 1
-  IsStatic: true
-  IsKinematic: true
-  UseGravity: true
-  Is_trigger: false
 ---
 ID: 1163298989791228276
 GameObject:
@@ -27517,9 +27600,9 @@ GameObject:
 ID: 3694986087622353895
 Transform:
   m_GameObject: {fileID: 13025417182947408799}
-  Translation: [66.5716248, 36.3312607, -119.984283]
+  Translation: [66.5438766, 36.3312607, -112.766396]
   Rotation: [0, 0, 0]
-  Scale: [19.5, 0.5, 4.4000001]
+  Scale: [19.5, 0.5, 19.9728298]
   Father: {fileID: 0}
   m_Children:
     []
@@ -27534,41 +27617,6 @@ MeshRenderer:
 ID: 9995246613727977319
 BoxCollider:
   m_GameObject: {fileID: 13025417182947408799}
-  m_IsEnabled: true
-  Dimensions: [1, 1, 1]
-  Offset: [0, 0, 0]
----
-ID: 12182959782790575471
-GameObject:
-  m_IsActive: true
-  m_Name: BossLiftNavMesh - Copy
-  m_TagString: ""
-  m_Layer: 5
-  m_Component:
-    - component: {fileID: 11745791738163346042}  # Transform
-    - component: {fileID: 13329632250188881287}  # MeshRenderer
-    - component: {fileID: 5877163961152267511}  # BoxCollider
----
-ID: 11745791738163346042
-Transform:
-  m_GameObject: {fileID: 12182959782790575471}
-  Translation: [66.7457733, 36.3312607, -106.675453]
-  Rotation: [0, 0, 0]
-  Scale: [19.5, 0.5, 6.19999981]
-  Father: {fileID: 0}
-  m_Children:
-    []
----
-ID: 13329632250188881287
-MeshRenderer:
-  m_GameObject: {fileID: 12182959782790575471}
-  m_IsEnabled: true
-  Mesh: {guid: 00000000000000000000000000000001}
-  Material_ID: {guid: 4b75b1a9e7664e440e90cdca5f4ae3b2}
----
-ID: 5877163961152267511
-BoxCollider:
-  m_GameObject: {fileID: 12182959782790575471}
   m_IsEnabled: true
   Dimensions: [1, 1, 1]
   Offset: [0, 0, 0]
@@ -31199,7 +31247,7 @@ ID: 13743423817598744102
 Transform:
   m_GameObject: {fileID: 9623545436869127279}
   Translation: [35.2081108, 37.4366608, -119.333839]
-  Rotation: [0, -1.57045102, -3.14158821]
+  Rotation: [0, -1.57045102, 0]
   Scale: [0.999883652, 1, 0.999885738]
   Father: {fileID: 10907430610981256203}
   m_Children:
@@ -31486,7 +31534,7 @@ Script:
   RotationSpeed: 6
   back: false
   bulletSpeed: 15
-  chaseDistance: 18
+  chaseDistance: 13
   currentHealth: 3
   duration: 2
   floatingY: 0.200000003
@@ -31498,7 +31546,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 13
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -31765,7 +31813,7 @@ Script:
   RotationSpeed: 6
   back: false
   bulletSpeed: 15
-  chaseDistance: 18
+  chaseDistance: 13
   currentHealth: 3
   duration: 2
   floatingY: 0.200000003
@@ -31777,7 +31825,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 13
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -32044,7 +32092,7 @@ Script:
   RotationSpeed: 6
   back: false
   bulletSpeed: 10
-  chaseDistance: 18
+  chaseDistance: 13
   currentHealth: 3
   duration: 2
   floatingY: 0.200000003
@@ -32056,7 +32104,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 13
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -32335,7 +32383,7 @@ Script:
   navMeshtimer: 0
   newRequest: false
   playOnce: true
-  shootDistance: 16
+  shootDistance: 18
   state: 0
   timer: 0
   bullet: {fileID: 16905222177648308199}  # GameObject
@@ -34638,10 +34686,10 @@ ParticleComponent:
   Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: false
   Particle Direction: [0, 1, 0]
-  Angle of Direction: 30
-  Number Of Particles: 15
-  Min Particle Lifetime: 1
-  Max Particle Lifetime: 3
+  Angle of Direction: 90
+  Number Of Particles: 30
+  Min Particle Lifetime: 0
+  Max Particle Lifetime: 0.5
   Particle Emission Rate: 1
   Particle Min Scale: 0
   Particle Max Scale: 0
@@ -44848,6 +44896,8 @@ Transform:
   Father: {fileID: 3187203319805926689}
   m_Children:
     - {fileID: 383668116300315972}
+    - {fileID: 8252669615322955072}
+    - {fileID: 2454999104902735477}
 ---
 ID: 383668116300315972
 GameObject:
@@ -44883,7 +44933,7 @@ ID: 9169780922658253905
 Transform:
   m_GameObject: {fileID: 10589105948784954568}
   Translation: [-2.25518306e-08, 7.33337164, -0.310161352]
-  Rotation: [-0.042272713, 6.69513756e-05, -0.00213414687]
+  Rotation: [-0.042272713, 6.69513684e-05, -0.00213414687]
   Scale: [0.999999642, 0.99999994, 1.00000012]
   Father: {fileID: 383668116300315972}
   m_Children:
@@ -45018,7 +45068,7 @@ ID: 9809591277645126838
 Transform:
   m_GameObject: {fileID: 8886665999065384408}
   Translation: [2.68220901e-07, 9.38611603, -8.57561827e-06]
-  Rotation: [-0.222700804, -0.000858201063, 0.0139973257]
+  Rotation: [-0.222700804, -0.000858201005, 0.0139973266]
   Scale: [1.0000006, 1.00000036, 1.00000024]
   Father: {fileID: 11406192150390888869}
   m_Children:
@@ -45061,6 +45111,7 @@ Transform:
   Father: {fileID: 671105312912157445}
   m_Children:
     - {fileID: 15469753426419407164}
+    - {fileID: 11026905248631548947}
 ---
 ID: 15469753426419407164
 GameObject:
@@ -45094,7 +45145,7 @@ ID: 10888064048767530507
 Transform:
   m_GameObject: {fileID: 17724991590097540518}
   Translation: [4.86455974e-07, 1.03478706, 1.53132714e-06]
-  Rotation: [-0.227070794, -0.00144509703, -0.0126738008]
+  Rotation: [-0.227070794, -0.00144509692, -0.0126737999]
   Scale: [1, 1.00000024, 1.00000012]
   Father: {fileID: 15469753426419407164}
   m_Children:
@@ -45170,7 +45221,7 @@ ID: 14977086574586303114
 Transform:
   m_GameObject: {fileID: 11657059819254827832}
   Translation: [-6.40749931e-07, 9.38611698, 2.10553408e-05]
-  Rotation: [-0.223022759, 0.00227635819, -0.00717219803]
+  Rotation: [-0.223022759, 0.00227635819, -0.00717219757]
   Scale: [0.99999994, 0.999999344, 1]
   Father: {fileID: 16116952986532813985}
   m_Children:
@@ -45213,6 +45264,7 @@ Transform:
   Father: {fileID: 17441072719817854021}
   m_Children:
     - {fileID: 984123964470655071}
+    - {fileID: 10974317866893035270}
 ---
 ID: 984123964470655071
 GameObject:
@@ -45455,7 +45507,7 @@ ID: 8228418226091831146
 Transform:
   m_GameObject: {fileID: 17458590961539025008}
   Translation: [5.74218575e-07, 11.939352, 8.54837708e-07]
-  Rotation: [0.670438945, -0.0282720774, 2.98142382e-08]
+  Rotation: [0.670438945, -0.0282720774, 3.07459338e-08]
   Scale: [1.00000024, 0.999999821, 0.99999994]
   Father: {fileID: 11126160581785034402}
   m_Children:
@@ -46342,9 +46394,9 @@ GameObject:
 ID: 15010388161110372166
 Transform:
   m_GameObject: {fileID: 2352107565156232123}
-  Translation: [74.2020187, 38.4715233, -72.0642548]
-  Rotation: [3.14159203, 0.0274095405, 0]
-  Scale: [0.586450875, 4.88351917, 0.372451812]
+  Translation: [73.6201172, 38.4715233, -72.02565]
+  Rotation: [3.14159226, 0.0274091773, 0]
+  Scale: [0.586450875, 4.88311243, 0.557340562]
   Father: {fileID: 17551185539749227568}
   m_Children:
     - {fileID: 982864220428115132}
@@ -48987,7 +49039,7 @@ GameObject:
   m_IsActive: true
   m_Name: Cabinet - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 2540031132282157025}  # Transform
     - component: {fileID: 9135133170925432081}  # MeshRenderer
@@ -49037,7 +49089,7 @@ GameObject:
   m_IsActive: true
   m_Name: Cabinet - Copy - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 14432671299795778085}  # Transform
     - component: {fileID: 6101469571628521631}  # MeshRenderer
@@ -49537,7 +49589,7 @@ GameObject:
   m_IsActive: true
   m_Name: BrokenSecurityCamera - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 7733837254994291093}  # Transform
     - component: {fileID: 16605253096237536077}  # MeshRenderer
@@ -49637,7 +49689,7 @@ GameObject:
   m_IsActive: true
   m_Name: BrokenSecurityCamera - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 7492273338961406482}  # Transform
     - component: {fileID: 8284656264519248297}  # MeshRenderer
@@ -49947,7 +49999,7 @@ GameObject:
 ID: 16657388234190897955
 Transform:
   m_GameObject: {fileID: 4724155989949222933}
-  Translation: [70.6665192, 36.6394997, -113.295708]
+  Translation: [70.9578629, 36.6394997, -113.295708]
   Rotation: [-3.14159226, -0.771056175, -3.14159226]
   Scale: [0.999366105, 0.999821663, 0.999316335]
   Father: {fileID: 15202522457526674551}
@@ -49997,9 +50049,9 @@ GameObject:
 ID: 5039164071796894151
 Transform:
   m_GameObject: {fileID: 685428555167534952}
-  Translation: [69.7403412, 37.0202179, -113.295708]
-  Rotation: [2.97320104, 0.0647009015, -1.60469401]
-  Scale: [0.99913764, 0.999623358, 0.998900294]
+  Translation: [70.1452637, 37.0202179, -113.375015]
+  Rotation: [2.97320127, 0.0647010207, -1.60462129]
+  Scale: [0.999077499, 0.999566615, 0.998783469]
   Father: {fileID: 15202522457526674551}
   m_Children:
     []
@@ -50237,7 +50289,7 @@ GameObject:
   m_IsActive: true
   m_Name: BrokenSecurityCamera - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 6871528439060651830}  # Transform
     - component: {fileID: 7433966677296793450}  # MeshRenderer
@@ -50937,7 +50989,7 @@ GameObject:
   m_IsActive: true
   m_Name: Cabinet - Copy - Copy - Copy - Copy
   m_TagString: ""
-  m_Layer: 0
+  m_Layer: 6
   m_Component:
     - component: {fileID: 18009475449513302753}  # Transform
     - component: {fileID: 11369749722483197590}  # MeshRenderer
@@ -63502,7 +63554,7 @@ ID: 4265295552149611951
 Transform:
   m_GameObject: {fileID: 9173642400808956319}
   Translation: [0, 0, 0]
-  Rotation: [1.62920671e-07, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 5297853854918785373}
   m_Children:
@@ -63521,7 +63573,7 @@ ID: 4325924194822668009
 Transform:
   m_GameObject: {fileID: 9589361301767231035}
   Translation: [-0.00100122951, 88.3813248, 0.70748055]
-  Rotation: [1.73846854e-06, -8.69905944e-06, 0.000189501021]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 9173642400808956319}
   m_Children:
@@ -63542,7 +63594,7 @@ ID: 2693066278364573453
 Transform:
   m_GameObject: {fileID: 6873277327145256891}
   Translation: [2.04249773e-09, 9.45211029, -0.946702182]
-  Rotation: [-0.0998267233, 8.97334394e-06, -0.000189600381]
+  Rotation: [-0.0998267233, 0, 0]
   Scale: [1, 1.00000024, 1.00000036]
   Father: {fileID: 9589361301767231035}
   m_Children:
@@ -63561,7 +63613,7 @@ ID: 17644892974792834535
 Transform:
   m_GameObject: {fileID: 2937262225452335113}
   Translation: [-1.69677605e-11, 11.082634, 5.95258371e-07]
-  Rotation: [2.60770374e-08, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 0.99999994, 1]
   Father: {fileID: 6873277327145256891}
   m_Children:
@@ -63580,7 +63632,7 @@ ID: 18040900734898723145
 Transform:
   m_GameObject: {fileID: 18186928386424854996}
   Translation: [-1.17097443e-11, 12.6658592, -2.392064e-07]
-  Rotation: [1.86264515e-08, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1.00000012, 1]
   Father: {fileID: 2937262225452335113}
   m_Children:
@@ -63601,7 +63653,7 @@ ID: 2519534003758242974
 Transform:
   m_GameObject: {fileID: 11578976208202744024}
   Translation: [-2.32716957e-10, 14.2490911, -1.43129898e-06]
-  Rotation: [0.0998248905, -0, 0]
+  Rotation: [0.0998248905, 0, 0]
   Scale: [1, 0.999999642, 0.999999642]
   Father: {fileID: 18186928386424854996}
   m_Children:
@@ -63658,7 +63710,7 @@ ID: 5382771218587778547
 Transform:
   m_GameObject: {fileID: 7489720971115786331}
   Translation: [5.36714125, 12.1520815, -0.188388973]
-  Rotation: [-1.01498342, 1.5574286, -2.73625779]
+  Rotation: [-1.01498342, 1.5574286, -2.73625803]
   Scale: [1, 1.00000036, 0.999999404]
   Father: {fileID: 18186928386424854996}
   m_Children:
@@ -63677,7 +63729,7 @@ ID: 10715421670221492727
 Transform:
   m_GameObject: {fileID: 16019219102609612314}
   Translation: [-5.66244125e-07, 11.798461, -9.86456871e-06]
-  Rotation: [-0.151646703, 0.125845969, -0.00676134555]
+  Rotation: [-0.151646703, 0.125845969, 0]
   Scale: [0.999999583, 0.999999642, 1.00000012]
   Father: {fileID: 7489720971115786331}
   m_Children:
@@ -63696,7 +63748,7 @@ ID: 3972059035942867822
 Transform:
   m_GameObject: {fileID: 9096540091806257769}
   Translation: [4.02656042e-07, 25.1169109, 1.21756675e-05]
-  Rotation: [-5.22127664e-07, 0.00163796439, -3.71428627e-07]
+  Rotation: [0, 0, 0]
   Scale: [1.00000048, 0.99999994, 1.0000006]
   Father: {fileID: 16019219102609612314}
   m_Children:
@@ -64137,7 +64189,7 @@ ID: 3753881738166056047
 Transform:
   m_GameObject: {fileID: 5972297200917451067}
   Translation: [-5.06639481e-07, 11.7984657, 2.23219395e-05]
-  Rotation: [-0.150528744, -0.110024996, -0.00346025452]
+  Rotation: [-0.150528744, -0.110024996, 0]
   Scale: [0.999999881, 1.00000024, 0.999999702]
   Father: {fileID: 16154106715213401243}
   m_Children:
@@ -64156,7 +64208,7 @@ ID: 8124997982402120329
 Transform:
   m_GameObject: {fileID: 2204859183704943108}
   Translation: [5.9910235e-08, 25.1152344, 5.6377321e-06]
-  Rotation: [-2.93286848e-06, -0.00196347502, 6.0628895e-07]
+  Rotation: [0, 0, 0]
   Scale: [0.999999583, 1, 0.999999702]
   Father: {fileID: 5972297200917451067}
   m_Children:
@@ -64175,7 +64227,7 @@ ID: 8276704276532400892
 Transform:
   m_GameObject: {fileID: 8322697727339066887}
   Translation: [-3.53320502e-08, 23.2977161, -1.38428004e-06]
-  Rotation: [0.0356810316, 0.0207434762, 0.0919679776]
+  Rotation: [0.0356810316, 0.0207434762, 0.091967985]
   Scale: [0.999999881, 0.999999702, 0.999999821]
   Father: {fileID: 2204859183704943108}
   m_Children:
@@ -82981,43 +83033,6 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: 5ad2b5f4f3e4ed1a5f789c21c24b3e62}
 ---
-ID: 5676392047881511918
-GameObject:
-  m_IsActive: false
-  m_Name: subtitles
-  m_TagString: ""
-  m_Layer: 0
-  m_Component:
-    - component: {fileID: 13704200365559655184}  # Transform
-    - component: {fileID: 15588496912826152058}  # TextRenderer
----
-ID: 13704200365559655184
-Transform:
-  m_GameObject: {fileID: 5676392047881511918}
-  Translation: [-0.634227455, -0.831888437, 7]
-  Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
-  Father: {fileID: 4212138099454399691}
-  m_Children:
-    []
----
-ID: 15588496912826152058
-TextRenderer:
-  m_GameObject: {fileID: 5676392047881511918}
-  m_IsEnabled: true
-  Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: Default Text
-  X-axis Offset: 0
-  Y-axis Offset: 0
-  Font Size: 0.25
-  Vertical Spacing: 1.5
-  Textbox Width: 95
-  Textbox Height: 0
-  Center Alignment: true
-  Wrap Text: false
-  WorldSpace: false
-  Color: [1, 1, 1, 1]
----
 ID: 17633603467252348022
 GameObject:
   m_IsActive: true
@@ -83081,6 +83096,7 @@ Transform:
     - {fileID: 9824744411261246132}
     - {fileID: 5753009934991238724}
     - {fileID: 7359964402167818618}
+    - {fileID: 6140361324581815844}
 ---
 ID: 3476722836763241155
 GameObject:
@@ -84227,6 +84243,7 @@ Transform:
     - {fileID: 365085607940253986}
     - {fileID: 5245298092074131690}
     - {fileID: 6227812347651407358}
+    - {fileID: 14279723885386086925}
 ---
 ID: 8160679611370606636
 Script:
@@ -84257,6 +84274,7 @@ Script:
   Thump1: {fileID: 12152755750733174901}  # Component
   Thump2: {fileID: 10580402611710297282}  # Component
   UseItem: {fileID: 8508182677235274511}  # Component
+  playerRespawn: {fileID: 9410263290189236167}  # Component
 ---
 ID: 14259422015049707415
 GameObject:
@@ -84602,6 +84620,7 @@ Transform:
     - {fileID: 7575960678470787192}
     - {fileID: 7347557997703022592}
     - {fileID: 534373427350032960}
+    - {fileID: 5654249122384004282}
 ---
 ID: 7575960678470787192
 GameObject:
@@ -84678,7 +84697,7 @@ AudioSource:
 ID: 534373427350032960
 GameObject:
   m_IsActive: true
-  m_Name: Apex3
+  m_Name: Apex4
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -84708,7 +84727,7 @@ AudioSource:
   SFX max Pitch: 0
   Fade In Time (s): 1
   Fade Out Time (s): 1
-  Sound File: {guid: 41c565f37b1feb2402f7cf1133687892}
+  Sound File: {guid: fc8606df4af7183961021cc0212d7f37}
   Play: false
 ---
 ID: 9824744411261246132
@@ -84826,9 +84845,9 @@ GameObject:
 ID: 18378077357969225113
 Transform:
   m_GameObject: {fileID: 7359964402167818618}
-  Translation: [41.8901176, 39.103363, -119.031349]
+  Translation: [66.3465881, 37.7132416, -113.686401]
   Rotation: [0, 0, 0]
-  Scale: [1.27011466, 5.57132959, 5.66181421]
+  Scale: [22.7806606, 0.925927818, 12.0109921]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -93895,10 +93914,12 @@ Script:
   HTPMenuObj: {fileID: 0}
   HTPRenderer: {fileID: 0}
   MainMenuRenderer: {fileID: 0}
+  NoRenderer: {fileID: 0}
   OptionsMenuObj: {fileID: 0}
   OptionsRenderer: {fileID: 0}
   PauseMenuObj: {fileID: 0}
   ResumeRenderer: {fileID: 0}
+  fader: {fileID: 0}
 ---
 ID: 9386478579826465449
 GameObject:
@@ -96520,7 +96541,7 @@ GameObject:
 ID: 4005314250094043051
 Transform:
   m_GameObject: {fileID: 17595281446523183228}
-  Translation: [-13.8839588, 35.9337692, -117.081535]
+  Translation: [-13.4110737, 35.8548965, -117.246078]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
@@ -96542,10 +96563,10 @@ ParticleComponent:
   Particle Material: {guid: 00000000000000000000000000000000}
   Local Space: true
   Particle Direction: [0, 1, 0]
-  Angle of Direction: 30
-  Number Of Particles: 15
-  Min Particle Lifetime: 1
-  Max Particle Lifetime: 3
+  Angle of Direction: 90
+  Number Of Particles: 20
+  Min Particle Lifetime: 0
+  Max Particle Lifetime: 0.5
   Particle Emission Rate: 1
   Particle Min Scale: 0.100000001
   Particle Max Scale: 0.100000001
@@ -96557,7 +96578,7 @@ ParticleComponent:
   2D particle: false
   Spawn From Shape: false
   Shape's Size: [1, 1, 1]
-  Trailing: false
+  Trailing: true
   Trail Color: [1, 1, 1]
   Trail Size: 10
   Trail Thickness: 1
@@ -96998,3 +97019,873 @@ SpriteRenderer:
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
   SpriteTexture: {guid: 29a511ce496f764ee1308dda7d666137}
+---
+ID: 17785360502356981163
+GameObject:
+  m_IsActive: true
+  m_Name: NavMesh Obstacle
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 12541155970112414096}  # Transform
+    - component: {fileID: 18334653955697036878}  # MeshRenderer
+    - component: {fileID: 7993203771683080098}  # BoxCollider
+    - component: {fileID: 12511017914139696890}  # Rigidbody
+---
+ID: 12541155970112414096
+Transform:
+  m_GameObject: {fileID: 17785360502356981163}
+  Translation: [63.9914436, 36.3173027, -110.114975]
+  Rotation: [0, 0, 0]
+  Scale: [2.3499999, 0.5, 1.39999998]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 18334653955697036878
+MeshRenderer:
+  m_GameObject: {fileID: 17785360502356981163}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 7993203771683080098
+BoxCollider:
+  m_GameObject: {fileID: 17785360502356981163}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 12511017914139696890
+Rigidbody:
+  m_GameObject: {fileID: 17785360502356981163}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 4388481834860289388
+GameObject:
+  m_IsActive: true
+  m_Name: NavMesh Obstacle 2
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 14396113162469048765}  # Transform
+    - component: {fileID: 14921303395086285527}  # MeshRenderer
+    - component: {fileID: 18275062980745405588}  # BoxCollider
+    - component: {fileID: 8803369883369332729}  # Rigidbody
+---
+ID: 14396113162469048765
+Transform:
+  m_GameObject: {fileID: 4388481834860289388}
+  Translation: [69.8002548, 36.3173027, -113.059631]
+  Rotation: [0, 0, 0]
+  Scale: [4.14004993, 0.5, 1.39999998]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14921303395086285527
+MeshRenderer:
+  m_GameObject: {fileID: 4388481834860289388}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 18275062980745405588
+BoxCollider:
+  m_GameObject: {fileID: 4388481834860289388}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 8803369883369332729
+Rigidbody:
+  m_GameObject: {fileID: 4388481834860289388}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 13853559668321667239
+GameObject:
+  m_IsActive: true
+  m_Name: NavMesh Obstacle 3
+  m_TagString: ""
+  m_Layer: 6
+  m_Component:
+    - component: {fileID: 13044964840134277267}  # Transform
+    - component: {fileID: 2280167900498217684}  # MeshRenderer
+    - component: {fileID: 10036439925359430582}  # BoxCollider
+    - component: {fileID: 16988318659059012616}  # Rigidbody
+---
+ID: 13044964840134277267
+Transform:
+  m_GameObject: {fileID: 13853559668321667239}
+  Translation: [63.6248894, 36.3173027, -116.952065]
+  Rotation: [0, 0, 0]
+  Scale: [3.74492931, 0.5, 2.55478144]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 2280167900498217684
+MeshRenderer:
+  m_GameObject: {fileID: 13853559668321667239}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000001}
+  Material_ID: {guid: 00000000000000000000000000000000}
+---
+ID: 10036439925359430582
+BoxCollider:
+  m_GameObject: {fileID: 13853559668321667239}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 16988318659059012616
+Rigidbody:
+  m_GameObject: {fileID: 13853559668321667239}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 10482025102164204176
+GameObject:
+  m_IsActive: true
+  m_Name: Subtitles
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14668362047316885406}  # Transform
+    - component: {fileID: 7921089866721039980}  # TextRenderer
+---
+ID: 14668362047316885406
+Transform:
+  m_GameObject: {fileID: 10482025102164204176}
+  Translation: [0, -0.879999995, 0.0800111741]
+  Rotation: [0, 0, 0]
+  Scale: [0.100999616, 0.100991637, 0.10095425]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    []
+---
+ID: 7921089866721039980
+TextRenderer:
+  m_GameObject: {fileID: 10482025102164204176}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: "SEER: This is the propeller room. Be careful of those blades, they will do some serious damage."
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 5
+  Vertical Spacing: 2
+  Textbox Width: 22.3999996
+  Textbox Height: 0.563333392
+  Center Alignment: true
+  Wrap Text: true
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 6140361324581815844
+GameObject:
+  m_IsActive: true
+  m_Name: ApexTrigger4
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12912354692767933931}  # Transform
+    - component: {fileID: 7471244745955034967}  # BoxCollider
+    - component: {fileID: 13294711353586321273}  # Rigidbody
+    - component: {fileID: 11050604169777268850}  # Script
+---
+ID: 12912354692767933931
+Transform:
+  m_GameObject: {fileID: 6140361324581815844}
+  Translation: [41.8901176, 39.103363, -119.031349]
+  Rotation: [0, 0, 0]
+  Scale: [1.27011466, 5.57132959, 5.66181421]
+  Father: {fileID: 16302274557395296677}
+  m_Children:
+    []
+---
+ID: 7471244745955034967
+BoxCollider:
+  m_GameObject: {fileID: 6140361324581815844}
+  m_IsEnabled: true
+  Dimensions: [1, 1, 1]
+  Offset: [0, 0, 0]
+---
+ID: 13294711353586321273
+Rigidbody:
+  m_GameObject: {fileID: 6140361324581815844}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: true
+  IsKinematic: false
+  UseGravity: false
+  Is_trigger: true
+---
+ID: 11050604169777268850
+Script:
+  m_GameObject: {fileID: 6140361324581815844}
+  m_IsEnabled: true
+  Script: {guid: f891f99f8d4439352d0b136cf0bead3c}
+  dialogue_state: 14
+---
+ID: 5654249122384004282
+GameObject:
+  m_IsActive: true
+  m_Name: Apex3
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10462669278366235586}  # Transform
+    - component: {fileID: 8117809333135974231}  # AudioSource
+---
+ID: 10462669278366235586
+Transform:
+  m_GameObject: {fileID: 5654249122384004282}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 1712204151478464524}
+  m_Children:
+    []
+---
+ID: 8117809333135974231
+AudioSource:
+  m_GameObject: {fileID: 5654249122384004282}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 1
+  max hearing Distance: 1000
+  SFX min Pitch: 0
+  SFX max Pitch: 0
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 41c565f37b1feb2402f7cf1133687892}
+  Play: false
+---
+ID: 10103826671983464825
+GameObject:
+  m_IsActive: true
+  m_Name: LevelElevator
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 12521640375564429408}  # Transform
+    - component: {fileID: 16718099755810019939}  # BoxCollider
+    - component: {fileID: 4731622995027369648}  # Rigidbody
+    - component: {fileID: 10092070983436485125}  # Script
+---
+ID: 12521640375564429408
+Transform:
+  m_GameObject: {fileID: 10103826671983464825}
+  Translation: [61.4087524, 35.7581062, -35.9222679]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    - {fileID: 15324005564863206208}
+    - {fileID: 5443607885573018339}
+    - {fileID: 14779636055066905227}
+    - {fileID: 7721988610030480110}
+---
+ID: 16718099755810019939
+BoxCollider:
+  m_GameObject: {fileID: 10103826671983464825}
+  m_IsEnabled: true
+  Dimensions: [5, 0.100000001, 5]
+  Offset: [0, 0, 0]
+---
+ID: 4731622995027369648
+Rigidbody:
+  m_GameObject: {fileID: 10103826671983464825}
+  m_IsEnabled: true
+  LinearVelocity: [0, 0, 0]
+  AngularVelocity: [0, 0, 0]
+  Force: [0, 0, 0]
+  Friction: 0.100000001
+  Mass: 1
+  IsStatic: false
+  IsKinematic: true
+  UseGravity: true
+  Is_trigger: false
+---
+ID: 10092070983436485125
+Script:
+  m_GameObject: {fileID: 10103826671983464825}
+  m_IsEnabled: true
+  Script: {guid: 3b98078bfb28c24bc457712c63ec8f52}
+  back: false
+  currentRestTimer: 0
+  duration: 4
+  hangTimerCap: 1
+  rest: false
+  restTimer: 2
+  returnDuration: 5
+  timer: 0
+  endPoint: {fileID: 12169582626431337029}  # Component
+---
+ID: 15324005564863206208
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(212) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 2272091896725566385}  # Transform
+    - component: {fileID: 2647850326874558667}  # MeshRenderer
+---
+ID: 2272091896725566385
+Transform:
+  m_GameObject: {fileID: 15324005564863206208}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10103826671983464825}
+  m_Children:
+    []
+---
+ID: 2647850326874558667
+MeshRenderer:
+  m_GameObject: {fileID: 15324005564863206208}
+  m_IsEnabled: true
+  Mesh: {guid: 99ec6fb3312a027f8ef16d385d951e11}
+  Material_ID: {guid: 626a1c88e30651b95302e65bc0d4e9d2}
+---
+ID: 5443607885573018339
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(75) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6975588116458816817}  # Transform
+    - component: {fileID: 12407137345664720036}  # MeshRenderer
+---
+ID: 6975588116458816817
+Transform:
+  m_GameObject: {fileID: 5443607885573018339}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10103826671983464825}
+  m_Children:
+    []
+---
+ID: 12407137345664720036
+MeshRenderer:
+  m_GameObject: {fileID: 5443607885573018339}
+  m_IsEnabled: true
+  Mesh: {guid: bacc696cab41efe546143d95aa4fe6f4}
+  Material_ID: {guid: 5e8df587ebadb671894bead2df64780b}
+---
+ID: 14779636055066905227
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(205) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 6054841882008143928}  # Transform
+    - component: {fileID: 9143757638872598252}  # MeshRenderer
+---
+ID: 6054841882008143928
+Transform:
+  m_GameObject: {fileID: 14779636055066905227}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10103826671983464825}
+  m_Children:
+    []
+---
+ID: 9143757638872598252
+MeshRenderer:
+  m_GameObject: {fileID: 14779636055066905227}
+  m_IsEnabled: true
+  Mesh: {guid: 3b4c597fc167a68d46ae8b834cc02307}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 7721988610030480110
+GameObject:
+  m_IsActive: true
+  m_Name: New GameObject(107) - Copy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11632938668202082557}  # Transform
+    - component: {fileID: 4007452384467080868}  # MeshRenderer
+---
+ID: 11632938668202082557
+Transform:
+  m_GameObject: {fileID: 7721988610030480110}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 10103826671983464825}
+  m_Children:
+    []
+---
+ID: 4007452384467080868
+MeshRenderer:
+  m_GameObject: {fileID: 7721988610030480110}
+  m_IsEnabled: true
+  Mesh: {guid: 5f004afd6c295555153140656c9a8ab8}
+  Material_ID: {guid: ebe3551dcf9b050a42b046a5e95efb87}
+---
+ID: 12169582626431337029
+GameObject:
+  m_IsActive: true
+  m_Name: Level2Target
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4117250875383237543}  # Transform
+---
+ID: 4117250875383237543
+Transform:
+  m_GameObject: {fileID: 12169582626431337029}
+  Translation: [61.3705482, 36.8441811, -35.8486252]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 14279723885386086925
+GameObject:
+  m_IsActive: true
+  m_Name: playerRespawn
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 504897952039717146}  # Transform
+    - component: {fileID: 9410263290189236167}  # AudioSource
+---
+ID: 504897952039717146
+Transform:
+  m_GameObject: {fileID: 14279723885386086925}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 3086226640464916968}
+  m_Children:
+    []
+---
+ID: 9410263290189236167
+AudioSource:
+  m_GameObject: {fileID: 14279723885386086925}
+  m_IsEnabled: true
+  AudioChannel: 1
+  Loop: false
+  Volume: 1
+  min hearing Distance: 500
+  max hearing Distance: 1000
+  SFX min Pitch: 1
+  SFX max Pitch: 1
+  Fade In Time (s): 1
+  Fade Out Time (s): 1
+  Sound File: {guid: 0c1b4d0ac1d4e5471da3d6a3d13c4924}
+  Play: false
+---
+ID: 17324707596223635025
+GameObject:
+  m_IsActive: true
+  m_Name: respawningVFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9220501566107666244}  # Transform
+    - component: {fileID: 15666169003738312394}  # ParticleComponent
+---
+ID: 9220501566107666244
+Transform:
+  m_GameObject: {fileID: 17324707596223635025}
+  Translation: [0, 0, 0]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 15666169003738312394
+ParticleComponent:
+  m_GameObject: {fileID: 17324707596223635025}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 244acdadaec78a3a5e31ec94de7392c7}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 0
+  Number Of Particles: 15
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0.200000003
+  Particle Scale Rate: 2
+  Particle Speed: 1
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 30
+  Particle Noise Frequency: 30
+  2D particle: true
+  Spawn From Shape: true
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 1
+  Looping: true
+  Fade towards Color: true
+  Color to Fade to: [1, 1, 1]
+---
+ID: 3940713627885508865
+GameObject:
+  m_IsActive: true
+  m_Name: OverDrive_UI
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7521308802677090983}  # Transform
+    - component: {fileID: 12685824081097334361}  # SpriteRenderer
+---
+ID: 7521308802677090983
+Transform:
+  m_GameObject: {fileID: 3940713627885508865}
+  Translation: [-1.06015956, 0.776940346, 0.887955666]
+  Rotation: [0, 0, 0]
+  Scale: [0.203447133, 0.203447089, 0.203447104]
+  Father: {fileID: 4212138099454399691}
+  m_Children:
+    - {fileID: 12556112462147106425}
+---
+ID: 12685824081097334361
+SpriteRenderer:
+  m_GameObject: {fileID: 3940713627885508865}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: c555c881a762b6d825e0665d52a1ab9f}
+---
+ID: 12556112462147106425
+GameObject:
+  m_IsActive: true
+  m_Name: OverDrive_Activate_Text
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 4328746336746444642}  # Transform
+    - component: {fileID: 10245994681528064300}  # TextRenderer
+---
+ID: 4328746336746444642
+Transform:
+  m_GameObject: {fileID: 12556112462147106425}
+  Translation: [-0.00396060944, -0.0333003998, 3.89883852]
+  Rotation: [0, 0, 0]
+  Scale: [0.534600019, 0.5345999, 0.534588873]
+  Father: {fileID: 3940713627885508865}
+  m_Children:
+    []
+---
+ID: 10245994681528064300
+TextRenderer:
+  m_GameObject: {fileID: 12556112462147106425}
+  m_IsEnabled: true
+  Font: {guid: d224692d54c5efe15c780f6a59491c23}
+  Text: Q
+  X-axis Offset: 0
+  Y-axis Offset: 0
+  Font Size: 4
+  Vertical Spacing: 1.71000004
+  Textbox Width: 0.31733337
+  Textbox Height: 0.225333348
+  Center Alignment: true
+  Wrap Text: false
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 128562352063763926
+GameObject:
+  m_IsActive: true
+  m_Name: ParticleEmitter_Enemy
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 777957583402713736}  # Transform
+    - component: {fileID: 5624992609434081276}  # ParticleComponent
+---
+ID: 777957583402713736
+Transform:
+  m_GameObject: {fileID: 128562352063763926}
+  Translation: [-13.3517504, -0.263694435, 15.7915907]
+  Rotation: [0, 0, 0]
+  Scale: [0.0318250023, 0.0318250023, 0.0318250023]
+  Father: {fileID: 0}
+  m_Children:
+    []
+---
+ID: 5624992609434081276
+ParticleComponent:
+  m_GameObject: {fileID: 128562352063763926}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 283b4d530ddbba0170927e5c18040b4f}
+  Local Space: false
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 8
+  Min Particle Lifetime: 3
+  Max Particle Lifetime: 4
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.0500000007
+  Particle Max Scale: 0.0500000007
+  Particle Scale Rate: 0.699999988
+  Particle Speed: 4
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 0
+  Trail Thickness: 1
+  Looping: false
+  Fade towards Color: false
+  Color to Fade to: [1, 0, 0]
+---
+ID: 8252669615322955072
+GameObject:
+  m_IsActive: true
+  m_Name: dashAttack_dashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 14333855268744945600}  # Transform
+    - component: {fileID: 738546090561784950}  # ParticleComponent
+---
+ID: 14333855268744945600
+Transform:
+  m_GameObject: {fileID: 8252669615322955072}
+  Translation: [0, 88.578125, 8.41930962]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6521774849105860025}
+  m_Children:
+    []
+---
+ID: 738546090561784950
+ParticleComponent:
+  m_GameObject: {fileID: 8252669615322955072}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 11026905248631548947
+GameObject:
+  m_IsActive: true
+  m_Name: right_dashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18403431391588427015}  # Transform
+    - component: {fileID: 18022210614532859008}  # ParticleComponent
+---
+ID: 18403431391588427015
+Transform:
+  m_GameObject: {fileID: 11026905248631548947}
+  Translation: [-2.30387878, 76.5048828, -6.05834961]
+  Rotation: [-1.52241731, 0, 1.57062411]
+  Scale: [0.999999225, 1.00001168, 0.999999881]
+  Father: {fileID: 4902761444011782099}
+  m_Children:
+    []
+---
+ID: 18022210614532859008
+ParticleComponent:
+  m_GameObject: {fileID: 11026905248631548947}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 10974317866893035270
+GameObject:
+  m_IsActive: true
+  m_Name: left_DashLine
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 17645749602526315205}  # Transform
+    - component: {fileID: 17735365419129732152}  # ParticleComponent
+---
+ID: 17645749602526315205
+Transform:
+  m_GameObject: {fileID: 10974317866893035270}
+  Translation: [2.20266747, 75.2988358, -6.06420946]
+  Rotation: [-1.52386904, 0, -1.57095838]
+  Scale: [0.999995291, 1.00000489, 0.99999243]
+  Father: {fileID: 16634065559162262692}
+  m_Children:
+    []
+---
+ID: 17735365419129732152
+ParticleComponent:
+  m_GameObject: {fileID: 10974317866893035270}
+  m_IsEnabled: true
+  Mesh: {guid: 00000000000000000000000000000002}
+  Particle Material: {guid: 00000000000000000000000000000000}
+  Local Space: true
+  Particle Direction: [0, 0, 0]
+  Angle of Direction: 30
+  Number Of Particles: 1
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 3
+  Particle Emission Rate: 1
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0
+  Particle Scale Rate: 0
+  Particle Speed: 0
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 0
+  Particle Noise Frequency: 0
+  2D particle: false
+  Spawn From Shape: false
+  Shape's Size: [1, 1, 1]
+  Trailing: true
+  Trail Color: [1, 1, 1]
+  Trail Size: 5
+  Trail Thickness: 0.300000012
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 2454999104902735477
+GameObject:
+  m_IsActive: true
+  m_Name: playHealthPack_VFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10124786951323790630}  # Transform
+    - component: {fileID: 10311412811271336519}  # ParticleComponent
+---
+ID: 10124786951323790630
+Transform:
+  m_GameObject: {fileID: 2454999104902735477}
+  Translation: [0, 44.4294434, 8.4456377]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6521774849105860025}
+  m_Children:
+    []
+---
+ID: 10311412811271336519
+ParticleComponent:
+  m_GameObject: {fileID: 2454999104902735477}
+  m_IsEnabled: true
+  Mesh: {guid: ee7d7228816fd99449f80dd47ff99465}
+  Particle Material: {guid: 2ecb71f675954da15370e879eb06b46e}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 0
+  Number Of Particles: 15
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1.5
+  Particle Emission Rate: 0
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0.200000003
+  Particle Scale Rate: 2
+  Particle Speed: 3
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 1
+  Particle Noise Frequency: 1
+  2D particle: false
+  Spawn From Shape: true
+  Shape's Size: [1, 1, 1]
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 0
+  Trail Thickness: 0
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]

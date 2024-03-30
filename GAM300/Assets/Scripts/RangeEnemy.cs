@@ -71,12 +71,10 @@ public class RangeEnemy : Script
 
     void Update()
     {
-
-
         if (player == null)
             return;
 
-        vec3 direction = player.localPosition - transform.position;
+        vec3 direction = player.position - transform.position;
         direction.y = 0f;
         direction = direction.NormalizedSafe;
 
@@ -111,37 +109,42 @@ public class RangeEnemy : Script
                     //change to chase state
                     state = 1;
                 }
-                break;
-            //chase state
-            case 1:
-                //change to attack state once it has reach it is in range
-                if(vec3.Distance(player.position, transform.position) <= shootDistance)
+                if (vec3.Distance(player.position, transform.position) <= shootDistance)
                 {
                     state = 2;
                     shootCooldown = 0f;
                 }
-                //return to its starting position if player is far from its chaseDistance
-                if(vec3.Distance(player.position, transform.position) > chaseDistance)
-                {
-                    //return back to its previous position state
-                    state = 0;
-                }
+                break;
+            //chase state
+            case 1:
+                ////change to attack state once it has reach it is in range
+                //if(vec3.Distance(player.position, transform.position) <= shootDistance)
+                //{
+                //    state = 2;
+                //    shootCooldown = 0f;
+                //}
+                ////return to its starting position if player is far from its chaseDistance
+                //if(vec3.Distance(player.position, transform.position) > chaseDistance)
+                //{
+                //    //return back to its previous position state
+                //    state = 0;
+                //}
 
-                NavMeshAgent check = GetComponent<NavMeshAgent>();
-                if (check != null) // Use navmesh if is navmesh agent
-                {
-                    if (newRequest)
-                    {
-                        Console.WriteLine("Moving agent...");
-                        check.FindPath(player.localPosition);
-                        newRequest = false;
-                    }
-                }
-                else
-                {
-                    LookAt(direction);
-                    GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
-                }
+                //NavMeshAgent check = GetComponent<NavMeshAgent>();
+                //if (check != null) // Use navmesh if is navmesh agent
+                //{
+                //    if (newRequest)
+                //    {
+                //        Console.WriteLine("Moving agent...");
+                //        check.FindPath(player.localPosition);
+                //        newRequest = false;
+                //    }
+                //}
+                //else
+                //{
+                //    LookAt(direction);
+                //    GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                //}
                 break;
             //attack state
             case 2:
@@ -154,9 +157,11 @@ public class RangeEnemy : Script
                         playOnce = false;
                         AudioManager.instance.rangeEnemyFiring.Play();
                     }
-                    
+                    CombatManager.instance.SpawnHitEffect2(modelOffset);
                     GameObject bulletPrefab = Instantiate(bullet, modelOffset.position, transform.rotation);
-                    bulletPrefab.GetComponent<Rigidbody>().linearVelocity = transform.forward * bulletSpeed;
+                    vec3 dir = player.position - transform.position;
+                    dir = dir.NormalizedSafe;
+                    bulletPrefab.GetComponent<Rigidbody>().linearVelocity = dir * bulletSpeed;
                     shootCooldown = 0;
                     if(shootCooldown == 0)
                     {
@@ -281,6 +286,7 @@ public class RangeEnemy : Script
                         {
                             ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
                             playerSounds.PowerUp.Play();
+                            ThirdPersonController.instance.overDriveUI.gameObject.SetActive(true);
                         }
                     }
                     else
@@ -292,6 +298,7 @@ public class RangeEnemy : Script
                         {
                             ThirdPersonController.instance.playOverdrivePowerUpOnce = false;
                             playerSounds.PowerUp.Play();
+                            ThirdPersonController.instance.overDriveUI.gameObject.SetActive(true);
                         }
                     }
                 }
