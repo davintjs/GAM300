@@ -127,7 +127,7 @@ public:
 private:
 
 	FMOD::ChannelGroup* master{};
-	FMOD::ChannelGroup* groups[CATEGORY_COUNT]{};
+	FMOD::ChannelGroup* groups[CATEGORY_COUNT];
 	FMOD_MODE modes[CATEGORY_COUNT]{};
 	MusicBuffer musics[2];
 	int currentMusicIdx{ 0 };
@@ -138,6 +138,7 @@ private:
 	Engine::GUID<AudioAsset> currentFXPath{};
 
 	float musicVolume{ 1.f };
+	float masterVolume{ 1.f };
 	float loopfxVolume{ 1.f };
 	float fixStepTime{ .5f };
 	float stepTime{ .0f };
