@@ -412,8 +412,14 @@ public class ThirdPersonController : Script
     // Update is called once per frame
     void Update()
     {
-        if (ThirdPersonCamera.instance.cutscene || GameManager.instance.paused)
+        if (GameManager.instance.paused)
             return;
+
+        if (ThirdPersonCamera.instance.cutscene)
+        {
+            animator.SetState("Idle");
+            return;
+        }
 
 
         //testing respawn
@@ -973,6 +979,8 @@ public class ThirdPersonController : Script
 
     void LateUpdate()
     {
+        if (cutscene)
+            return;
         animationManager.UpdateState();
     }
 

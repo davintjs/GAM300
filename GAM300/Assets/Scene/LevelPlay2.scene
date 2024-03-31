@@ -107,6 +107,7 @@ Script:
   Script: {guid: 8a3d764aaa0c62f092de33c99d51da14}
   currentLevel: 2
   fadeTime: 1
+  playMusic: true
   BGM_Source: {fileID: 13334384434134814286}  # Component
   hudCanvas: {fileID: 15240334966158831452}  # GameObject
   pauseCanvas: {fileID: 17065559468612678914}  # GameObject
@@ -4651,6 +4652,7 @@ Script:
   m_GameObject: {fileID: 16905222177648308199}
   m_IsEnabled: true
   Script: {guid: 350eb778cc6b442d24cbee2a9194c93b}
+  damage: 1
   destroyOnTrigger: true
 ---
 ID: 11170072543942258493
@@ -22543,6 +22545,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 13665857943017219500}  # Component
   attackTrigger: {fileID: 13608063128582373505}  # GameObject
   enemySounds: {fileID: 5823139587629919073}  # Component
@@ -22829,6 +22832,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 13228710214417602934}  # Component
   attackTrigger: {fileID: 5976458865903935298}  # GameObject
   enemySounds: {fileID: 4116794832389696516}  # Component
@@ -27686,6 +27690,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 15490750772518730921}  # Component
   attackTrigger: {fileID: 10182307845023477381}  # GameObject
   enemySounds: {fileID: 10721390715215017099}  # Component
@@ -30974,6 +30979,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 8176351043890245559}  # Component
   attackTrigger: {fileID: 1034696538995432217}  # GameObject
   enemySounds: {fileID: 483918539485333787}  # Component
@@ -31295,6 +31301,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 7677904935606688006}  # Component
   attackTrigger: {fileID: 13265326449278859074}  # GameObject
   enemySounds: {fileID: 2491182710776698818}  # Component
@@ -34825,6 +34832,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 10420907662376377271}  # Component
   attackTrigger: {fileID: 12702401490049601225}  # GameObject
   enemySounds: {fileID: 6424638694905317363}  # Component
@@ -36480,6 +36488,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 1323850131090951798}  # Component
   attackTrigger: {fileID: 8752970089702699583}  # GameObject
   enemySounds: {fileID: 12592328208421319411}  # Component
@@ -37996,6 +38005,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 7339897885214852959}  # Component
   attackTrigger: {fileID: 2036189163671800282}  # GameObject
   enemySounds: {fileID: 1310818332231878035}  # Component
@@ -39862,6 +39872,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 3967483864253535775}  # Component
   attackTrigger: {fileID: 1859320014956264795}  # GameObject
   enemySounds: {fileID: 11812070836746058474}  # Component
@@ -40113,6 +40124,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 12623166524767899496}  # Component
   attackTrigger: {fileID: 8737543050631908055}  # GameObject
   enemySounds: {fileID: 7216130535535194682}  # Component
@@ -40364,6 +40376,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 4008956330672296042}  # Component
   attackTrigger: {fileID: 9873304508655296805}  # GameObject
   enemySounds: {fileID: 8949505384541374368}  # Component
@@ -40615,6 +40628,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 11775922252982932051}  # Component
   attackTrigger: {fileID: 11728886119229421634}  # GameObject
   enemySounds: {fileID: 869581446478740379}  # Component
@@ -40866,6 +40880,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 524863122010150736}  # Component
   attackTrigger: {fileID: 11431698503551896276}  # GameObject
   enemySounds: {fileID: 14110353535689561705}  # Component
@@ -41117,6 +41132,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 17231996208733859994}  # Component
   attackTrigger: {fileID: 5680074196717204813}  # GameObject
   enemySounds: {fileID: 3329376242550333741}  # Component
@@ -41368,6 +41384,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 1299226768265844501}  # Component
   attackTrigger: {fileID: 406715076858283333}  # GameObject
   enemySounds: {fileID: 6528720743386414643}  # Component
@@ -41619,6 +41636,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 7335709090608580284}  # Component
   attackTrigger: {fileID: 17339074096294122883}  # GameObject
   enemySounds: {fileID: 11252108063346152311}  # Component
@@ -42170,6 +42188,7 @@ Script:
   stunDuration: 1.5
   testingValue: 0
   timer: 0
+  touchingPlayer: false
   animator: {fileID: 13324091730434544865}  # Component
   attackTrigger: {fileID: 12635576556742298042}  # GameObject
   enemySounds: {fileID: 16363258364260532132}  # Component
@@ -96786,23 +96805,23 @@ ParticleComponent:
   Local Space: true
   Particle Direction: [0, 0, 0]
   Angle of Direction: 30
-  Number Of Particles: 1
-  Min Particle Lifetime: 1
+  Number Of Particles: 2
+  Min Particle Lifetime: 0.300000012
   Max Particle Lifetime: 1
   Particle Emission Rate: 1
-  Particle Min Scale: 0.100000001
+  Particle Min Scale: 0
   Particle Max Scale: 0
   Particle Scale Rate: 0
-  Particle Speed: 0
+  Particle Speed: 0.699999988
   Particle acceleration: 0
-  Particle Noise Movement Percentage: 0
-  Particle Noise Frequency: 0
+  Particle Noise Movement Percentage: 50
+  Particle Noise Frequency: 5
   2D particle: false
   Spawn From Shape: false
   Shape's Size: [1, 1, 1]
   Trailing: true
   Trail Color: [1, 1, 1]
-  Trail Size: 5
+  Trail Size: 10
   Trail Thickness: 0.300000012
   Looping: true
   Fade towards Color: false

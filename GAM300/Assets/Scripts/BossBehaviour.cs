@@ -709,7 +709,7 @@ public class BossBehaviour : Script
             yield return null;
         }
         ultimateVFX.particleLooping = false;
-        ultiDomeVFX.gameObject.SetActive(false);
+        //ultiDomeVFX.gameObject.SetActive(false);
         
         
 
