@@ -445,11 +445,11 @@ Script:
   currentlyOverdriven: false
   cutscene: false
   dashAttackCooldown: 0.899999976
-  dashAttackSpeed: 10
+  dashAttackSpeed: 1200
   dashAttackStamina: 15
   dashAttackTimer: 0.899999976
   dodgeCooldown: 0.5
-  dodgeSpeed: 11.5
+  dodgeSpeed: 750
   dodgeStamina: 10
   dodgeTimer: 0.5
   healthRegenEnabled: false
