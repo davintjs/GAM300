@@ -168,6 +168,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
             continue;
         if (particleComponent.is2D) {
             counter += particleComponent.numParticles_;
+            generalTrailCounter += particleComponent.trailCounter;
             continue;
         }
         if (particleComponent.numParticles_ == 0)
@@ -246,27 +247,31 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
 
         shader.UnUse();
 
-        GLSLShader trailshader = SHADER.GetShader(SHADERTYPE::TRAILS);
-        glBindBuffer(GL_ARRAY_BUFFER, cylSRTBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (trailSRT.size()) * sizeof(glm::mat4), trailSRT.data() + generalTrailCounter);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        if (particleComponent.trailCounter != 0) {
+            GLSLShader trailshader = SHADER.GetShader(SHADERTYPE::TRAILS);
+            glBindBuffer(GL_ARRAY_BUFFER, cylSRTBuffer);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, particleComponent.trailCounter * sizeof(glm::mat4), trailSRT.data() + generalTrailCounter);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        trailshader.Use();
-        perspective = glGetUniformLocation(trailshader.GetHandle(), "persp_projection");
-        view = glGetUniformLocation(trailshader.GetHandle(), "View");
-        GLuint trailColor = glGetUniformLocation(trailshader.GetHandle(), "trailColor");
-        glUniform3fv(trailColor, 1, glm::value_ptr(glm::vec3(particleComponent.trailColor)));
-        glUniformMatrix4fv(perspective, 1, GL_FALSE,
-            glm::value_ptr(_camera.GetProjMatrix()));
-        glUniformMatrix4fv(view, 1, GL_FALSE,
-            glm::value_ptr(_camera.GetViewMatrix()));
-        glBindVertexArray(cylVAO);
-        glDrawElementsInstanced(GL_TRIANGLE_STRIP, (GLsizei)cylsize, GL_UNSIGNED_INT, 0, (GLsizei)particleComponent.trailCounter);
-        glBindVertexArray(0);
+            trailshader.Use();
+            perspective = glGetUniformLocation(trailshader.GetHandle(), "persp_projection");
+            view = glGetUniformLocation(trailshader.GetHandle(), "View");
+            GLuint trailColor = glGetUniformLocation(trailshader.GetHandle(), "trailColor");
+            glUniform3fv(trailColor, 1, glm::value_ptr(glm::vec3(particleComponent.trailColor)));
+            glUniformMatrix4fv(perspective, 1, GL_FALSE,
+                glm::value_ptr(_camera.GetProjMatrix()));
+            glUniformMatrix4fv(view, 1, GL_FALSE,
+                glm::value_ptr(_camera.GetViewMatrix()));
+            glBindVertexArray(cylVAO);
+            glDrawElementsInstanced(GL_TRIANGLE_STRIP, (GLsizei)cylsize, GL_UNSIGNED_INT, 0, (GLsizei)particleComponent.trailCounter);
+            glBindVertexArray(0);
 
-        trailshader.UnUse();
+            trailshader.UnUse();
+            generalTrailCounter += particleComponent.trailCounter;
+
+        }
+        
         counter += particleComponent.numParticles_;
-        generalTrailCounter += particleComponent.trailCounter;
     }
 }
 
