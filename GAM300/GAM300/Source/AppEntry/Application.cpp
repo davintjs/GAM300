@@ -107,7 +107,9 @@ void Application::InitApp(const int& _width, const int& _height, const std::stri
     glViewport(0, 0, windowWidth, windowHeight);
 
     // Bean: Uncomment to start in fullscreen
-    //fullscreen = true;
+#ifdef _BUILD
+    fullscreen = true;
+#endif // _BUILD
     Fullscreen(fullscreen, 1600, 900);
 }
 
