@@ -204,7 +204,7 @@ bool isParallel(const glm::vec3& v1, const glm::vec3& v2)
     /*if ((test.x < 0.01f) && (test.y < 0.01f) && (test.z < 0.01f) &&
         (test.x > -0.01f) && (test.y > -0.01f) && (test.z > -0.01f))*/
     //std::cout << glm::length(test) << std::endl;
-    if (glm::length(test) < 0.01f)
+    if (glm::length(test) < 0.00001f)
     {
         return true;
     }

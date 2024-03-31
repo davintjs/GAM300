@@ -203,9 +203,9 @@ Transform:
   Scale: [0.999942601, 0.999998927, 0.999943495]
   Father: {fileID: 0}
   m_Children:
-    - {fileID: 18166298383806670530}
-    - {fileID: 5005871009699849262}
     - {fileID: 16548255188574068218}
+    - {fileID: 5005871009699849262}
+    - {fileID: 18166298383806670530}
     - {fileID: 6020883254565359779}
     - {fileID: 10134924892093042433}
 ---
@@ -374,8 +374,6 @@ Script:
   m_IsEnabled: true
   Script: {guid: c2842abf1019f5a501732cffb6363736}
   cue: false
-  timeBeforeKeySpawn: 2
-  key: {fileID: 0}
   tutorialEnemy: {fileID: 13457975659125709231}  # Component
 ---
 ID: 5213150487805395678
@@ -32536,23 +32534,23 @@ ParticleComponent:
   Local Space: true
   Particle Direction: [0, 0, 0]
   Angle of Direction: 30
-  Number Of Particles: 1
-  Min Particle Lifetime: 1
+  Number Of Particles: 2
+  Min Particle Lifetime: 0.300000012
   Max Particle Lifetime: 1
   Particle Emission Rate: 1
   Particle Min Scale: 0
   Particle Max Scale: 0
   Particle Scale Rate: 0
-  Particle Speed: 0
+  Particle Speed: 0.699999988
   Particle acceleration: 0
-  Particle Noise Movement Percentage: 0
-  Particle Noise Frequency: 0
+  Particle Noise Movement Percentage: 50
+  Particle Noise Frequency: 5
   2D particle: false
   Spawn From Shape: false
   Shape's Size: [1, 1, 1]
   Trailing: true
   Trail Color: [1, 0.999899983, 0.999899983]
-  Trail Size: 5
+  Trail Size: 10
   Trail Thickness: 0.300000012
   Looping: true
   Fade towards Color: false
@@ -36958,9 +36956,9 @@ Transform:
   Scale: [0.00999720488, 0.00999316387, 0.00999638252]
   Father: {fileID: 13935503440945759624}
   m_Children:
-    - {fileID: 18164859351466756563}
     - {fileID: 14376053557854091219}
     - {fileID: 12205623883037955508}
+    - {fileID: 18164859351466756563}
     - {fileID: 9493569429264744518}
 ---
 ID: 7110473202682492868
@@ -38525,9 +38523,9 @@ Transform:
   Scale: [0.00999715738, 0.00999259762, 0.00999578182]
   Father: {fileID: 13935503440945759624}
   m_Children:
-    - {fileID: 5055659447931089887}
     - {fileID: 8539041132528431572}
     - {fileID: 16527197067196685009}
+    - {fileID: 5055659447931089887}
     - {fileID: 17458702503518279705}
 ---
 ID: 173681332482022895
@@ -40092,9 +40090,9 @@ Transform:
   Scale: [0.00999715738, 0.00999207702, 0.00999508239]
   Father: {fileID: 13935503440945759624}
   m_Children:
-    - {fileID: 10477206958905215538}
     - {fileID: 9271245958592108050}
     - {fileID: 11129826395751945656}
+    - {fileID: 10477206958905215538}
     - {fileID: 12900362851563059612}
 ---
 ID: 1600443963308069174
@@ -41659,9 +41657,9 @@ Transform:
   Scale: [0.00999667309, 0.00999209844, 0.00999569986]
   Father: {fileID: 13935503440945759624}
   m_Children:
-    - {fileID: 11789190007018543425}
     - {fileID: 13618814656696501470}
     - {fileID: 14462797988255609645}
+    - {fileID: 11789190007018543425}
     - {fileID: 3253875974616822904}
 ---
 ID: 8416674293496456497
