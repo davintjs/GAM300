@@ -577,8 +577,6 @@ struct ParticleComponent : Object
 
 	int numParticles_{ 1 };
 	int trailSize{ 0 };
-	unsigned int trailCounter{};
-
 	float trailThiccness{ 1.f };
 
 	float angle{ 30.f }; // for directional particles
@@ -608,6 +606,7 @@ struct ParticleComponent : Object
 	Vector3 colorToFadeTowards{ 1.f,1.f,1.f };
 
 	std::vector<Particle> particles_;
+
 	property_vtable();
 };
 
