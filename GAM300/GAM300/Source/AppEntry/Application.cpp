@@ -137,8 +137,12 @@ void Application::Draw(float dt)
 
 	// Printing to Windows Title Bar
 	std::stringstream sstr;
-	sstr << std::fixed << std::setprecision(2) << title << " | FPS: " << fps
-		<< " | Resolution: " << windowWidth << " by " << windowHeight;
+#ifdef _BUILD
+    sstr << "The Grid" << windowHeight;
+#else
+    sstr << std::fixed << std::setprecision(2) << title << " | FPS: " << fps
+        << " | Resolution: " << windowWidth << " by " << windowHeight;
+#endif // _BUILD
 	glfwSetWindowTitle(window, sstr.str().c_str());
 
     glfwSwapBuffers(window);

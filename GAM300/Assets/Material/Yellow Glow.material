@@ -1,15 +1,15 @@
 Material:
   Material Name: Yellow Glow
-  Shader: 0
-  Albedo: [0.984313786, 0.976470649, 0, 1]
-  Metallic: 1
-  Roughness: 0.5
-  AmbientOcclusion: 100
-  Is Emission: false
-  Emission: 1
+  Shader: 1
+  Albedo: [1, 0.0359282494, 0, 1]
+  Metallic: 0
+  Roughness: 1
+  AmbientOcclusion: 1
+  Is Emission: true
+  Emission: 30
   AlbedoTexture: {guid: 00000000000000000000000000000000}
   NormalMap: {guid: 00000000000000000000000000000000}
   MetallicTexture: {guid: 00000000000000000000000000000000}
   RoughnessTexture: {guid: 00000000000000000000000000000000}
   AoTexture: {guid: 00000000000000000000000000000000}
-  EmissionTexture: {guid: 00000000000000000000000000000000}
+  EmissionTexture: {guid: 05eabcd5686e83c719e179558b23b1a3}
