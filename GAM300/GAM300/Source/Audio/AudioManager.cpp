@@ -57,14 +57,14 @@ void AudioManager::DestroyAudioManager() {
 
 void AudioManager::Update(float dt) {
 	//const float fadeTime = 2.f; // in seconds
-	static float masterVolume = GetMasterVolume();
+	//static float masterVolume = GetMasterVolume();
 	if (!Application::Instance().IsWindowFocused())
 	{
-		masterVolume = (GetMasterVolume() != 0.01f) ? GetMasterVolume() : masterVolume;
+		//masterVolume = (GetMasterVolume() != 0.01f) ? GetMasterVolume() : masterVolume;
 		master->setVolume(0.01f);
 	}
 	else
-		master->setVolume(masterVolume);
+		SetMasterVolume(GetMasterVolume());
 
 	for (MusicBuffer& musicBuffer : musics) {
 		if (musicBuffer.currentMusic != 0 && musicBuffer.fade == FADE_IN) {
@@ -136,7 +136,8 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 
 	// if on same music, just unpause
 	if (musics[currentMusicIdx].currentMusicPath == name) {
-
+		groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+		groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 		groups[CATEGORY_MUSIC]->setPaused(false);
 		groups[CATEGORY_MUSIC2]->setPaused(false);
 		musics[currentMusicIdx].currentMusic->setPaused(false);
@@ -162,6 +163,8 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 			musics[currentMusicIdx].currentMusic->setVolume(0.f);
 			musics[currentMusicIdx].currentMusic->setPaused(false);
 			groups[CATEGORY_MUSIC + currentMusicIdx]->setPaused(false);
+			groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+			groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 			musics[currentMusicIdx].fade = FADE_IN;
 			musics[currentMusicIdx].fadetime = componentFadeIn;
 
@@ -186,13 +189,17 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 	musics[currentMusicIdx].currentMusic->setVolume(0.f);
 	musics[currentMusicIdx].currentMusic->setPaused(false);
 	groups[CATEGORY_MUSIC + currentMusicIdx]->setPaused(false);
+	groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+	groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 	musics[currentMusicIdx].fade = FADE_IN;
 	musics[currentMusicIdx].fadetime = componentFadeIn;
 }
 
 void AudioManager::PlayMusic() {
 	if (musics[currentMusicIdx].currentMusic) {
+		groups[CATEGORY_MUSIC]->setVolume(musicVolume);
 		groups[CATEGORY_MUSIC]->setPaused(false);
+		groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 		musics[currentMusicIdx].currentMusic->setPaused(false);
 		return;
 	}
@@ -209,8 +216,8 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 	case 0: // Music
 		Source.play = true;
 		//musics[currentMusicIdx].currentMusic->setVolume(Source.volume);
-		groups[CATEGORY_MUSIC]->setVolume(Source.volume);
-		groups[CATEGORY_MUSIC2]->setVolume(Source.volume);
+		groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+		groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 		PlayMusic(Source.currentSound, Source.fadeOutTime, Source.fadeInTime);
 		break;
 	case 1: // SFX
@@ -346,7 +353,8 @@ void AudioManager::StopAudioComponent(AudioSource& Source) {
 }
 
 void AudioManager::SetMasterVolume(float volume) {
-	master->setVolume(volume);
+	masterVolume = volume;
+	master->setVolume(masterVolume);
 }
 
 void AudioManager::SetSFXVolume(float volume) {
@@ -368,9 +376,7 @@ float AudioManager::GetComponentVolume(AudioSource& source) {
 }
 
 float AudioManager::GetMasterVolume() {
-	float vol;
-	master->getVolume(&vol);
-	return vol;
+	return masterVolume;
 }
 float AudioManager::GetSFXVolume() {
 	float vol;

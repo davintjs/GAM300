@@ -573,7 +573,7 @@ public class ThirdPersonController : Script
 
             if(currentDashAttackTimer > 0.5f)
             {
-                CC.force = PlayerModel.forward * dashAttackSpeed;//dash player forward
+                CC.force = PlayerModel.forward * dashAttackSpeed * Time.deltaTime;//dash player forward
 
                 selectedWeaponCollider.transform.position = new vec3(transform.position + PlayerModel.forward * 1.1f);
                 attackLight.SetActive(true);
@@ -632,7 +632,7 @@ public class ThirdPersonController : Script
                 }
             }
             startDodgeCooldown = true;
-            CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
+            CC.force = PlayerModel.forward * dodgeSpeed * Time.deltaTime;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
 
@@ -733,7 +733,7 @@ public class ThirdPersonController : Script
             }
             //DASH ATTACK
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
-            if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
+            if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && !isDodging && currentStamina >= dashAttackStamina)
             {
                 dashVFX.gameObject.SetActive(true);
                 //Console.WriteLine("DashAttack");
@@ -772,7 +772,7 @@ public class ThirdPersonController : Script
                 SetState("DashAttack", true);
             }
             //DODGE
-            if(Input.GetKey(KeyCode.LeftControl) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
+            if(Input.GetKey(KeyCode.LeftControl) && !isDodging && !startDodgeCooldown && !_isOverdrive && !_isDashAttacking && currentStamina >= dodgeStamina)
             {
                 //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
@@ -871,7 +871,7 @@ public class ThirdPersonController : Script
             }
 
             //JUMP
-            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
+            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking && !isDodging)
             {
                 //Console.WriteLine("JUMP KEY PRESSED!");
                 StartCoroutine(StopJump());

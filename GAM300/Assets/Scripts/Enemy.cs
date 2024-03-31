@@ -55,6 +55,7 @@ public class Enemy : Script
     public float duration = 0.2f;
     public float timer = 0f;
     public bool newRequest = false;
+    private bool attackOnce = false;
 
     public bool isStunned;
     public float stunDuration = 0.5f;
@@ -141,8 +142,10 @@ public class Enemy : Script
             {
                 currentAttackTimer += Time.deltaTime;
                 currentAttackBuffer += Time.deltaTime;
-                if (currentAttackBuffer >= 0.6f) // So that the attack is not instantaneous
+                //if (currentAttackBuffer >= 0.6f) // So that the attack is not instantaneous
+                if(animator.GetProgress() >= 2.786f && !attackOnce)
                 {
+                    attackOnce = true;
                     if (attackTrigger != null)
                     {
                         attackTrigger.SetActive(true);
@@ -158,7 +161,7 @@ public class Enemy : Script
                 {
                     isAttacking = false;
                     isAttackCooldown = true;
-                    SetState("Attack", false);
+                    //SetState("Attack", false);
                     currentAttackTimer = 0f;
                 }
             }
@@ -167,7 +170,8 @@ public class Enemy : Script
                 currentAttackCooldownTimer += Time.deltaTime;
                 if (attackTrigger != null)
                 {
-                    attackTrigger.SetActive(false);
+                    //attackTrigger.SetActive(false);
+                    attackTrigger.transform.position = vec3.Zero;
                 }
 
                 if (currentAttackCooldownTimer >= attackCooldownTimer)
@@ -175,6 +179,13 @@ public class Enemy : Script
                     isAttackCooldown = false;
                     currentAttackCooldownTimer = 0f;
                 }
+            }
+
+            if(animator.GetProgress() < 2.7f)
+            {
+                attackOnce = false;
+                isAttackCooldown = false;
+                attackTrigger.transform.position = vec3.Zero;
             }
            
         }
@@ -189,12 +200,14 @@ public class Enemy : Script
 
 
         vec3 direction = player.position - transform.position;
-        direction.y = 0f;
         direction = direction.NormalizedSafe;
+        direction.y = 0f;
 
         vec3 dir = initialPosition - transform.position;
-        dir.y = 0f;
         dir = dir.NormalizedSafe;
+        dir.y = 0f;
+
+        rb.linearVelocity -= vec3.UnitY;
 
         if (!isDead)
         {
@@ -206,6 +219,7 @@ public class Enemy : Script
                     //idle animation
                     playOnce = true;//reset ability to play audio
                     alertedOnce = true;
+                    SetState("Attack", false);
                     SetState("Idle", true);
 
                     float dist = vec2.Distance(initialPosition.xz, transform.position.xz);
@@ -231,7 +245,7 @@ public class Enemy : Script
                         state = 5;
                     }
 
-                    GetComponent<Rigidbody>().linearVelocity = vec3.Zero;
+                    rb.linearVelocity = vec3.Zero;
                     break;
                 //chase state
                 case 1:
@@ -292,7 +306,7 @@ public class Enemy : Script
                         else // Default
                         {
                             LookAt(direction);
-                            GetComponent<Rigidbody>().linearVelocity = direction * moveSpeed;
+                            rb.linearVelocity = direction * moveSpeed;
                         }
                     }
 
@@ -302,6 +316,13 @@ public class Enemy : Script
                     //Console.WriteLine("Attack");
                     SetState("Attack", true); //attack animation
                     staggerTimer += Time.deltaTime; // Start counting stagger timer
+                    rb.linearVelocity = vec3.Zero;
+
+                    if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
+                    {
+                        //mNavMeshAgent.FindPath(transform.position); // Bean: this is causing the teleporting issue
+                        mNavMeshAgent.ResetPath();
+                    }
 
                     if (playOnce)
                     {
@@ -309,9 +330,9 @@ public class Enemy : Script
                         enemySounds.MeleeEnemyAttack.Play();
                     }
 
-                    //LookAt(direction);
                     if(!isAttacking)
                     {
+                        
                         //change to chase state once player has reach out of range
                         if (vec3.Distance(player.localPosition, transform.localPosition) > attackDistance)
                         {
@@ -321,6 +342,10 @@ public class Enemy : Script
                             }
                             state = 1;
                         }
+                    }
+                    else
+                    {
+                        LookAt(direction);
                     }
 
                     break;
@@ -337,7 +362,14 @@ public class Enemy : Script
                     //Console.WriteLine("Stunned");
                     SetState("Stun", true);
                     //attackTrigger.SetActive(false);
-                    mNavMeshAgent.FindPath(transform.position);
+                    GetComponent<Rigidbody>().linearVelocity = vec3.Zero;
+                    if (mNavMeshAgent != null) // Use navmesh if is navmesh agent
+                    {
+                        //mNavMeshAgent.FindPath(transform.position); // Bean: this is causing the teleporting issue
+                        mNavMeshAgent.ResetPath();
+                    }
+                   
+
                     currentStunDuration -= Time.deltaTime;
                     if (currentStunDuration <= 0)
                     {
@@ -362,6 +394,10 @@ public class Enemy : Script
                             SetState("Run", false);
                         }
                         state = 0; // Go back to idle state
+                    }
+                    else if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance && mNavMeshAgent.FindPath(player.position))
+                    {
+                        state = 1;
                     }
                     else
                     {
@@ -503,13 +539,15 @@ public class Enemy : Script
             {
                 isStunned = true;
                 staggerTimer = 0f;
+
+                if (damagedCoroutine != null)
+                {
+                    StopCoroutine(damagedCoroutine);
+                }
+                damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 8));
             }
+
             
-            if (damagedCoroutine != null)
-            {
-                StopCoroutine(damagedCoroutine);
-            }
-            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 7));
 
             if (ThirdPersonController.instance.currentlyOverdriven == true)
             {

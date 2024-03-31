@@ -17,7 +17,7 @@ class SliderButtonLogic : Script
     public float value = 0.5f;
 
     private float sliderWidth;
-    private float mouse; 
+    private float mouse = 0f; 
     private bool onClick = false;
     public bool inverted = false;
 
@@ -47,13 +47,11 @@ class SliderButtonLogic : Script
     {
         if (sliderButtonRenderer.IsButtonClicked())
         {
-            Console.WriteLine("???");
             onClick = true;
         }
 
         if (Input.GetMouseHolding(0) && onClick)
         {
-            Console.WriteLine("Holding");
             //Update the slider value 
             UpdateSliderValue();
         }
@@ -70,10 +68,10 @@ class SliderButtonLogic : Script
         float mouseDelta = Input.GetMouseDelta().x * slideSpeed * Time.unscaledDeltaTime;
         mouse += (inverted) ? -mouseDelta : mouseDelta;
 
-        Console.WriteLine("Mouse: " + mouse + " " + maxX + " " + minX);
+        //Console.WriteLine("Mouse: " + mouse + " " + maxX + " " + minX);
 
         slider.x = Mathf.Clamp(mouse, minX, maxX);
-        Console.WriteLine("Slider: " + slider.x);
+        //Console.WriteLine("Slider: " + slider.x); 
 
         float newValue = (inverted) ? -slider.x : slider.x;
         value = (newValue + Mathf.Abs(minX)) / sliderWidth;
@@ -93,6 +91,7 @@ class SliderButtonLogic : Script
         sliderValue = (sliderValue * tempWidth) - Mathf.Abs(minX);
         sliderValue = (inverted) ? -sliderValue : sliderValue;
         slider.x = Mathf.Clamp(sliderValue, minX, maxX);
+        mouse = slider.x;
 
         buttonObj.transform.localPosition = slider;
         sliderTextRenderer.text = value.ToString("0.00");

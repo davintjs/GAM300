@@ -73,7 +73,6 @@ void AudioSystem::Update(float dt) {
 		// update music settings
 		if (audio.current_channel == (int)AudioSource::Channel::MUSIC) {
 			// music should auto loop
-			AUDIOMANAGER.SetMusicVolume(audio.volume);
 			AUDIOMANAGER.PlayMusic(audio.currentSound, audio.fadeOutTime, audio.fadeInTime);
 		}
 
