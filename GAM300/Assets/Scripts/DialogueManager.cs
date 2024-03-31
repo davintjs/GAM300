@@ -276,12 +276,12 @@ public class DialogueManager : Script
                 seer_1.Play();
                 cutscene = true;
                 cutsceneCoroutine = StartCoroutine(CameraPanning(13f, seerCam1, seerCam1_END));
-                text.text = "Seer: Hello, I am SEER, the rightful overseer of this place, until APEX's autonomous thinking become too ambitious and took";
+                text.text = "    Seer: Hello, I am SEER, the rightful overseer of this place, until APEX's autonomous   thinking become too ambitious and took";
                 curr_state = 8;
                 setTimer(9f);
                 break;
             case 9:
-                text.text = "over control of the GRID forcefully. APEX thought it got rid of me, but I managed to upload myself into your schematics.";
+                text.text = "    over control of the GRID forcefully. APEX thought it got rid of me, but I managed to    upload myself into your schematics.";
                 curr_state = 9;
                 seer1_door.moving = true;
                 setTimer(8f);
@@ -291,7 +291,7 @@ public class DialogueManager : Script
                 cutsceneCoroutine = StartCoroutine(CameraPanning(6f, seerCam1_END, seerCam2_END));
                 seer_2.Play();
                 curr_state = 10;
-                text.text = "As part of its main intention to progress humanity, it sought to replace them with creations such as yourself.";
+                text.text = "      As part of its main intention to progress humanity, it sought to replace them with       creations such as yourself.";
                 setTimer(6f);
                 break;
             case 11:
@@ -300,14 +300,14 @@ public class DialogueManager : Script
                 //cutscene = false;
                 seer_3.Play();
                 curr_state = 11;
-                text.text = "Like APEX, you have autonomy and control over your mind, thus you are the only one that can match APEX and stop it.";
+                text.text = "  Like APEX, you have autonomy and control over your mind, thus you are the only one   that can match APEX and stop it.";
                 setTimer(8f);
                 break;
             case 12:
                 cutsceneCoroutine = StartCoroutine(CameraPanning(7f, seerCam4, seerCam4_END));
                 seer_4.Play();
                 curr_state = 12;
-                text.text = "APEX is at the highest floor of the GRID, we have to find a way to defeat it! APEX has stationed guard bots around the GRID to stop us.";
+                text.text = " APEX is at the highest floor of the GRID, we have to find a way to defeat it! APEX has stationed guard bots around the GRID to stop us.";
                 setTimer(8f);
                 break;
             case 13:
