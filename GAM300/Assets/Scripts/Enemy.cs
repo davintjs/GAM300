@@ -138,13 +138,15 @@ public class Enemy : Script
         }
         if(state == 2)
         {
+            //Console.WriteLine("Progress: " + animator.GetProgress());
             isAttacking = true;
             if(isAttacking && !isAttackCooldown)
             {
                 currentAttackTimer += Time.deltaTime;
                 currentAttackBuffer += Time.deltaTime;
                 //if (currentAttackBuffer >= 0.6f) // So that the attack is not instantaneous
-                if(animator.GetProgress() >= 2.786f && !attackOnce)
+                //if(animator.GetProgress() >= 2.786f && !attackOnce)
+                if(animator.GetProgress() > 0.0f && animator.GetProgress() < 0.1f && !attackOnce)
                 {
                     attackOnce = true;
                     if (attackTrigger != null)
@@ -182,7 +184,8 @@ public class Enemy : Script
                 }
             }
 
-            if(animator.GetProgress() < 2.7f)
+            //if(animator.GetProgress() < 2.7f)
+            if(animator.GetProgress() > 0.9f)
             {
                 attackOnce = false;
                 isAttackCooldown = false;

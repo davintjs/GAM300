@@ -193,14 +193,10 @@ void PhysicsSystem::UpdateJoltTransforms()
 
 		UpdateBodyTransform(scene, entity, tmpBID, bodyInterface);
 
-		if (rb.useGravity)
-		{
-			rb.angularVelocity.x = rb.angularVelocity.z = 0.f;
-		}
-
 		bodyInterface->SetLinearVelocity(tmpBID, (JPH::Vec3&)rb.linearVelocity);
 		bodyInterface->SetAngularVelocity(tmpBID, (JPH::Vec3&)rb.angularVelocity);
 		bodyInterface->AddForce(tmpBID, (JPH::Vec3&)rb.force);
+
 		rb.force = vec3(0);
 
 		// Update awake/sleep state of bodies depending
@@ -920,11 +916,23 @@ void PhysicsSystem::UpdateGameObjects() {
 
 		Transform::Decompose(entityMtx, pos, rot, scale);
 
+		if (rb.useGravity)
+		{
+			rotEuler.x = rotEuler.z = 0.000f;
+			rotEuler.y = t.GetGlobalRotation().y;
+		}
+
 		t.SetWorldMatrix(pos, rotEuler, t.GetGlobalScale());
 
 		JPH::Vec3 angVel;
 		JPH::Vec3 lineVel;
 		bodyInterface->GetLinearAndAngularVelocity(tmpBID,lineVel, angVel);
+
+		if (rb.useGravity)
+		{
+			angVel.SetX(0.000f);
+			angVel.SetZ(0.000f);
+		}
 
 		JoltVec3ToGlmVec3(lineVel, rb.linearVelocity);
 		JoltVec3ToGlmVec3(angVel, rb.angularVelocity);
