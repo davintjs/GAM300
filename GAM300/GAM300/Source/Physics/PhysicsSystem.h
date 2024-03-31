@@ -174,9 +174,9 @@ public:
 };
 struct EngineRayCastResult {
 
-	EngineRayCastResult(Tag tag, Vector3 pt, bool hasHit) : tag{ tag }, point { pt }, hit{ hasHit }{}
+	EngineRayCastResult(Tag tag, Vector3 pt, bool hasHit) : name{ tag }, point { pt }, hit{ hasHit }{}
 
-	Tag tag;
+	Tag name;
 	Vector3 point;
 	bool hit;
 
@@ -238,7 +238,7 @@ public:
 	// Update the transform and other data of gameobjects with new values after simulating the physics
 	void UpdateGameObjects();
 
-	void SetBodyCreationSettings(JPH::BodyCreationSettings & bcs, Rigidbody & rb, JPH::EActivation enabledStatus);
+	UINT32 SetBodyCreationSettings(JPH::BodyCreationSettings & bcs, Rigidbody & rb, JPH::EActivation enabledStatus);
 
 	// Resolve any updates before Physics Simulation
 	void PrePhysicsUpdate(float dt);
@@ -266,7 +266,7 @@ public:
 	void DeleteBody(UINT32 bid);
 
 
-	EngineRayCastResult CastRay(JPH::RVec3& origin, const JPH::Vec3& direction, const float& maxDistance);
+	EngineRayCastResult CastRay(JPH::RVec3& origin, const JPH::RVec3& direction, const float& maxDistance);
 
 	const unsigned int maxObjects =						1024;
 	const unsigned int maxObjectMutexes =				   0;
@@ -303,6 +303,9 @@ public:
 	CharacterControllerTest* ccTest =				nullptr;
 	std::vector<JPH::Ref<JPH::Character>> characters;
 	#pragma endregion
+
+	std::unordered_map<UINT32, Engine::UUID> rigidbodyHashMap;
+	std::unordered_map<UINT32, Engine::UUID> characterHashMap;
 
 };
 

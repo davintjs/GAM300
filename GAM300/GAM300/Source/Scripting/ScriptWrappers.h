@@ -141,7 +141,7 @@ static void Raycast(Vector3& position, Vector3& direction, float distance, bool&
 	EngineRayCastResult rc = PHYSICS.CastRay(pos, { direction.x, direction.y, direction.z }, distance);
 	hit = rc.hit;
 	point = rc.point;
-	obj = &MySceneManager.GetCurrentScene().Get<Entity>(rc.tag);
+	obj = &MySceneManager.GetCurrentScene().Get<Entity>(rc.name);
 }
 
 #pragma endregion

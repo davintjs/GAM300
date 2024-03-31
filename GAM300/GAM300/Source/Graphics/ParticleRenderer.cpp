@@ -262,7 +262,8 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glBindVertexArray(0);
 
         trailshader.UnUse();
-        counter += particleComponent.numParticles_;
+        //counter += particleComponent.numParticles_;
+        counter += particleComponent.particles_.size();
 
     }
     

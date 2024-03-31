@@ -42,6 +42,7 @@ public class Enemy : Script
     public GameObject attackTrigger;
     public Transform parentTransform;
     Rigidbody rb;
+    public bool touchingPlayer = false;
 
     public bool isAttacking = false;
     public bool isAttackCooldown = false;
