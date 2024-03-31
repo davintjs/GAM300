@@ -58,6 +58,10 @@ public class ThirdPersonCamera : Script
 
     void Update()
     {
+        if (cutscene)
+        {
+            return;
+        }
         if (GameManager.instance.paused)
             return;
         UpdateCameraRotation();

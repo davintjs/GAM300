@@ -55,13 +55,5 @@ public class Door : Script
 
     }
 
-    void OnTriggerEnter(PhysicsComponent rb)
-    {
-        //detect the player
-        if (GetTag(rb) == "Player")
-        {
-            Console.WriteLine("U TOUCHED THE DOOR NOOOOO");
 
-        }
-    }
 }
