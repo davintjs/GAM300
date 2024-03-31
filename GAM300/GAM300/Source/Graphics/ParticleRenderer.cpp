@@ -36,7 +36,7 @@ void ParticleRenderer::Update(float dt) {
         Transform& transform = currentScene.Get<Transform>(particleComponent);
         if (!currentScene.IsActive(entity))
             continue;
-
+        particleComponent.trailCounter = 0;
         for (int i = 0; i < particleComponent.numParticles_; ++i) {
             //particleTransform.GetTranslation() += particleComponent.particles_[i].position;
             if (i >= particleComponent.particles_.size())
@@ -97,6 +97,7 @@ void ParticleRenderer::Update(float dt) {
 
             // update trail
             if (!particleComponent.is2D) {
+
                 for (unsigned int j = 1; j < particleComponent.particles_[i].trails.count; ++j) {
                     glm::vec3 trailVector = particleComponent.particles_[i].trails.pos[j] - particleComponent.particles_[i].trails.pos[j - 1u];
                     float trailScale = glm::length(trailVector);
@@ -124,6 +125,7 @@ void ParticleRenderer::Update(float dt) {
                         glm::vec4(particleComponent.particles_[i].trails.pos[j - 1], 1));
                     //trailSRT.emplace_back(trailScaleMatrix * trailRotationMatrix * trailTranslateMatrix);
                     trailSRT.emplace_back(trailTranslateMatrix * trailRotationMatrix * trailScaleMatrix);
+                    particleComponent.trailCounter++;
                 }
             }
         }
@@ -157,7 +159,7 @@ bool ParticleRenderer::compareParticles(const glm::mat4& particle1, const glm::m
 void ParticleRenderer::Draw(BaseCamera& _camera) {
     Scene& currentScene = SceneManager::Instance().GetCurrentScene();
     int counter = 0;
-   
+    int generalTrailCounter = 0;
     for (ParticleComponent& particleComponent : currentScene.GetArray<ParticleComponent>()) {
         if (!currentScene.IsActive(particleComponent))
             continue;
@@ -243,9 +245,10 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glBindVertexArray(0);
 
         shader.UnUse();
+
         GLSLShader trailshader = SHADER.GetShader(SHADERTYPE::TRAILS);
         glBindBuffer(GL_ARRAY_BUFFER, cylSRTBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (trailSRT.size()) * sizeof(glm::mat4), trailSRT.data());
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (trailSRT.size()) * sizeof(glm::mat4), trailSRT.data() + generalTrailCounter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         trailshader.Use();
@@ -258,14 +261,13 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glUniformMatrix4fv(view, 1, GL_FALSE,
             glm::value_ptr(_camera.GetViewMatrix()));
         glBindVertexArray(cylVAO);
-        glDrawElementsInstanced(GL_TRIANGLE_STRIP, (GLsizei)cylsize, GL_UNSIGNED_INT, 0, (GLsizei)trailSRT.size());
+        glDrawElementsInstanced(GL_TRIANGLE_STRIP, (GLsizei)cylsize, GL_UNSIGNED_INT, 0, (GLsizei)particleComponent.trailCounter);
         glBindVertexArray(0);
 
         trailshader.UnUse();
         counter += particleComponent.numParticles_;
-
+        generalTrailCounter += particleComponent.trailCounter;
     }
-    
 }
 
 void ParticleRenderer::Draw2D(BaseCamera& _camera) {
