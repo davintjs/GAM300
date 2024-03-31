@@ -64,10 +64,22 @@ void Transform::DisableFlag(Flag flag)
 {
 	flags &= ~static_cast<char>(flag);
 	Scene& scene = MySceneManager.GetCurrentScene();
-	for (const auto& childID : child)
+	if (flag == Flag::WorldEnabled)
 	{
-		Transform& tChild = scene.Get<Transform>(childID);
-		tChild.DisableFlag(flag);
+		for (const auto& childID : child)
+		{
+			Transform& tChild = scene.Get<Transform>(childID);
+			if (tChild.GetFlag(flag))
+				tChild.DisableFlag(flag);
+		}
+	}
+	else
+	{
+		for (const auto& childID : child)
+		{
+			Transform& tChild = scene.Get<Transform>(childID);
+			tChild.DisableFlag(flag);
+		}
 	}
 }
 

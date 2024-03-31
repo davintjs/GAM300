@@ -768,6 +768,10 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 	{
 		for (Script* script : scene.GetMulti<Script>(e1))
 		{
+			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
+			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
+			if (!mMethod)
+				continue;
 			if (script->state == DELETED) continue;
 			//Incase collision disables gameobject
 			if (!&e1 || !&e2)
@@ -777,10 +781,6 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 			if (!scene.IsActive(e2))
 				break;
 			if (!scene.IsActive(*script))
-				continue;
-			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
-			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
-			if (!mMethod)
 				continue;
 			ScriptObject<Object> object(&rb2);
 			void* param{ reinterpret_cast<void*>(&object) };
@@ -794,6 +794,10 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 	{
 		for (Script* script : scene.GetMulti<Script>(e2))
 		{
+			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
+			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
+			if (!mMethod)
+				continue;
 			if (!&e1 || !&e2)
 				break;
 			//Incase collision disables gameobject
@@ -802,10 +806,6 @@ void ScriptingSystem::InvokePhysicsEvent(size_t methodType, PhysicsComponent& rb
 			if (!scene.IsActive(e1))
 				break;
 			if (!scene.IsActive(*script))
-				continue;
-			ScriptClass& scriptClass = scriptClassMap[script->scriptId];
-			MonoMethod* mMethod = scriptClass.DefaultMethods[methodType];
-			if (!mMethod)
 				continue;
 			ScriptObject<Object> object(&rb1);
 			void* param{ reinterpret_cast<void*>(&object) };
