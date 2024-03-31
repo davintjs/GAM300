@@ -60,13 +60,23 @@ void ParticleRenderer::Update(float dt) {
                 glm::vec4(0.f, 0.f, 0.f, 1.f)
                 );
             }
+            glm::mat4 translate;
+            if (particleComponent.isLocalSpace) {
+                translate = glm::mat4(
+                    glm::vec4(1, 0, 0, 0),
+                    glm::vec4(0, 1, 0, 0),
+                    glm::vec4(0, 0, 1, 0),
+                    glm::vec4(particleComponent.particles_[i].position + transform.GetGlobalTranslation(), 1));/**/
+            }
+            else {
+                translate = glm::mat4(
+                    glm::vec4(1, 0, 0, 0),
+                    glm::vec4(0, 1, 0, 0),
+                    glm::vec4(0, 0, 1, 0),
+                    glm::vec4(particleComponent.particles_[i].position, 1));/**/
+            }
 
-
-            glm::mat4 translate = glm::mat4(
-                glm::vec4(1, 0, 0, 0),
-                glm::vec4(0, 1, 0, 0),
-                glm::vec4(0, 0, 1, 0),
-                glm::vec4(particleComponent.particles_[i].position, 1));/**/
+            
 
             //particleSRT.emplace_back(scale * rotate * translate);
             glm::mat4 srt = translate * rotate * scale;

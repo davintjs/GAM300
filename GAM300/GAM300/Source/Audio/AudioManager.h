@@ -41,7 +41,7 @@ struct MusicBuffer{
 SINGLETON(AudioManager) {
 private:
 	//static AudioManager* audioManager;
-	enum Category { CATEGORY_SFX, CATEGORY_MUSIC, CATEGORY_MUSIC2, CATEGORY_LOOPFX, CATEGORY_COUNT };
+	enum Category { CATEGORY_SFX, CATEGORY_MUSIC, CATEGORY_MUSIC2, CATEGORY_COUNT };
 public:
 	// initialize Audio Manager
 	void InitAudioManager();
@@ -55,9 +55,6 @@ public:
 	// add music into music channel
 	void AddMusic(const std::string & path, const Engine::GUID<AudioAsset>&soundGUID);
 
-	// add looping SFX onto LoopFX channel
-	void AddLoopFX(const std::string & path, const Engine::GUID<AudioAsset> soundGUID);
-
 	// add SFX into SFX channel
 	void AddSFX(const std::string & path, const Engine::GUID<AudioAsset> soundGUID);
 
@@ -66,10 +63,6 @@ public:
 
 	// Unpause Music
 	void PlayMusic();
-
-	// Play SFX with the filename on loop
-	void PlayLoopFX(Engine::GUID<AudioAsset> soundGUID, float pan = 0.f, float vol = 1.f,
-		float minPitch = -1, float maxPitch = 3);
 
 	// Play SFX once
 	FMOD::Channel* PlaySFX(Engine::GUID<AudioAsset> soundGUID,
@@ -98,9 +91,6 @@ public:
 
 	// pause current music
 	void PauseMusic();
-
-	//pause loopinf sfx
-	void PauseLoopFX();
 
 	// Functions for volume settings
 	void SetMasterVolume(float volume);
@@ -137,7 +127,7 @@ public:
 private:
 
 	FMOD::ChannelGroup* master{};
-	FMOD::ChannelGroup* groups[CATEGORY_COUNT]{};
+	FMOD::ChannelGroup* groups[CATEGORY_COUNT];
 	FMOD_MODE modes[CATEGORY_COUNT]{};
 	MusicBuffer musics[2];
 	int currentMusicIdx{ 0 };
@@ -148,6 +138,7 @@ private:
 	Engine::GUID<AudioAsset> currentFXPath{};
 
 	float musicVolume{ 1.f };
+	float masterVolume{ 1.f };
 	float loopfxVolume{ 1.f };
 	float fixStepTime{ .5f };
 	float stepTime{ .0f };

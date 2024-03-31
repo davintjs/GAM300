@@ -181,6 +181,11 @@ public class BossBehaviour : Script
 
                     //if (animator.GetProgress() >= 0.5)
                     StartCoroutine(Death());
+
+                    instance.SetState(3); //Death dialogue
+                    GameManager.instance.GetComponent<SceneTransitionTrigger>().fader.StartFadeIn(2f, true, 8f, 1f);
+                    GameManager.instance.GetComponent<SceneTransitionTrigger>().triggerEnter = true;
+                    InstanceData.SaveData("CurrentLevel", 0);
                     //DIE
                 }
             }
@@ -334,7 +339,6 @@ public class BossBehaviour : Script
 
     IEnumerator BasicAttackSequence()
     {
-
         SetState("Attack1", true);
         yield return new WaitForSeconds(0.65f);
         StartCoroutine(RotateAndMoveToPlayer(0.1f, 800f, rotationSpeed / 2f));
@@ -380,6 +384,7 @@ public class BossBehaviour : Script
 
     IEnumerator Dodge()
     {
+        isDashPlayed = false;
         float timer = dodgeDuration;
         float dist = 0;
         vec3 targetPos = center.position;
@@ -473,7 +478,13 @@ public class BossBehaviour : Script
         if (!isSlamplayed)
         {
             isSlamplayed = true;
-            instance.SetState(5); //Apex slam attack
+            Random rand = new Random();
+            if(rand.Next(1,100) >= 50)
+            {
+                instance.SetState(5); // Don' think you can run 
+            }
+            else
+                instance.SetState(9); // There's no escape
         }
         float jumpDur = jumpAttackDuration * 0.3f;
         float startDur = jumpAttackDuration * 0.7f;
@@ -712,7 +723,7 @@ public class BossBehaviour : Script
     IEnumerator ProjectileAttack()
     {
         int cycles = 4;
-
+        instance.SetState(8);
         int directions = projectileCount;
         float angle = 360 / (float)(directions);
         float offset = 10f;

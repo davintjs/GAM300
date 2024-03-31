@@ -58,7 +58,7 @@ public:
 	void UpdateStateName();
 
 	// Gets the current animation state progress
-	float GetProgress() { return m_CurrentTime / (endTime - startTime + blendDuration); }
+	float GetProgress() { return fmod(m_CurrentTime, endTime - startTime) / (endTime - startTime); }
 
 	// Sets the current animation state progress
 	void SetProgress(const float& _value) { m_CurrentTime = _value * (endTime - startTime + blendDuration); }

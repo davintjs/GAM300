@@ -346,7 +346,7 @@ namespace BeanFactory
         public static extern int GetScrollState();
 
         [MethodImpl(MethodImplOptions.InternalCall)]
-        public static extern void FindPath(NavMeshAgent pEnemy, vec3 pDest);
+        public static extern bool FindPath(NavMeshAgent pEnemy, vec3 pDest);
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void ResetPather(NavMeshAgent pEnemy);

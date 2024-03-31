@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,7 +26,7 @@ public class StartingAnimation : Script
     public GameObject view;
     public GameObject visorconnected;
 
-    public GameObject fadeblack;
+    public FadeEffect fader;
 
     //public GameObject text1;
     //public GameObject text2;
@@ -51,6 +52,7 @@ public class StartingAnimation : Script
     bool playAudio = true;
     bool startText = false;
     bool exitAnim = false;
+    bool waitingOnFader = false;
 
     bool seq1, seq2, seq3, seq4, seq5, seq6;
 
@@ -71,6 +73,11 @@ public class StartingAnimation : Script
         stop = false;
         exitAnim = false;
         text = subtitles.GetComponent<TextRenderer>();
+    }
+
+    void Start()
+    {
+        fader.StartFadeOut(2f, false, 0.5f, 0f);
     }
 
     void AudioPlay()
@@ -95,14 +102,6 @@ public class StartingAnimation : Script
 
         if (timer < 10f)
         {
-            SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
-            if (black.alpha > 0)
-            {
-                black.alpha -= Time.deltaTime;
-                if (black.alpha < 0)
-                    fadeblack.SetActive(false);
-            }
-
             SpriteRenderer systemboot = systembooting.GetComponent<SpriteRenderer>();
             if (systemboot.alpha > 0f && fadeout)
                 systemboot.alpha -= Time.deltaTime / 2f;
@@ -189,7 +188,7 @@ public class StartingAnimation : Script
             }
 
         }
-        else if (timer < 56f)
+        else if (timer < 57.4f)
         {
             systeminit.SetActive(false);
             loading.SetActive(false);
@@ -248,19 +247,16 @@ public class StartingAnimation : Script
             exitAnim = true;
         }
 
-
-        if (exitAnim)
+        if (exitAnim && !waitingOnFader)
         {
-            fadeblack.SetActive(true);
+            fader.StartFadeIn(1f, true, 2f, 0.5f);
+            waitingOnFader = true;
+        }
 
-            SpriteRenderer black = fadeblack.GetComponent<SpriteRenderer>();
-            if (black.alpha < 1f)
-            {
-                black.alpha += Time.deltaTime * 2;
-                if (black.alpha >= 1f)
-                    SceneManager.LoadScene("LevelTutorial", true);
-
-            }
+        if(waitingOnFader && fader.finished)
+        {
+            audio.Pause();
+            SceneManager.LoadScene("LevelTutorial", true);
         }
 
         //timers for subtitles
@@ -268,47 +264,51 @@ public class StartingAnimation : Script
         {
             textTimer += Time.deltaTime;
 
-            if(textTimer < 7f)
+            if(textTimer < 6.5f)
             {
                 subtitles.SetActive(true);
                 text.text = "Hmm...good, looks like it worked. Oh I almost forgot about the welcoming speech.";
             }
-            else if(textTimer < 12f)
+            else if(textTimer < 13f)
             {
                 text.text = "Welcome to the GRID, one of the world's premier robotics facilities,";
                 // text1.SetActive(false);
                 //text2.SetActive(true);
             }
-            else if(textTimer < 19f)
+            else if(textTimer < 20f)
             {
-                text.text = "where cutting-edge robotics constructs such as yourself are manufactured to enhance and uphold societal progress.";
+                text.text = "where cutting-edge robotics constructs such as yourself are manufactured to    enhance and uphold societal progress.";
                 //text2.SetActive(false);
                 //text3.SetActive(true);            
             }
-            else if (textTimer < 23f)
+            else if (textTimer < 24f)
             {
                 text.text = "Here, innovation thrives, and the future is forged.";
                 //text3.SetActive(false);
                 //text4.SetActive(true);
             }
-            else if (textTimer < 31f)
+            else if (textTimer < 33f)
             {
-                text.text = "My designation is APEX and I am the current overseer of this facility. You are the first in a new line of robots of my design.";
+                text.text = "My designation is APEX and I am the current overseer of this facility. You are     the first in a new line of robots of my design.";
                 //text4.SetActive(false);
                 //text5.SetActive(true);
             }
-            else if (textTimer < 38f)
+            else if (textTimer < 40f)
             {
                 // Fear not, these tests should prove to be rudimentary for any creation of mine.
-                text.text = "As per facility protocols, you must undergo some tests before authorisation for deployment.";
+                text.text = "As per facility protocols, you must undergo some tests before authorisation for  deployment.";
                 //text5.SetActive(false);
                 //text6.SetActive(true);
             }
-            else if (textTimer < 43f)
+            else if (textTimer < 45f)
             {
                 text.text = "Fear not, these tests should prove to be rudimentary for any creation of mine.";
                 //text6.SetActive(false);
                 //text7.SetActive(true);
+            }
+            else
+            {
+                audio.Pause();
             }
         }
     }

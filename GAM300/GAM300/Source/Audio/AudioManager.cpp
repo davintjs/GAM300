@@ -35,10 +35,8 @@ void AudioManager::InitAudioManager() {
 	}
 	master->setVolume(1.f);
 	// Set up modes for each category
-	modes[CATEGORY_SFX] = FMOD_3D;
-	modes[CATEGORY_MUSIC] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
-	modes[CATEGORY_MUSIC2] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
-	//modes[CATEGORY_LOOPFX] = FMOD_DEFAULT | FMOD_LOOP_NORMAL;
+	modes[CATEGORY_SFX] = FMOD_3D | FMOD_NONBLOCKING;
+	modes[CATEGORY_MUSIC] = FMOD_DEFAULT | FMOD_LOOP_NORMAL | FMOD_NONBLOCKING;
 	// Seed random number generator for SFXs
 	srand((unsigned int)time(0));
 
@@ -59,14 +57,14 @@ void AudioManager::DestroyAudioManager() {
 
 void AudioManager::Update(float dt) {
 	//const float fadeTime = 2.f; // in seconds
-	static float masterVolume = GetMasterVolume();
+	//static float masterVolume = GetMasterVolume();
 	if (!Application::Instance().IsWindowFocused())
 	{
-		masterVolume = (GetMasterVolume() != 0.01f) ? GetMasterVolume() : masterVolume;
+		//masterVolume = (GetMasterVolume() != 0.01f) ? GetMasterVolume() : masterVolume;
 		master->setVolume(0.01f);
 	}
 	else
-		master->setVolume(masterVolume);
+		SetMasterVolume(GetMasterVolume());
 
 	for (MusicBuffer& musicBuffer : musics) {
 		if (musicBuffer.currentMusic != 0 && musicBuffer.fade == FADE_IN) {
@@ -120,23 +118,10 @@ void AudioManager::Update(float dt) {
 void AudioManager::AddMusic(const std::string& path, const Engine::GUID<AudioAsset>& name) {
 
 	FMOD::Sound* sound;
-	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_MUSIC], 0, &sound);
-	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
-	sounds[CATEGORY_MUSIC].emplace(name, sound);
-
-	FMOD::Sound* sound2;
-	r = system->createSound(path.c_str(), modes[CATEGORY_MUSIC2], 0, &sound2);
-	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
-	sounds[CATEGORY_MUSIC2].emplace(name, sound2);
-}
-
-void AudioManager::AddLoopFX(const std::string& path, const Engine::GUID<AudioAsset> name) {
-
-	FMOD::Sound* sound;
-	FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_LOOPFX], 0, &sound);
-	E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
-
-	sounds[CATEGORY_LOOPFX].emplace(name, sound);
+    FMOD_RESULT r = system->createSound(path.c_str(), modes[CATEGORY_MUSIC], 0, &sound);
+    E_ASSERT(r == FMOD_OK, path, " doesnt exist!\n");
+    sound->setMode(modes[CATEGORY_MUSIC]);
+    sounds[CATEGORY_MUSIC].emplace(name, sound);
 }
 
 void AudioManager::AddSFX(const std::string& path, const Engine::GUID<AudioAsset> name) {
@@ -151,7 +136,8 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 
 	// if on same music, just unpause
 	if (musics[currentMusicIdx].currentMusicPath == name) {
-
+		groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+		groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 		groups[CATEGORY_MUSIC]->setPaused(false);
 		groups[CATEGORY_MUSIC2]->setPaused(false);
 		musics[currentMusicIdx].currentMusic->setPaused(false);
@@ -166,8 +152,8 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 
 			currentMusicIdx ^= 1;
 			// Find the Music in the corresponding sound map
-			SoundMap::iterator sound = sounds[CATEGORY_MUSIC + currentMusicIdx].find(name);
-			if (sound == sounds[CATEGORY_MUSIC + currentMusicIdx].end()) {
+			SoundMap::iterator sound = sounds[CATEGORY_MUSIC].find(name);
+			if (sound == sounds[CATEGORY_MUSIC].end()) {
 				return;
 			}
 			// Start playing Music with volume set to 0 and fade in
@@ -177,6 +163,8 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 			musics[currentMusicIdx].currentMusic->setVolume(0.f);
 			musics[currentMusicIdx].currentMusic->setPaused(false);
 			groups[CATEGORY_MUSIC + currentMusicIdx]->setPaused(false);
+			groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+			groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 			musics[currentMusicIdx].fade = FADE_IN;
 			musics[currentMusicIdx].fadetime = componentFadeIn;
 
@@ -190,8 +178,8 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 	}
 
 	// Find the Music in the corresponding sound map
-	SoundMap::iterator sound = sounds[CATEGORY_MUSIC + currentMusicIdx].find(name);
-	if (sound == sounds[CATEGORY_MUSIC + currentMusicIdx].end()) {
+	SoundMap::iterator sound = sounds[CATEGORY_MUSIC].find(name);
+	if (sound == sounds[CATEGORY_MUSIC].end()) {
 		return;
 	}
 	// Start playing Music with volume set to 0 and fade in
@@ -201,67 +189,17 @@ void AudioManager::PlayMusic(const Engine::GUID<AudioAsset> name, float componen
 	musics[currentMusicIdx].currentMusic->setVolume(0.f);
 	musics[currentMusicIdx].currentMusic->setPaused(false);
 	groups[CATEGORY_MUSIC + currentMusicIdx]->setPaused(false);
+	groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+	groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 	musics[currentMusicIdx].fade = FADE_IN;
 	musics[currentMusicIdx].fadetime = componentFadeIn;
 }
 
-void AudioManager::PlayLoopFX(const Engine::GUID<AudioAsset> name, float pan, float vol,
-	float minPitch, float maxPitch) {
-
-	//std::string name = "../Sandbox/Assets/All/Sounds/" + filename + ".mp3";
-	if (currentFXPath == name) {
-		groups[CATEGORY_LOOPFX]->setPaused(false);
-		currentFX->setPaused(false);
-		currentFX->setPan(pan);
-		loopfxVolume = vol;
-		int count{ 1 };
-		currentFX->getLoopCount(&count);
-		if (count == 1 || count == -1) {
-			count = 1;
-			currentFX->setFrequency(44100.f);
-		}
-		currentFX->setLoopCount(count);
-		if (count == 0) {
-			static float semitone_ratio = pow(2.0f, 1.0f / 12.0f);
-			float frequency{1};
-			float pitch = RandFloat(minPitch, maxPitch);
-			currentFX->getFrequency(&frequency);
-			frequency = frequency * pow(semitone_ratio, pitch);
-			currentFX->setFrequency(frequency);
-			currentFX->setLoopCount(2);
-
-		}
-		return;
-	}
-	// If a Music is playing stop them and set this as the next Music
-	if (currentFX != 0) {
-		//AudioManager::StopFX();
-		
-		return;
-	}
-	// Find the Music in the corresponding sound map
-	SoundMap::iterator sound = sounds[CATEGORY_LOOPFX].find(name);
-	//E_ASSERT(sound != sounds[CATEGORY_LOOPFX].end(), name.ToHexString(), " not found!\n");
-	if (sound == sounds[CATEGORY_LOOPFX].end()) {
-		return;
-	}
-	// Start playing Music with volume set to 0 and fade in
-	currentFXPath = name;
-	system->playSound(sound->second, 0, true, &currentFX);
-	currentFX->setChannelGroup(groups[CATEGORY_LOOPFX]);
-	//volume = RandFloat(minVolume, maxVolume);
-	
-	currentFX->setVolume(1.0f);
-	currentFX->setPan(pan);
-	loopfxVolume = vol;
-	currentFX->setPaused(false);
-	groups[CATEGORY_LOOPFX]->setPaused(false);
-
-}
-
 void AudioManager::PlayMusic() {
 	if (musics[currentMusicIdx].currentMusic) {
+		groups[CATEGORY_MUSIC]->setVolume(musicVolume);
 		groups[CATEGORY_MUSIC]->setPaused(false);
+		groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 		musics[currentMusicIdx].currentMusic->setPaused(false);
 		return;
 	}
@@ -278,8 +216,8 @@ void AudioManager::PlayComponent(AudioSource& Source) {
 	case 0: // Music
 		Source.play = true;
 		//musics[currentMusicIdx].currentMusic->setVolume(Source.volume);
-		groups[CATEGORY_MUSIC]->setVolume(Source.volume);
-		groups[CATEGORY_MUSIC2]->setVolume(Source.volume);
+		groups[CATEGORY_MUSIC]->setVolume(musicVolume);
+		groups[CATEGORY_MUSIC2]->setVolume(musicVolume);
 		PlayMusic(Source.currentSound, Source.fadeOutTime, Source.fadeInTime);
 		break;
 	case 1: // SFX
@@ -300,11 +238,6 @@ void AudioManager::PauseMusic() {
 	groups[CATEGORY_MUSIC]->setPaused(true);
 	musics[0].currentMusic->setPaused(true);
 	musics[1].currentMusic->setPaused(true);
-}
-
-void AudioManager::PauseLoopFX() {
-	groups[CATEGORY_LOOPFX]->setPaused(true);
-	currentFX->setPaused(true);
 }
 
 void AudioManager::PauseComponent(AudioSource& source) {
@@ -394,7 +327,6 @@ void AudioManager::StopAllAudio() {
 	groups[CATEGORY_SFX]->stop();
 	groups[CATEGORY_MUSIC]->stop();
 	groups[CATEGORY_MUSIC2]->stop();
-	groups[CATEGORY_LOOPFX]->stop();
 	currentFX->stop();
 }
 
@@ -415,18 +347,14 @@ void AudioManager::StopAudioComponent(AudioSource& Source) {
 		//musics[currentMusicIdx].currentMusic->stop();
 		musics[currentMusicIdx].fade = FADE_OUT;
 		break;
-	/*case CATEGORY_LOOPFX:
-		currentFXPath = 0;
-		groups[CATEGORY_LOOPFX]->stop();
-		currentFX->stop();
-		break;*/
 	default:
 		break;
 	}
 }
 
 void AudioManager::SetMasterVolume(float volume) {
-	master->setVolume(volume);
+	masterVolume = volume;
+	master->setVolume(masterVolume);
 }
 
 void AudioManager::SetSFXVolume(float volume) {
@@ -448,9 +376,7 @@ float AudioManager::GetComponentVolume(AudioSource& source) {
 }
 
 float AudioManager::GetMasterVolume() {
-	float vol;
-	master->getVolume(&vol);
-	return vol;
+	return masterVolume;
 }
 float AudioManager::GetSFXVolume() {
 	float vol;
@@ -476,9 +402,10 @@ void AudioManager::CallbackAudioAssetLoaded(AssetLoadedEvent<AudioAsset>* pEvent
 	// @kk rmb to delete when done
 	/*AUDIOMANAGER.AddMusic(pEvent->assetPath.string(), pEvent->assetPath.stem().string());
 	AUDIOMANAGER.AddSFX(pEvent->assetPath.string(), pEvent->assetPath.stem().string());*/
+	//std::cout << "loading " << pEvent->asset.mFilePath.string() << std::endl;
+
 	AUDIOMANAGER.AddMusic(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
 	AUDIOMANAGER.AddSFX(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
-	//AUDIOMANAGER.AddLoopFX(pEvent->asset.mFilePath.string(), pEvent->asset.importer->guid);
 }
 
 //Handle audio removal here

@@ -86,6 +86,12 @@ public class ThirdPersonController : Script
     public bool cutscene = false;
     public bool _isSprinting = false;
 
+    //new particles
+    public GameObject playerRespawningVFX;
+    public GameObject playerHealthVFX;
+
+    //overdrive QQ
+    public Transform overDriveUI;
     void Awake()
     {
         if (instance != null)
@@ -152,8 +158,6 @@ public class ThirdPersonController : Script
     public Transform healthBar;
     public GameObject healthStaminaCanvas;
     vec3 initialHealthBarPos;
-    float initialHealthBarXpos;
-    float initialHealthBarXScale;
     bool lowHealthSound = false;
     bool playingLowHealthSound = false;
 
@@ -162,14 +166,11 @@ public class ThirdPersonController : Script
     public float currentStamina;
     public GameObject staminaBarFill;
     public Transform staminaBar;
-    public Transform staminaBarPos;
     private Coroutine regen;
     public float timeBeforeRegen = 1.5f;
     public float regenRate = 60f;//the higher the number, the slower the regen is
     private WaitForSeconds regenTick = new WaitForSeconds(0.1f);
     vec3 initialStaminaBarPos;
-    float initialStaminaBarXpos;
-    float initialStaminaBarXScale;
     public float sprintStamina = 0.5f;
     public float jumpStamina = 10f;
     public float attackStamina = 10f;
@@ -182,7 +183,9 @@ public class ThirdPersonController : Script
     //public float currentOverdrive = 0;
     public GameObject overDriveBar;
     public Transform overDriveTransform;
+    public GameObject overDriveBarFill;
     public GameObject overDriveVFX;
+    vec3 initialOverdriveBarPos;
     //for overdrive chip purposes
     public bool isOverdriveEnabled = false;
     //used to check if in overdrive for dmg boost, regen and stamina reset
@@ -192,6 +195,8 @@ public class ThirdPersonController : Script
     public float currentOverdriveCharge = 0f;
     public float currentOverdriveHealthTimer = 0f;
     public float chargeOverdriveTimer = 0f;
+    public float currentOverdriveScaleTimer = 0f;
+    public bool overDriveUIScaleBool = true;
 
     public Animator animator;
     public bool startDeathAnimationCountdown = false;
@@ -208,6 +213,9 @@ public class ThirdPersonController : Script
 
     public PlayerAudioManager playerSounds;
     private bool noInterpolate = true;
+
+    public ParticleComponent dashVFX;
+    public bool healthRegenEnabled = false;
 
     bool _wasMoving = false;
     bool wasMoving
@@ -282,6 +290,23 @@ public class ThirdPersonController : Script
         //Material mat = doorTestMesh.material;
         //mat.color = vec4.Ones;
         //reference check
+        if (playerHealthVFX == null)
+        {
+            Console.WriteLine("Missing playerHealthVFX reference in ThirdPersonController script");
+        }
+
+
+        if (dashVFX == null)
+        {
+            Console.WriteLine("Missing dashVFX reference in ThirdPersonController script");
+        }
+
+        if (overDriveUI == null)
+        {
+            Console.WriteLine("Missing overDriveUI reference in ThirdPersonController script");
+        }
+
+
         if (overDriveTransform == null)
         {
             Console.WriteLine("Missing OverdriveBarTransform reference in ThirdPersonController script");
@@ -340,11 +365,11 @@ public class ThirdPersonController : Script
         {
             Console.WriteLine("Missing staminaBarFill reference in ThirdPersonController script");
         }
-        if(staminaBarPos == null)
+        if (overDriveBarFill == null)
         {
-            Console.WriteLine("Missing staminaBarPos reference in ThirdPersonController script");
+            Console.WriteLine("Missing overDriveBarFill reference in ThirdPersonController script");
         }
-        if(animator == null)
+        if (animator == null)
         {
             Console.WriteLine("Missing animator reference in ThirdPersonController script");
         }
@@ -365,13 +390,9 @@ public class ThirdPersonController : Script
         currentOverdriveTimer = overdriveTimer;
         currentOverdriveCooldown = overDriveCooldown;
 
-        initialHealthBarPos = healthBarFill.GetComponent<Transform>().localPosition;
-        initialHealthBarXpos = healthBarFill.GetComponent<Transform>().localPosition.x;
-        initialHealthBarXScale = healthBarFill.GetComponent<Transform>().localScale.x;
-
-        initialStaminaBarPos = staminaBarFill.GetComponent<Transform>().localPosition;
-        initialStaminaBarXpos = staminaBarFill.GetComponent<Transform>().localPosition.x;
-        initialStaminaBarXScale = staminaBarFill.GetComponent<Transform>().localScale.x;
+        initialHealthBarPos = healthBarFill.transform.localPosition;
+        initialStaminaBarPos = staminaBarFill.transform.localPosition;
+        initialOverdriveBarPos = overDriveBarFill.transform.localPosition;
         walkSoundTime = walkStepsInterval;
         InitAnimStates();
         spawnPoint = transform.position;
@@ -407,9 +428,12 @@ public class ThirdPersonController : Script
         //death animation timer
         if (startDeathAnimationCountdown)
         {
+            playerRespawningVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y - 1, transform.localPosition.z);
+            playerRespawningVFX.SetActive(true);
             currentAnimationTimer -= Time.deltaTime;
             if (currentAnimationTimer <= 0.2)
             {
+                //ie numerator to delay playeRespawnVFX setactive(false0
                 currentAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
                 //animator.Pause();//pause the death animation to prevent it from returning to idle animation
@@ -418,12 +442,14 @@ public class ThirdPersonController : Script
             }
         }
 
-        if (isDead) return;
+        if (isDead || GetState("Stun")) return;
 
         if (CC.velocity.y > JumpSpeed)
         {
             CC.velocity.y = JumpSpeed;
         }
+
+        vfxChecker();
 
         //Testing taking damage
         if (Input.GetKeyDown(KeyCode.T))
@@ -453,6 +479,38 @@ public class ThirdPersonController : Script
         if (currentStamina >= 20f)
         {
             playerSounds.LowStaminaSound.Pause();
+        }
+
+        if (currentOverdriveCharge >= maxOverdriveCharge && isOverdriveEnabled == true)
+        {
+            overDriveUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            overDriveUI.gameObject.SetActive(false);
+        }
+
+        if (overDriveUI.gameObject.activeSelf == true)
+        {
+            currentOverdriveScaleTimer += Time.deltaTime;
+
+            if (currentOverdriveScaleTimer >= 0.25f)
+            {
+                currentOverdriveScaleTimer = 0f;
+                overDriveUIScaleBool = !overDriveUIScaleBool;
+            }
+
+            if (overDriveUIScaleBool == true)
+            {
+                vec3 target = vec3.Lerp(overDriveUI.localScale, 0.307f, Time.deltaTime * 2);
+                overDriveUI.localScale = target;
+            }
+            else
+            {
+                vec3 target = vec3.Lerp(overDriveUI.localScale, 0.203f, Time.deltaTime * 2);
+                overDriveUI.localScale = target;
+            }
+
         }
 
         vec3 dir = GetDirection();
@@ -501,6 +559,7 @@ public class ThirdPersonController : Script
         if(_isDashAttacking)
         {
             startDashCooldown = true;
+
             //CC.force = PlayerModel.back * dashAttackSpeed;//dash player forward
 
             //selectedWeaponCollider.transform.localPosition = new vec3(transform.localPosition + PlayerModel.back * 0.6f);
@@ -514,7 +573,7 @@ public class ThirdPersonController : Script
 
             if(currentDashAttackTimer > 0.5f)
             {
-                CC.force = PlayerModel.forward * dashAttackSpeed;//dash player forward
+                CC.force = PlayerModel.forward * dashAttackSpeed * Time.deltaTime;//dash player forward
 
                 selectedWeaponCollider.transform.position = new vec3(transform.position + PlayerModel.forward * 1.1f);
                 attackLight.SetActive(true);
@@ -573,7 +632,7 @@ public class ThirdPersonController : Script
                 }
             }
             startDodgeCooldown = true;
-            CC.force = PlayerModel.forward * dodgeSpeed;//dash player forward
+            CC.force = PlayerModel.forward * dodgeSpeed * Time.deltaTime;//dash player forward
             movement = CC.force;//set the movement to be the dash force
             currentDodgeTimer -= Time.deltaTime;
 
@@ -658,6 +717,7 @@ public class ThirdPersonController : Script
                 UpdateOverdriveBar();
 
                 //remove regen, stamina reset and double dmg here
+                healthRegenEnabled = false;
                 currentlyOverdriven = false;
             }
         }
@@ -673,8 +733,9 @@ public class ThirdPersonController : Script
             }
             //DASH ATTACK
             //if(Input.GetMouseDown(1) && !_isDashAttacking && !IsAttacking && !startDashCooldown)
-            if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && currentStamina >= dashAttackStamina)
+            if (Input.GetMouseDown(1) && !_isDashAttacking && !startDashCooldown && !isDodging && currentStamina >= dashAttackStamina)
             {
+                dashVFX.gameObject.SetActive(true);
                 //Console.WriteLine("DashAttack");
                 IsAttacking = false;
                 UseStamina(dashAttackStamina);
@@ -711,7 +772,7 @@ public class ThirdPersonController : Script
                 SetState("DashAttack", true);
             }
             //DODGE
-            if(Input.GetKey(KeyCode.LeftControl) && !isDodging && !startDodgeCooldown && !_isOverdrive && currentStamina >= dodgeStamina)
+            if(Input.GetKey(KeyCode.LeftControl) && !isDodging && !startDodgeCooldown && !_isOverdrive && !_isDashAttacking && currentStamina >= dodgeStamina)
             {
                 //Console.WriteLine("Dodging");
                 UseStamina(dodgeStamina);
@@ -749,6 +810,8 @@ public class ThirdPersonController : Script
             //OVERDRIVE
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && currentOverdriveCharge == maxOverdriveCharge && isOverdriveEnabled == true && currentlyOverdriven == false)
             {
+                healthRegenEnabled = true;
+                overDriveUI.gameObject.SetActive(false);
                 playerSounds.PlayerOverdrive.Play();
                 playerSounds.OverdriveVFXSound.Play();
                 //Overdrive doesn't need stamina to use
@@ -808,7 +871,7 @@ public class ThirdPersonController : Script
             }
 
             //JUMP
-            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking)
+            else if (Input.GetKeyDown(KeyCode.Space) && !IsAttacking && !_isOverdrive && !_isDashAttacking && !isDodging)
             {
                 //Console.WriteLine("JUMP KEY PRESSED!");
                 StartCoroutine(StopJump());
@@ -919,21 +982,52 @@ public class ThirdPersonController : Script
         isOverdriveEnabled = true;
     }
 
+    public void vfxChecker()
+    {
+        //checks whether its dashing vfx should be enabled
+        if (_isDashAttacking == false)
+        {
+            dashVFX.gameObject.SetActive(false);
+        }
+
+        //checks whether healthregen sfx should be enabled
+        if (healthRegenEnabled == true)
+        {
+            playerHealthVFX.SetActive(true);
+        }
+        else
+        {
+            playerHealthVFX.SetActive(false);
+        }
+
+    }
+
+    IEnumerator delayRespawnVFX()
+    {
+        yield return new WaitForSeconds(2f);
+
+        playerRespawningVFX.SetActive(false);
+    }
+
     public void Respawn()
     {
+        PlayerAudioManager.instance.playerRespawn.Play();
         //Console.WriteLine("Respawn");
         isDead = false;
         healthStaminaCanvas.SetActive(true);
         SetState("Death", false);
         //animator.Play();
         player.localPosition = spawnPoint;
+        playerRespawningVFX.transform.position = new vec3(transform.localPosition.x, transform.localPosition.y - 1, transform.localPosition.z);
         HealHealth(maxHealth);
-        healthBarFill.GetComponent<Transform>().localPosition = initialHealthBarPos;
+        healthBarFill.transform.localPosition = initialHealthBarPos;
         UpdatehealthBar();
-        staminaBarFill.GetComponent<Transform>().localPosition = initialStaminaBarPos;
+        staminaBarFill.transform.localPosition = initialStaminaBarPos;
         UpdateStaminaBar();
+        overDriveBarFill.transform.localPosition = initialOverdriveBarPos;
+        UpdateOverdriveBar();
 
-
+        StartCoroutine(delayRespawnVFX());
     }
 
     public void restoreStamina(float staminaPackAmount)
@@ -1097,6 +1191,8 @@ public class ThirdPersonController : Script
             IsAttacking = false;
             //dmg noise
             playerSounds.PlayerInjured.Play();
+
+            CombatManager.instance.SpawnHitEffect(gameObject.transform);
 
             Random rd = new Random();
             damageAudioRotation = rd.Next(0, 1);

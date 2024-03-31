@@ -193,6 +193,11 @@ void PhysicsSystem::UpdateJoltTransforms()
 
 		UpdateBodyTransform(scene, entity, tmpBID, bodyInterface);
 
+		if (rb.useGravity)
+		{
+			rb.angularVelocity.x = rb.angularVelocity.z = 0.f;
+		}
+
 		bodyInterface->SetLinearVelocity(tmpBID, (JPH::Vec3&)rb.linearVelocity);
 		bodyInterface->SetAngularVelocity(tmpBID, (JPH::Vec3&)rb.angularVelocity);
 		bodyInterface->AddForce(tmpBID, (JPH::Vec3&)rb.force);

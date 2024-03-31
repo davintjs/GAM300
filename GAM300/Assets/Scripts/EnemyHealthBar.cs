@@ -18,7 +18,11 @@ public class EnemyHealthBar : Script
 
     void Update()
     {
-        vec3 dir = (camera.position - transform.position).Normalized;
+        vec3 dir = transform.forward;
+        if (camera != null)
+        {
+            dir = (camera.position - transform.position).Normalized;
+        }
         // Get direction from health bar to camera
 
         UpdateRotation(dir);

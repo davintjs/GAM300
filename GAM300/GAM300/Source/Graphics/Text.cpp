@@ -219,9 +219,8 @@ void TextSystem::RenderText(TextRenderer& text)
 		float xpos = x + ch.Bearing.x * scale;
 
 		float ypos = y - (ch.Bearing.y * 2.f) * scale;
-		if(*c == 'p' || *c == 'y' || *c == 'q' || *c == 'g' || *c == 'j')
+		if(*c == 'p' || *c == 'y' || *c == 'q' || *c == 'g' || *c == 'j' || *c == '\'')
 			ypos = y - (ch.Bearing.y) * scale;
-
 		float nextChWidth = 0.f;
 		bool updateNewLine = false;
 

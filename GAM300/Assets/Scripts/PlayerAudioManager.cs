@@ -36,6 +36,7 @@ public class PlayerAudioManager : Script
 
     public AudioSource DoorOpen;
     public AudioSource Elevator;
+    public AudioSource playerRespawn;
 
     void Awake()
     {

@@ -70,8 +70,8 @@ SpriteRenderer:
   World Space: false
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
-  Alpha Scalar: 0.400000006
-  SpriteTexture: {guid: 951aa8d2c1666788ebb81984b77754a5}
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 1bfb233cf78fb5c3b997dec7684d03f2}
 ---
 ID: 15122834859859923062
 GameObject:
@@ -362,8 +362,8 @@ AudioSource:
   Volume: 0.800000012
   min hearing Distance: 999
   max hearing Distance: 1000
-  SFX min Pitch: -1
-  SFX max Pitch: 3
+  SFX min Pitch: 1
+  SFX max Pitch: 1
   Fade In Time (s): 1
   Fade Out Time (s): 1
   Sound File: {guid: 030b0a245a0d54f2c78b85b5b47531be}
@@ -428,6 +428,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1.79999995
+  Vertical Spacing: 1.5
   Textbox Width: 2.16060019
   Textbox Height: 0.101400003
   Center Alignment: true
@@ -7873,7 +7874,7 @@ GameObject:
 ID: 18199103854449706123
 Transform:
   m_GameObject: {fileID: 11807028811020752031}
-  Translation: [0, 6.42500019, 13.552]
+  Translation: [2.08881588e-08, 6.42500019, 13.552]
   Rotation: [0, 0, 0]
   Scale: [0.809986234, 0.810000002, 0.810003757]
   Father: {fileID: 10842162362203223496}
@@ -7919,12 +7920,13 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 8.60999966
+  Vertical Spacing: 1.5
   Textbox Width: 2.12954021
   Textbox Height: 0.485030025
   Center Alignment: true
   Wrap Text: false
   WorldSpace: true
-  Color: [10.000001, 0, 9.52941227, 1]
+  Color: [4, 0, 3.81176496, 1]
 ---
 ID: 3694081528385908447
 GameObject:
@@ -9059,7 +9061,6 @@ Script:
   camera: {fileID: 10110825994908871609}  # Component
   fader: {fileID: 3273061677841725499}  # Component
   incubatorObj: {fileID: 3927099464123553639}  # GameObject
-  mainMenuObj: {fileID: 5972497116800961600}  # GameObject
   settingsButton: {fileID: 11997381317790178123}  # GameObject
   spotLightObj: {fileID: 10615518877558506322}  # GameObject
   startButton: {fileID: 5144980746915515514}  # GameObject
@@ -10921,6 +10922,7 @@ Script:
   m_GameObject: {fileID: 16789995656188959844}
   m_IsEnabled: true
   Script: {guid: 4cf27c0d93a1496bb047824f4b69d79a}
+  hasCamera: true
   camera: {fileID: 10110825994908871609}  # Component
   fader: {fileID: 3273061677841725499}  # Component
   noButton: {fileID: 1882959560974552602}  # GameObject
@@ -10988,6 +10990,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 8
+  Vertical Spacing: 1.5
   Textbox Width: 1.78933346
   Textbox Height: 0.450666696
   Center Alignment: true
@@ -11067,6 +11070,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 8
+  Vertical Spacing: 1.5
   Textbox Width: 1.21600008
   Textbox Height: 0.450666696
   Center Alignment: true
@@ -11115,6 +11119,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.20000005
+  Vertical Spacing: 1.5
   Textbox Width: 1.38600016
   Textbox Height: 0.123933345
   Center Alignment: true
@@ -11151,6 +11156,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.330333382
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11187,6 +11193,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.475666732
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11223,6 +11230,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.311000019
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11259,6 +11267,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.328333348
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11295,6 +11304,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.46600005
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11331,6 +11341,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.516333401
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11367,6 +11378,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.219333351
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11403,6 +11415,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.532000065
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11439,6 +11452,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.076000005
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11475,6 +11489,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.0743333399
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11511,6 +11526,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.0743333399
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11547,6 +11563,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.0743333399
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11615,7 +11632,7 @@ GameObject:
 ID: 11237156434400751748
 Transform:
   m_GameObject: {fileID: 15869362262719794040}
-  Translation: [-1.22189522e-06, 0.467472076, 0.100175858]
+  Translation: [-1.22189522e-06, 0.449999988, 0.100175858]
   Rotation: [0, 0, 0]
   Scale: [0.999999642, 1.00000024, 0.99999994]
   Father: {fileID: 6752217455587753583}
@@ -11627,10 +11644,11 @@ TextRenderer:
   m_GameObject: {fileID: 15869362262719794040}
   m_IsEnabled: true
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: "||||||||||||||||||||||| "
+  Text: "|||||||||||||||||| "
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.34000003
   Textbox Width: 0.0480000004
   Textbox Height: 0.056333337
   Center Alignment: true
@@ -11691,6 +11709,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.502000034
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11727,6 +11746,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.295333356
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11763,6 +11783,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.272000015
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11799,6 +11820,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.667333364
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11835,6 +11857,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.648666739
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11871,6 +11894,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.613000035
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11931,6 +11955,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.681666732
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -11967,6 +11992,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.314666688
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -12003,6 +12029,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.734666824
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -12039,6 +12066,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.825333416
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -12075,6 +12103,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.857000113
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -12111,6 +12140,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.964333415
   Textbox Height: 0.056333337
   Center Alignment: false
@@ -12178,6 +12208,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0900000036
   Font Size: 2
+  Vertical Spacing: 1.5
   Textbox Width: 0.55400008
   Textbox Height: 0.112666674
   Center Alignment: true
@@ -12263,6 +12294,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 2.5
+  Vertical Spacing: 1.5
   Textbox Width: 1.03666675
   Textbox Height: 0.140833348
   Center Alignment: true
@@ -12330,6 +12362,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0900000036
   Font Size: 2
+  Vertical Spacing: 1.5
   Textbox Width: 0.863333404
   Textbox Height: 0.112666674
   Center Alignment: true
@@ -12409,6 +12442,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0900000036
   Font Size: 2
+  Vertical Spacing: 1.5
   Textbox Width: 0.697333395
   Textbox Height: 0.112666674
   Center Alignment: true
@@ -12607,6 +12641,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: 0
   Font Size: 1.5
+  Vertical Spacing: 1.5
   Textbox Width: 4.4034996
   Textbox Height: 0.0845000073
   Center Alignment: true
@@ -12643,6 +12678,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0500000007
   Font Size: 1.25
+  Vertical Spacing: 1.5
   Textbox Width: 0.435833365
   Textbox Height: 0.070416674
   Center Alignment: true
@@ -12708,7 +12744,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 1
-  SpriteTexture: {guid: 1719ff7d2329f798155c60fb66d2a61c}
+  SpriteTexture: {guid: e2cbe5428e0131c3bd0335ac45f90ec5}
 ---
 ID: 1308670381251737083
 GameObject:
@@ -12739,6 +12775,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0299999993
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.17400001
   Textbox Height: 0.056333337
   Center Alignment: true
@@ -12759,7 +12796,7 @@ GameObject:
 ID: 2710512181228744512
 Transform:
   m_GameObject: {fileID: 5025454116081322359}
-  Translation: [-0.779999971, -1, -0.0499658585]
+  Translation: [-0.800000012, -1, -0.0499591827]
   Rotation: [0, 0, 0]
   Scale: [0.999998331, 1, 0.999998033]
   Father: {fileID: 6713450706993220945}
@@ -12774,10 +12811,11 @@ Script:
   m_IsEnabled: true
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 5
-  MinValue: 0
+  MinValue: 0.5
   inverted: true
-  maxX: 0.709999979
-  minX: -0.709999979
+  maxX: 1.10000002
+  minX: -1.10000002
+  slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 9712636449910607818}  # GameObject
   sliderTextObj: {fileID: 1308670381251737083}  # GameObject
@@ -12811,6 +12849,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0599999987
   Font Size: 2.25
+  Vertical Spacing: 1.5
   Textbox Width: 1.65225017
   Textbox Height: 0.126750007
   Center Alignment: false
@@ -12847,6 +12886,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0599999987
   Font Size: 2.25
+  Vertical Spacing: 1.5
   Textbox Width: 1.36950016
   Textbox Height: 0.126750007
   Center Alignment: false
@@ -12883,6 +12923,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0599999987
   Font Size: 2.25
+  Vertical Spacing: 1.5
   Textbox Width: 1.41600013
   Textbox Height: 0.126750007
   Center Alignment: false
@@ -12922,6 +12963,7 @@ Script:
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
+  slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 8994722542415437916}  # GameObject
   sliderTextObj: {fileID: 10870457192150947301}  # GameObject
@@ -13015,6 +13057,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0299999993
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.17400001
   Textbox Height: 0.056333337
   Center Alignment: true
@@ -13054,6 +13097,7 @@ Script:
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
+  slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 7091100355578800126}  # GameObject
   sliderTextObj: {fileID: 6479069291501227691}  # GameObject
@@ -13147,6 +13191,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0299999993
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.17400001
   Textbox Height: 0.056333337
   Center Alignment: true
@@ -13186,6 +13231,7 @@ Script:
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
+  slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 14571891404093188607}  # GameObject
   sliderTextObj: {fileID: 4090370652779046302}  # GameObject
@@ -13279,6 +13325,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0299999993
   Font Size: 1
+  Vertical Spacing: 1.5
   Textbox Width: 0.17400001
   Textbox Height: 0.056333337
   Center Alignment: true
@@ -13315,6 +13362,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0500000007
   Font Size: 2.25
+  Vertical Spacing: 1.5
   Textbox Width: 1.17825007
   Textbox Height: 0.126750007
   Center Alignment: false
@@ -13391,6 +13439,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0500000007
   Font Size: 2.25
+  Vertical Spacing: 1.5
   Textbox Width: 1.01100004
   Textbox Height: 0.126750007
   Center Alignment: false
@@ -13427,6 +13476,7 @@ TextRenderer:
   X-axis Offset: 0
   Y-axis Offset: -0.0500000007
   Font Size: 2.25
+  Vertical Spacing: 1.5
   Textbox Width: 0.661500096
   Textbox Height: 0.126750007
   Center Alignment: false

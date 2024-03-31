@@ -20,18 +20,17 @@ GameObject:
 ID: 4864774252226257722
 Transform:
   m_GameObject: {fileID: 7305319039410813174}
-  Translation: [0, 0, 0.816037178]
+  Translation: [0, 0, 1]
   Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 0}
   m_Children:
-    []
+    - {fileID: 4592072074559840146}
 ---
 ID: 2199169755166096751
 Camera:
   m_GameObject: {fileID: 7305319039410813174}
   m_IsEnabled: true
-  BackgroundColor: [7.10738581e-42, 0, 3.8442101e-40, 0]
   ClearFlags: "\x00"
   CullingMask: "\x00"
   NearClip: 0.100000001
@@ -79,6 +78,7 @@ Transform:
     - {fileID: 16526287598854957340}
     - {fileID: 6711356329535506755}
     - {fileID: 15177962187234400664}
+    - {fileID: 17232772334709633373}
 ---
 ID: 4442105592620540233
 Canvas:
@@ -91,7 +91,7 @@ Script:
   m_IsEnabled: true
   Script: {guid: 7ab20ba8375724359f12ba9f101f8850}
   audio: {fileID: 18230885468184141171}  # Component
-  fadeblack: {fileID: 6711356329535506755}  # GameObject
+  fader: {fileID: 3372796401943198642}  # Component
   gps: {fileID: 9397382759585305232}  # GameObject
   loading: {fileID: 17869501716874934695}  # GameObject
   location: {fileID: 17621016148347953717}  # GameObject
@@ -122,10 +122,10 @@ GameObject:
 ID: 4120904777019993763
 Transform:
   m_GameObject: {fileID: 4592072074559840146}
-  Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Translation: [0, 0, -0.816037178]
+  Rotation: [0, -0, 0]
   Scale: [1, 1, 1]
-  Father: {fileID: 0}
+  Father: {fileID: 7305319039410813174}
   m_Children:
     - {fileID: 16470510239641695939}
     - {fileID: 2408824139090975511}
@@ -158,7 +158,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 0
   Loop: false
-  Volume: 0.699999988
+  Volume: 0.5
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -449,7 +451,7 @@ GameObject:
 ID: 9650576533481140271
 Transform:
   m_GameObject: {fileID: 1925772060971598989}
-  Translation: [-1.04999995, -0.118244544, 0.860000014]
+  Translation: [-1.04999995, -0.118244544, 0.400000006]
   Rotation: [0, 0, 0]
   Scale: [0.550000012, -0.579999983, 0.738213718]
   Father: {fileID: 17065559468612678914}
@@ -757,7 +759,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -791,7 +795,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -825,7 +831,9 @@ AudioSource:
   m_IsEnabled: true
   AudioChannel: 1
   Loop: false
-  Volume: 1
+  Volume: 1.20000005
+  min hearing Distance: 1
+  max hearing Distance: 1000
   SFX min Pitch: 0
   SFX max Pitch: 0
   Fade In Time (s): 1
@@ -895,20 +903,21 @@ SpriteRenderer:
 ---
 ID: 6711356329535506755
 GameObject:
-  m_IsActive: false
+  m_IsActive: true
   m_Name: fadeblack
   m_TagString: ""
   m_Layer: 0
   m_Component:
     - component: {fileID: 12547162527113978062}  # Transform
     - component: {fileID: 9092643756737553499}  # SpriteRenderer
+    - component: {fileID: 3372796401943198642}  # Script
 ---
 ID: 12547162527113978062
 Transform:
   m_GameObject: {fileID: 6711356329535506755}
-  Translation: [-0.0450473242, -0.0500993803, 1.37800002]
+  Translation: [0, 0, 0.5]
   Rotation: [3.14159083, 0, -3.14159083]
-  Scale: [28.1259995, 28, 0.970950902]
+  Scale: [7.30000019, 4.30000019, 1]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -923,10 +932,24 @@ SpriteRenderer:
   Alpha Scalar: 1
   SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}
 ---
+ID: 3372796401943198642
+Script:
+  m_GameObject: {fileID: 6711356329535506755}
+  m_IsEnabled: true
+  Script: {guid: d75689aa359715e72826ba5750f6faf3}
+  finished: false
+  inDuration: 1
+  isFading: false
+  looping: false
+  outDuration: 1
+  targetVal: 1
+  waitDelay: 0
+  fader: {fileID: 6711356329535506755}  # GameObject
+---
 ID: 15177962187234400664
 GameObject:
   m_IsActive: false
-  m_Name: subtitles
+  m_Name: Subtitles
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -936,9 +959,9 @@ GameObject:
 ID: 5296641902821484860
 Transform:
   m_GameObject: {fileID: 15177962187234400664}
-  Translation: [-0.629999995, -0.769999981, 0]
+  Translation: [0, -0.879999995, 0]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.101000004, 0.101000004, 0.101000004]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -948,14 +971,44 @@ TextRenderer:
   m_GameObject: {fileID: 15177962187234400664}
   m_IsEnabled: true
   Font: {guid: a7cae9393a3a20320ff941174aa43890}
-  Text: hmm...good. Looks like it worked
+  Text: This is the subtitles
   X-axis Offset: 0
   Y-axis Offset: 0
-  Font Size: 0.25
-  Textbox Width: 92
-  Leading: 2
+  Font Size: 5
+  Vertical Spacing: 1.5
+  Textbox Width: 20
+  Textbox Height: 0.281666696
   Center Alignment: true
-  Color R: 1
-  Color G: 1
-  Color B: 1
-  Opacity: 1
+  Wrap Text: true
+  WorldSpace: false
+  Color: [1, 1, 1, 1]
+---
+ID: 17232772334709633373
+GameObject:
+  m_IsActive: true
+  m_Name: Background
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 1958507342053744360}  # Transform
+    - component: {fileID: 925648368314709029}  # SpriteRenderer
+---
+ID: 1958507342053744360
+Transform:
+  m_GameObject: {fileID: 17232772334709633373}
+  Translation: [0, 0, -8]
+  Rotation: [0, 0, 0]
+  Scale: [7.30000019, 4.9000001, 1]
+  Father: {fileID: 17065559468612678914}
+  m_Children:
+    []
+---
+ID: 925648368314709029
+SpriteRenderer:
+  m_GameObject: {fileID: 17232772334709633373}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: false
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 50b561148e09d42e170b6f17fec40c58}

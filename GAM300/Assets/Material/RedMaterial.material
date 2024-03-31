@@ -1,6 +1,6 @@
 Material:
   Material Name: RedMaterial
-  Shader: 0
+  Shader: 1
   Albedo: [1, 0, 0, 1]
   Metallic: 1
   Roughness: 0.330000013

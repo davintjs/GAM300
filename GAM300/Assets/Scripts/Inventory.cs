@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -45,6 +46,7 @@ public class Inventory : Script
 
     void Start()
     {
+        healthPackCount = 10;
         playerSounds = PlayerAudioManager.instance;
 
         if (sprintIcon == null)
@@ -131,11 +133,19 @@ public class Inventory : Script
         }
     }
 
+    IEnumerator delayRegenVFX()
+    {
+        ThirdPersonController.instance.healthRegenEnabled = true;
+        yield return new WaitForSeconds(2f);
+        ThirdPersonController.instance.healthRegenEnabled = false;
+    }
+
     void thePacks()
     {
         //HEALTH PACK - RESTORES HEALTH
         if (healthPackCount > 0 && Input.GetKeyDown(KeyCode.D1))
         {
+            StartCoroutine(delayRegenVFX());
             healthPackCount -= 1;
             Console.WriteLine("Use Health Pack");
             playerSounds.UseItem.Play();

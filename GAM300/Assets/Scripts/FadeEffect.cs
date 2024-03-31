@@ -96,25 +96,24 @@ public class FadeEffect : Script
     IEnumerator FadeInOrOut(bool keepActive = false, float inDelay = 0f, float outDelay = 0f)
     {
         if(inDelay == 0f)
-            yield return new WaitForSeconds(waitDelay);
+            yield return new WaitForUnscaledSeconds(waitDelay);
         else
-            yield return new WaitForSeconds(inDelay);
+            yield return new WaitForUnscaledSeconds(inDelay);
 
         float elaspedTime = 0f;
         while (elaspedTime < duration)
         {
             spriteRenderer.alpha = Mathf.Lerp(startVal, targetVal, elaspedTime / duration);
-            elaspedTime += Time.deltaTime;
+            elaspedTime += Time.unscaledDeltaTime;
             yield return null;
         }
 
         spriteRenderer.alpha = targetVal;
 
         if (outDelay == 0f)
-            yield return new WaitForSeconds(waitDelay);
+            yield return new WaitForUnscaledSeconds(waitDelay);
         else
-            yield return new WaitForSeconds(outDelay);
-
+            yield return new WaitForUnscaledSeconds(outDelay);
         finished = true;
         isFading = false;
         if(!keepActive)
@@ -125,13 +124,13 @@ public class FadeEffect : Script
 
     IEnumerator FadeInAndOut()
     {
-        yield return new WaitForSeconds(waitDelay);
+        yield return new WaitForUnscaledSeconds(waitDelay);
 
         float elaspedTime = 0f;
         while (elaspedTime < duration)
         {
             spriteRenderer.alpha = Mathf.Lerp(startVal, targetVal, elaspedTime / duration);
-            elaspedTime += Time.deltaTime;
+            elaspedTime += Time.unscaledDeltaTime;
             yield return null;
         }
 
@@ -139,19 +138,19 @@ public class FadeEffect : Script
         startVal = 1.0f;
         targetVal = 0.0f;
 
-        yield return new WaitForSeconds(waitDelay);
+        yield return new WaitForUnscaledSeconds(waitDelay);
 
         elaspedTime = 0f;
         while (elaspedTime < duration)
         {
             spriteRenderer.alpha = Mathf.Lerp(startVal, targetVal, elaspedTime / duration);
-            elaspedTime += Time.deltaTime;
+            elaspedTime += Time.unscaledDeltaTime;
             yield return null;
         }
 
         spriteRenderer.alpha = targetVal;
 
-        yield return new WaitForSeconds(waitDelay);
+        yield return new WaitForUnscaledSeconds(waitDelay);
 
         finished = true;
         isFading = false;
