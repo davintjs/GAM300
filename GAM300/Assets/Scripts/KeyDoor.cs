@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -64,7 +64,13 @@ public class KeyDoor : Script
             doorscript.moving = true;
             AudioManager.instance.keyCollected.Play();
             playerSounds.DoorOpen.Play();
-            gameObject.SetActive(false);
+            StartCoroutine(Destroy());
         }
+    }
+
+    IEnumerator Destroy()
+    {
+        yield return null;
+        gameObject.SetActive(false);
     }
 }
