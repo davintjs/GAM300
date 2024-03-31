@@ -549,7 +549,7 @@ public class Enemy : Script
 
             
 
-            if (ThirdPersonController.instance.currentlyOverdriven == true)
+            if (ThirdPersonController.instance.currentlyOverdriven == true || ThirdPersonController.instance._isDashAttacking)
             {
                 TakeDamage(2);
             }
