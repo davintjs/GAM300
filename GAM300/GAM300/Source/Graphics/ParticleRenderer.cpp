@@ -137,7 +137,7 @@ void ParticleRenderer::Update(float dt) {
                     return compareParticles(particle1, particle2, camTranslate);
                 });
         }
-        particleCounter += particleComponent.numParticles_;
+        particleCounter += particleComponent.particles_.size();
     }
     
 }
@@ -167,7 +167,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         if (!currentScene.IsActive(entity))
             continue;
         if (particleComponent.is2D) {
-            counter += particleComponent.numParticles_;
+            counter += particleComponent.particles_.size();
             generalTrailCounter += particleComponent.trailCounter;
             continue;
         }
@@ -188,14 +188,14 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
 
         glBindBuffer(GL_ARRAY_BUFFER, prop.entitySRTbuffer);
 
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.particles_.size()) * sizeof(glm::mat4), particleSRT.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES);
         shader.Use();
 
         glBindBuffer(GL_ARRAY_BUFFER, prop.ShininessBuffer);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::vec2), particleLifetimes.data() + counter);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.particles_.size()) * sizeof(glm::vec2), particleLifetimes.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         GLint fadeToColor =
@@ -241,7 +241,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
         glUniform1i(boolean1, hasTexture);
         
         glBindVertexArray(vao);
-        glDrawElementsInstanced(prim, prop.drawCount, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
+        glDrawElementsInstanced(prim, prop.drawCount, GL_UNSIGNED_INT, 0, particleComponent.particles_.size());
         
         glBindVertexArray(0);
 
@@ -271,7 +271,7 @@ void ParticleRenderer::Draw(BaseCamera& _camera) {
 
         }
         
-        counter += particleComponent.numParticles_;
+        counter += particleComponent.particles_.size();
     }
 }
 
@@ -285,7 +285,7 @@ void ParticleRenderer::Draw2D(BaseCamera& _camera) {
         if (!currentScene.IsActive(entity))
             continue;
         if (!particleComponent.is2D) {
-            counter += particleComponent.numParticles_;
+            counter += particleComponent.particles_.size();
             continue;
         }
         if (particleComponent.numParticles_ == 0)
@@ -306,11 +306,11 @@ void ParticleRenderer::Draw2D(BaseCamera& _camera) {
 
         glBindBuffer(GL_ARRAY_BUFFER, quadSRTBuffer);
         
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::mat4), particleSRT.data() + counter);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.particles_.size()) * sizeof(glm::mat4), particleSRT.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         glBindBuffer(GL_ARRAY_BUFFER, lifetimeFor2D);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.numParticles_) * sizeof(glm::vec2), particleLifetimes.data() + counter);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, (particleComponent.particles_.size()) * sizeof(glm::vec2), particleLifetimes.data() + counter);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         GLSLShader shader = SHADER.GetShader(SHADERTYPE::PARTICLES2D);
@@ -359,12 +359,12 @@ void ParticleRenderer::Draw2D(BaseCamera& _camera) {
         glUniform1i(boolean1, hasTexture);
 
         glBindVertexArray(quadVAO);
-        glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particleComponent.numParticles_);
+        glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0, particleComponent.particles_.size());
         
         
         glBindVertexArray(0);
 
-        counter += particleComponent.numParticles_;
+        counter += particleComponent.particles_.size();
 
     }
 }
