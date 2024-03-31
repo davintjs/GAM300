@@ -51,6 +51,7 @@ public class BossAudioManager : Script
 
     //Projectile Attack
     public AudioSource slashRelease;
+    public AudioSource slashSpawn;
 
     void Awake()
     {

@@ -64,6 +64,7 @@ public class BossBehaviour : Script
     public Transform attack2Right;
     public Transform attack3;
     public Transform attack4;
+    public Transform slamAttack;
 
     public ParticleComponent dashVFX;
     public ParticleComponent ultimateVFX;
@@ -256,7 +257,7 @@ public class BossBehaviour : Script
         model.gameObject.SetActive(true);
         yield return new WaitForSeconds(3);
         animator.SetSpeed(0);
-        StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
+        //StartCoroutine(GameManager.instance.GetComponent<SceneTransitionTrigger>().StartFadeOut());
     }
 
     IEnumerator EnterBossCutscene()
@@ -281,13 +282,12 @@ public class BossBehaviour : Script
             camera.localRotation = targetRot;
             if (Input.GetKeyDown(KeyCode.X))
             {
-                //Skip cutscen
                 break;
             }
             timer -= Time.deltaTime;
             yield return null;
         }
-
+        GameManager.instance.BGM_Source.Play();
         ThirdPersonCamera.instance.SetYaw(openingCameraEndTarget.rotation.y);
         ThirdPersonCamera.instance.transform.localRotation = new vec3(openingCameraEndTarget.rotation.x, openingCameraEndTarget.rotation.y, 0f);
         ThirdPersonCamera.instance.cutscene = false;
@@ -388,13 +388,14 @@ public class BossBehaviour : Script
         float timer = dodgeDuration;
         float dist = 0;
         vec3 targetPos = center.position;
-        targetPos.y = yPos;
         vec3 startPos = transform.position;
         while (timer > 0)
         {
             SetState("Sprinting", true);
             dist = vec3.Distance(startPos, targetPos);
-            vec3 dir = (targetPos - startPos) / dist;
+            vec3 dir = targetPos - startPos;
+            dir.y = 0;
+            dir = dir.Normalized;
             rb.linearVelocity = dir * chaseSpeed * 2f * Time.deltaTime;
             UpdateRotation(dir, rotationSpeed);
             timer -= Time.deltaTime;
@@ -402,8 +403,6 @@ public class BossBehaviour : Script
         }
 
         rb.linearVelocity = vec3.Zero;
-
-        SetState("Sprinting", false);
         timer = dodgeDuration / 2f;
         while (timer > 0)
         {
@@ -505,6 +504,7 @@ public class BossBehaviour : Script
             yield return null;
         }
         bossSounds.jumpAttackSFX.Play();
+        bossSounds.slamJumpWhoosh.Play();
         timer = startDur - timer;
         while (timer > 0)
         {
@@ -534,6 +534,7 @@ public class BossBehaviour : Script
 
         vec3 modelPos = model.localPosition;
         vec3 modelTargetPos = modelPos + vec3.UnitZ * 2f;
+        bossSounds.slamFallWhoosh.Play();
         while (timer > 0)
         {
             if (timer < jumpDur / 3f * 2f)
@@ -548,12 +549,18 @@ public class BossBehaviour : Script
             timer -= Time.deltaTime;
             yield return null;
         }
+        
         ThirdPersonCamera.instance.ShakeCamera(0.6f, 0.2f);
         animator.SetSpeed(0f);
+        slamAttack.position = targetPos;
+        slamAttack.gameObject.SetActive(true);
         ultiSphere.localPosition = indicatorLocal;
         ultiSphere.scale = vec3.Ones;
         transform.localPosition = targetPos;
         ultiSphere.gameObject.SetActive(false);
+        bossSounds.slamAttack.Play();
+        yield return null;
+        slamAttack.gameObject.SetActive(false);
         yield return new WaitForSeconds(jumpAttackDuration / 2f);
         model.localPosition = modelPos;
         SetState("JumpAttack", false);
@@ -750,6 +757,7 @@ public class BossBehaviour : Script
                 GameObject obj = Instantiate(bullet, transform.localPosition + posOffset, rot);
                 obj.transform.position += obj.transform.right * projectileDistance;
                 StartBullet(obj, intervals, waitTime, obj.transform.right * projectileSpeed);
+                bossSounds.slashSpawn.Play();
                 while (timer > 0)
                 {
                     waitTime -= Time.deltaTime;
@@ -932,12 +940,6 @@ public class BossBehaviour : Script
                 }
             }
         }
-        ////Not working
-        //if(GetTag(rb) == "PuzzleKey")
-        //{
-        //    Console.WriteLine("Collected");
-        //    AudioManager.instance.itemCollected.Play();//play audio sound
-        //}
     }
 
     IEnumerator StartForceField(float duration)
@@ -953,7 +955,7 @@ public class BossBehaviour : Script
             vec4 color = mr.material.color;
             color.a = percentage/4f;
             mr.material.color = color;
-            ultiForceField.localScale = vec3.Lerp(0, 3, percentage);
+            ultiForceField.localScale = vec3.Lerp(0, 3.5f, percentage);
             yield return null;
         }
         _forceFieldUp = true;

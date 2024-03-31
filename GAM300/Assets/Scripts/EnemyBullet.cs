@@ -11,6 +11,8 @@ public class EnemyBullet : Script
 {
     public bool destroyOnTrigger = true;
 
+    public int damage = 1;
+
     void OnTriggerEnter(PhysicsComponent other)
     {
         if (!destroyOnTrigger)

@@ -1395,8 +1395,11 @@ public class ThirdPersonController : Script
     {
         if (GetTag(rb) == "EnemyAttack")
         {
-            //AudioManager.instance.playerInjured.Play();
-            TakeDamage(1);
+            EnemyBullet bullet = rb.gameObject.GetComponent<EnemyBullet>();
+            if (bullet != null)
+                TakeDamage(bullet.damage);
+            else
+                TakeDamage(1);
         }
         if(GetTag(rb) == "SpinningPropeller")
         {

@@ -2,8 +2,8 @@ Material:
   Material Name: BossUltDomeWhite
   Shader: 1
   Albedo: [9.99999975e-05, 9.99762997e-05, 9.99762997e-05, 1]
-  Metallic: 1
-  Roughness: 0.100000001
+  Metallic: 0
+  Roughness: 1000
   AmbientOcclusion: 1
   Is Emission: false
   Emission: 0

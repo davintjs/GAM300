@@ -16,6 +16,8 @@ public class GameManager : Script
     public GameObject hudCanvas;
     public float currentLevel = 0f;
 
+    public bool playMusic = true;
+
     bool _paused = false;
 
     private Pause pauseMenu;
@@ -44,7 +46,7 @@ public class GameManager : Script
     void Awake()
     {
         instance = this;
-        if (BGM_Source != null)
+        if (BGM_Source != null && playMusic)
             BGM_Source.Play();
 
         if(pauseCanvas != null)
