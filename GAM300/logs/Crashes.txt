@@ -1,5 +1,5 @@
-[2024-04-01 02:08:44.200] [Error] [critical] 
-Caused By:	serializeFile
-Info:		Could not open output file to serialize geom!
-Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\AssetManager\ModelCompiler.cpp (Line: 634)
+[2024-04-01 10:56:00.494] [Error] [critical] 
+Caused By:	start
+Info:		Couldn't find index
+Source:		C:\Users\prawn\Documents\GitHub\GAM300\GAM300\GAM300\Source\Utilities\ObjectsList.cpp (Line: 262)
 

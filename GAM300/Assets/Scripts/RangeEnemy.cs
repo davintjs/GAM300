@@ -177,25 +177,28 @@ public class RangeEnemy : Script
                 break;
             //death state
             //return to previous position state
-/*            case 4:
+            case 4:
                 //Console.WriteLine("Return");
-                vec3 returnDirection = (startingPos.localPosition - transform.localPosition).Normalized;
-                returnDirection.y = 0;
-                float angle2 = (float)Math.Atan2(returnDirection.x, returnDirection.z);
-                transform.localRotation = new vec3(0, angle2, 0);
-                GetComponent<Rigidbody>().linearVelocity = returnDirection * moveSpeed;
-                //change to idle state once it has reach its starting position
-                if(transform.localPosition == startingPos.localPosition)
-                {
-                    state = 0;
-                }
-                //player detection
-                if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
-                {
-                    //change to chase state
-                    state = 1;
-                }
-                break;*/
+                //vec3 returnDirection = (startingPos.localPosition - transform.localPosition).Normalized;
+                //returnDirection.y = 0;
+                //float angle2 = (float)Math.Atan2(returnDirection.x, returnDirection.z);
+                //transform.localRotation = new vec3(0, angle2, 0);
+                //GetComponent<Rigidbody>().linearVelocity = returnDirection * moveSpeed;
+                ////change to idle state once it has reach its starting position
+                //if (transform.localPosition == startingPos.localPosition)
+                //{
+                //    state = 0;
+                //}
+                ////player detection
+                //if (vec3.Distance(player.localPosition, transform.localPosition) <= chaseDistance)
+                //{
+                //    //change to chase state
+                //    state = 1;
+                //}
+                SetEnabled(rb, false);
+                gameObject.SetActive(false);
+                //transform.position = vec3.Zero;
+                break;
         }
         navMeshtimer += Time.deltaTime;
     }
@@ -248,7 +251,7 @@ public class RangeEnemy : Script
             AudioManager.instance.rangeEnemyDead.Play();
             if (spawnObject != null)
                 spawnObject.SetActive(true);
-            Destroy(gameObject);
+            state = 4;
         }
     }
 
@@ -256,7 +259,7 @@ public class RangeEnemy : Script
     void OnTriggerEnter(PhysicsComponent other)
     {
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
-        if(GetTag(other) == "PlayerAttack")
+        if(GetTag(other) == "PlayerAttack" && state != 4)
         {
             Transform otherT = other.gameObject.GetComponent<Transform>();
             vec3 dir = otherT.forward;
