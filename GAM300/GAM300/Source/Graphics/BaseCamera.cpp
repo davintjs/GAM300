@@ -112,14 +112,14 @@ void BaseCamera::UpdateViewMatrix()
 {
 	//glm::quat Orientation = GetOrientation();
 	//viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(Orientation);
-	viewMatrix = glm::inverse(transformMatrix);
+	viewMatrix = glm::inverse(viewMatrix);
 }
 
 void BaseCamera::UpdateProjection()
 {
 	projMatrix = glm::perspective(glm::radians(fieldOfView), aspect, nearClip, farClip);
 	//std::cout << "field of view : " << fieldOfView << "\n";
-}
+} 
 
 void BaseCamera::UpdateFrustum()
 {
@@ -179,8 +179,8 @@ void BaseCamera::UpdateCamera(const glm::mat4& _matrix, const glm::vec3& _rotati
 	if (!setFocalPoint)
 		focalPoint = GetFocalPoint();
 
-	transformMatrix = _matrix;
-	SetCameraPosition(transformMatrix[0]);
+	viewMatrix = _matrix;
+	SetCameraPosition(viewMatrix[3]);
 
 	SetCameraRotation(_rotation);
 
@@ -229,7 +229,6 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 
 	UpdateProjection();
 }
-
 
 bool BaseCamera::WithinFrustrumAnimation(Transform& _transform, const glm::vec3& _min, const glm::vec3& _max)
 {
@@ -321,16 +320,10 @@ bool BaseCamera::WithinFrustum(Transform& _transform, const glm::vec3& _min, con
 
 void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
 {
-	pitch = -_rotation.x;
+	/*pitch = -_rotation.x;
 	yaw = -_rotation.y;
-	roll = _rotation.z;
-}
-
-void BaseCamera::SetCameraRotation(const glm::vec4& _rotation)
-{
-	pitch = -_rotation.x;
-	yaw = -_rotation.y;
-	roll = _rotation.z;
+	roll = _rotation.z;*/
+	orientation = glm::quat(_rotation);
 }
 
 void BaseCamera::SetCameraPosition(const glm::vec3& _position)

@@ -29,6 +29,7 @@ void EditorCamera::Init()
 	farClip = 10000.f;
 	focalPoint = { 0.f, 2.f, 3.f };
 	pitch = 0.7f;
+	SetCameraRotation({ -pitch, 0.f, 0.f });
 
 	timer = duration;
 
@@ -186,6 +187,7 @@ void EditorCamera::OrbitCamera(const glm::vec2& _delta)
 {
 	pitch += _delta.y * GetRotationSpeed();
 	yaw += _delta.x * GetRotationSpeed();
+	orientation = glm::quat(glm::vec3(-pitch, -yaw, 0.f));
 }
 
 void EditorCamera::PanCamera(const glm::vec2& _delta)

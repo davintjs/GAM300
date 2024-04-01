@@ -95,7 +95,6 @@ public:
 	
 	// Getting Things relative to Cameras 
 	void SetCameraRotation(const glm::vec3& _rotation);
-	void SetCameraRotation(const glm::vec4& _rotation);
 
 	void SetCameraPosition(const glm::vec3& _position);
 	glm::vec3 GetCameraPosition();
@@ -113,10 +112,11 @@ public:
 	CAMERATYPE GetCameraType() const { return cameraType; }
 	unsigned int& GetTargetDisplay() { return targetDisplay; }
 
-	float& GetPitch() { return pitch; }
-	float& GetYaw() { return yaw; }
+	//float& GetPitch() { return pitch; }
+	//float& GetYaw() { return yaw; }
 
-	glm::quat GetOrientation() { return glm::quat(glm::vec3(-pitch, -yaw, -roll)); }
+	//glm::quat GetOrientation() { return glm::quat(glm::vec3(-pitch, -yaw, -roll)); }
+	glm::quat GetOrientation() { return orientation; }
 	glm::vec3 GetRightVec() { return glm::vec3(glm::mat4(GetOrientation())[0]); }
 	glm::vec3 GetUpVec() { return glm::vec3(glm::mat4(GetOrientation())[1]); }
 	glm::vec3 GetForwardVec() { return -glm::vec3(glm::mat4(GetOrientation())[2]); }
@@ -138,7 +138,7 @@ public:
 
 	property_vtable();
 protected:
-	glm::vec4 orientation;				// Default solid color when rendering
+	glm::quat orientation{};			// Default solid color when rendering
 	glm::vec3 cameraPosition{};			// The location of the viewer / eye (Center of the screen, 10 units away)
 	glm::vec3 focalPoint{};				// The look-at point / target point where the viewer is looking (Center of screen)
 	glm::vec2 dimension;				// The dimension of the camera in width and height defined in pixels
@@ -172,7 +172,6 @@ protected:
 
 	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
-	glm::mat4 transformMatrix{ 0 };		// The transform matrix -> camera
 
 	unsigned int framebufferID;			// The framebuffer used for this camera
 	unsigned int colorAttachment;		// The color attachment used for this camera

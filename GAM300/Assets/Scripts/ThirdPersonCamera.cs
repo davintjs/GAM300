@@ -26,7 +26,8 @@ public class ThirdPersonCamera : Script
     public GameObject target;
 
     public float zoom = 1f;
-    //private float initialZoom = 0f;
+    private float finalZoom = 0f;
+    private float zoomTimer = 0f;
     public float defaultZoom = 5f;
     public float zoomSpeed = 50f;
     public float zoomInSpeed = 3f;
@@ -35,10 +36,9 @@ public class ThirdPersonCamera : Script
     public bool isZooming = false;
     private bool zoomReset = false;
     private bool settingYaw = false;
-    private bool startSmoothCamera = false;
 
     public float timer = 0f;
-    private float duration = 1.0f;
+    //private float duration = 1.0f;
     //private float bufferTimer = 0f;
     //private float bufferDuration = 3.0f;
     //private float distance = 0f;
@@ -47,8 +47,6 @@ public class ThirdPersonCamera : Script
 
     float shakeMagnitude = 0f;
     float shakeDuration = 0f;
-    float magnitudeDelta = 0f;
-    //private vec3 targetPosition;
 
 
     void Awake()
@@ -164,14 +162,14 @@ public class ThirdPersonCamera : Script
         else if (pitchAngle < minPitchAngle * 3.14f / 180f)
             pitchAngle = minPitchAngle * 3.14f / 180f;
 
+        //transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
+
         quat newQuat = glm.FromEulerToQuat(new vec3(pitchAngle, yawAngle, 0f)).Normalized;
         quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
-        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * 10f);
-        //float magnitude = Mathf.Magnitude(new vec4(midQuat - oldQuat));
+        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * 20f);
 
-        vec3 correctDirection = transform.up;
         vec3 rot = ((vec3)midQuat.EulerAngles);
 
         if (rot != vec3.NaN)
@@ -187,23 +185,9 @@ public class ThirdPersonCamera : Script
             }
             if (!isNan)
             {
-                vec3 previousRot = transform.localRotation;
-
-                quat _quat = glm.FromEulerToQuat(rot).Normalized;
-
-                vec3 currentDir = _quat * vec3.UnitY;
-
-                if (vec3.Dot(correctDirection, currentDir) < 0)
-                {
-                    Console.WriteLine("HELLO!");
-                    return;
-                }
                 transform.localRotation = rot;
-
             }
         }
-
-        //magnitudeDelta = magnitude;
     }
 
     void Zoom()
@@ -254,6 +238,7 @@ public class ThirdPersonCamera : Script
             //    startSmoothCamera = true;
             //    StartCoroutine(SmoothCamera());
             //}
+
             vec3 finalPosition = target.transform.position - (camera.forward * zoom);
             transform.position = camera.position = finalPosition;
 
