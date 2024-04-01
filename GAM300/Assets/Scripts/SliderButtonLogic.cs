@@ -20,6 +20,7 @@ class SliderButtonLogic : Script
     private float mouse = 0f; 
     private bool onClick = false;
     public bool inverted = false;
+    public bool screenSpace = false;
 
     private SpriteRenderer sliderButtonRenderer;
     private TextRenderer sliderTextRenderer;
@@ -66,6 +67,11 @@ class SliderButtonLogic : Script
         //Calculating the new value based on the mouse position
         vec3 slider = buttonObj.transform.localPosition;
         float mouseDelta = Input.GetMouseDelta().x * slideSpeed * Time.unscaledDeltaTime;
+
+        //Console.WriteLine("Pos: " + Input.GetMousePosition().x);
+        if (screenSpace)
+            mouseDelta = Input.GetMousePosition().x;
+
         mouse += (inverted) ? -mouseDelta : mouseDelta;
 
         //Console.WriteLine("Mouse: " + mouse + " " + maxX + " " + minX);

@@ -255,7 +255,8 @@ void GraphicsSystem::Update(float dt)
 		windowPos = glm::vec2(0.f, 0.f);
 
 		// Update camera view 
-		camera.UpdateCamera(transform->GetGlobalTranslation(), transform->GetGlobalRotation());
+		//camera.UpdateCamera(transform->GetLocalTranslation(), transform->GetLocalRotation());
+		camera.UpdateCamera(transform->GetLocalMatrix(), rotation);
 
 		//COLOURPICKER.ColorPickingUIButton(camera);
 
@@ -281,11 +282,10 @@ void GraphicsSystem::Update(float dt)
 
 		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
 
-
-		const glm::vec3 translation = transform->GetGlobalTranslation();
-		const glm::vec3 rotation = transform->GetGlobalRotation();
+		const glm::vec3 translation = transform->GetLocalTranslation();
+		const glm::vec3 rotation = transform->GetLocalRotation();
 		// Update camera view 
-		camera.UpdateCamera(translation, rotation);
+		camera.UpdateCamera(transform->GetLocalMatrix(), rotation);
 
 		COLOURPICKER.ColorPickingUIButton(camera);
 

@@ -122,6 +122,11 @@ static bool GetMouseHolding(int mouseCode)
 	return InputHandler::isMouseButtonHolding_R();
 }
 
+static void GetMousePosition(Vector2& mousePos)
+{
+	mousePos = InputHandler::getMousePos();
+}
+
 static void GetMouseDelta(Vector2& mouseDelta)
 {
 	mouseDelta = InputHandler::mouseDeltaNormalized();
@@ -465,6 +470,11 @@ static void GetForwardVec(ScriptObject<Camera> pCamera, Vector3& vector)
 {
 	Camera& camera = pCamera;
 	vector = camera.GetForwardVec();
+}
+
+static void GetNearestEnemy(ScriptObject<Entity> pEntity)
+{
+
 }
 
 #pragma endregion
@@ -837,6 +847,7 @@ static void RegisterScriptWrappers()
 	Register(GetMouseDelta);
 	Register(LockCursor);
 	Register(GetMouseHolding);
+	Register(GetMousePosition);
 
 	// Physics System
 	Register(Raycast);
@@ -905,6 +916,7 @@ static void RegisterScriptWrappers()
 	Register(GetRightVec);
 	Register(GetUpVec);
 	Register(GetForwardVec);
+	Register(GetNearestEnemy);
 
 	// NavMeshAgent Component
 	Register(FindPath);

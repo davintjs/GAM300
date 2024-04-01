@@ -35,6 +35,7 @@ public class ThirdPersonCamera : Script
     public bool isZooming = false;
     private bool zoomReset = false;
     private bool settingYaw = false;
+    private bool startSmoothCamera = false;
 
     public float timer = 0f;
     private float duration = 1.0f;
@@ -46,6 +47,7 @@ public class ThirdPersonCamera : Script
 
     float shakeMagnitude = 0f;
     float shakeDuration = 0f;
+    float magnitudeDelta = 0f;
     //private vec3 targetPosition;
 
 
@@ -162,7 +164,46 @@ public class ThirdPersonCamera : Script
         else if (pitchAngle < minPitchAngle * 3.14f / 180f)
             pitchAngle = minPitchAngle * 3.14f / 180f;
 
-        transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
+        quat newQuat = glm.FromEulerToQuat(new vec3(pitchAngle, yawAngle, 0f)).Normalized;
+        quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
+
+        // Interpolate using spherical linear interpolation (slerp)
+        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * 10f);
+        //float magnitude = Mathf.Magnitude(new vec4(midQuat - oldQuat));
+
+        vec3 correctDirection = transform.up;
+        vec3 rot = ((vec3)midQuat.EulerAngles);
+
+        if (rot != vec3.NaN)
+        {
+            bool isNan = false;
+            foreach (float val in rot)
+            {
+                if (float.IsNaN(val))
+                {
+                    isNan = true;
+                    break;
+                }
+            }
+            if (!isNan)
+            {
+                vec3 previousRot = transform.localRotation;
+
+                quat _quat = glm.FromEulerToQuat(rot).Normalized;
+
+                vec3 currentDir = _quat * vec3.UnitY;
+
+                if (vec3.Dot(correctDirection, currentDir) < 0)
+                {
+                    Console.WriteLine("HELLO!");
+                    return;
+                }
+                transform.localRotation = rot;
+
+            }
+        }
+
+        //magnitudeDelta = magnitude;
     }
 
     void Zoom()
@@ -208,11 +249,31 @@ public class ThirdPersonCamera : Script
     {
         if (target != null)
         {
+            //if (!startSmoothCamera)
+            //{
+            //    startSmoothCamera = true;
+            //    StartCoroutine(SmoothCamera());
+            //}
             vec3 finalPosition = target.transform.position - (camera.forward * zoom);
             transform.position = camera.position = finalPosition;
+
             camera.LookAt(target);
         }
     }
+
+    //IEnumerator SmoothCamera()
+    //{
+    //    float tempTimer = 0f;
+        
+    //    while (tempTimer < 0.3f)
+    //    {
+    //        transform.position = camera.position = vec3.Lerp(initialPosition, finalPosition, tempTimer);
+            
+    //        tempTimer += Time.deltaTime;
+    //        yield return null;
+    //    }
+    //    startSmoothCamera = false;
+    //}
 
     float Lerp(float start, float end, float value, float duration)
     {

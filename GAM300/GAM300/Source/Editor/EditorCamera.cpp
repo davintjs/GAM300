@@ -54,7 +54,16 @@ void EditorCamera::Update(float dt)
 		ZoomCamera();
 
 	cameraPosition = GetCameraPosition();
-	BaseCamera::Update();
+
+	viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(GetOrientation());
+	viewMatrix = glm::inverse(viewMatrix);
+
+	UpdateProjection();
+
+	if (useFrustumCulling)
+		UpdateFrustum();
+
+	//BaseCamera::Update();
 }
 
 void EditorCamera::InputControls()

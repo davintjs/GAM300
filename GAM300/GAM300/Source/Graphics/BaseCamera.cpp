@@ -110,9 +110,9 @@ void BaseCamera::Update()
 
 void BaseCamera::UpdateViewMatrix()
 {
-	glm::quat Orientation = GetOrientation();
-	viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(Orientation);
-	viewMatrix = glm::inverse(viewMatrix);
+	//glm::quat Orientation = GetOrientation();
+	//viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(Orientation);
+	viewMatrix = glm::inverse(transformMatrix);
 }
 
 void BaseCamera::UpdateProjection()
@@ -164,6 +164,23 @@ void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rota
 		focalPoint = GetFocalPoint();
 
 	SetCameraPosition(_position);
+
+	SetCameraRotation(_rotation);
+
+	SetDistance(glm::length(focalPoint - cameraPosition));
+
+	Update();
+
+	setFocalPoint = false;
+}
+
+void BaseCamera::UpdateCamera(const glm::mat4& _matrix, const glm::vec3& _rotation)
+{
+	if (!setFocalPoint)
+		focalPoint = GetFocalPoint();
+
+	transformMatrix = _matrix;
+	SetCameraPosition(transformMatrix[0]);
 
 	SetCameraRotation(_rotation);
 
@@ -303,6 +320,13 @@ bool BaseCamera::WithinFrustum(Transform& _transform, const glm::vec3& _min, con
 }
 
 void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
+{
+	pitch = -_rotation.x;
+	yaw = -_rotation.y;
+	roll = _rotation.z;
+}
+
+void BaseCamera::SetCameraRotation(const glm::vec4& _rotation)
 {
 	pitch = -_rotation.x;
 	yaw = -_rotation.y;

@@ -80,6 +80,7 @@ public:
 
 	// Update the camera's position and rotation
 	void UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation);
+	void UpdateCamera(const glm::mat4& _matrix, const glm::vec3& _rotation);
 
 	// Attemp to resize the camera's dimension
 	void TryResize(glm::vec2 _newDimension);
@@ -94,6 +95,7 @@ public:
 	
 	// Getting Things relative to Cameras 
 	void SetCameraRotation(const glm::vec3& _rotation);
+	void SetCameraRotation(const glm::vec4& _rotation);
 
 	void SetCameraPosition(const glm::vec3& _position);
 	glm::vec3 GetCameraPosition();
@@ -136,7 +138,7 @@ public:
 
 	property_vtable();
 protected:
-	glm::vec4 backgroundColor;			// Default solid color when rendering
+	glm::vec4 orientation;				// Default solid color when rendering
 	glm::vec3 cameraPosition{};			// The location of the viewer / eye (Center of the screen, 10 units away)
 	glm::vec3 focalPoint{};				// The look-at point / target point where the viewer is looking (Center of screen)
 	glm::vec2 dimension;				// The dimension of the camera in width and height defined in pixels
@@ -170,6 +172,7 @@ protected:
 
 	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
+	glm::mat4 transformMatrix{ 0 };		// The transform matrix -> camera
 
 	unsigned int framebufferID;			// The framebuffer used for this camera
 	unsigned int colorAttachment;		// The color attachment used for this camera
