@@ -11,6 +11,7 @@ public class Generator : Script
     public GameObject forceField;
     public GameObject explosionEffect;
     public AudioSource generatorExplodeSound;
+    public Transform hitEffectPos;
 
     public GameObject ObjectReference;
     public MeshRenderer generatorMesh;
@@ -20,9 +21,13 @@ public class Generator : Script
     public int dialogue_state = 10;
     bool done = false;
 
+    public float maxHealth = 5f;
+    public float currentHealth;
+
 
     void Start()
     {
+        currentHealth = maxHealth;
 
         //get the glow color
         burntMat = ObjectReference.GetComponent<MeshRenderer>().material;
@@ -43,13 +48,14 @@ public class Generator : Script
 
     }
 
-    void OnTriggerEnter(PhysicsComponent other)
+    void TakeDamage(float amount)
     {
-        if (done) return;
-
-        //check if the rigidbody belongs to a game object called PlayerWeaponCollider
-        if (GetTag(other) == "PlayerAttack")
+        ThirdPersonCamera.instance.ShakeCamera(CombatManager.instance.hitShakeMag, CombatManager.instance.hitShakeDur);
+        ThirdPersonCamera.instance.SetFOV(-CombatManager.instance.hitShakeMag * 150, CombatManager.instance.hitShakeDur * 4);
+        currentHealth -= amount;
+        if(currentHealth <= 0)
         {
+            currentHealth = 0;
             DialogueManagerLevel.Instance.SetState(dialogue_state);
             Console.WriteLine("Generatorhit");
             forceField.GetComponent<Door>().moving = true;
@@ -59,15 +65,39 @@ public class Generator : Script
             mat.Set(burntMat);
             mat.color = new vec4(burntMat.color);
             explosionEffect.SetActive(true);
+
+            done = true;
+        }
+    }
+
+    void OnTriggerEnter(PhysicsComponent other)
+    {
+        if (done) return;
+
+        //check if the rigidbody belongs to a game object called PlayerWeaponCollider
+        if (GetTag(other) == "PlayerAttack")
+        {
+            TakeDamage(1);
+            CombatManager.instance.SpawnHitEffect2(hitEffectPos);
+            generatorExplodeSound.Play();
+            //DialogueManagerLevel.Instance.SetState(dialogue_state);
+            //Console.WriteLine("Generatorhit");
+            //forceField.GetComponent<Door>().moving = true;
+            //generatorExplodeSound.Play();
+            ////change glow of terminal
+            //Material mat = generatorMesh.material;
+            //mat.Set(burntMat);
+            //mat.color = new vec4(burntMat.color);
+            //explosionEffect.SetActive(true);
         }
     }
 
     public void OnTriggerExit(PhysicsComponent component)
     {
         if (done) return;
-        if (GetTag(component) == "PlayerAttack")
-        {
-            done = true;
-        }
+        //if (GetTag(component) == "PlayerAttack")
+        //{
+        //    done = true;
+        //}
     }
 }
