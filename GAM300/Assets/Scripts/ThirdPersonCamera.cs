@@ -48,7 +48,6 @@ public class ThirdPersonCamera : Script
     float shakeMagnitude = 0f;
     float shakeDuration = 0f;
 
-
     void Awake()
     {
         //targetPosition = target.transform.localPosition;
@@ -108,8 +107,8 @@ public class ThirdPersonCamera : Script
 
     void AvoidColliders()
     {
-        vec3 direction = transform.position - target.transform.position;
-        RaycastHit raycast = Physics.Raycast(target.transform.position, direction, 1.01f);
+        vec3 tempDirection = transform.position - target.transform.position;
+        RaycastHit raycast = Physics.Raycast(target.transform.position, tempDirection, 1.01f);
         
         if (raycast.hit && raycast.gameObj != null)
         {
@@ -119,8 +118,9 @@ public class ThirdPersonCamera : Script
             if (tagName != "Camera" && tagName != "Enemy")
             {
                 //Console.WriteLine("Name: " +  raycast.gameObj.name);
-                zoom = vec3.Distance(target.transform.position, raycast.point) * 0.95f;
-                zoom = Mathf.Clamp(zoom, closestZoom, furthestZoom);
+                finalZoom = vec3.Distance(target.transform.position, raycast.point) * 0.95f;
+                finalZoom = Mathf.Clamp(finalZoom, closestZoom, furthestZoom);
+                zoomTimer = 0f;
             }
         }
         else
@@ -137,7 +137,7 @@ public class ThirdPersonCamera : Script
         setYawAngle = yaw;
         settingYaw = true;
     }
-
+        
     void UpdateCameraRotation()
     {
         vec2 mouseDelta = Input.GetMouseDelta();
@@ -168,7 +168,7 @@ public class ThirdPersonCamera : Script
         quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
-        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * 20f);
+        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * 15f);
 
         vec3 rot = ((vec3)midQuat.EulerAngles);
 
@@ -207,6 +207,7 @@ public class ThirdPersonCamera : Script
         {
             zoom = furthestZoom;
         }
+
         camera.lookatDistance = zoom;
     }
     void ResetZoom()
@@ -225,6 +226,10 @@ public class ThirdPersonCamera : Script
         //        timer = bufferTimer = 0f;
         //    }
         //}
+
+        if (timer > 1.0f)
+            timer = 0f;
+
         zoom = Mathf.Lerp(zoom, defaultZoom, timer);
         timer += Time.deltaTime;
     }
@@ -233,37 +238,17 @@ public class ThirdPersonCamera : Script
     {
         if (target != null)
         {
-            //if (!startSmoothCamera)
-            //{
-            //    startSmoothCamera = true;
-            //    StartCoroutine(SmoothCamera());
-            //}
-
+            if (finalZoom != 0f)
+            {
+                zoomTimer += Time.deltaTime;
+                zoom = Mathf.Lerp(zoom, finalZoom, zoomTimer, 0.16f, Mathf.EasingType.EASEOUT);
+            }
             vec3 finalPosition = target.transform.position - (camera.forward * zoom);
-            transform.position = camera.position = finalPosition;
+            finalZoom = 0f;
+            transform.localPosition = finalPosition;
 
             camera.LookAt(target);
         }
-    }
-
-    //IEnumerator SmoothCamera()
-    //{
-    //    float tempTimer = 0f;
-        
-    //    while (tempTimer < 0.3f)
-    //    {
-    //        transform.position = camera.position = vec3.Lerp(initialPosition, finalPosition, tempTimer);
-            
-    //        tempTimer += Time.deltaTime;
-    //        yield return null;
-    //    }
-    //    startSmoothCamera = false;
-    //}
-
-    float Lerp(float start, float end, float value, float duration)
-    {
-        value /= duration;
-        return (1.0f - value) * start + value * end;
     }
 
     public void ShakeCamera(float magnitude, float duration)

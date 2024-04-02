@@ -556,15 +556,13 @@ public class Enemy : Script
             {
                 isStunned = true;
                 staggerTimer = 0f;
-
-                if (damagedCoroutine != null)
-                {
-                    StopCoroutine(damagedCoroutine);
-                }
-                damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 8));
             }
 
-            
+            if (damagedCoroutine != null)
+            {
+                StopCoroutine(damagedCoroutine);
+            }
+            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 6));
 
             if (ThirdPersonController.instance.currentlyOverdriven == true || ThirdPersonController.instance._isDashAttacking)
             {

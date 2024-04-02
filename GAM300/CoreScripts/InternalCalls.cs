@@ -50,6 +50,10 @@ namespace BeanFactory
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetSpeed(Animator animator, float value);
         [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static float GetBlendDuration(Animator animator);
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        internal extern static void SetBlendDuration(Animator animator, float value);
+        [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetDefaultState(Animator animator, string defaultState);
         [MethodImpl(MethodImplOptions.InternalCall)]
         internal extern static void SetState(Animator animator, string state);

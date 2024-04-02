@@ -267,6 +267,18 @@ static void SetSpeed(ScriptObject<Animator> pAnimator, float value)
 	animator.SetSpeed(value);
 }
 
+static float GetBlendDuration(ScriptObject<Animator> pAnimator)
+{
+	Animator& animator = pAnimator;
+	return animator.GetBlendDuration();
+}
+
+static void SetBlendDuration(ScriptObject<Animator> pAnimator, float value)
+{
+	Animator& animator = pAnimator;
+	animator.SetBlendDuration(value);
+}
+
 static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
 {
 	Animator& animator = pAnimator;
@@ -903,6 +915,8 @@ static void RegisterScriptWrappers()
 	Register(SetProgress);
 	Register(GetSpeed);
 	Register(SetSpeed);
+	Register(GetBlendDuration);
+	Register(SetBlendDuration);
 	Register(SetDefaultState);
 	Register(SetState);
 	Register(SetNextState);

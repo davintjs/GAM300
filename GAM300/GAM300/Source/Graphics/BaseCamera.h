@@ -165,7 +165,6 @@ protected:
 	char clearFlags = 1;				// The background to render for the camera
 	char cullingMask = 0;				// A culling mask to prevent rendering of specific layers, to be implemented in the future
 	bool orthographic = false;			// Perspective by default until orthographic camera has been implemented
-	bool useOcclusionCulling = false;	// Bean: A feature to be implemented in the future
 	bool useFrustumCulling = true;		// Frustum culling for the camera, on by default
 	bool enableHDR = true;				// High dynamic range rendering
 	bool setFocalPoint = false;			// Is the focal point being set via script
@@ -189,7 +188,6 @@ property_begin_name(BaseCamera, "BaseCamera") {
 	property_var(orthographic).Name("Orthographic"),
 	property_var(targetDisplay).Name("TargetDisplay"),
 	property_var(enableHDR).Name("HDR"),
-	property_var(useOcclusionCulling).Name("OcclusionCulling"),
 	property_var(useFrustumCulling).Name("FrustumCulling"),
 	property_var(distanceCheck).Name("DistanceCulling"),
 

@@ -947,13 +947,15 @@ public class ThirdPersonController : Script
             //Console.WriteLine("NOT GROUNDED!");
             if (animationManager.GetState("Jump").state)
             {
-                if (currentAirTime >= maxAirTime)
+                //Console.WriteLine("Jump");
+                if (currentAirTime >= maxAirTime * .4f)
                 {
+                    //Console.WriteLine("Air time");
                     SetState("Falling", true);
                 }
 
             }
-            else if (currentAirTime >= maxAirTime * .5f)
+            else if (currentAirTime >= maxAirTime * .2f)
             {
                 SetState("Falling", true);
             }
@@ -1401,7 +1403,7 @@ public class ThirdPersonController : Script
 
     void OnTriggerEnter(PhysicsComponent rb)
     {
-        if (GetTag(rb) == "EnemyAttack")
+        if (GetTag(rb) == "EnemyAttack" && !isDead)
         {
             EnemyBullet bullet = rb.gameObject.GetComponent<EnemyBullet>();
             if (bullet != null)
@@ -1409,7 +1411,7 @@ public class ThirdPersonController : Script
             else
                 TakeDamage(1);
         }
-        if(GetTag(rb) == "SpinningPropeller")
+        if(GetTag(rb) == "SpinningPropeller" && !isDead)
         {
             TakeDamage(1);
         }

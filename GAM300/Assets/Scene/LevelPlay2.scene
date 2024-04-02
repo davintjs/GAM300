@@ -244,7 +244,6 @@ Camera:
   Orthographic: false
   TargetDisplay: 0
   HDR: true
-  OcclusionCulling: false
   FrustumCulling: true
   DistanceCulling: 50
 ---
@@ -8192,7 +8191,7 @@ Script:
   floatingY: 0.200000003
   inRange: false
   maxHealth: 3
-  maxShootCooldown: 1.5
+  maxShootCooldown: 2.5
   moveSpeed: 0
   navMeshduration: 0
   navMeshtimer: 0
@@ -99498,6 +99497,7 @@ Script:
   inverted: false
   maxX: 0.560000002
   minX: -0.560000002
+  screenSpace: false
   slideSpeed: 800
   value: 0.5
   buttonObj: {fileID: 3837557141907955647}  # GameObject
@@ -99632,6 +99632,7 @@ Script:
   inverted: false
   maxX: 0.560000002
   minX: -0.560000002
+  screenSpace: false
   slideSpeed: 800
   value: 0.5
   buttonObj: {fileID: 16432005865971837572}  # GameObject
@@ -99766,6 +99767,7 @@ Script:
   inverted: false
   maxX: 0.560000002
   minX: -0.560000002
+  screenSpace: false
   slideSpeed: 800
   value: 0.5
   buttonObj: {fileID: 13025755940254410433}  # GameObject
@@ -100034,6 +100036,7 @@ Script:
   inverted: false
   maxX: 0.560000002
   minX: -0.560000002
+  screenSpace: false
   slideSpeed: 800
   value: 0.5
   buttonObj: {fileID: 18052166248832161833}  # GameObject

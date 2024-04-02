@@ -162,6 +162,7 @@ public class RangeEnemy : Script
                     vec3 dir = player.position - transform.position;
                     dir = dir.NormalizedSafe;
                     bulletPrefab.GetComponent<Rigidbody>().linearVelocity = dir * bulletSpeed;
+                    rb.linearVelocity = vec3.Zero;
                     shootCooldown = 0;
                     if(shootCooldown == 0)
                     {
