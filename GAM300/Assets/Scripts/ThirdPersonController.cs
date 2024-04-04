@@ -1226,22 +1226,22 @@ public class ThirdPersonController : Script
                 lowHealthSound = true;
             }
             UpdatehealthBar();
-        }
-        
-        if (currentHealth <= 0)
-        {
-            playerSounds.LowHealthSound.Pause();
-            playerSounds.LowHealthHeartbeatSound.Pause();
-            //Console.WriteLine("YouDied");
-            isDead = true;
-            SetState("Death", true);
-        }
-        else
-        {
-            SetState("Stun", true);
-            animator.Stop();
-            animator.Play();
-        }
+
+            if (currentHealth <= 0)
+            {
+                playerSounds.LowHealthSound.Pause();
+                playerSounds.LowHealthHeartbeatSound.Pause();
+                //Console.WriteLine("YouDied");
+                isDead = true;
+                SetState("Death", true);
+            }
+            else
+            {
+                SetState("Stun", true);
+                animator.Stop();
+                animator.Play();
+            }
+        }   
     }
 
     public void HealHealth(float amount)

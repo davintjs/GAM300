@@ -256,7 +256,7 @@ void GraphicsSystem::Update(float dt)
 
 		// Update camera view 
 		//camera.UpdateCamera(transform->GetLocalTranslation(), transform->GetLocalRotation());
-		camera.UpdateCamera(transform->GetLocalMatrix(), rotation);
+		camera.UpdateCamera(transform->GetLocalMatrix(), transform->GetLocalRotation());
 
 		//COLOURPICKER.ColorPickingUIButton(camera);
 

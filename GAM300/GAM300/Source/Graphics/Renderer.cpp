@@ -103,13 +103,11 @@ void Renderer::Update(float)
 		if (!it.IsActive()) continue; // Bean: IsActive is tanking fps
 		// No material instance, then just go next
 		MeshRenderer& renderer = *it;
-		Entity& entity = currentScene.Get<Entity>(renderer);
-		if (!currentScene.IsActive(entity)) continue; // Bean: Is there a better way ard this???
 
 		Mesh* t_Mesh = MESHMANAGER.DereferencingMesh(renderer.meshID);
 		if (!t_Mesh) continue;
 
-		Transform& transform = currentScene.Get<Transform>(entity);
+		Transform& transform = currentScene.Get<Transform>(renderer);
 		const glm::mat4 worldMatrix = transform.GetWorldMatrix();
 		const glm::vec3 position = transform.GetGlobalTranslation();
 
@@ -131,6 +129,9 @@ void Renderer::Update(float)
 
 			if (!withinCamera) continue;
 		}
+
+		Entity& entity = currentScene.Get<Entity>(renderer);
+		if (!currentScene.IsActive(entity)) continue; // Bean: Is there a better way ard this???
 
 		auto vaoIt = MESHMANAGER.vaoMap.find(renderer.meshID);
 		if (vaoIt == MESHMANAGER.vaoMap.end()) continue;
