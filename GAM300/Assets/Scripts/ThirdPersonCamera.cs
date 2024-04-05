@@ -165,28 +165,13 @@ public class ThirdPersonCamera : Script
         //transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
 
         quat newQuat = glm.FromEulerToQuat(new vec3(pitchAngle, yawAngle, 0f)).Normalized;
-        quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
+        //quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
 
         // Interpolate using spherical linear interpolation (slerp)
-        quat midQuat = quat.SLerp(oldQuat, newQuat, Time.deltaTime * 15f);
-
-        vec3 rot = ((vec3)midQuat.EulerAngles);
-
-        if (rot != vec3.NaN)
+        quat midQuat = quat.SLerp(camera.rotation, newQuat, Time.deltaTime * 15f);
+        if (midQuat != quat.NaN)
         {
-            bool isNan = false;
-            foreach (float val in rot)
-            {
-                if (float.IsNaN(val))
-                {
-                    isNan = true;
-                    break;
-                }
-            }
-            if (!isNan)
-            {
-                transform.localRotation = rot;
-            }
+            camera.rotation = midQuat;
         }
     }
 

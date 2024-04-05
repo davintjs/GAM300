@@ -255,8 +255,9 @@ void GraphicsSystem::Update(float dt)
 		windowPos = glm::vec2(0.f, 0.f);
 
 		// Update camera view 
-		//camera.UpdateCamera(transform->GetLocalTranslation(), transform->GetLocalRotation());
-		camera.UpdateCamera(transform->GetLocalMatrix(), transform->GetLocalRotation());
+		const glm::vec3 rotation = glm::eulerAngles(camera.GetOrientation());
+		transform->SetLocalRotation(rotation);
+		camera.UpdateCamera(transform->GetLocalTranslation());
 
 		//COLOURPICKER.ColorPickingUIButton(camera);
 
@@ -281,11 +282,20 @@ void GraphicsSystem::Update(float dt)
 		if (camera.state == DELETED) continue;
 
 		Transform* transform = &currentScene.Get<Transform>(camera.EUID());
-
-		const glm::vec3 translation = transform->GetLocalTranslation();
-		const glm::vec3 rotation = transform->GetLocalRotation();
+		glm::vec3 rotation{ 0 };
+		
 		// Update camera view 
-		camera.UpdateCamera(transform->GetLocalMatrix(), rotation);
+		if (camera.IsSetOrientation())
+		{
+			rotation = glm::eulerAngles(camera.GetOrientation());
+			transform->SetLocalRotation(rotation);
+			camera.UpdateCamera(transform->GetLocalTranslation());
+		}
+		else
+		{
+			rotation = transform->GetLocalRotation();
+			camera.UpdateCamera(transform->GetLocalTranslation(), rotation);
+		}
 
 		COLOURPICKER.ColorPickingUIButton(camera);
 

@@ -517,14 +517,27 @@ namespace BeanFactory
             }
         }
 
+        public quat rotation
+        {
+            get
+            {
+                return orientation;
+            }
+            set 
+            { 
+                orientation = value;
+                InternalCalls.SetOrientation(this);
+            }
+        }
+
         float padding;
         float padding1;
-        vec4 backgroundColor;          // Default solid color when rendering
-        vec3 cameraPosition;           // The location of the viewer / eye (Center of the screen, 10 units away)
-        vec3 focalPoint;               // The look-at point / target point where the viewer is looking (Center of screen)
-        vec2 dimension;                // The dimension of the camera in width and height defined in pixels
+        quat orientation;           // Default solid color when rendering
+        vec3 cameraPosition;        // The location of the viewer / eye (Center of the screen, 10 units away)
+        vec3 focalPoint;            // The look-at point / target point where the viewer is looking (Center of screen)
+        vec2 dimension;             // The dimension of the camera in width and height defined in pixels
         
-        int cameraType;              // Type of camera
+        int cameraType;             // Type of camera
 
         uint targetDisplay = 0;     // Target display for the camera
 

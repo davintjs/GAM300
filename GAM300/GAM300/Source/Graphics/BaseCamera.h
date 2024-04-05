@@ -80,7 +80,7 @@ public:
 
 	// Update the camera's position and rotation
 	void UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation);
-	void UpdateCamera(const glm::mat4& _matrix, const glm::vec3& _rotation);
+	void UpdateCamera(const glm::vec3& _position);
 
 	// Attemp to resize the camera's dimension
 	void TryResize(glm::vec2 _newDimension);
@@ -95,6 +95,8 @@ public:
 	
 	// Getting Things relative to Cameras 
 	void SetCameraRotation(const glm::vec3& _rotation);
+	void SetOrientation();
+	const bool& IsSetOrientation() { return setOrientation; }
 
 	void SetCameraPosition(const glm::vec3& _position);
 	glm::vec3 GetCameraPosition();
@@ -168,6 +170,7 @@ protected:
 	bool useFrustumCulling = true;		// Frustum culling for the camera, on by default
 	bool enableHDR = true;				// High dynamic range rendering
 	bool setFocalPoint = false;			// Is the focal point being set via script
+	bool setOrientation = false;		// Is the orientation being set via script
 
 	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix

@@ -484,6 +484,12 @@ static void GetForwardVec(ScriptObject<Camera> pCamera, Vector3& vector)
 	vector = camera.GetForwardVec();
 }
 
+static void SetOrientation(ScriptObject<Camera> pCamera)
+{
+	Camera& camera = pCamera;
+	camera.SetOrientation();
+}
+
 static void GetNearestEnemy(ScriptObject<Entity> pEntity)
 {
 
@@ -930,6 +936,7 @@ static void RegisterScriptWrappers()
 	Register(GetRightVec);
 	Register(GetUpVec);
 	Register(GetForwardVec);
+	Register(SetOrientation);
 	Register(GetNearestEnemy);
 
 	// NavMeshAgent Component

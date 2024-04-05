@@ -275,6 +275,9 @@ namespace BeanFactory
 
         [MethodImpl(MethodImplOptions.InternalCall)]
         public static extern void GetForwardVec(Camera camera, ref vec3 temp);
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        public static extern void SetOrientation(Camera camera);
         #endregion
 
         #region SPRITERENDERER
