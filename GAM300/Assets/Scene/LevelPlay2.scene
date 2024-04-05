@@ -4355,8 +4355,8 @@ ParticleComponent:
   Particle Direction: [0, 0, 0]
   Angle of Direction: 30
   Number Of Particles: 16
-  Min Particle Lifetime: 1
-  Max Particle Lifetime: 3
+  Min Particle Lifetime: 0.5
+  Max Particle Lifetime: 1
   Particle Emission Rate: 1
   Particle Min Scale: 0.0299999993
   Particle Max Scale: 0.0599999987
@@ -4374,7 +4374,7 @@ ParticleComponent:
   Trail Thickness: 1
   Looping: false
   Fade towards Color: false
-  Color to Fade to: [1, 1, 1]
+  Color to Fade to: [0.922665775, 0.728322029, 0.188434452]
 ---
 ID: 13482372997539004348
 GameObject:
@@ -42449,6 +42449,7 @@ Transform:
   Father: {fileID: 2501033563124642148}
   m_Children:
     - {fileID: 8108389175939038789}
+    - {fileID: 12862077961287106216}
 ---
 ID: 13962959782719857445
 MeshRenderer:
@@ -42483,13 +42484,16 @@ Script:
   m_GameObject: {fileID: 9364165241051347360}
   m_IsEnabled: true
   Script: {guid: f68e17add344d4021d2de2a58e2e7967}
+  currentHealth: 0
   dialogue_state: 10
+  maxHealth: 5
   ObjectReference: {fileID: 17835439861496099335}  # GameObject
   burntMesh: {fileID: 7004788017645728507}  # Component
   explosionEffect: {fileID: 17595281446523183228}  # GameObject
   forceField: {fileID: 15531594244202276862}  # GameObject
   generatorExplodeSound: {fileID: 3615268751664594178}  # Component
   generatorMesh: {fileID: 13962959782719857445}  # Component
+  hitEffectPos: {fileID: 12862077961287106216}  # Component
 ---
 ID: 9132359687142672998
 GameObject:
@@ -73992,18 +73996,18 @@ ParticleComponent:
   m_GameObject: {fileID: 128562352063763926}
   m_IsEnabled: true
   Mesh: {guid: 00000000000000000000000000000002}
-  Particle Material: {guid: 283b4d530ddbba0170927e5c18040b4f}
+  Particle Material: {guid: b57036938cee3e06aad1785f03361791}
   Local Space: false
   Particle Direction: [0, 0, 0]
   Angle of Direction: 30
-  Number Of Particles: 8
-  Min Particle Lifetime: 3
-  Max Particle Lifetime: 4
+  Number Of Particles: 16
+  Min Particle Lifetime: 0.5
+  Max Particle Lifetime: 1
   Particle Emission Rate: 1
   Particle Min Scale: 0.0500000007
   Particle Max Scale: 0.0500000007
   Particle Scale Rate: 0.699999988
-  Particle Speed: 4
+  Particle Speed: 10
   Particle acceleration: 0
   Particle Noise Movement Percentage: 0
   Particle Noise Frequency: 0
@@ -74011,11 +74015,11 @@ ParticleComponent:
   Spawn From Shape: false
   Shape's Size: [1, 1, 1]
   Trailing: false
-  Trail Color: [1, 1, 1]
+  Trail Color: [1, 0, 0]
   Trail Size: 0
   Trail Thickness: 1
   Looping: false
-  Fade towards Color: false
+  Fade towards Color: true
   Color to Fade to: [1, 0, 0]
 ---
 ID: 8252669615322955072
@@ -77768,3 +77772,22 @@ Transform:
   Father: {fileID: 4720521423488205772}
   m_Children:
     - {fileID: 3925618525247661714}
+---
+ID: 12862077961287106216
+GameObject:
+  m_IsActive: true
+  m_Name: HitEffectPosition
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7332744997495798785}  # Transform
+---
+ID: 7332744997495798785
+Transform:
+  m_GameObject: {fileID: 12862077961287106216}
+  Translation: [0, 0, 1]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 9364165241051347360}
+  m_Children:
+    []
