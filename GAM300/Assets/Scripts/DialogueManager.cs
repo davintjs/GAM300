@@ -164,7 +164,13 @@ public class DialogueManager : Script
             yield return null;
         }
 
-        camera.rotation = camRot;
+        
+        //camera.rotation = camRot;
+        if(ThirdPersonCamera.instance.camera != null)
+        {
+            ThirdPersonCamera.instance.camera.rotation = glm.FromEulerToQuat(camRot).Normalized;
+
+        }
         camera.position = camPos;
         timer = 0;
         while (timer < startTime)
@@ -191,7 +197,12 @@ public class DialogueManager : Script
                 yield return null;
             }
 
-            camera.rotation = start.rotation;
+            //camera.rotation = start.rotation;
+            if (ThirdPersonCamera.instance.camera != null)
+            {
+                ThirdPersonCamera.instance.camera.rotation = glm.FromEulerToQuat(start.rotation).Normalized;
+
+            }
             camera.position = start.position;
             timer = 0;
             while (timer < startTime)
@@ -214,7 +225,12 @@ public class DialogueManager : Script
             float t = timer / duration;
 
             vec3 targetRotation = vec3.Lerp(start.rotation, end.rotation, t);
-            camera.rotation = targetRotation;
+            //camera.rotation = targetRotation;
+            if (ThirdPersonCamera.instance.camera != null)
+            {
+                ThirdPersonCamera.instance.camera.rotation = glm.FromEulerToQuat(targetRotation).Normalized;
+
+            }
 
             vec3 targetPosition = vec3.Lerp(start.position, end.position, t);
             camera.position = targetPosition;

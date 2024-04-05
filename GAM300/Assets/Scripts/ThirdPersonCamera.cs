@@ -9,7 +9,7 @@ using System.Diagnostics.Tracing;
 public class ThirdPersonCamera : Script
 {
     public static ThirdPersonCamera instance;
-    private Camera camera;
+    public Camera camera;
 
     public float yawRotSpeed = 1f;
     public float pitchRotSpeed = 1f;
