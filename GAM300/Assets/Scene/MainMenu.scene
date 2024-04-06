@@ -12813,15 +12813,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 5
   MinValue: 0.5
+  hoverDuration: 1
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 9712636449910607818}  # GameObject
-  decerementbuttonObj: {fileID: 632718507615856631}  # GameObject
-  incerementbuttonObj: {fileID: 9587656880601776389}  # GameObject
+  clickSound: {fileID: 10922656780418682009}  # Component
+  decrementbuttonObj: {fileID: 632718507615856631}  # GameObject
+  hoverSound: {fileID: 7823455904144311016}  # Component
+  incrementbuttonObj: {fileID: 9587656880601776389}  # GameObject
   sliderTextObj: {fileID: 1308670381251737083}  # GameObject
 ---
 ID: 7454816294857865540
@@ -12964,15 +12968,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
+  hoverDuration: 1
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
+  targetScaleMultiplier: [1, 1, 1]
   value: 0.5
   buttonObj: {fileID: 8994722542415437916}  # GameObject
-  decerementbuttonObj: {fileID: 0}
-  incerementbuttonObj: {fileID: 0}
+  clickSound: {fileID: 0}
+  decrementbuttonObj: {fileID: 0}
+  hoverSound: {fileID: 0}
+  incrementbuttonObj: {fileID: 0}
   sliderTextObj: {fileID: 10870457192150947301}  # GameObject
 ---
 ID: 8994722542415437916
@@ -13101,15 +13109,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
+  hoverDuration: 1
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
+  targetScaleMultiplier: [1, 1, 1]
   value: 0.5
   buttonObj: {fileID: 7091100355578800126}  # GameObject
-  decerementbuttonObj: {fileID: 0}
-  incerementbuttonObj: {fileID: 0}
+  clickSound: {fileID: 0}
+  decrementbuttonObj: {fileID: 0}
+  hoverSound: {fileID: 0}
+  incrementbuttonObj: {fileID: 0}
   sliderTextObj: {fileID: 6479069291501227691}  # GameObject
 ---
 ID: 7091100355578800126
@@ -13238,15 +13250,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
+  hoverDuration: 1
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
+  targetScaleMultiplier: [1, 1, 1]
   value: 0.5
   buttonObj: {fileID: 14571891404093188607}  # GameObject
-  decerementbuttonObj: {fileID: 0}
-  incerementbuttonObj: {fileID: 0}
+  clickSound: {fileID: 0}
+  decrementbuttonObj: {fileID: 0}
+  hoverSound: {fileID: 0}
+  incrementbuttonObj: {fileID: 0}
   sliderTextObj: {fileID: 4090370652779046302}  # GameObject
 ---
 ID: 14571891404093188607
@@ -13719,7 +13735,7 @@ ID: 8308514905720906089
 Transform:
   m_GameObject: {fileID: 632718507615856631}
   Translation: [1.52900004, 0, -0.0399999991]
-  Rotation: [0, 0.157079637, -3.11541271]
+  Rotation: [0, 0.157079637, 3.14159274]
   Scale: [0.800000012, 0.800000012, 0.800000012]
   Father: {fileID: 5025454116081322359}
   m_Children:
