@@ -35170,7 +35170,7 @@ Script:
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [2, 2, 2]
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 3837557141907955647}  # GameObject
   clickSound: {fileID: 2051875914575560535}  # Component
@@ -35313,7 +35313,7 @@ Script:
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [2, 2, 2]
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 16432005865971837572}  # GameObject
   clickSound: {fileID: 2051875914575560535}  # Component
