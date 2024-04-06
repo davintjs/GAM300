@@ -587,8 +587,20 @@ void PhysicsSystem::ResolveCharacterMovement() {
 		JPH::Vec3 new_velocity = 0.75f * current_velocity + 0.25f * desired_velocity;
 
 		// Jump
-		if(groundState == JPH::Character::EGroundState::OnGround)
-			new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+		if (groundState == JPH::Character::EGroundState::OnGround) {
+			if (!mCharacter->GetGroundBodyID().IsInvalid() && rigidbodyHashMap.contains(mCharacter->GetGroundBodyID().GetIndexAndSequenceNumber())) {
+				UINT32 tmp = mCharacter->GetGroundBodyID().GetIndexAndSequenceNumber();
+				Rigidbody& rb = scene.Get<Rigidbody>(rigidbodyHashMap[tmp]);
+				if(rb.state != DELETED && !rb.is_trigger)
+					new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+
+			}
+		}
+
+		//if (groundState == JPH::Character::EGroundState::OnGround) {
+		//	new_velocity += JPH::Vec3(0, direction.GetY(), 0);
+
+		//}
 		//std::cout << "new velocity:" << new_velocity.GetX() << ',' << new_velocity.GetY() << ',' << new_velocity.GetZ() << std::endl;
 
 
@@ -981,10 +993,17 @@ void PhysicsSystem::UpdateGameObjects() {
 		Vector3 newPos = t.GetGlobalTranslation();
 		JoltVec3ToGlmVec3(tmp, newPos);
 		t.SetGlobalPosition(newPos);
+
 		if (characters[idx]->GetGroundState() == JPH::Character::EGroundState::OnGround)
 		{
-			//std::cout << "Character " << idx << " is grounded\n";
-			cc.isGrounded = true;
+			if (!characters[idx]->GetGroundBodyID().IsInvalid() && rigidbodyHashMap.contains(characters[idx]->GetGroundBodyID().GetIndexAndSequenceNumber())) {
+				UINT32 tmp = characters[idx]->GetGroundBodyID().GetIndexAndSequenceNumber();
+				Rigidbody& rb = scene.Get<Rigidbody>(rigidbodyHashMap[tmp]);
+				if (rb.state != DELETED && !rb.is_trigger)
+					cc.isGrounded = true;
+				else
+					cc.isGrounded = false;
+			}
 		}
 		else
 		{
