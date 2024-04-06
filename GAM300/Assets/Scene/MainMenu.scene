@@ -12815,8 +12815,8 @@ Script:
   MinValue: 0.5
   hoverDuration: 1
   inverted: true
-  maxX: 1.10000002
-  minX: -1.10000002
+  maxX: 1.13
+  minX: -1.13
   screenSpace: false
   slideSpeed: 2000
   targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
