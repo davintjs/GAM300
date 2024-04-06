@@ -153,6 +153,11 @@ public class Inventory : Script
         ThirdPersonController.instance.playerMaxVFX.SetActive(false);
     }
 
+    public void useStaminaForScript()
+    {
+        StartCoroutine(delayStaminaRegenVFX());
+    }
+
     void thePacks()
     {
         //HEALTH PACK - RESTORES HEALTH
