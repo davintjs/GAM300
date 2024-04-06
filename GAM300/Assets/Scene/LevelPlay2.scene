@@ -7848,7 +7848,7 @@ ID: 3659628927964928141
 Transform:
   m_GameObject: {fileID: 6826500622308863951}
   Translation: [0, -0.699996948, 0]
-  Rotation: [-3.14158463, -0, -3.14159274]
+  Rotation: [-3.14158463, 0, -3.14159274]
   Scale: [-1, -0.999999762, -0.999999762]
   Father: {fileID: 15240334966158831452}
   m_Children:
@@ -7907,7 +7907,7 @@ ID: 14751546446793523439
 Transform:
   m_GameObject: {fileID: 3827453200974574750}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 0.999999523]
   Father: {fileID: 15240334966158831452}
   m_Children:
@@ -60350,8 +60350,8 @@ Transform:
   m_Children:
     - {fileID: 3476722836763241155}
     - {fileID: 16207680269001726648}
-    - {fileID: 2310634752158958975}
     - {fileID: 8412529737597656277}
+    - {fileID: 2310634752158958975}
     - {fileID: 5114381423122968400}
     - {fileID: 16294717769688043480}
     - {fileID: 13898223901269057467}
@@ -60377,9 +60377,9 @@ GameObject:
 ID: 11604910606234455406
 Transform:
   m_GameObject: {fileID: 3476722836763241155}
-  Translation: [66.657486, 38.9129562, -40.7536697]
+  Translation: [66.1834335, 38.9129562, -35.6866112]
   Rotation: [0, 0, 0]
-  Scale: [5.4603548, 5.44534731, 5.4603548]
+  Scale: [7.84063625, 5.44534731, 5.4603548]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -60427,9 +60427,9 @@ GameObject:
 ID: 9195845575189172252
 Transform:
   m_GameObject: {fileID: 16207680269001726648}
-  Translation: [66.657486, 36.8833084, -78.5070801]
+  Translation: [66.657486, 36.8833084, -79.5169601]
   Rotation: [0, 0, 0]
-  Scale: [18.8412952, 1.69355547, 11.5670586]
+  Scale: [18.8412952, 1.69355547, 10.7292061]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -60577,9 +60577,9 @@ GameObject:
 ID: 13154812941767734569
 Transform:
   m_GameObject: {fileID: 5114381423122968400}
-  Translation: [105.494255, 37.7094955, -108.591644]
+  Translation: [108.303024, 37.7094955, -123.272438]
   Rotation: [0, 0, 0]
-  Scale: [6.09813833, 7.72537327, 8.37242031]
+  Scale: [8.94829559, 7.72537327, 5.23838091]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -62096,7 +62096,7 @@ Script:
 ---
 ID: 7359964402167818618
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: ApexTrigger3
   m_TagString: ""
   m_Layer: 0
@@ -73513,7 +73513,7 @@ Rigidbody:
 ---
 ID: 10482025102164204176
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: Subtitles
   m_TagString: ""
   m_Layer: 0
@@ -73525,7 +73525,7 @@ ID: 14668362047316885406
 Transform:
   m_GameObject: {fileID: 10482025102164204176}
   Translation: [0, -0.879997253, 0.0800094604]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.100999616, 0.100991637, 0.10095425]
   Father: {fileID: 15240334966158831452}
   m_Children:

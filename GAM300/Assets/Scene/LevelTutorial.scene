@@ -16037,7 +16037,7 @@ Script:
 ---
 ID: 7799246395945065968
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: DialogueTrigger3
   m_TagString: ""
   m_Layer: 0
@@ -16083,7 +16083,7 @@ Script:
   m_GameObject: {fileID: 7799246395945065968}
   m_IsEnabled: true
   Script: {guid: 73a99346dabafcd80f1945f025aef51a}
-  dialogue_state: 3
+  dialogue_state: 0
 ---
 ID: 9496102192294917609
 GameObject:
@@ -21658,7 +21658,7 @@ ID: 7918018387209235940
 Transform:
   m_GameObject: {fileID: 13667354508004312860}
   Translation: [0, 0, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [1.62920671e-07, -0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 11998253260673808900}
   m_Children:
