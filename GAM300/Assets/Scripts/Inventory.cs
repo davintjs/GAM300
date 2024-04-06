@@ -46,7 +46,6 @@ public class Inventory : Script
 
     void Start()
     {
-        healthPackCount = 10;
         playerSounds = PlayerAudioManager.instance;
 
         if (sprintIcon == null)
@@ -140,6 +139,20 @@ public class Inventory : Script
         ThirdPersonController.instance.healthRegenEnabled = false;
     }
 
+    IEnumerator delayStaminaRegenVFX()
+    {
+        ThirdPersonController.instance.playerStaminaVFX.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        ThirdPersonController.instance.playerStaminaVFX.SetActive(false);
+    }
+
+    IEnumerator delayMaxRegenVFX()
+    {
+        ThirdPersonController.instance.playerMaxVFX.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        ThirdPersonController.instance.playerMaxVFX.SetActive(false);
+    }
+
     void thePacks()
     {
         //HEALTH PACK - RESTORES HEALTH
@@ -156,6 +169,7 @@ public class Inventory : Script
         //STAMINA PACK - RESTORE STAMINA
         if (staminaPackCount > 0 && Input.GetKeyDown(KeyCode.D2))
         {
+            StartCoroutine(delayStaminaRegenVFX());
             staminaPackCount -= 1;
             Console.WriteLine("Use Stamina Pack");
             playerSounds.UseItem.Play();
@@ -166,6 +180,7 @@ public class Inventory : Script
         //MAXSTAT PACK - RESTORE HEALTH AND STAMINA
         if (maxStatPackCount > 0 && Input.GetKeyDown(KeyCode.D3))
         {
+            StartCoroutine(delayMaxRegenVFX());
             maxStatPackCount -= 1;
             Console.WriteLine("Use MaxStat Pack");
             playerSounds.UseItem.Play();
