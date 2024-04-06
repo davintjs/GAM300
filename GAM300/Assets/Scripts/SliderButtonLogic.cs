@@ -12,6 +12,9 @@ class SliderButtonLogic : Script
     //public GameObject sliderFillObj;
     public GameObject sliderTextObj;
 
+    public GameObject decerementbuttonObj;
+    public GameObject incerementbuttonObj;
+
     public float MinValue = 0f;
     public float MaxValue = 1f;
     public float value = 0.5f;
@@ -25,6 +28,10 @@ class SliderButtonLogic : Script
     private SpriteRenderer sliderButtonRenderer;
     private TextRenderer sliderTextRenderer;
 
+    private SpriteRenderer decrementButtonRenderer;
+    private SpriteRenderer incrementButtonRenderer;
+
+
     public float minX = 0f;
     public float maxX = 0f;
     public float slideSpeed = 800f;
@@ -33,6 +40,8 @@ class SliderButtonLogic : Script
     {
         sliderButtonRenderer = buttonObj.GetComponent<SpriteRenderer>();
         sliderTextRenderer = sliderTextObj.GetComponent<TextRenderer>();
+        decrementButtonRenderer = decerementbuttonObj.GetComponent<SpriteRenderer>();
+        incrementButtonRenderer = incerementbuttonObj.GetComponent<SpriteRenderer>();
     }
 
     void Start()
@@ -46,44 +55,89 @@ class SliderButtonLogic : Script
 
     void Update()
     {
-        if (sliderButtonRenderer.IsButtonClicked())
-        {
-            onClick = true;
-        }
+        //if (sliderButtonRenderer.IsButtonClicked())
+        //{
+        //    onClick = true;
+        //}
 
-        if (Input.GetMouseHolding(0) && onClick)
+        //if (Input.GetMouseHolding(0) && onClick)
+        //{
+        //    //Update the slider value 
+        //    UpdateSliderValue();
+        //}
+        //else if (!Input.GetMouseHolding(0))
+        //{
+        //    onClick = false;
+        //}
+
+        if (decrementButtonRenderer.IsButtonClicked() || incrementButtonRenderer.IsButtonClicked())
         {
-            //Update the slider value 
             UpdateSliderValue();
         }
-        else if (!Input.GetMouseHolding(0))
-        {
-            onClick = false;
-        }
+
+
+
     }
 
     public void UpdateSliderValue()
     {
-        //Calculating the new value based on the mouse position
         vec3 slider = buttonObj.transform.localPosition;
-        float mouseDelta = Input.GetMouseDelta().x * slideSpeed * Time.unscaledDeltaTime;
 
-        //Console.WriteLine("Pos: " + Input.GetMousePosition().x);
-        if (screenSpace)
-            mouseDelta = Input.GetMousePosition().x;
+        Console.WriteLine("Position before " + slider.x);
+        Console.WriteLine("Value before is " + value);
 
-        mouse += (inverted) ? -mouseDelta : mouseDelta;
+        if (decrementButtonRenderer.IsButtonClicked())
+        {
+            
+            value -= 0.1f;
 
-        //Console.WriteLine("Mouse: " + mouse + " " + maxX + " " + minX);
+        }
+        else
+        {
+            value += 0.1f;
 
-        slider.x = Mathf.Clamp(mouse, minX, maxX);
-        //Console.WriteLine("Slider: " + slider.x); 
+        }
+         
 
-        float newValue = (inverted) ? -slider.x : slider.x;
-        value = (newValue + Mathf.Abs(minX)) / sliderWidth;
-        value = value * (MaxValue - MinValue) + MinValue;
+        value = Mathf.Clamp(value, MinValue, MaxValue);
+
+        //buttonObj.transform.localPosition = slider;
+
+        Console.WriteLine("Position after " + slider.x);
+
+        ////Calculating the new value based on the mouse position
+        //vec3 slider = buttonObj.transform.localPosition;
+        //float mouseDelta = Input.GetMouseDelta().x * slideSpeed * Time.unscaledDeltaTime;
+
+        ////Console.WriteLine("Pos: " + Input.GetMousePosition().x);
+        //if (screenSpace)
+        //    mouseDelta = Input.GetMousePosition().x;
+
+        //mouse += (inverted) ? -mouseDelta : mouseDelta;
+
+        ////Console.WriteLine("Mouse: " + mouse + " " + maxX + " " + minX);
+
+
+
+        //slider.x = Mathf.Clamp(value, minX, maxX);
+        //////Console.WriteLine("Slider: " + slider.x); 
+
+        //float newValue = (inverted) ? -slider.x : slider.x;
+        //value = (newValue + Mathf.Abs(minX)) / sliderWidth;
+        //value = value * (MaxValue - MinValue) + MinValue;
+        //buttonObj.transform.localPosition = slider;
+
+        //vec3 slider = buttonObj.transform.localPosition;
+        float tempWidth = Mathf.Abs(minX) + maxX;
+        float sliderValue = (value - MinValue) / (MaxValue - MinValue);
+        sliderValue = (sliderValue * tempWidth) - Mathf.Abs(minX);
+        sliderValue = (inverted) ? -sliderValue : sliderValue;
+        slider.x = Mathf.Clamp(sliderValue, minX, maxX);
+        mouse = slider.x;
+
         buttonObj.transform.localPosition = slider;
         sliderTextRenderer.text = value.ToString("0.00");
+
     }
 
     public void InitializeSliderValue(float startValue)

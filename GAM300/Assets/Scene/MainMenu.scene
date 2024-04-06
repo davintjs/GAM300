@@ -39,7 +39,6 @@ Camera:
   Orthographic: false
   TargetDisplay: 0
   HDR: true
-  OcclusionCulling: false
   FrustumCulling: false
   DistanceCulling: 5
 ---
@@ -5919,7 +5918,7 @@ ID: 11981267205586978845
 Transform:
   m_GameObject: {fileID: 11330124082524549178}
   Translation: [12.8294716, 5, 0.0001039505]
-  Rotation: [-3.1415925, -1.00954808e-14, 2.35619426]
+  Rotation: [-3.14159274, 0, 2.35619426]
   Scale: [5.49999857, 5.49999905, 0.799999654]
   Father: {fileID: 985189440964763271}
   m_Children:
@@ -9557,9 +9556,9 @@ GameObject:
 ID: 15786392711675892143
 Transform:
   m_GameObject: {fileID: 8830289429346299081}
-  Translation: [0, 0, -1.43051147e-06]
+  Translation: [5.51342964e-07, 0, -1.43051147e-06]
   Rotation: [-3.14159226, 0, 0]
-  Scale: [2.1000011, 2.39999914, 0.999999881]
+  Scale: [2.10000086, 2.3999989, 0.999999881]
   Father: {fileID: 14993186529203053056}
   m_Children:
     []
@@ -12395,7 +12394,7 @@ GameObject:
 ID: 922116115944227000
 Transform:
   m_GameObject: {fileID: 17270895963181484804}
-  Translation: [-0.0618429184, -0.800000012, 0.0200948715]
+  Translation: [-0.0618429184, -0.799999952, 0.0200948715]
   Rotation: [0, -1.25663733, 0]
   Scale: [2.50000381, 0.75, 0.999690175]
   Father: {fileID: 4856351502259171584}
@@ -12804,6 +12803,8 @@ Transform:
     - {fileID: 9712636449910607818}
     - {fileID: 6857993424936574129}
     - {fileID: 1308670381251737083}
+    - {fileID: 632718507615856631}
+    - {fileID: 9587656880601776389}
 ---
 ID: 5419302154516907815
 Script:
@@ -12815,9 +12816,12 @@ Script:
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
+  screenSpace: false
   slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 9712636449910607818}  # GameObject
+  decerementbuttonObj: {fileID: 632718507615856631}  # GameObject
+  incerementbuttonObj: {fileID: 9587656880601776389}  # GameObject
   sliderTextObj: {fileID: 1308670381251737083}  # GameObject
 ---
 ID: 7454816294857865540
@@ -12963,9 +12967,12 @@ Script:
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
+  screenSpace: false
   slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 8994722542415437916}  # GameObject
+  decerementbuttonObj: {fileID: 0}
+  incerementbuttonObj: {fileID: 0}
   sliderTextObj: {fileID: 10870457192150947301}  # GameObject
 ---
 ID: 8994722542415437916
@@ -13097,9 +13104,12 @@ Script:
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
+  screenSpace: false
   slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 7091100355578800126}  # GameObject
+  decerementbuttonObj: {fileID: 0}
+  incerementbuttonObj: {fileID: 0}
   sliderTextObj: {fileID: 6479069291501227691}  # GameObject
 ---
 ID: 7091100355578800126
@@ -13231,9 +13241,12 @@ Script:
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
+  screenSpace: false
   slideSpeed: 2000
   value: 0.5
   buttonObj: {fileID: 14571891404093188607}  # GameObject
+  decerementbuttonObj: {fileID: 0}
+  incerementbuttonObj: {fileID: 0}
   sliderTextObj: {fileID: 4090370652779046302}  # GameObject
 ---
 ID: 14571891404093188607
@@ -13691,3 +13704,63 @@ Transform:
   Father: {fileID: 15789012492597134895}
   m_Children:
     []
+---
+ID: 632718507615856631
+GameObject:
+  m_IsActive: true
+  m_Name: GammaDecrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8308514905720906089}  # Transform
+    - component: {fileID: 9259858696713306201}  # SpriteRenderer
+---
+ID: 8308514905720906089
+Transform:
+  m_GameObject: {fileID: 632718507615856631}
+  Translation: [1.52900004, 0, -0.0399999991]
+  Rotation: [0, 0.157079637, -3.11541271]
+  Scale: [0.800000012, 0.800000012, 0.800000012]
+  Father: {fileID: 5025454116081322359}
+  m_Children:
+    []
+---
+ID: 9259858696713306201
+SpriteRenderer:
+  m_GameObject: {fileID: 632718507615856631}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
+---
+ID: 9587656880601776389
+GameObject:
+  m_IsActive: true
+  m_Name: GammeIncrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 16683446972497272301}  # Transform
+    - component: {fileID: 17992763675410721460}  # SpriteRenderer
+---
+ID: 16683446972497272301
+Transform:
+  m_GameObject: {fileID: 9587656880601776389}
+  Translation: [-1.49999988, 0, -0.0399994887]
+  Rotation: [0, 0, 0]
+  Scale: [0.799999654, 0.800000072, 0.799999952]
+  Father: {fileID: 5025454116081322359}
+  m_Children:
+    []
+---
+ID: 17992763675410721460
+SpriteRenderer:
+  m_GameObject: {fileID: 9587656880601776389}
+  m_IsEnabled: true
+  World Space: true
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
