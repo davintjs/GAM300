@@ -10265,9 +10265,9 @@ GameObject:
 ID: 18383902940380763618
 Transform:
   m_GameObject: {fileID: 7961823828605190600}
-  Translation: [0, 0, 0]
+  Translation: [0.487079024, 6.85453415e-07, 0.228081226]
   Rotation: [0, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [1.00001192, 1.00001192, 1.00001192]
   Father: {fileID: 8848755377487004663}
   m_Children:
     []
@@ -13262,13 +13262,13 @@ Script:
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
-  targetScaleMultiplier: [1, 1, 1]
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 14571891404093188607}  # GameObject
-  clickSound: {fileID: 0}
-  decrementbuttonObj: {fileID: 0}
-  hoverSound: {fileID: 0}
-  incrementbuttonObj: {fileID: 0}
+  clickSound: {fileID: 10922656780418682009}  # Component
+  decrementbuttonObj: {fileID: 13635776619369940112}  # GameObject
+  hoverSound: {fileID: 7823455904144311016}  # Component
+  incrementbuttonObj: {fileID: 4933611192475565118}  # GameObject
   sliderTextObj: {fileID: 4090370652779046302}  # GameObject
 ---
 ID: 14571891404093188607
@@ -13921,7 +13921,7 @@ ID: 5684924175387783443
 Transform:
   m_GameObject: {fileID: 13635776619369940112}
   Translation: [1.5, 0, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [0, 0.0174532924, 3.14159274]
   Scale: [0.800000012, 0.800000012, 0.800000012]
   Father: {fileID: 7444458813515797325}
   m_Children:
