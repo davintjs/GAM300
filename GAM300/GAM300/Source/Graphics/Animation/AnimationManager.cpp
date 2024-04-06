@@ -78,7 +78,8 @@ void Animation_Manager::Update(float dt)
 
             bool withinFrustum = CurrCam.WithinFrustum(transForm, minBound, maxBound);
 
-            if (distance > 20.f && !withinFrustum) continue;
+            if ((distance > 20.f && !withinFrustum) || (distance > 60.f && withinFrustum))
+                continue;
 
             if (distance > 20.f && withinFrustum) // Only raycast for those within frustum
             {
@@ -95,9 +96,28 @@ void Animation_Manager::Update(float dt)
 
                 JPH::RVec3 physicsVec3 = { p.x, p.y, p.z };
                 EngineRayCastResult ray = PHYSICS.CastRay(physicsVec3, { d.x, d.y, d.z }, 0.95f);
-                std::string tagName = IDENTIFIERS.GetTagString(ray.name.tagName);
-                if (ray.hit && tagName.compare("Enemy") && ray.name.physicsLayerIndex != 1) // If it hits something
-                    continue;
+                if (ray.hit) // If it hits something that is not enemy
+                {
+                    Transform* tParent = currentScene.Get<Transform>(ray.name).GetParent();
+                    if (tParent) // Get the parent object because the enemy tag is in the parent
+                    {
+                        const Tag& tag = currentScene.Get<Tag>(*tParent);
+                        const Tag& tag2 = currentScene.Get<Tag>(ray.name);
+                        const std::string tagName = IDENTIFIERS.GetTagString(tag.tagName);
+                        const std::string tagName1 = IDENTIFIERS.GetTagString(tag2.tagName);
+                        // If the tag is not the enemy and it isnt on the transparent layer, ignore the animator
+                        if (tagName.compare("Enemy") != 0 && ray.name.physicsLayerIndex != 1 && tagName1.compare("Enemy") != 0)
+                        {
+                            //std::cout << "Ignore: " << tag.name << "\n";
+                            continue;
+                        }
+                    }
+                    
+                    const Tag& tag = currentScene.Get<Tag>(ray.name);
+                    const std::string tagName = IDENTIFIERS.GetTagString(tag.tagName);
+                    if (tagName.compare("Enemy") != 0 && ray.name.physicsLayerIndex != 1)
+                        continue;
+                }
             }
 
             if (animator.playing && animator.AnimationAttached())

@@ -73,6 +73,11 @@ namespace BeanFactory
         {
             return start + (end - start) * percentage;
         }
+        public static float Magnitude(vec4 vec)
+        {
+            return (float)Math.Sqrt(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z + vec.w * vec.w);
+        }
+
         public static float Lerp(float start, float end, float value, float duration, EasingType type)
         {
             value /= duration;

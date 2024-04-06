@@ -122,6 +122,11 @@ static bool GetMouseHolding(int mouseCode)
 	return InputHandler::isMouseButtonHolding_R();
 }
 
+static void GetMousePosition(Vector2& mousePos)
+{
+	mousePos = InputHandler::getMousePos();
+}
+
 static void GetMouseDelta(Vector2& mouseDelta)
 {
 	mouseDelta = InputHandler::mouseDeltaNormalized();
@@ -260,6 +265,18 @@ static void SetSpeed(ScriptObject<Animator> pAnimator, float value)
 {
 	Animator& animator = pAnimator;
 	animator.SetSpeed(value);
+}
+
+static float GetBlendDuration(ScriptObject<Animator> pAnimator)
+{
+	Animator& animator = pAnimator;
+	return animator.GetBlendDuration();
+}
+
+static void SetBlendDuration(ScriptObject<Animator> pAnimator, float value)
+{
+	Animator& animator = pAnimator;
+	animator.SetBlendDuration(value);
 }
 
 static void SetDefaultState(ScriptObject<Animator> pAnimator, MonoString* mString)
@@ -465,6 +482,17 @@ static void GetForwardVec(ScriptObject<Camera> pCamera, Vector3& vector)
 {
 	Camera& camera = pCamera;
 	vector = camera.GetForwardVec();
+}
+
+static void SetOrientation(ScriptObject<Camera> pCamera)
+{
+	Camera& camera = pCamera;
+	camera.SetOrientation();
+}
+
+static void GetNearestEnemy(ScriptObject<Entity> pEntity)
+{
+
 }
 
 #pragma endregion
@@ -837,6 +865,7 @@ static void RegisterScriptWrappers()
 	Register(GetMouseDelta);
 	Register(LockCursor);
 	Register(GetMouseHolding);
+	Register(GetMousePosition);
 
 	// Physics System
 	Register(Raycast);
@@ -892,6 +921,8 @@ static void RegisterScriptWrappers()
 	Register(SetProgress);
 	Register(GetSpeed);
 	Register(SetSpeed);
+	Register(GetBlendDuration);
+	Register(SetBlendDuration);
 	Register(SetDefaultState);
 	Register(SetState);
 	Register(SetNextState);
@@ -905,6 +936,8 @@ static void RegisterScriptWrappers()
 	Register(GetRightVec);
 	Register(GetUpVec);
 	Register(GetForwardVec);
+	Register(SetOrientation);
+	Register(GetNearestEnemy);
 
 	// NavMeshAgent Component
 	Register(FindPath);

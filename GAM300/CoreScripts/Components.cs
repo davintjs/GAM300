@@ -196,6 +196,8 @@ namespace BeanFactory
         public void SetProgress(float value) { InternalCalls.SetProgress(this, value); }
         public float GetSpeed() { return InternalCalls.GetSpeed(this); }
         public void SetSpeed(float value) { InternalCalls.SetSpeed(this, value); }
+        public float GetBlendDuration() { return InternalCalls.GetBlendDuration(this); }
+        public void SetBlendDuration(float value) { InternalCalls.SetBlendDuration(this, value); }
         public void SetDefaultState(string defaultState) { InternalCalls.SetDefaultState(this, defaultState); }
         public void SetState(string state) { InternalCalls.SetState(this, state); }
         public string GetState() { return InternalCalls.GetState(this); }
@@ -515,14 +517,27 @@ namespace BeanFactory
             }
         }
 
+        public quat rotation
+        {
+            get
+            {
+                return orientation;
+            }
+            set 
+            { 
+                orientation = value;
+                InternalCalls.SetOrientation(this);
+            }
+        }
+
         float padding;
         float padding1;
-        vec4 backgroundColor;          // Default solid color when rendering
-        vec3 cameraPosition;           // The location of the viewer / eye (Center of the screen, 10 units away)
-        vec3 focalPoint;               // The look-at point / target point where the viewer is looking (Center of screen)
-        vec2 dimension;                // The dimension of the camera in width and height defined in pixels
+        quat orientation;           // Default solid color when rendering
+        vec3 cameraPosition;        // The location of the viewer / eye (Center of the screen, 10 units away)
+        vec3 focalPoint;            // The look-at point / target point where the viewer is looking (Center of screen)
+        vec2 dimension;             // The dimension of the camera in width and height defined in pixels
         
-        int cameraType;              // Type of camera
+        int cameraType;             // Type of camera
 
         uint targetDisplay = 0;     // Target display for the camera
 

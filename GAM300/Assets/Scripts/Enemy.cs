@@ -109,20 +109,23 @@ public class Enemy : Script
         //Console.WriteLine(state);
 
         //death animation timer
-        if (startDeathAnimationCountdown)
+/*        if (startDeathAnimationCountdown)
         {
             SetEnabled(GetComponent<Rigidbody>(), false);
+            Console.WriteLine("Progress: " + animator.GetProgress());
             currentDeathAnimationTimer -= Time.deltaTime;
-            if (currentDeathAnimationTimer <= 0.5f)
+            if (animator.GetState() == "Death" && animator.GetProgress() > 0.4f)
             {
+                animator.SetSpeed(0f);
                 currentDeathAnimationTimer = animationTimer;
                 startDeathAnimationCountdown = false;
                 //animator.Pause();//pause the death animation to prevent it from returning to idle animation
                 gameObject.SetActive(false);
+                return;
                 //Respawn();
                 //SceneManager.LoadScene("LevelPlay2");
             }
-        }
+        }*/
 
         if (isDead)
         {
@@ -219,7 +222,6 @@ public class Enemy : Script
             {
                 //idle state
                 case 0:
-                    //Console.WriteLine("Idle");
                     //idle animation
                     playOnce = true;//reset ability to play audio
                     alertedOnce = true;
@@ -514,6 +516,7 @@ public class Enemy : Script
             currentHealth = 0;
             hpBar.gameObject.SetActive(false);
             isDead = true;
+            StartCoroutine(StartDeath());
             //Console.WriteLine("EnemyDead");
             SetState("Death", true);
             animationManager.UpdateState();
@@ -526,6 +529,16 @@ public class Enemy : Script
         }
     }
 
+    IEnumerator StartDeath()
+    {
+        SetEnabled(rb,false);
+        float timer = 0;
+        yield return new WaitForSeconds(2f);
+        animator.SetSpeed(0);
+        yield return new WaitForSeconds(1f);
+        gameObject.SetActive(false);
+    }
+
     void Exit()
     {
 
@@ -534,7 +547,7 @@ public class Enemy : Script
     void OnTriggerEnter(PhysicsComponent other)
     {
         //check if the rigidbody belongs to a game object called PlayerWeaponCollider
-        if (GetTag(other) == "PlayerAttack")
+        if (GetTag(other) == "PlayerAttack" && !isDead)
         {
             Transform otherT = other.gameObject.GetComponent<Transform>();
             vec3 dir = otherT.forward;
@@ -543,15 +556,13 @@ public class Enemy : Script
             {
                 isStunned = true;
                 staggerTimer = 0f;
-
-                if (damagedCoroutine != null)
-                {
-                    StopCoroutine(damagedCoroutine);
-                }
-                damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 8));
             }
 
-            
+            if (damagedCoroutine != null)
+            {
+                StopCoroutine(damagedCoroutine);
+            }
+            damagedCoroutine = StartCoroutine(Damaged(.5f, dir * 6));
 
             if (ThirdPersonController.instance.currentlyOverdriven == true || ThirdPersonController.instance._isDashAttacking)
             {

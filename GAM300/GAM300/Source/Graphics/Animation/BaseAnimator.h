@@ -67,6 +67,10 @@ public:
 
 	void SetSpeed(const float& _value) { speedModifier = _value; }
 
+	float GetBlendDuration() { return blendDuration; }
+
+	void SetBlendDuration(const float& _value) { blendDuration = _value; }
+
 	AnimationState* GetCurrentState() { return currentState; }
 
 	std::vector<glm::mat4> GetFinalBoneMatrices() { return m_FinalBoneMatrices; }

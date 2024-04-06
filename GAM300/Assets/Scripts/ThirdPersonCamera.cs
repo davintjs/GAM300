@@ -9,7 +9,7 @@ using System.Diagnostics.Tracing;
 public class ThirdPersonCamera : Script
 {
     public static ThirdPersonCamera instance;
-    private Camera camera;
+    public Camera camera;
 
     public float yawRotSpeed = 1f;
     public float pitchRotSpeed = 1f;
@@ -26,7 +26,8 @@ public class ThirdPersonCamera : Script
     public GameObject target;
 
     public float zoom = 1f;
-    //private float initialZoom = 0f;
+    private float finalZoom = 0f;
+    private float zoomTimer = 0f;
     public float defaultZoom = 5f;
     public float zoomSpeed = 50f;
     public float zoomInSpeed = 3f;
@@ -37,7 +38,7 @@ public class ThirdPersonCamera : Script
     private bool settingYaw = false;
 
     public float timer = 0f;
-    private float duration = 1.0f;
+    //private float duration = 1.0f;
     //private float bufferTimer = 0f;
     //private float bufferDuration = 3.0f;
     //private float distance = 0f;
@@ -46,8 +47,6 @@ public class ThirdPersonCamera : Script
 
     float shakeMagnitude = 0f;
     float shakeDuration = 0f;
-    //private vec3 targetPosition;
-
 
     void Awake()
     {
@@ -108,8 +107,8 @@ public class ThirdPersonCamera : Script
 
     void AvoidColliders()
     {
-        vec3 direction = transform.position - target.transform.position;
-        RaycastHit raycast = Physics.Raycast(target.transform.position, direction, 1.01f);
+        vec3 tempDirection = transform.position - target.transform.position;
+        RaycastHit raycast = Physics.Raycast(target.transform.position, tempDirection, 1.01f);
         
         if (raycast.hit && raycast.gameObj != null)
         {
@@ -119,8 +118,9 @@ public class ThirdPersonCamera : Script
             if (tagName != "Camera" && tagName != "Enemy")
             {
                 //Console.WriteLine("Name: " +  raycast.gameObj.name);
-                zoom = vec3.Distance(target.transform.position, raycast.point) * 0.95f;
-                zoom = Mathf.Clamp(zoom, closestZoom, furthestZoom);
+                finalZoom = vec3.Distance(target.transform.position, raycast.point) * 0.95f;
+                finalZoom = Mathf.Clamp(finalZoom, closestZoom, furthestZoom);
+                zoomTimer = 0f;
             }
         }
         else
@@ -137,7 +137,7 @@ public class ThirdPersonCamera : Script
         setYawAngle = yaw;
         settingYaw = true;
     }
-
+        
     void UpdateCameraRotation()
     {
         vec2 mouseDelta = Input.GetMouseDelta();
@@ -162,7 +162,17 @@ public class ThirdPersonCamera : Script
         else if (pitchAngle < minPitchAngle * 3.14f / 180f)
             pitchAngle = minPitchAngle * 3.14f / 180f;
 
-        transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
+        //transform.localRotation = new vec3(pitchAngle, yawAngle, 0f);
+
+        quat newQuat = glm.FromEulerToQuat(new vec3(pitchAngle, yawAngle, 0f)).Normalized;
+        //quat oldQuat = glm.FromEulerToQuat(transform.localRotation).Normalized;
+
+        // Interpolate using spherical linear interpolation (slerp)
+        quat midQuat = quat.SLerp(camera.rotation, newQuat, Time.deltaTime * 15f);
+        if (midQuat != quat.NaN)
+        {
+            camera.rotation = midQuat;
+        }
     }
 
     void Zoom()
@@ -182,6 +192,7 @@ public class ThirdPersonCamera : Script
         {
             zoom = furthestZoom;
         }
+
         camera.lookatDistance = zoom;
     }
     void ResetZoom()
@@ -200,6 +211,10 @@ public class ThirdPersonCamera : Script
         //        timer = bufferTimer = 0f;
         //    }
         //}
+
+        if (timer > 1.0f)
+            timer = 0f;
+
         zoom = Mathf.Lerp(zoom, defaultZoom, timer);
         timer += Time.deltaTime;
     }
@@ -208,16 +223,17 @@ public class ThirdPersonCamera : Script
     {
         if (target != null)
         {
+            if (finalZoom != 0f)
+            {
+                zoomTimer += Time.deltaTime;
+                zoom = Mathf.Lerp(zoom, finalZoom, zoomTimer, 0.16f, Mathf.EasingType.EASEOUT);
+            }
             vec3 finalPosition = target.transform.position - (camera.forward * zoom);
-            transform.position = camera.position = finalPosition;
+            finalZoom = 0f;
+            transform.localPosition = finalPosition;
+
             camera.LookAt(target);
         }
-    }
-
-    float Lerp(float start, float end, float value, float duration)
-    {
-        value /= duration;
-        return (1.0f - value) * start + value * end;
     }
 
     public void ShakeCamera(float magnitude, float duration)

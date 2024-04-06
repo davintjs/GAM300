@@ -80,6 +80,7 @@ public:
 
 	// Update the camera's position and rotation
 	void UpdateCamera(const glm::vec3& _position, const glm::vec3& _rotation);
+	void UpdateCamera(const glm::vec3& _position);
 
 	// Attemp to resize the camera's dimension
 	void TryResize(glm::vec2 _newDimension);
@@ -94,6 +95,8 @@ public:
 	
 	// Getting Things relative to Cameras 
 	void SetCameraRotation(const glm::vec3& _rotation);
+	void SetOrientation();
+	const bool& IsSetOrientation() { return setOrientation; }
 
 	void SetCameraPosition(const glm::vec3& _position);
 	glm::vec3 GetCameraPosition();
@@ -111,10 +114,11 @@ public:
 	CAMERATYPE GetCameraType() const { return cameraType; }
 	unsigned int& GetTargetDisplay() { return targetDisplay; }
 
-	float& GetPitch() { return pitch; }
-	float& GetYaw() { return yaw; }
+	//float& GetPitch() { return pitch; }
+	//float& GetYaw() { return yaw; }
 
-	glm::quat GetOrientation() { return glm::quat(glm::vec3(-pitch, -yaw, -roll)); }
+	//glm::quat GetOrientation() { return glm::quat(glm::vec3(-pitch, -yaw, -roll)); }
+	glm::quat GetOrientation() { return orientation; }
 	glm::vec3 GetRightVec() { return glm::vec3(glm::mat4(GetOrientation())[0]); }
 	glm::vec3 GetUpVec() { return glm::vec3(glm::mat4(GetOrientation())[1]); }
 	glm::vec3 GetForwardVec() { return -glm::vec3(glm::mat4(GetOrientation())[2]); }
@@ -136,7 +140,7 @@ public:
 
 	property_vtable();
 protected:
-	glm::vec4 backgroundColor;			// Default solid color when rendering
+	glm::quat orientation{};			// Default solid color when rendering
 	glm::vec3 cameraPosition{};			// The location of the viewer / eye (Center of the screen, 10 units away)
 	glm::vec3 focalPoint{};				// The look-at point / target point where the viewer is looking (Center of screen)
 	glm::vec2 dimension;				// The dimension of the camera in width and height defined in pixels
@@ -163,10 +167,10 @@ protected:
 	char clearFlags = 1;				// The background to render for the camera
 	char cullingMask = 0;				// A culling mask to prevent rendering of specific layers, to be implemented in the future
 	bool orthographic = false;			// Perspective by default until orthographic camera has been implemented
-	bool useOcclusionCulling = false;	// Bean: A feature to be implemented in the future
 	bool useFrustumCulling = true;		// Frustum culling for the camera, on by default
 	bool enableHDR = true;				// High dynamic range rendering
 	bool setFocalPoint = false;			// Is the focal point being set via script
+	bool setOrientation = false;		// Is the orientation being set via script
 
 	glm::mat4 projMatrix{ 0 };			// The projection matrix to use, either orthographic or perspective
 	glm::mat4 viewMatrix{ 0 };			// The view matrix -> worldToCamera matrix
@@ -187,7 +191,6 @@ property_begin_name(BaseCamera, "BaseCamera") {
 	property_var(orthographic).Name("Orthographic"),
 	property_var(targetDisplay).Name("TargetDisplay"),
 	property_var(enableHDR).Name("HDR"),
-	property_var(useOcclusionCulling).Name("OcclusionCulling"),
 	property_var(useFrustumCulling).Name("FrustumCulling"),
 	property_var(distanceCheck).Name("DistanceCulling"),
 

@@ -32,7 +32,7 @@ BaseAnimator::BaseAnimator()
     playing = false;
     currBlendState = notblending;
     blendedBones = 0;
-    blendDuration = 4.f;
+    blendDuration = 0.1f;
     blendStartTime = 0.f;
     blendTimer = 0.f;
 
@@ -168,7 +168,8 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     //std::cout << "Initial: " << m_CurrentTime << "\n";
 
     // Animation has ended and is not blending
-    if (m_CurrentTime >= endTime - startTime - blendDuration && currBlendState != blending)
+    float newBlendDuration = blendDuration * m_CurrentAnimation.GetTicksPerSecond();
+    if (m_CurrentTime >= endTime - startTime - newBlendDuration && currBlendState != blending)
     {
         if (!defaultState)
             return;
@@ -188,7 +189,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
         if (currentState != nextState)
         {
             currBlendState = blending;
-            //endTime += blendDuration;
+            //endTime += newBlendDuration;
             blendStartTime = m_CurrentTime;
         }
         else
@@ -200,14 +201,15 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
     m_CurrentTime = fmod(m_CurrentTime, endTime - startTime);
     m_CurrentTime += startTime; // wrap within the time range then offset by the start time 
 
-    //std::cout << "End    : " << m_CurrentTime << "\n";
+    //std::cout << "End: " << m_CurrentTime << "\n";
     if (currBlendState == blending)/*if (nextState)*/
     {
         blendTimer += (m_CurrentAnimation.GetTicksPerSecond() * dt * speedModifier);
         blendedBones = 0;
         CalculateBlendedBoneTransform(&m_CurrentAnimation.GetRootNode(), glm::mat4(1.f));
         
-        if (blendedBones == m_CurrentAnimation.GetBoneCount() && blendTimer >= blendDuration)
+        float newBlendDuration = blendDuration * m_CurrentAnimation.GetTicksPerSecond();
+        if (blendedBones == m_CurrentAnimation.GetBoneCount() && blendTimer >= newBlendDuration)
         {
             //std::cout << "Finished blending " << currentState->label << " and " << nextState->label << '\n';
             //std::cout << "Bone count: " << blendedBones << " and timer: " << blendTimer << '\n';
@@ -218,7 +220,7 @@ void BaseAnimator::UpdateAnimation(float dt, glm::mat4& pTransform)
             blendTimer = 0.f;
             blendedBones = 0;
             startTime = currentState->minMax.x;
-            m_CurrentTime = startTime + blendDuration;
+            m_CurrentTime = startTime + newBlendDuration;
             endTime = currentState->minMax.y;
             stateName = currentState->label;
             playing = true;
@@ -276,10 +278,10 @@ void BaseAnimator::ChangeState()
     {
         currBlendState = blending;
         //std::cout << "Change state Different state blending " << currentState->label << " and " << nextState->label << '\n';
-        //endTime = m_CurrentTime + blendDuration;
+        //endTime = m_CurrentTime;
         blendStartTime = m_CurrentTime;
     }
-
+    
     if (!currentState && defaultState) // If no next state, use default state
     {
         currentState = defaultState;
@@ -369,11 +371,14 @@ void BaseAnimator::CalculateBlendedBoneTransform(const AssimpNodeData* node, glm
             // get anim2 xform
             int p1Index = NextBone->GetPositionIndex(nextState->minMax.x + blendTimer);
 
-            // blend factor
-            float blendFactor = Bone->GetBlendFactor(Bone->GetTimeStamp(p0Index),
-                blendDuration, m_CurrentTime);
+            float newBlendDuration = blendDuration * m_CurrentAnimation.GetTicksPerSecond();
 
-            blendFactor = blendTimer / (blendDuration == 0.f) ? 1.f : blendDuration; 
+            // blend factor
+            //float blendFactor = Bone->GetBlendFactor(Bone->GetTimeStamp(p0Index),
+            //    newBlendDuration, m_CurrentTime);
+
+            float blendFactor = blendTimer / ((newBlendDuration == 0.f) ? 1.f : newBlendDuration);
+            //std::cout << "Blend Factor: " << blendFactor << " with time: " << blendTimer << " and duration: " << newBlendDuration << "\n";
 
             if (blendFactor >= 1.f)
             {

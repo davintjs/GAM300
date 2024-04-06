@@ -110,8 +110,8 @@ void BaseCamera::Update()
 
 void BaseCamera::UpdateViewMatrix()
 {
-	glm::quat Orientation = GetOrientation();
-	viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(Orientation);
+	//glm::quat Orientation = GetOrientation();
+	viewMatrix = glm::translate(glm::mat4(1.0f), cameraPosition) * glm::mat4(orientation);
 	viewMatrix = glm::inverse(viewMatrix);
 }
 
@@ -119,7 +119,7 @@ void BaseCamera::UpdateProjection()
 {
 	projMatrix = glm::perspective(glm::radians(fieldOfView), aspect, nearClip, farClip);
 	//std::cout << "field of view : " << fieldOfView << "\n";
-}
+} 
 
 void BaseCamera::UpdateFrustum()
 {
@@ -165,13 +165,30 @@ void BaseCamera::UpdateCamera(const glm::vec3& _position, const glm::vec3& _rota
 
 	SetCameraPosition(_position);
 
-	SetCameraRotation(_rotation);
+	// Gimbal lock condition
+	float rotY = abs(_rotation.y);
+	if (rotY > 0.001745f && rotY < 1.569051f || rotY > 1.572542f)
+		SetCameraRotation(_rotation);
 
 	SetDistance(glm::length(focalPoint - cameraPosition));
 
 	Update();
 
 	setFocalPoint = false;
+}
+
+void BaseCamera::UpdateCamera(const glm::vec3& _position)
+{
+	if (!setFocalPoint)
+		focalPoint = GetFocalPoint();
+
+	SetCameraPosition(_position);
+
+	SetDistance(glm::length(focalPoint - cameraPosition));
+
+	Update();
+
+	setFocalPoint = setOrientation = false;
 }
 
 void BaseCamera::TryResize(glm::vec2 _newDimension)
@@ -212,7 +229,6 @@ void BaseCamera::OnResize(const float& _width, const float& _height)
 
 	UpdateProjection();
 }
-
 
 bool BaseCamera::WithinFrustrumAnimation(Transform& _transform, const glm::vec3& _min, const glm::vec3& _max)
 {
@@ -304,9 +320,12 @@ bool BaseCamera::WithinFrustum(Transform& _transform, const glm::vec3& _min, con
 
 void BaseCamera::SetCameraRotation(const glm::vec3& _rotation)
 {
-	pitch = -_rotation.x;
-	yaw = -_rotation.y;
-	roll = _rotation.z;
+	orientation = glm::quat(_rotation);
+}
+
+void BaseCamera::SetOrientation()
+{
+	setOrientation = true;
 }
 
 void BaseCamera::SetCameraPosition(const glm::vec3& _position)

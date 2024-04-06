@@ -875,6 +875,24 @@ void PhysicsSystem::UpdateGameObjects() {
 
 	Scene& scene = MySceneManager.GetCurrentScene();
 
+	Camera* pCamera = nullptr;
+	for (Camera& camera : scene.GetArray<Camera>())
+	{
+		if (camera.state == DELETED) 
+			continue;
+
+		if (!scene.IsActive(camera)) 
+			continue;
+
+		Entity& entity = scene.Get<Entity>(camera);
+		if (!scene.IsActive(entity)) 
+			continue;
+
+		pCamera = &camera;
+		break;
+	}
+
+
 	// Rigidbodies
 	auto& rbArray = scene.GetArray<Rigidbody>();
 	for (auto it = rbArray.begin(); it != rbArray.end(); ++it) {
@@ -889,6 +907,17 @@ void PhysicsSystem::UpdateGameObjects() {
 			continue;
 
 		Transform& t = scene.Get<Transform>(entity);
+
+		// Distance & frustum culling
+		if (pCamera)
+		{
+			float distance = glm::distance(pCamera->GetCameraPosition(), t.GetGlobalTranslation());
+			bool withinCamera = pCamera->WithinFrustum(t, { -1.f, -1.f, -1.f }, { 1.f,1.f ,1.f });
+			if (distance > 20.f && !withinCamera)
+				continue;
+			else if (distance > 60.f && withinCamera)
+				continue;
+		}
 
 		JPH::BodyID tmpBID(rb.bid);
 
