@@ -284,7 +284,7 @@ public class DialogueManager : Script
                 setTimer(7f);
                 break;
             case 7:
-                text.text = "Right, enhance and uphold societal progress. The lift should be ready for you in a moment...[CUT OFFS]";
+                text.text = "     Right, enhance and uphold societal progress. The lift should be ready for you in a     moment...[CUT OFFS]";
                 curr_state = 7;
                 setTimer(11f);
                 break;
