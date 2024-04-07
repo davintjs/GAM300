@@ -2,11 +2,11 @@ Material:
   Material Name: BossMaterial
   Shader: 0
   Albedo: [1, 1, 1, 1]
-  Metallic: 1
+  Metallic: 0.5
   Roughness: 1
-  AmbientOcclusion: 1
+  AmbientOcclusion: 2
   Is Emission: true
-  Emission: 10
+  Emission: 100
   AlbedoTexture: {guid: fd333922e74601cd43f419df2ebd1f20}
   NormalMap: {guid: 38462a9f772463f8effbdf0ea7428bc4}
   MetallicTexture: {guid: c3ce1fd68c809077c3e62c661831c455}

@@ -55,9 +55,6 @@ public class BossBehaviour : Script
 
     public int projectileCount = 16;
 
-    
-
-
     public Transform attack1;
     public Transform attack2;
     public Transform attack2Left;
@@ -562,8 +559,9 @@ public class BossBehaviour : Script
         yield return null;
         slamAttack.gameObject.SetActive(false);
         yield return new WaitForSeconds(jumpAttackDuration / 2f);
-        model.localPosition = modelPos;
         SetState("JumpAttack", false);
+        yield return new WaitForSeconds(jumpAttackDuration / 2f);
+        model.localPosition = modelPos;
         StartCoroutine(Dodge());
     }
 
@@ -892,10 +890,24 @@ public class BossBehaviour : Script
         animationManager.UpdateState();
     }
 
+    IEnumerator Knockback(vec3 dir)
+    {
+        float timer = 0f;
+        float maxTime = 0.1f;
+        while (timer < maxTime)
+        {
+            timer += Time.deltaTime;
+            rb.linearVelocity = vec3.Lerp(dir * 50f,vec3.Zero,timer/ maxTime);
+            yield return null;
+        }
+        rb.linearVelocity = vec3.Zero;
+    }
+
     void OnTriggerEnter(PhysicsComponent rb)
     {
         if (GetTag(rb) == "PlayerAttack")
         {
+            vec3 dir = -ThirdPersonController.instance.PlayerModel.back;
             //While being in overdrive, deals double dmg.
             if (ThirdPersonController.instance.currentlyOverdriven == true)
             {
@@ -905,6 +917,7 @@ public class BossBehaviour : Script
                 //AudioManager.instance.enemyHit.Play();
                 //AudioManager.instance.playerInjured.Play();
                 health -= 20;
+                StartCoroutine(Knockback(dir));
             }
             else
             {
@@ -914,6 +927,7 @@ public class BossBehaviour : Script
                 //AudioManager.instance.enemyHit.Play();
                 //AudioManager.instance.playerInjured.Play();
                 health -= 10;
+                StartCoroutine(Knockback(dir));
 
                 //This allows the player to charge his overdrive while ONLY NOT BEING IN OVERDRIVE
                 if (ThirdPersonController.instance.currentOverdriveCharge >= ThirdPersonController.instance.maxOverdriveCharge)
