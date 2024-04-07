@@ -41,7 +41,7 @@ public class Exit : Script
                 camera.GoToMainMenu();
             }
 
-            if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
+            if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked() && !waitingExit)
             {
                 camera.GoToFinalExit();
                 fader.StartFadeIn(2.5f, true, 0f, 1f);
@@ -52,7 +52,7 @@ public class Exit : Script
         {
             // No portion in pause script
             
-            if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked())
+            if (yesButtonRenderer != null && yesButtonRenderer.IsButtonClicked() && !waitingExit)
             {
                 fader.StartFadeIn(1f, true, 0f, 1f);
                 waitingExit = true;

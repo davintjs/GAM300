@@ -249,7 +249,7 @@ public class StartingAnimation : Script
 
         if (exitAnim && !waitingOnFader)
         {
-            fader.StartFadeIn(1f, true, 2f, 0.5f);
+            fader.StartFadeIn(1f, true, 0f, 1f);
             waitingOnFader = true;
         }
 

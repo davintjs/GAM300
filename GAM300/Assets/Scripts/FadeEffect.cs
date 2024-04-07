@@ -22,6 +22,7 @@ public class FadeEffect : Script
     public float inDuration = 1f;
     public float outDuration = 1f;
     public float waitDelay = 0f;
+    public float stayDuration = 0.5f;
     public float targetVal = 1f;
 
     public bool finished = false;
@@ -47,6 +48,7 @@ public class FadeEffect : Script
 
     public void StartFadeInAndOut(float fadeDuration = 1f)
     {
+        Reset();
         isFading = true;
         finished = false;
         duration = inDuration = outDuration = fadeDuration;
@@ -62,6 +64,7 @@ public class FadeEffect : Script
     
     public void StartFadeIn(float fadeDuration = 1f, bool keepActive = false, float inDelay = 0f, float outDelay = 0f)
     {
+        Reset();
         isFading = true;
         finished = false;
         startVal = 0.0f;
@@ -78,6 +81,7 @@ public class FadeEffect : Script
 
     public void StartFadeOut(float fadeDuration = 1f, bool keepActive = false, float inDelay = 0f, float outDelay = 0f)
     {
+        Reset();
         isFading = true;
         finished = false;
         startVal = 1.0f;
@@ -138,7 +142,7 @@ public class FadeEffect : Script
         startVal = 1.0f;
         targetVal = 0.0f;
 
-        yield return new WaitForUnscaledSeconds(waitDelay);
+        yield return new WaitForUnscaledSeconds(stayDuration);
 
         elaspedTime = 0f;
         while (elaspedTime < duration)
@@ -162,8 +166,6 @@ public class FadeEffect : Script
         StopCoroutine(fadeInCoroutine);
         StopCoroutine(fadeOutCoroutine);
         StopCoroutine(fadeInAndOutCoroutine);
-        finished = false;
-        fader.SetActive(false);
     }
 
     public bool IsFading()

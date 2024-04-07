@@ -9060,6 +9060,7 @@ Script:
   camera: {fileID: 10110825994908871609}  # Component
   fader: {fileID: 3273061677841725499}  # Component
   incubatorObj: {fileID: 3927099464123553639}  # GameObject
+  particleObj: {fileID: 167587689074432387}  # GameObject
   settingsButton: {fileID: 11997381317790178123}  # GameObject
   spotLightObj: {fileID: 10615518877558506322}  # GameObject
   startButton: {fileID: 5144980746915515514}  # GameObject
@@ -10573,6 +10574,7 @@ Script:
   isFading: false
   looping: false
   outDuration: 1
+  stayDuration: 0.5
   targetVal: 1
   waitDelay: 0
   fader: {fileID: 3938540783280617309}  # GameObject

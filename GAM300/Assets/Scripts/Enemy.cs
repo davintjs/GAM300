@@ -215,8 +215,6 @@ public class Enemy : Script
         dir = dir.NormalizedSafe;
         dir.y = 0f;
 
-        rb.linearVelocity -= vec3.UnitY;
-
         if (!isDead)
         {
             switch (state)
@@ -532,6 +530,7 @@ public class Enemy : Script
 
     IEnumerator StartDeath()
     {
+        rb.linearVelocity = vec3.Zero;
         SetEnabled(rb,false);
         float timer = 0;
         yield return new WaitForSeconds(2f);

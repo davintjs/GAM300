@@ -17,6 +17,7 @@ public class MainMenu : Script
 
     public GameObject spotLightObj;
     public GameObject incubatorObj;
+    public GameObject particleObj;
     public FadeEffect fader;
 
     public FreeLookCamera camera;
@@ -35,6 +36,7 @@ public class MainMenu : Script
     private float duration = 2f;
     private float alpha = 0.11f;
     private bool waitingPlay = false;
+    private vec3 finalParticlePos;
 
     void Awake()
     {
@@ -55,6 +57,8 @@ public class MainMenu : Script
         color.a = 1f;
         spotLightObj.SetActive(false);
         incubatorGlass.material.SetRawColor(color);
+        finalParticlePos = particleObj.transform.localPosition;
+        particleObj.transform.localPosition -= vec3.UnitY * 5;
 
         startButton.SetActive(false);
         HTPButton.SetActive(false);
@@ -69,7 +73,7 @@ public class MainMenu : Script
     void Update()
     {
         // Get refto Button
-        if (startButton.activeSelf && startButtonRenderer.IsButtonClicked())
+        if (startButton.activeSelf && startButtonRenderer.IsButtonClicked() && !waitingPlay)
         {
             camera.GoToPlay();
 
@@ -98,22 +102,22 @@ public class MainMenu : Script
             StartCoroutine(QueueAction(loadScene));
         }
 
-        if(Input.GetKeyDown(KeyCode.Escape)) 
+        if(Input.GetKeyDown(KeyCode.Escape) && !waitingPlay) 
         {
             camera.GoToMainMenu();
         }
 
-        if (settingsButton.activeSelf && settingsButtonRenderer.IsButtonClicked())
+        if (settingsButton.activeSelf && settingsButtonRenderer.IsButtonClicked() && !waitingPlay)
         {
             camera.GoToSettings();
         }
 
-        if (HTPButton.activeSelf && HTPButtonRenderer.IsButtonClicked())
+        if (HTPButton.activeSelf && HTPButtonRenderer.IsButtonClicked() && !waitingPlay)
         {
             camera.GoToHTP();
         }
 
-        if (ExitButton.activeSelf && ExitButtonRenderer.IsButtonClicked())
+        if (ExitButton.activeSelf && ExitButtonRenderer.IsButtonClicked() && !waitingPlay)
         {
             camera.GoToExit();
         }
@@ -127,6 +131,7 @@ public class MainMenu : Script
 
     IEnumerator InitializeSceneObjects()
     {
+        Console.WriteLine("particle: " + finalParticlePos);
         yield return new WaitForSeconds(0.5f);
 
         vec4 oldColor = incubatorGlass.material.color;
@@ -139,7 +144,8 @@ public class MainMenu : Script
         while (timer < duration)
         {
             spotLight.intensity = Mathf.Lerp(0f, intensity, timer, 1f, Mathf.EasingType.LINEAR);
-            glassAlpha = Mathf.Lerp(1f, alpha, timer, duration, Mathf.EasingType.BEZIER);
+            //glassAlpha = Mathf.Lerp(1f, alpha, timer, duration, Mathf.EasingType.BEZIER);
+            glassAlpha = Mathf.Lerp(1f, 0f, timer, duration, Mathf.EasingType.BEZIER);
             incubatorGlass.material.SetRawColor(new vec4(oldColor.xyz, glassAlpha));
 
             timer += Time.deltaTime;
@@ -150,6 +156,19 @@ public class MainMenu : Script
         StartCoroutine(FadeIn(HTPButtonRenderer, HTPButton, 0.1f));
         StartCoroutine(FadeIn(settingsButtonRenderer, settingsButton, 0.2f));
         StartCoroutine(FadeIn(ExitButtonRenderer, ExitButton, 0.3f));
+        
+        incubatorObj.SetActive(false);
+
+        timer = 0f;
+        vec3 initialPos = particleObj.transform.localPosition;
+        while (timer < 2f)
+        {
+            float y = Mathf.Lerp(initialPos.y, finalParticlePos.y, timer, 2f, Mathf.EasingType.LINEAR);
+            particleObj.transform.localPosition = new vec3(initialPos.x, y, initialPos.z);
+
+            timer += Time.deltaTime;
+            yield return null;
+        }
     }
 
     IEnumerator FadeIn(SpriteRenderer renderer, GameObject spriteObj, float wait)

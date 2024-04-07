@@ -288,9 +288,9 @@ GameObject:
 ID: 2078812242787879120
 Transform:
   m_GameObject: {fileID: 6034621871942586701}
-  Translation: [47.1288681, -0.868320704, -35.1256599]
+  Translation: [47.1288681, -0.87166518, -35.1256599]
   Rotation: [-3.14159203, -1.54447472, -3.14159203]
-  Scale: [0.999961138, 1, 0.999961257]
+  Scale: [0.999943316, 1, 0.999943435]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 15952054123807579159}
@@ -320,7 +320,7 @@ Rigidbody:
   Friction: 0.100000001
   Mass: 1
   IsStatic: false
-  IsKinematic: false
+  IsKinematic: true
   UseGravity: true
   Is_trigger: false
 ---
@@ -18706,6 +18706,7 @@ Script:
   isFading: false
   looping: false
   outDuration: 1
+  stayDuration: 0.5
   targetVal: 1
   waitDelay: 0
   fader: {fileID: 14843899441988254193}  # GameObject
