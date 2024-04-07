@@ -310,6 +310,7 @@ Script:
   zoom: 5.00000143
   zoomInSpeed: 3
   zoomSpeed: 50
+  camera: {fileID: 0}
   target: {fileID: 6663313825132233637}  # GameObject
 ---
 ID: 3977294589520766028
@@ -460,8 +461,10 @@ Script:
   overDriveVFX: {fileID: 1342498447182496088}  # GameObject
   player: {fileID: 3977294589520766028}  # Component
   playerHealthVFX: {fileID: 2454999104902735477}  # GameObject
+  playerMaxVFX: {fileID: 12638532461777693877}  # GameObject
   playerRespawningVFX: {fileID: 17324707596223635025}  # GameObject
   playerSounds: {fileID: 0}
+  playerStaminaVFX: {fileID: 2612270033413862245}  # GameObject
   playerWeaponCollider1: {fileID: 17150978404869133335}  # GameObject
   playerWeaponCollider2: {fileID: 9126212843899289109}  # GameObject
   playerWeaponCollider3: {fileID: 7640003431994965172}  # GameObject
@@ -7845,7 +7848,7 @@ ID: 3659628927964928141
 Transform:
   m_GameObject: {fileID: 6826500622308863951}
   Translation: [0, -0.699996948, 0]
-  Rotation: [-3.14158463, -0, -3.14159274]
+  Rotation: [-3.14158463, 0, -3.14159274]
   Scale: [-1, -0.999999762, -0.999999762]
   Father: {fileID: 15240334966158831452}
   m_Children:
@@ -7904,7 +7907,7 @@ ID: 14751546446793523439
 Transform:
   m_GameObject: {fileID: 3827453200974574750}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 0.999999523]
   Father: {fileID: 15240334966158831452}
   m_Children:
@@ -8428,7 +8431,7 @@ ID: 14483430449207858683
 Transform:
   m_GameObject: {fileID: 5485624148561562475}
   Translation: [73.85215, 37.734787, -74.6511002]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 10646343810737701062}
   m_Children:
@@ -34339,7 +34342,7 @@ ID: 4245215145822457428
 Transform:
   m_GameObject: {fileID: 16020784044125801197}
   Translation: [127.722557, 36.7065544, -143.31279]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 10646343810737701062}
   m_Children:
@@ -43356,6 +43359,8 @@ Transform:
     - {fileID: 383668116300315972}
     - {fileID: 8252669615322955072}
     - {fileID: 2454999104902735477}
+    - {fileID: 2612270033413862245}
+    - {fileID: 12638532461777693877}
 ---
 ID: 383668116300315972
 GameObject:
@@ -43391,7 +43396,7 @@ ID: 9169780922658253905
 Transform:
   m_GameObject: {fileID: 10589105948784954568}
   Translation: [-2.25518306e-08, 7.33337164, -0.310161352]
-  Rotation: [-0.042272713, 6.69513684e-05, -0.00213414687]
+  Rotation: [-0.042272713, 6.69513756e-05, -0.00213414687]
   Scale: [0.999999642, 0.99999994, 1.00000012]
   Father: {fileID: 383668116300315972}
   m_Children:
@@ -43526,7 +43531,7 @@ ID: 9809591277645126838
 Transform:
   m_GameObject: {fileID: 8886665999065384408}
   Translation: [2.68220901e-07, 9.38611603, -8.57561827e-06]
-  Rotation: [-0.222700804, -0.000858201005, 0.0139973266]
+  Rotation: [-0.222700804, -0.000858201063, 0.0139973257]
   Scale: [1.0000006, 1.00000036, 1.00000024]
   Father: {fileID: 11406192150390888869}
   m_Children:
@@ -43603,7 +43608,7 @@ ID: 10888064048767530507
 Transform:
   m_GameObject: {fileID: 17724991590097540518}
   Translation: [4.86455974e-07, 1.03478706, 1.53132714e-06]
-  Rotation: [-0.227070794, -0.00144509692, -0.0126737999]
+  Rotation: [-0.227070794, -0.00144509703, -0.0126738008]
   Scale: [1, 1.00000024, 1.00000012]
   Father: {fileID: 15469753426419407164}
   m_Children:
@@ -43679,7 +43684,7 @@ ID: 14977086574586303114
 Transform:
   m_GameObject: {fileID: 11657059819254827832}
   Translation: [-6.40749931e-07, 9.38611698, 2.10553408e-05]
-  Rotation: [-0.223022759, 0.00227635819, -0.00717219757]
+  Rotation: [-0.223022759, 0.00227635819, -0.00717219803]
   Scale: [0.99999994, 0.999999344, 1]
   Father: {fileID: 16116952986532813985}
   m_Children:
@@ -43965,7 +43970,7 @@ ID: 8228418226091831146
 Transform:
   m_GameObject: {fileID: 17458590961539025008}
   Translation: [5.74218575e-07, 11.939352, 8.54837708e-07]
-  Rotation: [0.670438945, -0.0282720774, 3.07459338e-08]
+  Rotation: [0.670438945, -0.0282720774, 2.98142382e-08]
   Scale: [1.00000024, 0.999999821, 0.99999994]
   Father: {fileID: 11126160581785034402}
   m_Children:
@@ -60372,9 +60377,9 @@ GameObject:
 ID: 11604910606234455406
 Transform:
   m_GameObject: {fileID: 3476722836763241155}
-  Translation: [66.657486, 38.9129562, -40.7536697]
+  Translation: [66.1834335, 38.9129562, -35.6866112]
   Rotation: [0, 0, 0]
-  Scale: [5.4603548, 5.44534731, 5.4603548]
+  Scale: [7.84063625, 5.44534731, 5.4603548]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -60422,9 +60427,9 @@ GameObject:
 ID: 9195845575189172252
 Transform:
   m_GameObject: {fileID: 16207680269001726648}
-  Translation: [66.657486, 36.8833084, -78.5070801]
+  Translation: [66.657486, 36.8833084, -79.5169601]
   Rotation: [0, 0, 0]
-  Scale: [18.8412952, 1.69355547, 11.5670586]
+  Scale: [18.8412952, 1.69355547, 10.7292061]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -60572,9 +60577,9 @@ GameObject:
 ID: 13154812941767734569
 Transform:
   m_GameObject: {fileID: 5114381423122968400}
-  Translation: [105.494255, 37.7094955, -108.591644]
+  Translation: [108.303024, 37.7094955, -123.272438]
   Rotation: [0, 0, 0]
-  Scale: [6.09813833, 7.72537327, 8.37242031]
+  Scale: [8.94829559, 7.72537327, 5.23838091]
   Father: {fileID: 16302274557395296677}
   m_Children:
     []
@@ -62091,7 +62096,7 @@ Script:
 ---
 ID: 7359964402167818618
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: ApexTrigger3
   m_TagString: ""
   m_Layer: 0
@@ -62154,9 +62159,9 @@ GameObject:
 ID: 9960601967167856393
 Transform:
   m_GameObject: {fileID: 15442274699394429429}
-  Translation: [66.1655884, 37.4376526, -116.422615]
+  Translation: [66.1655884, 37.7233047, -116.422615]
   Rotation: [-3.14159203, -0.433590263, -3.14159203]
-  Scale: [0.999983549, 1, 0.99998337]
+  Scale: [2.35996103, 2.3599999, 2.35996032]
   Father: {fileID: 0}
   m_Children:
     - {fileID: 2420084808271522827}
@@ -62192,8 +62197,8 @@ Script:
   m_IsEnabled: true
   Script: {guid: 02d31cdd0396b80b42114a1a4036d6bd}
   back: false
-  floatKey: 1
-  maxTime: 5
+  floatKey: 0.25
+  maxTime: 1
   moving: false
   movingTimer: 2
   temp: false
@@ -62320,7 +62325,7 @@ ID: 5837461272465025935
 Transform:
   m_GameObject: {fileID: 16911691310441525962}
   Translation: [-3.81469727e-06, -1.20000005, 0.5]
-  Rotation: [0, -0.00034505126, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.999999881, 1, 0.999999881]
   Father: {fileID: 15442274699394429429}
   m_Children:
@@ -73508,7 +73513,7 @@ Rigidbody:
 ---
 ID: 10482025102164204176
 GameObject:
-  m_IsActive: true
+  m_IsActive: false
   m_Name: Subtitles
   m_TagString: ""
   m_Layer: 0
@@ -73520,7 +73525,7 @@ ID: 14668362047316885406
 Transform:
   m_GameObject: {fileID: 10482025102164204176}
   Translation: [0, -0.879997253, 0.0800094604]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [0.100999616, 0.100991637, 0.10095425]
   Father: {fileID: 15240334966158831452}
   m_Children:
@@ -76733,6 +76738,8 @@ Transform:
     - {fileID: 10683771249975390909}
     - {fileID: 12459665266378410779}
     - {fileID: 3837557141907955647}
+    - {fileID: 13829523206391220407}
+    - {fileID: 9420079379702182734}
 ---
 ID: 7571647308285224003
 Script:
@@ -76741,13 +76748,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
+  hoverDuration: 1
   inverted: false
-  maxX: 0.560000002
-  minX: -0.560000002
+  maxX: 0.479999989
+  minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 3837557141907955647}  # GameObject
+  clickSound: {fileID: 2051875914575560535}  # Component
+  decrementbuttonObj: {fileID: 9420079379702182734}  # GameObject
+  hoverSound: {fileID: 12043367231734905459}  # Component
+  incrementbuttonObj: {fileID: 13829523206391220407}  # GameObject
   sliderTextObj: {fileID: 10683771249975390909}  # GameObject
 ---
 ID: 10683771249975390909
@@ -76802,7 +76815,7 @@ Transform:
   m_GameObject: {fileID: 12459665266378410779}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.150000006, 0.150000006, 1]
+  Scale: [0.129999995, 0.129999995, 1]
   Father: {fileID: 6015150721758642484}
   m_Children:
     []
@@ -76868,6 +76881,8 @@ Transform:
     - {fileID: 10402154493338136639}
     - {fileID: 8943803993135374804}
     - {fileID: 16432005865971837572}
+    - {fileID: 15477304330410470098}
+    - {fileID: 12751152951181260202}
 ---
 ID: 13773741570488192022
 Script:
@@ -76876,13 +76891,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
+  hoverDuration: 1
   inverted: false
-  maxX: 0.560000002
-  minX: -0.560000002
+  maxX: 0.479999989
+  minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 16432005865971837572}  # GameObject
+  clickSound: {fileID: 2051875914575560535}  # Component
+  decrementbuttonObj: {fileID: 12751152951181260202}  # GameObject
+  hoverSound: {fileID: 12043367231734905459}  # Component
+  incrementbuttonObj: {fileID: 15477304330410470098}  # GameObject
   sliderTextObj: {fileID: 10402154493338136639}  # GameObject
 ---
 ID: 10402154493338136639
@@ -76937,7 +76958,7 @@ Transform:
   m_GameObject: {fileID: 8943803993135374804}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.150000006, 0.150000006, 1]
+  Scale: [0.129999995, 0.129999995, 1]
   Father: {fileID: 13925131884888531310}
   m_Children:
     []
@@ -77003,6 +77024,8 @@ Transform:
     - {fileID: 14872740804228924139}
     - {fileID: 16603589090303827277}
     - {fileID: 13025755940254410433}
+    - {fileID: 2371421531027724777}
+    - {fileID: 11817950855495122574}
 ---
 ID: 17783808125982917232
 Script:
@@ -77011,13 +77034,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
+  hoverDuration: 1
   inverted: false
-  maxX: 0.560000002
-  minX: -0.560000002
+  maxX: 0.479999989
+  minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 13025755940254410433}  # GameObject
+  clickSound: {fileID: 2051875914575560535}  # Component
+  decrementbuttonObj: {fileID: 11817950855495122574}  # GameObject
+  hoverSound: {fileID: 12043367231734905459}  # Component
+  incrementbuttonObj: {fileID: 2371421531027724777}  # GameObject
   sliderTextObj: {fileID: 16603589090303827277}  # GameObject
 ---
 ID: 14872740804228924139
@@ -77035,7 +77064,7 @@ Transform:
   m_GameObject: {fileID: 14872740804228924139}
   Translation: [0, 0, 0]
   Rotation: [0, 0, 0]
-  Scale: [0.150000006, 0.150000006, 1]
+  Scale: [0.129999995, 0.129999995, 1]
   Father: {fileID: 3437768977513831968}
   m_Children:
     []
@@ -77272,6 +77301,8 @@ Transform:
     - {fileID: 1137712744709410449}
     - {fileID: 16161679824847459402}
     - {fileID: 18052166248832161833}
+    - {fileID: 13161182422646030444}
+    - {fileID: 3011065125406771620}
 ---
 ID: 11429007331869135488
 Script:
@@ -77280,13 +77311,19 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 5
   MinValue: 0.5
+  hoverDuration: 1
   inverted: false
   maxX: 0.560000002
   minX: -0.560000002
   screenSpace: false
   slideSpeed: 800
+  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
   value: 0.5
   buttonObj: {fileID: 18052166248832161833}  # GameObject
+  clickSound: {fileID: 2051875914575560535}  # Component
+  decrementbuttonObj: {fileID: 3011065125406771620}  # GameObject
+  hoverSound: {fileID: 12043367231734905459}  # Component
+  incrementbuttonObj: {fileID: 13161182422646030444}  # GameObject
   sliderTextObj: {fileID: 1137712744709410449}  # GameObject
 ---
 ID: 1137712744709410449
@@ -77791,3 +77828,345 @@ Transform:
   Father: {fileID: 9364165241051347360}
   m_Children:
     []
+---
+ID: 2612270033413862245
+GameObject:
+  m_IsActive: false
+  m_Name: playStaminaPack_VFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 9538294343165914506}  # Transform
+    - component: {fileID: 17197384571649267038}  # ParticleComponent
+---
+ID: 9538294343165914506
+Transform:
+  m_GameObject: {fileID: 2612270033413862245}
+  Translation: [0, 44.4294434, 8.4456377]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6521774849105860025}
+  m_Children:
+    []
+---
+ID: 17197384571649267038
+ParticleComponent:
+  m_GameObject: {fileID: 2612270033413862245}
+  m_IsEnabled: true
+  Mesh: {guid: 6811ea601c7d9c924a8721b5aa626a13}
+  Particle Material: {guid: 872c98c264e26b92229d6a8372d62839}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 0
+  Number Of Particles: 15
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1.5
+  Particle Emission Rate: 0
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0.200000003
+  Particle Scale Rate: 2
+  Particle Speed: 3
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 1
+  Particle Noise Frequency: 1
+  2D particle: false
+  Spawn From Shape: true
+  Shape's Size: [1, 1, 1]
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 0
+  Trail Thickness: 0
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 12638532461777693877
+GameObject:
+  m_IsActive: false
+  m_Name: playMaxStatPack_VFX
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 15132120776924484427}  # Transform
+    - component: {fileID: 13447119723052116825}  # ParticleComponent
+---
+ID: 15132120776924484427
+Transform:
+  m_GameObject: {fileID: 12638532461777693877}
+  Translation: [0, 44.4294434, 8.4456377]
+  Rotation: [0, 0, 0]
+  Scale: [1, 1, 1]
+  Father: {fileID: 6521774849105860025}
+  m_Children:
+    []
+---
+ID: 13447119723052116825
+ParticleComponent:
+  m_GameObject: {fileID: 12638532461777693877}
+  m_IsEnabled: true
+  Mesh: {guid: 1618c2cac1782fbbcc81e882fe12adce}
+  Particle Material: {guid: 7ee6c635c3d7b018c09c132f98c8a085}
+  Local Space: false
+  Particle Direction: [0, 1, 0]
+  Angle of Direction: 0
+  Number Of Particles: 15
+  Min Particle Lifetime: 1
+  Max Particle Lifetime: 1.5
+  Particle Emission Rate: 0
+  Particle Min Scale: 0.100000001
+  Particle Max Scale: 0.200000003
+  Particle Scale Rate: 2
+  Particle Speed: 3
+  Particle acceleration: 0
+  Particle Noise Movement Percentage: 1
+  Particle Noise Frequency: 1
+  2D particle: false
+  Spawn From Shape: true
+  Shape's Size: [1, 1, 1]
+  Trailing: false
+  Trail Color: [1, 1, 1]
+  Trail Size: 0
+  Trail Thickness: 0
+  Looping: true
+  Fade towards Color: false
+  Color to Fade to: [1, 1, 1]
+---
+ID: 13161182422646030444
+GameObject:
+  m_IsActive: true
+  m_Name: GammaIncrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 18052474497125572234}  # Transform
+    - component: {fileID: 14854086595265110843}  # SpriteRenderer
+---
+ID: 18052474497125572234
+Transform:
+  m_GameObject: {fileID: 13161182422646030444}
+  Translation: [0.75, 0, 0.100000001]
+  Rotation: [0, 0, 0]
+  Scale: [0.400000006, 0.400000006, 0.400000006]
+  Father: {fileID: 14169290571310822634}
+  m_Children:
+    []
+---
+ID: 14854086595265110843
+SpriteRenderer:
+  m_GameObject: {fileID: 13161182422646030444}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
+---
+ID: 3011065125406771620
+GameObject:
+  m_IsActive: true
+  m_Name: GammaDecrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 11455283748059714676}  # Transform
+    - component: {fileID: 2794673309846506580}  # SpriteRenderer
+---
+ID: 11455283748059714676
+Transform:
+  m_GameObject: {fileID: 3011065125406771620}
+  Translation: [-0.75, 0, 0.100000001]
+  Rotation: [0, 0, 3.14159274]
+  Scale: [0.400000006, 0.400000006, 0.400000006]
+  Father: {fileID: 14169290571310822634}
+  m_Children:
+    []
+---
+ID: 2794673309846506580
+SpriteRenderer:
+  m_GameObject: {fileID: 3011065125406771620}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
+---
+ID: 2371421531027724777
+GameObject:
+  m_IsActive: true
+  m_Name: MasterAudioIncrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 5612111940456097103}  # Transform
+    - component: {fileID: 1096835780060914416}  # SpriteRenderer
+---
+ID: 5612111940456097103
+Transform:
+  m_GameObject: {fileID: 2371421531027724777}
+  Translation: [0.649999976, 0, 0.100006104]
+  Rotation: [0, 0, 0]
+  Scale: [0.300000012, 0.300000012, 0.300000012]
+  Father: {fileID: 3437768977513831968}
+  m_Children:
+    []
+---
+ID: 1096835780060914416
+SpriteRenderer:
+  m_GameObject: {fileID: 2371421531027724777}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
+---
+ID: 11817950855495122574
+GameObject:
+  m_IsActive: true
+  m_Name: MasterAudioDecrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8161477090755604119}  # Transform
+    - component: {fileID: 14081186891499825417}  # SpriteRenderer
+---
+ID: 8161477090755604119
+Transform:
+  m_GameObject: {fileID: 11817950855495122574}
+  Translation: [-0.649999976, 0, 0.100006104]
+  Rotation: [0, 0, -3.14159274]
+  Scale: [0.300000012, 0.300000012, 0.300000012]
+  Father: {fileID: 3437768977513831968}
+  m_Children:
+    []
+---
+ID: 14081186891499825417
+SpriteRenderer:
+  m_GameObject: {fileID: 11817950855495122574}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: 4cc5cef1aab1d33fd9e2df285b106155}
+---
+ID: 15477304330410470098
+GameObject:
+  m_IsActive: true
+  m_Name: SFXIncrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 7850733901949014023}  # Transform
+    - component: {fileID: 16229184483709537189}  # SpriteRenderer
+---
+ID: 7850733901949014023
+Transform:
+  m_GameObject: {fileID: 15477304330410470098}
+  Translation: [0.649999976, 0, 0.100006104]
+  Rotation: [0, 0, 0]
+  Scale: [0.300000012, 0.300000012, 0.300000012]
+  Father: {fileID: 13925131884888531310}
+  m_Children:
+    []
+---
+ID: 16229184483709537189
+SpriteRenderer:
+  m_GameObject: {fileID: 15477304330410470098}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
+---
+ID: 12751152951181260202
+GameObject:
+  m_IsActive: true
+  m_Name: SFXDecrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 10986227012005365955}  # Transform
+    - component: {fileID: 3251513638382750053}  # SpriteRenderer
+---
+ID: 10986227012005365955
+Transform:
+  m_GameObject: {fileID: 12751152951181260202}
+  Translation: [-0.649999976, 0, 0.100006104]
+  Rotation: [0, 0, 3.14159274]
+  Scale: [0.299999952, 0.299999952, 0.300000012]
+  Father: {fileID: 13925131884888531310}
+  m_Children:
+    []
+---
+ID: 3251513638382750053
+SpriteRenderer:
+  m_GameObject: {fileID: 12751152951181260202}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: ca996d03582a88b8f76e5462b83f00fb}
+---
+ID: 13829523206391220407
+GameObject:
+  m_IsActive: true
+  m_Name: BGMIncrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 431153394657860931}  # Transform
+    - component: {fileID: 7084444932432197699}  # SpriteRenderer
+---
+ID: 431153394657860931
+Transform:
+  m_GameObject: {fileID: 13829523206391220407}
+  Translation: [0.649999976, 0, 0.100006104]
+  Rotation: [0, 0, 0]
+  Scale: [0.300000012, 0.300000012, 0.300000012]
+  Father: {fileID: 6015150721758642484}
+  m_Children:
+    []
+---
+ID: 7084444932432197699
+SpriteRenderer:
+  m_GameObject: {fileID: 13829523206391220407}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a9e8426212023b5f8e4ba5d639f3d3f6}
+---
+ID: 9420079379702182734
+GameObject:
+  m_IsActive: true
+  m_Name: BGMDecrementButton
+  m_TagString: ""
+  m_Layer: 0
+  m_Component:
+    - component: {fileID: 8053563448891064535}  # Transform
+    - component: {fileID: 15061341097129690516}  # SpriteRenderer
+---
+ID: 8053563448891064535
+Transform:
+  m_GameObject: {fileID: 9420079379702182734}
+  Translation: [-0.649999976, 0, 0.100006104]
+  Rotation: [0, 0, -3.14159274]
+  Scale: [0.299999893, 0.299999893, 0.300000012]
+  Father: {fileID: 6015150721758642484}
+  m_Children:
+    []
+---
+ID: 15061341097129690516
+SpriteRenderer:
+  m_GameObject: {fileID: 9420079379702182734}
+  m_IsEnabled: true
+  World Space: false
+  Colour Picker Mode: true
+  Include Alpha (ColourPicking): false
+  Alpha Scalar: 1
+  SpriteTexture: {guid: a9e8426212023b5f8e4ba5d639f3d3f6}

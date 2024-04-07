@@ -89,6 +89,8 @@ public class ThirdPersonController : Script
     //new particles
     public GameObject playerRespawningVFX;
     public GameObject playerHealthVFX;
+    public GameObject playerStaminaVFX;
+    public GameObject playerMaxVFX;
 
     //overdrive QQ
     public Transform overDriveUI;
@@ -290,6 +292,17 @@ public class ThirdPersonController : Script
         //Material mat = doorTestMesh.material;
         //mat.color = vec4.Ones;
         //reference check
+
+        if (playerStaminaVFX == null)
+        {
+            Console.WriteLine("Missing playerStaminaVFX reference in ThirdPersonController script");
+        }
+
+        if (playerMaxVFX == null)
+        {
+            Console.WriteLine("Missing playerMaxVFX reference in ThirdPersonController script");
+        }
+
         if (playerHealthVFX == null)
         {
             Console.WriteLine("Missing playerHealthVFX reference in ThirdPersonController script");
@@ -816,6 +829,7 @@ public class ThirdPersonController : Script
             //OVERDRIVE
             if(Input.GetKeyDown(KeyCode.Q) && !_isOverdrive && !_isDashAttacking && !IsAttacking && !startDashCooldown && currentOverdriveCharge == maxOverdriveCharge && isOverdriveEnabled == true && currentlyOverdriven == false)
             {
+                Inventory.instance.useStaminaForScript();
                 healthRegenEnabled = true;
                 overDriveUI.gameObject.SetActive(false);
                 playerSounds.PlayerOverdrive.Play();
