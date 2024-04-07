@@ -196,9 +196,9 @@ public class RangeEnemy : Script
                 //    //change to chase state
                 //    state = 1;
                 //}
+                rb.linearVelocity = vec3.Zero;
                 SetEnabled(rb, false);
                 gameObject.SetActive(false);
-                //transform.position = vec3.Zero;
                 break;
         }
         navMeshtimer += Time.deltaTime;

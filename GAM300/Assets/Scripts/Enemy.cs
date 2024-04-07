@@ -149,7 +149,8 @@ public class Enemy : Script
                 currentAttackBuffer += Time.deltaTime;
                 //if (currentAttackBuffer >= 0.6f) // So that the attack is not instantaneous
                 //if(animator.GetProgress() >= 2.786f && !attackOnce)
-                if(animator.GetProgress() > 0.0f && animator.GetProgress() < 0.1f && !attackOnce)
+                bool animatorCheck = animator.GetState() == "Attack" && animator.GetProgress() > 0.0f && animator.GetProgress() < 0.1f;
+                if(animatorCheck && !attackOnce)
                 {
                     attackOnce = true;
                     if (attackTrigger != null)
@@ -188,7 +189,7 @@ public class Enemy : Script
             }
 
             //if(animator.GetProgress() < 2.7f)
-            if(animator.GetProgress() > 0.9f)
+            if(animator.GetProgress() > 0.5f)
             {
                 attackOnce = false;
                 isAttackCooldown = false;
@@ -213,8 +214,6 @@ public class Enemy : Script
         vec3 dir = initialPosition - transform.position;
         dir = dir.NormalizedSafe;
         dir.y = 0f;
-
-        rb.linearVelocity -= vec3.UnitY;
 
         if (!isDead)
         {
@@ -531,6 +530,7 @@ public class Enemy : Script
 
     IEnumerator StartDeath()
     {
+        rb.linearVelocity = vec3.Zero;
         SetEnabled(rb,false);
         float timer = 0;
         yield return new WaitForSeconds(2f);

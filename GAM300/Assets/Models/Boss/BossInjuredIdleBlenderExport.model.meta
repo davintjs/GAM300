@@ -4,4 +4,4 @@ meshes:
 animations:
   data: {guid: 50644ddff51377b7d848ab56902f37e6}
 animationStates:
-  Idle: [5, 55]
+  Idle: [0, 279]

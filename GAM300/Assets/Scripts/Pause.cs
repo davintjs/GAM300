@@ -45,7 +45,7 @@ public class Pause : Script
             StartCoroutine(Wait(1));
         }
 
-        if (MainMenuRenderer != null && MainMenuRenderer.IsButtonClicked())
+        if (MainMenuRenderer != null && MainMenuRenderer.IsButtonClicked() && !waitingMainMenu)
         {
             fader.StartFadeIn(1f, true, 0f, 1f);
             waitingMainMenu = true;
@@ -71,7 +71,7 @@ public class Pause : Script
             StartCoroutine(Wait(0));
         }
 
-        if (Input.GetKey(KeyCode.Escape))
+        if (Input.GetKey(KeyCode.Escape) && fader.finished)
         {
             if (currentMenu != 0)
             {

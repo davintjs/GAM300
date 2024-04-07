@@ -184,6 +184,9 @@ public class BossBehaviour : Script
                     GameManager.instance.GetComponent<SceneTransitionTrigger>().fader.StartFadeIn(2f, true, 8f, 1f);
                     GameManager.instance.GetComponent<SceneTransitionTrigger>().triggerEnter = true;
                     InstanceData.SaveData("CurrentLevel", 0);
+                    InstanceData.SaveData("HealthPack", 0);
+                    InstanceData.SaveData("StaminaPack", 0);
+                    InstanceData.SaveData("MaxStatPack", 0);
                     //DIE
                 }
             }

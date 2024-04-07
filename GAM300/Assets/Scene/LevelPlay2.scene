@@ -475,11 +475,8 @@ ID: 14362096387145765665
 Script:
   m_GameObject: {fileID: 3977294589520766028}
   m_IsEnabled: true
-  Script: {guid: 40db08235bca45a537583d5f5e9d204f}
-  healthPackCount: 0
+  Script: {guid: ef8fb5603fe259e4784ac0e689157008}
   healthPackHealValue: 5
-  maxStatPackCount: 0
-  staminaPackCount: 0
   staminaPackValue: 50
   dashIcon: {fileID: 119939428832678592}  # Component
   dodgeIcon: {fileID: 17761990468584646356}  # Component
@@ -76748,18 +76745,18 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.479999989
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 3837557141907955647}  # GameObject
-  clickSound: {fileID: 2051875914575560535}  # Component
+  clickSound: {fileID: 0}
   decrementbuttonObj: {fileID: 9420079379702182734}  # GameObject
-  hoverSound: {fileID: 12043367231734905459}  # Component
+  hoverSound: {fileID: 0}
   incrementbuttonObj: {fileID: 13829523206391220407}  # GameObject
   sliderTextObj: {fileID: 10683771249975390909}  # GameObject
 ---
@@ -76891,18 +76888,18 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.479999989
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 16432005865971837572}  # GameObject
-  clickSound: {fileID: 2051875914575560535}  # Component
+  clickSound: {fileID: 0}
   decrementbuttonObj: {fileID: 12751152951181260202}  # GameObject
-  hoverSound: {fileID: 12043367231734905459}  # Component
+  hoverSound: {fileID: 0}
   incrementbuttonObj: {fileID: 15477304330410470098}  # GameObject
   sliderTextObj: {fileID: 10402154493338136639}  # GameObject
 ---
@@ -77034,18 +77031,18 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.479999989
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 13025755940254410433}  # GameObject
-  clickSound: {fileID: 2051875914575560535}  # Component
+  clickSound: {fileID: 0}
   decrementbuttonObj: {fileID: 11817950855495122574}  # GameObject
-  hoverSound: {fileID: 12043367231734905459}  # Component
+  hoverSound: {fileID: 0}
   incrementbuttonObj: {fileID: 2371421531027724777}  # GameObject
   sliderTextObj: {fileID: 16603589090303827277}  # GameObject
 ---
@@ -77311,18 +77308,18 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 5
   MinValue: 0.5
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.560000002
   minX: -0.560000002
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 18052166248832161833}  # GameObject
-  clickSound: {fileID: 2051875914575560535}  # Component
+  clickSound: {fileID: 0}
   decrementbuttonObj: {fileID: 3011065125406771620}  # GameObject
-  hoverSound: {fileID: 12043367231734905459}  # Component
+  hoverSound: {fileID: 0}
   incrementbuttonObj: {fileID: 13161182422646030444}  # GameObject
   sliderTextObj: {fileID: 1137712744709410449}  # GameObject
 ---

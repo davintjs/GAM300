@@ -1,7 +1,7 @@
 "%Serializer Version 1.1"
 ---
 Scene Settings:
-  Name: HowToPlay
+  Name: Start
   m_OcclusionCullingSettings: None
   m_RenderSettings: None
   m_LightMapSettings: None
@@ -39,7 +39,6 @@ Camera:
   Orthographic: false
   TargetDisplay: 0
   HDR: true
-  OcclusionCulling: false
   FrustumCulling: true
   DistanceCulling: 5
 ---
@@ -96,9 +95,9 @@ GameObject:
 ID: 7029561702410403906
 Transform:
   m_GameObject: {fileID: 12690634969259096449}
-  Translation: [0, 0.100000001, 0.676999986]
+  Translation: [0, -0.100000001, 0.676999986]
   Rotation: [3.14159083, 0, 0]
-  Scale: [1, 1, 1]
+  Scale: [0.800000012, 0.800000012, 1]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -122,7 +121,7 @@ Script:
   inDuration: 2
   isFading: false
   looping: false
-  outDuration: 1
+  outDuration: 2
   targetVal: 1
   waitDelay: 0
   fader: {fileID: 12690634969259096449}  # GameObject
@@ -130,7 +129,7 @@ Script:
 ID: 1497825775628923368
 GameObject:
   m_IsActive: true
-  m_Name: GameLogo
+  m_Name: FmodLogo
   m_TagString: ""
   m_Layer: 0
   m_Component:
@@ -142,8 +141,8 @@ ID: 15388810202921298389
 Transform:
   m_GameObject: {fileID: 1497825775628923368}
   Translation: [0, 0, 0.822000027]
-  Rotation: [-3.14159274, 0, 0]
-  Scale: [1, 1, 0.999982297]
+  Rotation: [3.14159226, 0, 0]
+  Scale: [1, 1, 1.49997306]
   Father: {fileID: 17065559468612678914}
   m_Children:
     []
@@ -156,7 +155,7 @@ SpriteRenderer:
   Colour Picker Mode: false
   Include Alpha (ColourPicking): false
   Alpha Scalar: 0
-  SpriteTexture: {guid: 1bfb233cf78fb5c3b997dec7684d03f2}
+  SpriteTexture: {guid: 868abec7fe4799066c8321765147f4c8}
 ---
 ID: 12304487287803117599
 Script:

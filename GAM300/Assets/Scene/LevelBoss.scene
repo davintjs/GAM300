@@ -4939,12 +4939,9 @@ Script:
 ID: 14362096387145765665
 Script:
   m_GameObject: {fileID: 3977294589520766028}
-  m_IsEnabled: false
-  Script: {guid: 40db08235bca45a537583d5f5e9d204f}
-  healthPackCount: 0
+  m_IsEnabled: true
+  Script: {guid: ef8fb5603fe259e4784ac0e689157008}
   healthPackHealValue: 5
-  maxStatPackCount: 0
-  staminaPackCount: 0
   staminaPackValue: 50
   dashIcon: {fileID: 10952728874392460159}  # Component
   dodgeIcon: {fileID: 5090397920395014621}  # Component
@@ -26016,7 +26013,7 @@ ID: 7734122293360687130
 Script:
   m_GameObject: {fileID: 1942411715421602675}
   m_IsEnabled: true
-  Script: {guid: 1761a9cabdef2fc73e985ee6529cf8ee}
+  Script: {guid: 40db08235bca45a537583d5f5e9d204f}
   basicAttackDistance: 3
   chaseDuration: 3
   chaseSpeed: 400
@@ -32347,7 +32344,7 @@ ID: 7691471858327592276
 Transform:
   m_GameObject: {fileID: 16976826314362932260}
   Translation: [0.425828934, 0.287997246, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [3.14159274, 0, 0]
   Scale: [1.53999972, 1.54000008, 1.53999996]
   Father: {fileID: 11966624967280915999}
   m_Children:
@@ -32360,7 +32357,7 @@ TextRenderer:
   Font: {guid: d224692d54c5efe15c780f6a59491c23}
   Text: 0
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.150000006
   Font Size: 2.75
   Vertical Spacing: 1.5
   Textbox Width: 0.21358335
@@ -32384,7 +32381,7 @@ ID: 17429879026089317217
 Transform:
   m_GameObject: {fileID: 9403672302287126743}
   Translation: [0.414870262, 0.287950993, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [3.14159274, 0, 0]
   Scale: [1.53999972, 1.53994644, 1.53994334]
   Father: {fileID: 5373156629717249403}
   m_Children:
@@ -32397,7 +32394,7 @@ TextRenderer:
   Font: {guid: d224692d54c5efe15c780f6a59491c23}
   Text: 0
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.150000006
   Font Size: 2.75
   Vertical Spacing: 1.5
   Textbox Width: 0.21358335
@@ -32421,7 +32418,7 @@ ID: 2221796841059680131
 Transform:
   m_GameObject: {fileID: 15116276095710042611}
   Translation: [0.371783257, 0.287995338, 0]
-  Rotation: [0, 0, 0]
+  Rotation: [3.14159274, 0, 0]
   Scale: [1.53999996, 1.54018319, 1.54019296]
   Father: {fileID: 14672171448417775020}
   m_Children:
@@ -32434,7 +32431,7 @@ TextRenderer:
   Font: {guid: d224692d54c5efe15c780f6a59491c23}
   Text: 0
   X-axis Offset: 0
-  Y-axis Offset: 0
+  Y-axis Offset: -0.150000006
   Font Size: 2.75
   Vertical Spacing: 1.5
   Textbox Width: 0.21358335
@@ -35426,13 +35423,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.479999989
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 2]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 3837557141907955647}  # GameObject
   clickSound: {fileID: 2051875914575560535}  # Component
@@ -35569,13 +35566,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.479999989
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 16432005865971837572}  # GameObject
   clickSound: {fileID: 2051875914575560535}  # Component
@@ -35712,13 +35709,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.479999989
   minX: -0.479999989
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 2]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 13025755940254410433}  # GameObject
   clickSound: {fileID: 2051875914575560535}  # Component
@@ -35989,13 +35986,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 5
   MinValue: 0.5
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: false
   maxX: 0.560000002
   minX: -0.560000002
   screenSpace: false
   slideSpeed: 800
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 18052166248832161833}  # GameObject
   clickSound: {fileID: 2051875914575560535}  # Component
@@ -36131,7 +36128,7 @@ Script:
   Script: {guid: 4cf27c0d93a1496bb047824f4b69d79a}
   hasCamera: false
   camera: {fileID: 0}
-  fader: {fileID: 0}
+  fader: {fileID: 16783126781131578973}  # Component
   noButton: {fileID: 2781535148401569210}  # GameObject
   noTextObj: {fileID: 13481648616233458407}  # GameObject
   yesButton: {fileID: 5412856711210004307}  # GameObject
@@ -36384,7 +36381,7 @@ ID: 4202594731449276592
 Transform:
   m_GameObject: {fileID: 5465610122679378114}
   Translation: [0, 0, 0]
-  Rotation: [0, -0, 0]
+  Rotation: [0, 0, 0]
   Scale: [1, 1, 1]
   Father: {fileID: 5256743220533750157}
   m_Children:

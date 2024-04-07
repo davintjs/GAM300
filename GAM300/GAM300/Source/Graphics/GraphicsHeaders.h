@@ -75,7 +75,7 @@ class Ray3D;
 // Graphics Settings
 
 const unsigned int SHADOW_WIDTH = 2048, SHADOW_HEIGHT = 2048;
-const unsigned int SHADOW_WIDTH_DIRECTIONAL = 16384, SHADOW_HEIGHT_DIRECTIONAL = 16384;
+const unsigned int SHADOW_WIDTH_DIRECTIONAL = 8192, SHADOW_HEIGHT_DIRECTIONAL = 8192;
 
 
 // Graphic Functions
@@ -505,18 +505,18 @@ private:
 	void DrawDepthPoint();
 
 
-	unsigned int depthMapFBO;
-	unsigned int depthMap; // Shadow Texture
+	//unsigned int depthMapFBO;
+	//unsigned int depthMap; // Shadow Texture
 
 
-	// Shadow Mapping - Spot
-	unsigned int depthMapFBO_S;
-	unsigned int depthMap_S; // Shadow Texture
+	//// Shadow Mapping - Spot
+	//unsigned int depthMapFBO_S;
+	//unsigned int depthMap_S; // Shadow Texture
 
 
-	// Shadow Cube Mapping
-	unsigned int depthCubemapFBO;
-	unsigned int depthCubemap;
+	//// Shadow Cube Mapping
+	//unsigned int depthCubemapFBO;
+	//unsigned int depthCubemap;
 
 };
 
