@@ -28,20 +28,20 @@ public class AmbientAudioManager : Script
 
     void Start()
     {
-
-    }
-
-    void Update()
-    {
         if (ComputerAmbient != null)
         {
             ComputerAmbient.Play();
         }
-        
+
         if (SparkAmbient != null)
         {
             SparkAmbient.Play();
         }
+    }
+
+    void Update()
+    {
+        
         
     }
 }
