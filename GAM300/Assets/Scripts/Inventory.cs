@@ -13,9 +13,48 @@ public class Inventory : Script
     public static Inventory instance;
     public ThirdPersonController thirdPersonController;
 
-    public int healthPackCount;
-    public int staminaPackCount;
-    public int maxStatPackCount;
+    private int _healthPackCount;
+    private int _staminaPackCount;
+    private int _maxStatPackCount;
+
+    public int healthPackCount
+    {
+        get
+        {
+            return _healthPackCount;
+        }
+        set
+        {
+            _healthPackCount = value;
+            InstanceData.SaveData("HealthPack", healthPackCount);
+        }
+    }
+    public int staminaPackCount
+    {
+        get
+        {
+            return _staminaPackCount;
+        }
+        set
+        {
+            _staminaPackCount = value;
+            InstanceData.SaveData("StaminaPack", staminaPackCount);
+        }
+    }
+
+    public int maxStatPackCount
+    {
+        get
+        {
+            return _maxStatPackCount;
+        }
+        set
+        {
+            _maxStatPackCount = value;
+            InstanceData.SaveData("MaxStatPack", maxStatPackCount);
+        }
+    }
+    
     public float staminaPackValue = 100f;
     public float healthPackHealValue = 5f;
 
@@ -77,6 +116,10 @@ public class Inventory : Script
         {
             Console.WriteLine("Missing thirdPersonController reference in Inventory script");
         }
+
+        healthPackCount = (int)InstanceData.GetData("HealthPack");
+        staminaPackCount = (int)InstanceData.GetData("StaminaPack");
+        maxStatPackCount = (int)InstanceData.GetData("MaxStatPack");
     }
 
     void Update()
@@ -180,6 +223,7 @@ public class Inventory : Script
             playerSounds.UseItem.Play();
             thirdPersonController.restoreStamina(staminaPackValue);
             thirdPersonController.UpdateStaminaBar();
+
         }
 
         //MAXSTAT PACK - RESTORE HEALTH AND STAMINA

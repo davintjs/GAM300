@@ -12813,13 +12813,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 5
   MinValue: 0.5
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: true
   maxX: 1.13
   minX: -1.13
   screenSpace: false
   slideSpeed: 2000
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 9712636449910607818}  # GameObject
   clickSound: {fileID: 10922656780418682009}  # Component
@@ -12970,13 +12970,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 8994722542415437916}  # GameObject
   clickSound: {fileID: 10922656780418682009}  # Component
@@ -13113,13 +13113,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 7091100355578800126}  # GameObject
   clickSound: {fileID: 10922656780418682009}  # Component
@@ -13256,13 +13256,13 @@ Script:
   Script: {guid: b3deb0e943f9a0d16ebeb319537cfdb5}
   MaxValue: 1
   MinValue: 0
-  hoverDuration: 1
+  hoverDuration: 0.300000012
   inverted: true
   maxX: 1.10000002
   minX: -1.10000002
   screenSpace: false
   slideSpeed: 2000
-  targetScaleMultiplier: [1.20000005, 1.20000005, 1.20000005]
+  targetScaleMultiplier: [1.04999995, 1.04999995, 1.04999995]
   value: 0.5
   buttonObj: {fileID: 14571891404093188607}  # GameObject
   clickSound: {fileID: 10922656780418682009}  # Component

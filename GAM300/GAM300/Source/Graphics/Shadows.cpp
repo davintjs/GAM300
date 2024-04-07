@@ -20,11 +20,11 @@ All content © 2023 DigiPen Institute of Technology Singapore. All rights reserve
 
 void Shadows::Init()
 {
-	FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO, depthMap, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
+	//FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO, depthMap, SHADOW_WIDTH_DIRECTIONAL, SHADOW_HEIGHT_DIRECTIONAL);
 
-	FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO_S, depthMap_S, SHADOW_WIDTH, SHADOW_HEIGHT);
+	//FRAMEBUFFER.CreateDirectionalAndSpotLight(depthMapFBO_S, depthMap_S, SHADOW_WIDTH, SHADOW_HEIGHT);
 
-	FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
+	//FRAMEBUFFER.CreatePointLight(depthCubemapFBO, depthCubemap, SHADOW_WIDTH, SHADOW_HEIGHT);
 }
 
 void Shadows::Update(float dt)
@@ -169,6 +169,19 @@ void Shadows::DrawDepthSpot()
 
 void Shadows::DrawDepthDirectional()
 {
+	Scene& currentScene = MySceneManager.GetCurrentScene();
+
+	Camera* pCamera = nullptr;
+	for (Camera& camera : currentScene.GetArray<Camera>())
+	{
+		if (camera.state == DELETED || !currentScene.IsActive(camera)) continue;
+
+		pCamera = &camera;
+	}
+
+	static float timer = 0.f;
+	static glm::vec3 prevPos = glm::vec3{ 0 };
+
 	unsigned index = 0;
 	for (int i = 0; i < (int)LIGHTING.directionalLightCount; ++i)
 	{
@@ -188,10 +201,23 @@ void Shadows::DrawDepthDirectional()
 		float near_plane = -1000.f, far_plane = 1000.f;
 
 		//lightProjection = glm::ortho(-90.f, 90.f, -90.f, 90.f, near_plane, far_plane);
-		lightProjection = glm::ortho(-180.f, 180.f, -180.f, 180.f, near_plane, far_plane);
+		const float viewSize = 32.f;
+		lightProjection = glm::ortho(-viewSize, viewSize, -viewSize, viewSize, near_plane, far_plane);
+
+		glm::vec3 displacement = prevPos;
+		if (pCamera)
+		{
+			float f = 1.0 / (float)SHADOW_WIDTH_DIRECTIONAL;
+			glm::vec3 forward = pCamera->GetForwardVec() * viewSize;
+			forward.y = 0.f;
+			displacement = pCamera->GetConstCameraPosition() + forward;
+			displacement = round(displacement / f) * f;
+		}
+
 
 		//lightView = glm::lookAt(-directional_light_stuffs.direction + EditorCam.GetCameraPosition(), EditorCam.GetCameraPosition(), glm::vec3(0.0, 1.0, 0.0));
-		lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		//lightView = glm::lookAt(-directional_light_stuffs.direction, glm::vec3(0.0f), glm::vec3(0.0, 1.0, 0.0));
+		lightView = glm::lookAt(-directional_light_stuffs.direction + displacement, displacement, glm::vec3(0.0, 1.0, 0.0));
 
 		LIGHTING.GetDirectionLights()[i].lightSpaceMatrix = lightProjection * lightView;
 		//lightSpaceMatrix_directional = lightProjection * lightView;
@@ -259,6 +285,8 @@ void Shadows::DrawDepthDirectional()
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
+
+	timer += 0.016f;
 }
 
 void Shadows::DrawDepthPoint()
